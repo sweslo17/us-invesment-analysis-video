@@ -1,0 +1,39 @@
+[tool.poetry]
+name = "pmb"
+version = "0.1.0"
+description = "Pre-Market Macro Brief — 美股盤前總經自動研究/影片系統"
+authors = ["roger.lo <roger.lo@goodfinance.com>"]
+readme = "README.md"
+packages = [{ include = "pmb" }]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fredapi = "^0.5.2"
+yfinance = "^1.4.1"
+pandas-market-calendars = "^5.4.0"
+pandas = "^3.0.3"
+pydantic = "^2.13.4"
+pydantic-settings = "^2.14.1"
+loguru = "^0.7.3"
+
+[tool.poetry.scripts]
+pmb = "pmb.cli:main"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^9.1.0"
+ruff = "^0.15.17"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W", "UP", "B"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[build-system]
+requires = ["poetry-core>=2.0.0"]
+build-backend = "poetry.core.masonry.api"
