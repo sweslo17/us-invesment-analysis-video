@@ -29,19 +29,33 @@ poetry run ruff check .     # lint
 
 | 指令 | 階段 | 說明 |
 |---|---|---|
-| `pmb fetch` | Phase 0 | 組出當日真實數據快照 |
-| `pmb research` | Phase 1/3 | 研究 + brief + 講稿/選圖 + 報告(LLM) |
-| `pmb render` | Phase 2 | 依 chart_spec 渲染圖表 |
-| `pmb assemble` | Phase 4 | 配音 + 合成影片 |
-| `pmb publish` | Phase 5 | 發布(預設 dry-run) |
-| `pmb run` | — | 全流程 |
+| `pmb fetch [--date]` | Phase 0 | 組出當日真實數據快照(`--json` 輸出 JSON) |
+| `pmb research [--date] [--dry-run]` | Phase 1/3 | 研究 → 一次產出 brief + script + report(`--dry-run` 用範例、免金鑰) |
+| `pmb render [--date] [--module M]` | Phase 2 | 從快照渲染圖表 PNG(8 個固定模組) |
+| `pmb assemble [--date] [--dry-run]` | Phase 4 | 配音 + 合成 30s mp4(`--dry-run` 用靜音) |
+| `pmb publish [--date] [--approve]` | Phase 5 | 發布(**預設 dry-run**;`--approve` 才上傳 YouTube) |
+| `pmb run [--date] [--dry-run]` | — | 全流程 fetch→research→assemble→人工 gate(不自動發布) |
+
+典型開發跑法(完全不對外、免 LLM/TTS 金鑰):
+
+```bash
+poetry run pmb run --dry-run            # 一鍵跑完,產物落 artifacts/,印出 review gate
+poetry run pmb publish                  # 只寫 publish manifest,不上傳(需 --approve 才發)
+```
+
+## 部署成雲端 routine
+
+日更研究部署成 **Claude Code 雲端 scheduled routine**(盤前排程,電腦關機也跑)。
+routine 貼上 [`prompts/cloud_routine.md`](prompts/cloud_routine.md):它會 `pmb fetch` 取數 →
+依 [`prompts/daily_research.md`](prompts/daily_research.md) 做研究產出 brief/script/report/thesis →
+`pmb assemble` 合成 → 停在人工 gate。影片放行才 `pmb publish --approve`,報告人工貼上。
 
 ## 開發進度
 
 - [x] Phase 0 — 資料層(FRED + yfinance + 衍生指標 + 快照)
 - [x] Phase 1 — 研究 prompt + schema(確定性骨架完成;品質 burn-in 進行中)
 - [x] Phase 2 — 圖表模組庫(§6.1 全 8 模組)
-- [ ] Phase 3 — 講稿 + 報告
-- [ ] Phase 4 — 配音 + 合成
-- [ ] Phase 5 — 發布 + 人工 gate
-- [ ] Phase 6 — 雲端 routine + 文件
+- [x] Phase 3 — 講稿 + 報告(一次產出 brief/script/report,chart_id 交叉驗證)
+- [x] Phase 4 — 配音 + 合成(edge-tts + ffmpeg,30s mp4 + 燒字幕)
+- [x] Phase 5 — 發布 + 人工 gate(YouTube 預設 dry-run + orchestrator)
+- [x] Phase 6 — 雲端 routine + 文件
