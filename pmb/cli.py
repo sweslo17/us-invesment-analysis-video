@@ -331,6 +331,28 @@ def cmd_run(args: argparse.Namespace) -> int:
     return 0
 
 
+def _render_cover(target, settings) -> Path | None:
+    """用講稿的開場鉤子卡產出封面圖(Shorts 首幀同款),回傳路徑;無講稿則 None。"""
+    from pmb.charts.cards import accent_for, render_headline_card
+    from pmb.schemas.script import Script
+
+    script_path = settings.artifacts_dir / f"script_{target}.json"
+    if not script_path.exists():
+        return None
+    script = Script.model_validate_json(script_path.read_text(encoding="utf-8"))
+    for idx, seg in enumerate(script.segments):
+        if seg.headline:
+            cover = settings.artifacts_dir / f"cover_{target}.png"
+            render_headline_card(
+                str(cover),
+                seg.headline,
+                accent=accent_for(idx),
+                tag=seg.tag or settings.channel_name,
+            )
+            return cover
+    return None
+
+
 def cmd_publish(args: argparse.Namespace) -> int:
     """發布(預設 dry-run / 需 --approve 放行)。報告走人工貼上,影片走 YouTube gate。"""
     settings = get_settings()
@@ -348,7 +370,8 @@ def cmd_publish(args: argparse.Namespace) -> int:
         return 1
 
     brief = Brief.model_validate_json(brief_path.read_text(encoding="utf-8"))
-    title, description = build_youtube_metadata(brief, channel_name=settings.channel_name)
+    title, description, tags = build_youtube_metadata(brief, channel_name=settings.channel_name)
+    cover = _render_cover(target, settings)
 
     # --approve 但沒憑證時,優雅退回 dry-run(排程不會炸),並提示如何取得憑證
     approve = args.approve
@@ -361,6 +384,8 @@ def cmd_publish(args: argparse.Namespace) -> int:
         video,
         title=title,
         description=description,
+        tags=tags,
+        thumbnail=cover,
         privacy=settings.youtube_privacy,
         approve=approve,
         manifest_path=settings.artifacts_dir / f"publish_{target}.json",
@@ -374,6 +399,9 @@ def cmd_publish(args: argparse.Namespace) -> int:
         print(f"[dry-run] 未發布。標題:{title}")
         print(f"  manifest:{settings.artifacts_dir / f'publish_{target}.json'}")
         print("  要真正上傳:pmb publish --approve(需 YouTube OAuth 憑證)。")
+    print(f"  tags:{'、'.join(tags)}")
+    if cover:
+        print(f"  封面:{cover}")
     report_path = settings.artifacts_dir / f"report_{target}.md"
     print(f"  報告(人工貼上):{report_path}")
     print("※ 本內容為市場資訊與風險教育,非投資建議。")

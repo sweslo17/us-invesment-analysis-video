@@ -18,12 +18,21 @@ _DISCLAIMER = (
     "不構成任何買賣建議。槓桿說明為一般性的槓桿倍數風險教育,不針對任何特定商品。"
 )
 
+# YouTube 專屬 tags 欄位(與描述裡的 hashtag 不同):SEO 關鍵字
+_BASE_TAGS = [
+    "美股", "美股盤前", "盤前快報", "美股新聞", "美股懶人包",
+    "投資", "投資理財", "理財", "財經", "股市",
+    "S&P 500", "那斯達克", "道瓊", "Fed", "聯準會", "shorts",
+]
 
-def build_youtube_metadata(brief: Brief, channel_name: str = "美股早發車") -> tuple[str, str]:
-    """由 brief 組 YouTube 標題與描述。
+
+def build_youtube_metadata(
+    brief: Brief, channel_name: str = "美股早發車"
+) -> tuple[str, str, list[str]]:
+    """由 brief 組 YouTube 標題、描述、tags。
 
     標題走頻道公式「〔主軸〕｜M/D 美股盤前 #shorts」;描述帶今日重點 + 催化劑 +
-    免責 + 追蹤 CTA + hashtag(SEO)。
+    免責 + 追蹤 CTA + hashtag(SEO);tags 為 YouTube 專屬關鍵字欄位。
     """
     items = sorted(brief.items, key=lambda it: it.materiality, reverse=True)
     lead = items[0] if items else None
@@ -41,7 +50,16 @@ def build_youtube_metadata(brief: Brief, channel_name: str = "美股早發車") 
     parts.append(f"🔔 每天盤前更新,訂閱不錯過 —— {channel_name}")
     parts.append("#美股 #美股盤前 #投資理財 #理財 #財經 #shorts")
     description = "\n\n".join(parts)
-    return title[:100], description  # YouTube 標題上限 100 字
+
+    # tags:頻道名 + 基礎關鍵字,去重 + 控總長(YouTube tags 上限約 500 字元)
+    tags: list[str] = []
+    total = 0
+    for tag in [channel_name, *_BASE_TAGS]:
+        if tag in tags or total + len(tag) + 1 > 480:
+            continue
+        tags.append(tag)
+        total += len(tag) + 1
+    return title[:100], description, tags  # YouTube 標題上限 100 字
 
 
 def upload_video(
@@ -49,6 +67,8 @@ def upload_video(
     *,
     title: str,
     description: str,
+    tags: list[str] | None = None,
+    thumbnail: str | Path | None = None,
     privacy: str = "private",
     approve: bool = False,
     manifest_path: str | Path | None = None,
@@ -56,10 +76,13 @@ def upload_video(
 ) -> dict:
     """上傳影片。``approve=False``(預設)只寫 manifest 不上傳。"""
     video_path = Path(video_path)
+    tags = tags or []
     record = {
         "video": str(video_path),
         "title": title,
         "description": description,
+        "tags": tags,
+        "thumbnail": str(thumbnail) if thumbnail else None,
         "privacy": privacy,
         "approved": approve,
         "published": False,
@@ -73,14 +96,22 @@ def upload_video(
             manifest_path.write_text(json.dumps(record, ensure_ascii=False, indent=2), "utf-8")
         return record
 
-    video_id = _do_upload(video_path, title, description, privacy, settings)
+    video_id = _do_upload(video_path, title, description, tags, privacy, settings, thumbnail)
     record["published"] = True
     record["video_id"] = video_id
     logger.info("已上傳 YouTube:{}", video_id)
     return record
 
 
-def _do_upload(video_path: Path, title: str, description: str, privacy: str, settings) -> str:
+def _do_upload(
+    video_path: Path,
+    title: str,
+    description: str,
+    tags: list[str],
+    privacy: str,
+    settings,
+    thumbnail: str | Path | None = None,
+) -> str:
     """實際上傳(僅 approve=True 時呼叫)。需 OAuth refresh token。"""
     if settings is None or not settings.youtube_refresh_token:
         raise RuntimeError("缺少 YouTube OAuth 憑證(youtube_client_id/secret/refresh_token)")
@@ -95,16 +126,31 @@ def _do_upload(video_path: Path, title: str, description: str, privacy: str, set
         client_id=settings.youtube_client_id,
         client_secret=settings.youtube_client_secret,
         token_uri="https://oauth2.googleapis.com/token",
+        # youtube.upload 同時涵蓋影片上傳與 thumbnails.set(自訂封面)
         scopes=["https://www.googleapis.com/auth/youtube.upload"],
     )
     youtube = build("youtube", "v3", credentials=creds)
+    snippet = {"title": title, "description": description, "categoryId": "27"}
+    if tags:
+        snippet["tags"] = tags
     request = youtube.videos().insert(
         part="snippet,status",
         body={
-            "snippet": {"title": title, "description": description, "categoryId": "27"},
+            "snippet": snippet,
             "status": {"privacyStatus": privacy, "selfDeclaredMadeForKids": False},
         },
         media_body=MediaFileUpload(str(video_path), resumable=True),
     )
     response = request.execute()
-    return response["id"]
+    video_id = response["id"]
+
+    # 自訂封面:best-effort(Shorts / 頻道資格可能拒絕,失敗不擋上傳)
+    if thumbnail and Path(thumbnail).exists():
+        try:
+            youtube.thumbnails().set(
+                videoId=video_id, media_body=MediaFileUpload(str(thumbnail))
+            ).execute()
+            logger.info("已設定自訂封面:{}", thumbnail)
+        except Exception as exc:  # noqa: BLE001 — 封面失敗不應讓整支上傳失敗
+            logger.warning("自訂封面設定失敗(略過):{}", exc)
+    return video_id
