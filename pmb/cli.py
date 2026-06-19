@@ -374,11 +374,10 @@ def cmd_publish(args: argparse.Namespace) -> int:
     cover = _render_cover(target, settings)
 
     approve = args.approve
-    # 安全:dry-run 範例內容(headline 帶「dry-run」標記)絕不上傳到頻道
+    # dry-run 範例內容(headline 帶「dry-run」標記):只警告、不擋上傳
     if approve and ("dry-run" in title or any("dry-run" in it.headline for it in brief.items)):
-        approve = False
-        print("⛔ 偵測到 dry-run 範例內容,拒絕上傳到頻道。")
-        print("   請改用真研究:pmb research --date <交易日>(接 LLM)或雲端 routine 產出後再發布。")
+        print("⚠️ 偵測到 dry-run 範例內容(含「dry-run」字樣),確認這是要發布的真內容嗎?")
+        print("   真內容請用 pmb research(接 LLM)或雲端 routine 產出。")
     # --approve 但沒憑證時,優雅退回 dry-run(排程不會炸),並提示如何取得憑證
     if approve and not settings.youtube_refresh_token:
         approve = False
