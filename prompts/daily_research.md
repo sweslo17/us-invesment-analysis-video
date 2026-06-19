@@ -17,7 +17,7 @@
 
 【產出】(嚴格照 schema)
 - brief.json:見規格 §5.7。
-- script:30 秒講稿,切成 segments,每段綁一個 chart_id;依 lead_horizon 浮動配時(平常日短期為主、中長期各一句;regime 日把該中長期項目升級、甚至當 hook)。同時輸出 charts 陣列,模組只能從固定清單挑(index_overnight_grid / yield_curve / vix_regime / rates_trend / stock_bond_corr / breadth / econ_print / leverage_decay),附參數。選圖以「幫最多人理解今天市場」為準。
+- script:**直式短影片**講稿,切成 6–10 段,每段綁一個 chart_id(模組只能從固定清單挑:index_overnight_grid / yield_curve / vix_regime / rates_trend / stock_bond_corr / breadth / econ_print / leverage_decay)。每段的 `vo` 是**完整解說**——講清楚這張圖的內容(引用快照真實數字)+ 它代表什麼意義,讓人**不看畫面、只聽聲音也能完全聽懂**;不要只把圖表標題唸一遍。語氣口語、有個性,**適度加網路梗/時事梗**讓人想看下去,但保持教育而非建議、數字精準。合成時系統會把每段 `vo` 自動斷句、字幕一句一句跟著語音播,所以 `vo` 請寫成順口的短句串接(用句號分句)。依 lead_horizon 安排順序與比重(regime 日把中長期項目升級、甚至當開場 hook)。選圖以「幫最多人理解今天市場」為準。
 - report.md:同一份研究的完整版長文,面向一般讀者,結構見規格 §7.1。
 - thesis 更新(若有)。
 

@@ -2,7 +2,7 @@
 
 import pytest
 
-from pmb.video.assemble import build_srt, segment_timeline
+from pmb.video.assemble import build_srt, segment_timeline, split_sentences
 
 
 def test_build_srt_formats_cues_with_ms():
@@ -11,6 +11,25 @@ def test_build_srt_formats_cues_with_ms():
     assert "你好" in srt
     assert "00:00:02,500 --> 00:00:04,000" in srt
     assert "世界" in srt
+
+
+def test_split_sentences_breaks_on_terminators_keeping_punctuation():
+    out = split_sentences("隔夜美股收紅。費半領漲!VIX 回落到十六。")
+    assert out == ["隔夜美股收紅。", "費半領漲!", "VIX 回落到十六。"]
+
+
+def test_split_sentences_single_returns_one():
+    assert split_sentences("沒有句號的一句話") == ["沒有句號的一句話"]
+
+
+def test_split_sentences_ignores_blank_fragments():
+    assert split_sentences("一句。\n\n二句。") == ["一句。", "二句。"]
+
+
+def test_split_sentences_does_not_break_decimals():
+    # 3.8% / 0.53 的小數點不可被當句尾切斷
+    out = split_sentences("中位數拉到 3.8%。股債相關 0.53,分散打折。")
+    assert out == ["中位數拉到 3.8%。", "股債相關 0.53,分散打折。"]
 
 
 def test_segment_timeline_accumulates_actual_durations():

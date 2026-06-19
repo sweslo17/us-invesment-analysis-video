@@ -1,11 +1,12 @@
-"""影片合成:每個 segment 一張圖 + 該段配音 + 燒字幕,串成 30 秒 mp4。
+"""影片合成:直式短影片(1080×1920)。
 
-每段獨立合成(圖隨旁白切換、字幕跟著該段),再用 ffmpeg concat 串接。配音以可注入的
-``synth_fn`` 提供(dry-run 用靜音、正式用 edge-tts)。圖表由腳本的 charts 即時渲染。
+每段一張圖;段內把旁白切成「一句一句」,每句各自配音 + 一張字幕卡(字幕跟著語音逐句播,
+與圖表標題分開)。圖在上、字幕帶在下。配音以可注入的 ``synth_fn`` 提供。
 """
 
 from __future__ import annotations
 
+import re
 import subprocess
 from collections.abc import Callable
 from pathlib import Path
@@ -20,8 +21,29 @@ from pmb.tts.edge import SynthResult
 # synth_fn(text, out_path, planned_duration) -> SynthResult
 SynthFn = Callable[[str, Path, float], SynthResult]
 
-_CANVAS = (1280, 720)
-_SUBTITLE_STYLE = "FontName=PingFang TC,FontSize=24,PrimaryColour=&H00000000,Outline=0,MarginV=40"
+# 直式短影片畫布(9:16)
+_WIDTH, _HEIGHT = 1080, 1920
+_BG = "0x0D1B2A"
+_CHART_W = 1040
+_CHART_Y = 430
+# 字幕樣式(ASS):置中、半透明黑底框、白粗體;字幕 ≠ 圖表標題,且逐句播放
+_SUB_STYLE = (
+    "Alignment=2,MarginV=115,FontName=PingFang TC,Fontsize=14,"
+    "PrimaryColour=&H00FFFFFF,BorderStyle=3,Outline=4,Shadow=0,"
+    "BackColour=&HC0101010,Bold=1"
+)
+
+# 句尾標點不含 ASCII 句點「.」,否則 3.8% 這類小數會被誤切
+_SENT_RE = re.compile(r"[^。!?！？;；\n]+[。!?！？;；]?")
+
+
+def split_sentences(text: str) -> list[str]:
+    """把旁白切成句子(保留句尾標點),供逐句字幕。沒有標點則整段為一句。
+
+    刻意不把 ASCII 句點當句尾,避免 3.8%、0.53 這類小數被切斷。
+    """
+    parts = [m.group().strip() for m in _SENT_RE.finditer(text)]
+    return [p for p in parts if p]
 
 
 def _timestamp(seconds: float) -> str:
@@ -56,23 +78,20 @@ def _run_ffmpeg(args: list[str], cwd: Path) -> None:
         raise RuntimeError(f"ffmpeg 失敗(rc={proc.returncode})")
 
 
-def _make_clip(
-    image: str, audio: str, srt: str | None, out: str, duration: float, cwd: Path
-) -> None:
-    """單段:靜止圖 + 配音 +(選配)燒字幕 → mp4。以 basename 在 cwd 內執行,免去路徑跳脫。"""
-    width, height = _CANVAS
-    vf = (
-        f"scale={width}:{height}:force_original_aspect_ratio=decrease,"
-        f"pad={width}:{height}:(ow-iw)/2:(oh-ih)/2:color=white"
+def _make_subclip(image: str, audio: str, srt: str, out: str, duration: float, cwd: Path) -> None:
+    """單句子片:直式畫布 = 深色底 + 上方圖表 + 下方逐句字幕,配該句語音。"""
+    filter_complex = (
+        f"color=c={_BG}:s={_WIDTH}x{_HEIGHT}:d={duration}[bg];"
+        f"[0:v]scale={_CHART_W}:-1[ch];"
+        f"[bg][ch]overlay=(W-w)/2:{_CHART_Y}[bgc];"
+        f"[bgc]subtitles={srt}:force_style='{_SUB_STYLE}'[v]"
     )
-    if srt:
-        vf += f",subtitles={srt}:force_style='{_SUBTITLE_STYLE}'"
     _run_ffmpeg(
         [
             "ffmpeg", "-y", "-loop", "1", "-i", image, "-i", audio,
-            "-vf", vf, "-t", f"{duration}", "-r", "25",
-            "-c:v", "libx264", "-pix_fmt", "yuv420p",
-            "-c:a", "aac", "-shortest", out,
+            "-filter_complex", filter_complex,
+            "-map", "[v]", "-map", "1:a", "-t", f"{duration}", "-r", "25",
+            "-c:v", "libx264", "-pix_fmt", "yuv420p", "-c:a", "aac", "-shortest", out,
         ],
         cwd=cwd,
     )
@@ -85,34 +104,30 @@ def assemble_video(
     *,
     synth_fn: SynthFn,
     work_dir: str | Path,
-    subtitles: bool = True,
 ) -> Path:
-    """合成整支影片並回傳 mp4 路徑。"""
+    """合成直式短影片並回傳 mp4 路徑。段內逐句配音 + 逐句字幕。"""
     out_path = Path(out_path).resolve()
     work_dir = Path(work_dir)
     work_dir.mkdir(parents=True, exist_ok=True)
 
-    # 1. 渲染腳本選的圖(以 chart id 命名)
     chart_paths = {spec.id: render_chart(spec, snapshot, work_dir).name for spec in script.charts}
 
-    # 2. 每段:配音 + 合成單段 clip
     clip_names: list[str] = []
     for i, seg in enumerate(script.segments):
-        audio_name = f"seg_{i}.mp3"
-        result = synth_fn(seg.vo, work_dir / audio_name, seg.duration)
-        srt_name = None
-        if subtitles:
-            srt_name = f"seg_{i}.srt"
+        sentences = split_sentences(seg.vo) or [seg.vo]
+        planned_each = seg.duration / len(sentences)
+        chart = chart_paths[seg.chart_id]
+        for j, sentence in enumerate(sentences):
+            audio_name = f"s{i}_{j}.mp3"
+            result = synth_fn(sentence, work_dir / audio_name, planned_each)
+            srt_name = f"s{i}_{j}.srt"
             (work_dir / srt_name).write_text(
-                build_srt([(seg.vo, 0.0, result.duration)]), encoding="utf-8"
+                build_srt([(sentence, 0.0, result.duration)]), encoding="utf-8"
             )
-        clip_name = f"clip_{i}.mp4"
-        _make_clip(
-            chart_paths[seg.chart_id], audio_name, srt_name, clip_name, result.duration, work_dir
-        )
-        clip_names.append(clip_name)
+            clip_name = f"c{i}_{j}.mp4"
+            _make_subclip(chart, audio_name, srt_name, clip_name, result.duration, work_dir)
+            clip_names.append(clip_name)
 
-    # 3. concat 串接
     listing = work_dir / "clips.txt"
     listing.write_text("".join(f"file '{name}'\n" for name in clip_names), encoding="utf-8")
     _run_ffmpeg(
@@ -120,5 +135,5 @@ def assemble_video(
          "-c", "copy", str(out_path)],
         cwd=work_dir,
     )
-    logger.info("影片合成完成 → {}", out_path)
+    logger.info("直式影片合成完成 → {}", out_path)
     return out_path

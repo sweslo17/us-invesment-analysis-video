@@ -42,19 +42,36 @@ def build_script_from_brief(
     def headline(i: int) -> str | None:
         return items[i].headline if i < len(items) else None
 
-    # (module, 短旁白)候選,依序;每個模組最多出現一次
+    def explain(i: int) -> str:
+        """item 標題 + 「對一般人代表什麼」,讓人不看畫面也聽得懂。"""
+        if i < len(items):
+            return f"{items[i].headline}。{items[i].audience_value}"
+        return ""
+
+    # (module, 完整旁白)候選;每段講內容 + 代表意義(脫離畫面也懂),每個模組最多一次
     candidates: list[tuple[str, str]] = [
-        ("index_overnight_grid", headline(0) or "隔夜四大指數這樣收"),
-        ("breadth", "看類股輪動:誰領漲、誰殺尾"),
-        ("vix_regime", "波動 VIX 在這個位置"),
+        (
+            "index_overnight_grid",
+            explain(0) or "先看隔夜四大指數怎麼收,漲跌幅一次看懂今天的盤勢基調。",
+        ),
+        ("breadth", "看類股輪動,誰領漲、誰殺尾盤,就知道資金往哪跑、這波漲是不是全面。"),
+        ("vix_regime", "VIX 是市場的恐慌溫度計,它在這個位置,代表現在大家有多緊張或多鬆懈。"),
     ]
     if regime.rates == "rising":
-        candidates.append(("yield_curve", headline(1) or "殖利率曲線:利率往哪走"))
-    candidates.append(("rates_trend", "10 年期殖利率走勢"))
+        candidates.append(
+            ("yield_curve", explain(1) or "殖利率曲線的形狀,藏著市場對利率和景氣的預期,別小看它。")
+        )
+    candidates.append(
+        ("rates_trend", "十年期殖利率是全球資產的定價錨,它一動,股票和債券的估值都得重算。")
+    )
     if regime.stock_bond_corr == "positive":
-        candidates.append(("stock_bond_corr", "股債同向,分散效果打折"))
-    candidates.append(("econ_print", headline(2) or "最新總經數據"))
-    candidates.append(("leverage_decay", lev_note))
+        candidates.append(
+            ("stock_bond_corr", "股債正相關時,股票殺低、債券不一定救你,傳統分散風險的效果會打折。")
+        )
+    candidates.append(
+        ("econ_print", explain(2) or "最新總經數據直接牽動 Fed 下一步,也牽動你的荷包。")
+    )
+    candidates.append(("leverage_decay", f"{lev_note}槓桿放大的不只是報酬,還有風險。"))
 
     chosen: list[tuple[str, str]] = []
     seen: set[str] = set()
