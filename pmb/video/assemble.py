@@ -85,6 +85,29 @@ def build_srt(cues: list[tuple[str, float, float]]) -> str:
     return "\n".join(blocks)
 
 
+_BREAK_AFTER = "，、,。!?!?;；:：…)）」』】"
+
+
+def wrap_caption(text: str, max_units: int = 14) -> str:
+    """把一行字幕依寬度切成多行(中文算 1、英數算 0.55),優先在標點後斷行。
+
+    回傳以 ASS 換行符 ``\\N`` 連接的多行,確保不超出畫面寬度。
+    """
+    lines: list[str] = []
+    cur: list[str] = []
+    width = 0.0
+    for ch in text:
+        cur.append(ch)
+        width += 1.0 if not ch.isascii() else 0.55
+        if (ch in _BREAK_AFTER and width >= max_units * 0.55) or width >= max_units:
+            lines.append("".join(cur))
+            cur = []
+            width = 0.0
+    if cur:
+        lines.append("".join(cur))
+    return "\\N".join(lines)
+
+
 def _ass_time(seconds: float) -> str:
     cs = int(round(seconds * 100))
     h, cs = divmod(cs, 360000)
@@ -96,7 +119,7 @@ def _ass_time(seconds: float) -> str:
 def build_ass(sentence: str, duration: float, *, title: str | None = None) -> str:
     """組一段子片用的 .ass:底部逐句字幕 + (選配)頂部主題標題,皆全片長顯示。"""
     end = _ass_time(duration)
-    events = [f"Dialogue: 0,0:00:00.00,{end},sub,,0,0,0,,{sentence}"]
+    events = [f"Dialogue: 0,0:00:00.00,{end},sub,,0,0,0,,{wrap_caption(sentence)}"]
     if title:
         events.append(f"Dialogue: 0,0:00:00.00,{end},title,,0,0,0,,{title}")
     return _ASS_TEMPLATE.format(events="\n".join(events))

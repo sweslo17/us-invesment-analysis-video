@@ -2,7 +2,13 @@
 
 import pytest
 
-from pmb.video.assemble import build_ass, build_srt, segment_timeline, split_sentences
+from pmb.video.assemble import (
+    build_ass,
+    build_srt,
+    segment_timeline,
+    split_sentences,
+    wrap_caption,
+)
 
 
 def test_build_srt_formats_cues_with_ms():
@@ -30,6 +36,25 @@ def test_split_sentences_does_not_break_decimals():
     # 3.8% / 0.53 的小數點不可被當句尾切斷
     out = split_sentences("中位數拉到 3.8%。股債相關 0.53,分散打折。")
     assert out == ["中位數拉到 3.8%。", "股債相關 0.53,分散打折。"]
+
+
+def test_wrap_caption_short_stays_one_line():
+    assert "\\N" not in wrap_caption("短短一句話", max_units=14)
+
+
+def test_wrap_caption_breaks_long_line_into_multiple():
+    text = "不管你用融資、期貨還是槓桿型產品,數學都一樣,開到三倍很危險很危險"
+    lines = wrap_caption(text, max_units=10).split("\\N")
+    assert len(lines) >= 2
+    # 每行寬度單位不超過上限太多(中文算 1、英數算 0.55)
+    for line in lines:
+        units = sum(1.0 if not c.isascii() else 0.55 for c in line)
+        assert units <= 12
+
+
+def test_wrap_caption_prefers_breaking_after_punctuation():
+    out = wrap_caption("第一段話講完了、第二段話開始", max_units=8)
+    assert out.split("\\N")[0].endswith("、")
 
 
 def test_build_ass_has_pixel_playres_title_and_subtitle():
