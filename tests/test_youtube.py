@@ -33,10 +33,13 @@ def _brief() -> Brief:
 
 
 def test_metadata_has_date_lead_and_disclaimer():
-    title, description = build_youtube_metadata(_brief())
-    assert "2026-06-18" in title
+    title, description = build_youtube_metadata(_brief(), channel_name="美股早發車")
+    assert "6/18" in title  # 標題走「M/D 美股盤前」公式
+    assert "美股盤前" in title and "#shorts" in title
     assert "Fed 轉鷹" in description
     assert "非投資建議" in description
+    assert "美股早發車" in description  # 追蹤 CTA 帶頻道名
+    assert "#美股" in description  # SEO hashtag
 
 
 def test_upload_dry_run_writes_manifest_and_does_not_publish(tmp_path):

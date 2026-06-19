@@ -19,16 +19,28 @@ _DISCLAIMER = (
 )
 
 
-def build_youtube_metadata(brief: Brief) -> tuple[str, str]:
-    """由 brief 組 YouTube 標題與描述(描述固定帶免責)。"""
+def build_youtube_metadata(brief: Brief, channel_name: str = "美股早發車") -> tuple[str, str]:
+    """由 brief 組 YouTube 標題與描述。
+
+    標題走頻道公式「〔主軸〕｜M/D 美股盤前 #shorts」;描述帶今日重點 + 催化劑 +
+    免責 + 追蹤 CTA + hashtag(SEO)。
+    """
     items = sorted(brief.items, key=lambda it: it.materiality, reverse=True)
     lead = items[0] if items else None
-    title = f"盤前市場觀察 · {brief.date}"
-    if lead:
-        title = f"{title}|{lead.headline}"
+    headline = lead.headline if lead else "今日美股盤前"
     body = lead.audience_value if lead else "今日盤前市場觀察。"
-    headline = lead.headline if lead else ""
-    description = f"{headline}\n\n{body}\n\n— — —\n{_DISCLAIMER}"
+    d = brief.date
+    title = f"{headline}｜{d.month}/{d.day} 美股盤前 #shorts"
+
+    parts = [f"{headline}。{body}"]
+    if items:
+        parts.append("\n▍今天重點\n" + "\n".join(f"・{it.headline}" for it in items[:3]))
+    if brief.catalysts:
+        parts.append("\n▍今天盤中要看\n" + "\n".join(f"・{c}" for c in brief.catalysts[:3]))
+    parts.append(f"⚠️ {_DISCLAIMER}")
+    parts.append(f"🔔 每天盤前更新,訂閱不錯過 —— {channel_name}")
+    parts.append("#美股 #美股盤前 #投資理財 #理財 #財經 #shorts")
+    description = "\n\n".join(parts)
     return title[:100], description  # YouTube 標題上限 100 字
 
 
@@ -89,7 +101,7 @@ def _do_upload(video_path: Path, title: str, description: str, privacy: str, set
     request = youtube.videos().insert(
         part="snippet,status",
         body={
-            "snippet": {"title": title, "description": description, "categoryId": "25"},
+            "snippet": {"title": title, "description": description, "categoryId": "27"},
             "status": {"privacyStatus": privacy, "selfDeclaredMadeForKids": False},
         },
         media_body=MediaFileUpload(str(video_path), resumable=True),

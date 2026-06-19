@@ -187,6 +187,7 @@ def assemble_video(
     synth_fn: SynthFn,
     work_dir: str | Path,
     font: str = "Noto Sans CJK TC",
+    channel_name: str = "美股早發車",
 ) -> Path:
     """合成直式短影片並回傳 mp4 路徑。段內逐句配音 + 逐句字幕。"""
     out_path = Path(out_path).resolve()
@@ -204,7 +205,7 @@ def assemble_video(
                 str(work_dir / card_name),
                 seg.headline,
                 accent=accent_for(i),
-                tag=seg.tag or "盤前快報",
+                tag=seg.tag or channel_name,
             )
             audio_name = f"card{i}.mp3"
             result = synth_fn(seg.vo, work_dir / audio_name, seg.duration)

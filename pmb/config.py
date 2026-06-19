@@ -39,6 +39,9 @@ class Settings(BaseSettings):
     # 配音:短影片用快語速,高資訊密度
     tts_rate: str = "+40%"
 
+    # 頻道品牌
+    channel_name: str = "美股早發車"
+
     # 短影片開頭 / 結尾 slogan
     slogan_intro: str = "30 秒看懂今天美股盤前"
     slogan_outro: str = "每天盤前見,記得追蹤;非投資建議"

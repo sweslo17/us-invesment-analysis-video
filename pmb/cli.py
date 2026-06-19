@@ -206,7 +206,7 @@ def cmd_research(args: argparse.Namespace) -> int:
     brief_path.write_text(brief.model_dump_json(indent=2), encoding="utf-8")
 
     # 同一次研究的另外兩種 renderer:30 秒講稿 + 長文報告
-    script = build_script_from_brief(brief, thesis=thesis)
+    script = build_script_from_brief(brief, thesis=thesis, channel_name=settings.channel_name)
     script_path = settings.artifacts_dir / f"script_{target}.json"
     script_path.write_text(script.model_dump_json(indent=2), encoding="utf-8")
 
@@ -283,7 +283,13 @@ def cmd_assemble(args: argparse.Namespace) -> int:
     out_path = settings.artifacts_dir / f"video_{target}.mp4"
     work_dir = settings.artifacts_dir / f"video_{target}_work"
     assemble_video(
-        script, snapshot, out_path, synth_fn=synth_fn, work_dir=work_dir, font=settings.video_font
+        script,
+        snapshot,
+        out_path,
+        synth_fn=synth_fn,
+        work_dir=work_dir,
+        font=settings.video_font,
+        channel_name=settings.channel_name,
     )
 
     duration = probe_duration(out_path)
@@ -333,7 +339,7 @@ def cmd_publish(args: argparse.Namespace) -> int:
         return 1
 
     brief = Brief.model_validate_json(brief_path.read_text(encoding="utf-8"))
-    title, description = build_youtube_metadata(brief)
+    title, description = build_youtube_metadata(brief, channel_name=settings.channel_name)
     result = upload_video(
         video,
         title=title,

@@ -38,6 +38,7 @@ def build_script_from_brief(
     max_cards: int = 3,
     intro_slogan: str = _DEFAULT_INTRO,
     outro_slogan: str = _DEFAULT_OUTRO,
+    channel_name: str = "美股早發車",
 ) -> Script:
     """回傳一份合法、**高視覺變化**的直式短影片講稿。
 
@@ -115,7 +116,7 @@ def build_script_from_brief(
     intro = card(
         intro_slogan,
         vo=f"{d.month} 月 {d.day} 號,{intro_slogan}。",
-        tag=f"{d.isoformat()} · 盤前快報",
+        tag=f"{d.isoformat()} · {channel_name}",
     )
     line1, line2, source = punchline_for(d)
     couplet = card(
