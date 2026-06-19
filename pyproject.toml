@@ -18,6 +18,7 @@ loguru = "^0.7.3"
 anthropic = "^0.111.0"
 matplotlib = "^3.11.0"
 mplfinance = "^0.12.10b0"
+edge-tts = "^7.2.8"
 
 [tool.poetry.scripts]
 pmb = "pmb.cli:main"

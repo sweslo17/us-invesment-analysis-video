@@ -28,7 +28,10 @@ from pmb.research.script_builder import build_script_from_brief
 from pmb.research.thesis import load_thesis
 from pmb.schemas.brief import Brief
 from pmb.schemas.chart import ChartSpec
+from pmb.schemas.script import Script
 from pmb.schemas.snapshot import Quote, Snapshot
+from pmb.tts.edge import edge_synthesize, probe_duration, silent_synth
+from pmb.video.assemble import assemble_video
 
 _EASTERN = ZoneInfo("America/New_York")
 
@@ -250,6 +253,40 @@ def cmd_render(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_assemble(args: argparse.Namespace) -> int:
+    settings = get_settings()
+    settings.ensure_dirs()
+
+    explicit = dt.date.fromisoformat(args.date) if args.date else None
+    target = resolve_fetch_target(today_eastern(), explicit)
+    if target is None:
+        print("今天非 NYSE 交易日,skip。")
+        return 0
+
+    script_path = settings.artifacts_dir / f"script_{target}.json"
+    snap_path = settings.artifacts_dir / f"snapshot_{target}.json"
+    if not script_path.exists() or not snap_path.exists():
+        print(f"缺 script 或 snapshot({target}),請先跑 pmb fetch 與 pmb research。")
+        return 1
+    script = Script.model_validate_json(script_path.read_text(encoding="utf-8"))
+    snapshot = Snapshot.model_validate_json(snap_path.read_text(encoding="utf-8"))
+
+    if args.dry_run:
+        logger.info("dry-run:用靜音配音合成,不打 edge-tts")
+        synth_fn = lambda vo, path, planned: silent_synth(vo, path, duration=planned)  # noqa: E731
+    else:
+        synth_fn = lambda vo, path, planned: edge_synthesize(vo, path)  # noqa: E731
+
+    out_path = settings.artifacts_dir / f"video_{target}.mp4"
+    work_dir = settings.artifacts_dir / f"video_{target}_work"
+    assemble_video(script, snapshot, out_path, synth_fn=synth_fn, work_dir=work_dir)
+
+    duration = probe_duration(out_path)
+    print(f"影片合成完成:{out_path}({duration:.1f}s,{len(script.segments)} 段)")
+    print("※ 本內容為市場資訊與風險教育,非投資建議。")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="pmb", description="Pre-Market Macro Brief CLI")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -273,6 +310,13 @@ def build_parser() -> argparse.ArgumentParser:
         "--module", action="append", help="指定圖表模組(可重複);省略則渲染全部已實作模組"
     )
     render.set_defaults(func=cmd_render)
+
+    assemble = sub.add_parser("assemble", help="配音 + 合成 30 秒影片")
+    assemble.add_argument("--date", help="指定交易日 YYYY-MM-DD")
+    assemble.add_argument(
+        "--dry-run", action="store_true", help="用靜音配音(不打 edge-tts),只驗證合成"
+    )
+    assemble.set_defaults(func=cmd_assemble)
 
     return parser
 
