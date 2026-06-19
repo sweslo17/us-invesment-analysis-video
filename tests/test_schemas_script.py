@@ -23,6 +23,14 @@ def test_valid_script_parses_and_reports_total_duration():
     script = Script.model_validate(_valid_script())
     assert len(script.segments) == 2
     assert script.total_duration == pytest.approx(30.0)
+    assert script.coverage_gaps == []  # 預設無缺口
+
+
+def test_script_records_chart_coverage_gaps():
+    data = _valid_script()
+    data["coverage_gaps"] = ["想講『信用利差擴大』但沒有對應圖表模組"]
+    script = Script.model_validate(data)
+    assert "信用利差" in script.coverage_gaps[0]
 
 
 def test_segment_chart_id_must_reference_a_chart():

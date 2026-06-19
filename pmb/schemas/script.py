@@ -35,6 +35,8 @@ class Segment(BaseModel):
 class Script(BaseModel):
     segments: list[Segment]
     charts: list[ChartSpec]
+    # 研究時「想講但固定圖表庫沒得配」的需求描述;人工 gate 當 alert,據此擴充模組庫
+    coverage_gaps: list[str] = []
 
     @property
     def total_duration(self) -> float:

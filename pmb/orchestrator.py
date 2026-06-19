@@ -13,6 +13,8 @@ from pathlib import Path
 
 from loguru import logger
 
+from pmb.schemas.script import Script
+
 _GATE_NOTE = (
     "此為開發/審稿用途:所有產物落在本機 review 資料夾,**不會自動對外發布**。"
     "確認內容無誤後,影片用 `pmb publish --approve` 放行上傳;報告人工貼上。"
@@ -38,13 +40,32 @@ def collect_artifacts(target: dt.date, artifacts_dir: str | Path) -> dict[str, P
     return found
 
 
+def script_coverage_gaps(target: dt.date, artifacts_dir: str | Path) -> list[str]:
+    """讀 script 的 coverage_gaps:研究時「想講但固定圖表庫沒得配」的需求。"""
+    path = Path(artifacts_dir) / f"script_{target}.json"
+    if not path.exists():
+        return []
+    try:
+        return Script.model_validate_json(path.read_text(encoding="utf-8")).coverage_gaps
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("讀 script coverage_gaps 失敗 {}:{}", path, exc)
+        return []
+
+
 def review_summary(target: dt.date, artifacts_dir: str | Path) -> str:
-    """人工 gate 用的可讀摘要:列出各產物狀態 + 放行提示。"""
+    """人工 gate 用的可讀摘要:列出各產物狀態 + 圖表庫缺口 alert + 放行提示。"""
     arts = collect_artifacts(target, artifacts_dir)
     lines = [f"=== {target} 產物審查(人工放行 gate)==="]
     for name, path in arts.items():
         mark = "✓" if path else "—"
         lines.append(f"  [{mark}] {name:<9} {path.name if path else '(未產出)'}")
+
+    gaps = script_coverage_gaps(target, artifacts_dir)
+    if gaps:
+        lines.append("")
+        lines.append("⚠️ 圖表庫缺口(今天想講但沒有合適圖表,建議新增模組後隔天可用):")
+        lines.extend(f"  - {g}" for g in gaps)
+
     lines.append("")
     lines.append(_GATE_NOTE)
     return "\n".join(lines)
@@ -57,6 +78,7 @@ def build_review_manifest(target: dt.date, artifacts_dir: str | Path) -> dict:
     manifest = {
         "date": str(target),
         "artifacts": {k: (str(v) if v else None) for k, v in arts.items()},
+        "coverage_gaps": script_coverage_gaps(target, artifacts_dir),
         "approved": False,
         "published": False,
         "note": _GATE_NOTE,
