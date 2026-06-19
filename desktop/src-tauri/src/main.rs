@@ -156,6 +156,54 @@ fn open_path(path: String) -> Result<(), String> {
         .map_err(|e| format!("開啟失敗:{e}"))
 }
 
+/// 開啟專案內的指定檔(白名單:研究 prompt / thesis / artifacts 資料夾)。
+#[tauri::command]
+fn open_rel(rel: String) -> Result<(), String> {
+    const ALLOWED: [&str; 3] = ["prompts/daily_research.md", "state/thesis.json", "artifacts"];
+    if !ALLOWED.contains(&rel.as_str()) {
+        return Err(format!("不允許開啟:{rel}"));
+    }
+    let path = project_root().join(&rel);
+    Command::new("open")
+        .arg(&path)
+        .spawn()
+        .map(|_| ())
+        .map_err(|e| format!("開啟失敗:{e}"))
+}
+
+#[tauri::command]
+fn cover_path(date: String) -> Option<String> {
+    let p = artifact_path(&date, "cover");
+    if p.exists() {
+        Some(p.to_string_lossy().to_string())
+    } else {
+        None
+    }
+}
+
+/// 查今天是否交易日 + 下一個交易日(呼叫 `pmb next-session --json`)。
+#[tauri::command]
+fn next_session() -> Result<serde_json::Value, String> {
+    let root = project_root();
+    let out = Command::new("/bin/zsh")
+        .arg("-lc")
+        .arg(format!(
+            "cd '{}' && poetry run pmb next-session --json",
+            root.display()
+        ))
+        .current_dir(&root)
+        .output()
+        .map_err(|e| format!("執行失敗:{e}"))?;
+    let stdout = String::from_utf8_lossy(&out.stdout);
+    // login shell 可能印雜訊;取最後一行 JSON
+    let line = stdout
+        .lines()
+        .rev()
+        .find(|l| l.trim_start().starts_with('{'))
+        .ok_or_else(|| "next-session 無 JSON 輸出".to_string())?;
+    serde_json::from_str(line).map_err(|e| format!("解析失敗:{e}"))
+}
+
 /// 觸發一個 pmb 步驟;以 login shell 跑(取得 poetry PATH),
 /// 即時把 stdout/stderr 逐行 emit 給前端,結束時 emit 結束碼。
 #[tauri::command]
@@ -239,7 +287,10 @@ fn main() {
             get_status,
             read_artifact,
             video_path,
+            cover_path,
             open_path,
+            open_rel,
+            next_session,
             run_step
         ])
         .run(tauri::generate_context!())

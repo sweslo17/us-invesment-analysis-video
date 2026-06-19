@@ -3,12 +3,17 @@ import { listen } from "@tauri-apps/api/event";
 import {
   type ArtifactKind,
   type BriefDoc,
+  type NextSession,
   type ScriptDoc,
   type Status,
   type Step,
+  convertFileSrc,
+  coverPath,
   getStatus,
   listDates,
+  nextSession,
   openPath,
+  openRel,
   readArtifact,
   runStep,
   videoPath,
@@ -42,6 +47,7 @@ export default function App() {
   const [logs, setLogs] = useState<string[]>([]);
   const [running, setRunning] = useState(false);
   const [exitCode, setExitCode] = useState<number | null>(null);
+  const [nextInfo, setNextInfo] = useState<NextSession | null>(null);
 
   const dateRef = useRef(date);
   dateRef.current = date;
@@ -66,6 +72,9 @@ export default function App() {
 
   useEffect(() => {
     refreshDates();
+    nextSession()
+      .then(setNextInfo)
+      .catch(() => setNextInfo(null));
   }, [refreshDates]);
 
   useEffect(() => {
@@ -79,6 +88,7 @@ export default function App() {
     raw: "",
   });
   const [vpath, setVpath] = useState<string | null>(null);
+  const [cpath, setCpath] = useState<string | null>(null);
 
   const loadContent = useCallback(async (t: Tab, d: string) => {
     if (!d) {
@@ -87,6 +97,7 @@ export default function App() {
     }
     if (t === "video") {
       setVpath(await videoPath(d).catch(() => null));
+      setCpath(await coverPath(d).catch(() => null));
       return;
     }
     const kind = t as ArtifactKind;
@@ -142,6 +153,13 @@ export default function App() {
         <h1>
           PMB 控台 · <span>美股早發車</span>
         </h1>
+        {nextInfo && (
+          <span className="muted" style={{ fontSize: 12.5 }}>
+            {nextInfo.is_trading_day
+              ? `今天 ${nextInfo.today} 開市`
+              : `今天休市 · 下次啟動 ${nextInfo.next_session}`}
+          </span>
+        )}
         <div className="spacer" />
         <span className="muted">交易日</span>
         <select value={date} onChange={(e) => setDate(e.target.value)}>
@@ -195,6 +213,16 @@ export default function App() {
           ▶ 全流程 run
         </button>
         {running && <span className="spin" />}
+        <div className="spacer" style={{ flex: 1 }} />
+        <button title="編輯研究 prompt" onClick={() => openRel("prompts/daily_research.md")}>
+          ✎ prompt
+        </button>
+        <button title="編輯中長期 thesis" onClick={() => openRel("state/thesis.json")}>
+          ✎ thesis
+        </button>
+        <button title="開啟 artifacts 資料夾" onClick={() => openRel("artifacts")}>
+          📂 artifacts
+        </button>
       </div>
 
       <div className="main">
@@ -211,7 +239,13 @@ export default function App() {
             ))}
           </div>
           <div className="pane">
-            <ContentView tab={tab} content={content} vpath={vpath} status={status} />
+            <ContentView
+              tab={tab}
+              content={content}
+              vpath={vpath}
+              cpath={cpath}
+              status={status}
+            />
           </div>
         </div>
 
@@ -255,11 +289,13 @@ function ContentView({
   tab,
   content,
   vpath,
+  cpath,
   status,
 }: {
   tab: Tab;
   content: { kind: Tab; ok: boolean; raw: string };
   vpath: string | null;
+  cpath: string | null;
   status: Status | null;
 }) {
   if (tab === "video") {
@@ -268,9 +304,17 @@ function ContentView({
         <div className="section-title">影片</div>
         {vpath ? (
           <>
-            <p className="muted" style={{ wordBreak: "break-all", marginBottom: 10 }}>{vpath}</p>
-            <button onClick={() => openPath(vpath)}>▶ 用系統播放器開啟</button>{" "}
-            <button onClick={() => openPath(vpath.replace(/\/[^/]+$/, ""))}>📂 開啟資料夾</button>
+            <video
+              className="preview"
+              src={convertFileSrc(vpath)}
+              poster={cpath ? convertFileSrc(cpath) : undefined}
+              controls
+            />
+            <div style={{ margin: "10px 0" }}>
+              <button onClick={() => openPath(vpath)}>▶ 系統播放器</button>{" "}
+              <button onClick={() => openPath(vpath.replace(/\/[^/]+$/, ""))}>📂 資料夾</button>
+            </div>
+            <p className="muted" style={{ wordBreak: "break-all", fontSize: 12 }}>{vpath}</p>
             <div className="section-title" style={{ marginTop: 18 }}>發布狀態</div>
             <p className="muted">
               {status?.publish

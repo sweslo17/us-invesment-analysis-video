@@ -1,5 +1,13 @@
 // 後端 Tauri 指令的型別化封裝
-import { invoke } from "@tauri-apps/api/core";
+import { convertFileSrc, invoke } from "@tauri-apps/api/core";
+
+export { convertFileSrc };
+
+export interface NextSession {
+  today: string;
+  is_trading_day: boolean;
+  next_session: string;
+}
 
 export interface Status {
   date: string;
@@ -22,7 +30,10 @@ export const getStatus = (date: string) => invoke<Status>("get_status", { date }
 export const readArtifact = (date: string, kind: ArtifactKind) =>
   invoke<string>("read_artifact", { date, kind });
 export const videoPath = (date: string) => invoke<string | null>("video_path", { date });
+export const coverPath = (date: string) => invoke<string | null>("cover_path", { date });
 export const openPath = (path: string) => invoke<void>("open_path", { path });
+export const openRel = (rel: string) => invoke<void>("open_rel", { rel });
+export const nextSession = () => invoke<NextSession>("next_session");
 
 export const runStep = (step: Step, date: string, dryrun: boolean, approve: boolean) =>
   invoke<void>("run_step", { step, date: date || null, dryrun, approve });
