@@ -56,7 +56,7 @@ def test_intro_card_carries_date_and_outro_is_daily_couplet():
     assert "2026-06-18" in (script.segments[0].tag or "")  # 首卡帶日期
     last = script.segments[-1]
     assert last.headline and "\n" in last.headline  # 對句兩行
-    assert last.tag and "改編自" in last.tag
+    assert last.tag and "不知道有沒有說過" in last.tag
 
 
 def test_rising_rates_picks_yield_curve_as_regime_chart():

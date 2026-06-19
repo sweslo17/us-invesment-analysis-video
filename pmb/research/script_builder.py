@@ -118,8 +118,8 @@ def build_script_from_brief(
     line1, line2, source = punchline_for(d)
     couplet = card(
         f"{line1}\n{line2}",
-        vo=f"最後送你今天的盤前金句:{line1},{line2}。改編自{source}。{outro_slogan}。",
-        tag=f"改編自 {source}",
+        vo=f"最後送你今天的盤前金句:{line1},{line2}。{source}不知道有沒有說過。{outro_slogan}。",
+        tag=f"{source}  不知道有沒有說過",
     )
 
     # 編排:開場(含日期)→(時事卡、圖表交錯)→ 每日金句,讓視覺一直變
