@@ -48,7 +48,7 @@ _ASS_TEMPLATE = "\n".join(
         "[V4+ Styles]",
         _STYLE_FORMAT,
         "Style: sub,PingFang TC,62,&H00FFFFFF,&H00000000,&HA0000000,1,3,6,0,2,70,70,230",
-        "Style: title,PingFang TC,104,&H0066D9FF,&H00202020,&H00000000,1,1,6,0,8,50,50,70",
+        "Style: title,PingFang TC,120,&H0066D9FF,&H00202020,&H00000000,1,1,7,0,8,40,40,64",
         "",
         "[Events]",
         _EVENT_FORMAT,

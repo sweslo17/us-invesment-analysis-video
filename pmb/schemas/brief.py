@@ -35,7 +35,7 @@ class BriefIndex(BaseModel):
 
 
 class LeverageContext(BaseModel):
-    """每個市場/指數的「最適槓桿」教育(全市場視角,非任何 ETF 商品的投資建議)。
+    """每個市場/指數的「最適槓桿」教育(一般性的倍數概念,非任何特定商品的投資建議)。
 
     具體數字(已實現波動、波動目標槓桿、波動耗損)由資料層 ``snapshot.leverage_math``
     提供;此處只放 LLM 寫的文字說明,LLM 不產生數字。
