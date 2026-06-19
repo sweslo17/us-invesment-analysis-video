@@ -133,7 +133,7 @@ def _do_upload(
     snippet = {
         "title": title,
         "description": description,
-        "categoryId": "27",  # Education
+        "categoryId": getattr(settings, "youtube_category_id", "27"),  # 預設 27=教育
         "defaultLanguage": "zh-TW",  # 影片語言:繁中
         "defaultAudioLanguage": "zh-TW",  # 旁白語言(edge-tts zh-TW)
     }
