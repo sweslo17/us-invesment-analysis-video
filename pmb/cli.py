@@ -14,6 +14,7 @@ from zoneinfo import ZoneInfo
 
 from loguru import logger
 
+from pmb.charts.select import implemented_modules, render_chart
 from pmb.config import get_settings
 from pmb.data.calendar import is_trading_day
 from pmb.data.fred import FredClient
@@ -24,6 +25,7 @@ from pmb.research.runner import make_anthropic_caller, research_once
 from pmb.research.sample import sample_brief_json
 from pmb.research.thesis import load_thesis
 from pmb.schemas.brief import Brief
+from pmb.schemas.chart import ChartSpec
 from pmb.schemas.snapshot import Quote, Snapshot
 
 _EASTERN = ZoneInfo("America/New_York")
@@ -207,6 +209,32 @@ def cmd_research(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_render(args: argparse.Namespace) -> int:
+    settings = get_settings()
+    settings.ensure_dirs()
+
+    explicit = dt.date.fromisoformat(args.date) if args.date else None
+    target = resolve_fetch_target(today_eastern(), explicit)
+    if target is None:
+        print("今天非 NYSE 交易日,skip。")
+        return 0
+
+    snap_path = settings.artifacts_dir / f"snapshot_{target}.json"
+    if not snap_path.exists():
+        print(f"找不到 {snap_path},請先跑 pmb fetch --date {target}。")
+        return 1
+    snapshot = Snapshot.model_validate_json(snap_path.read_text(encoding="utf-8"))
+
+    out_dir = settings.artifacts_dir / "charts"
+    modules = args.module or implemented_modules()
+    for module in modules:
+        spec = ChartSpec(id=module, module=module)
+        path = render_chart(spec, snapshot, out_dir)
+        print(f"  {module:<22} → {path}")
+    print(f"\n已實作模組:{', '.join(implemented_modules())}")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="pmb", description="Pre-Market Macro Brief CLI")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -223,6 +251,13 @@ def build_parser() -> argparse.ArgumentParser:
         "--dry-run", action="store_true", help="用範例 brief 跑通 pipeline,不呼叫 LLM"
     )
     research.set_defaults(func=cmd_research)
+
+    render = sub.add_parser("render", help="依模組從快照渲染圖表 PNG")
+    render.add_argument("--date", help="指定交易日 YYYY-MM-DD")
+    render.add_argument(
+        "--module", action="append", help="指定圖表模組(可重複);省略則渲染全部已實作模組"
+    )
+    render.set_defaults(func=cmd_render)
 
     return parser
 

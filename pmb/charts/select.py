@@ -1,0 +1,46 @@
+"""選圖:驗證 LLM 選的模組/參數,從快照取真實數據,呼叫對應 render。
+
+``module`` 的合法性由 ``ChartSpec`` 的 Literal 在驗證期擋下(非法模組進不來);
+這裡負責把合法 spec 對應到 render 函式,並用真實快照數據渲染。
+"""
+
+from __future__ import annotations
+
+from collections.abc import Callable
+from pathlib import Path
+
+from loguru import logger
+
+from pmb.charts.library import render_index_overnight_grid, render_leverage_decay
+from pmb.schemas.chart import ChartSpec
+from pmb.schemas.snapshot import Snapshot
+
+# 模組 → 渲染器(從快照取對應數據)。新增模組只要在這註冊,不動 render_chart(開放封閉)。
+_RENDERERS: dict[str, Callable[[Path, Snapshot, dict], Path]] = {
+    "leverage_decay": lambda out, snap, params: render_leverage_decay(
+        out, snap.leverage_math, params
+    ),
+    "index_overnight_grid": lambda out, snap, params: render_index_overnight_grid(
+        out, snap.indices, params
+    ),
+}
+
+
+def implemented_modules() -> list[str]:
+    """目前已實作的圖表模組清單。"""
+    return sorted(_RENDERERS)
+
+
+def render_chart(spec: ChartSpec, snapshot: Snapshot, out_dir: str | Path) -> Path:
+    """依 ``spec`` 渲染單一圖表,回傳 PNG 路徑。未實作的模組明確拋 NotImplementedError。"""
+    out_dir = Path(out_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    out_path = out_dir / f"{spec.id}.png"
+
+    renderer = _RENDERERS.get(spec.module)
+    if renderer is None:
+        raise NotImplementedError(f"圖表模組 {spec.module} 尚未實作")
+    renderer(out_path, snapshot, spec.params)
+
+    logger.info("渲染圖表 {} → {}", spec.module, out_path)
+    return out_path
