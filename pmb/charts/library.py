@@ -16,7 +16,7 @@ matplotlib.use("Agg")  # 無 GUI 後端,供批次渲染
 import matplotlib.pyplot as plt  # noqa: E402
 from matplotlib import font_manager  # noqa: E402
 
-from pmb.schemas.snapshot import LeverageMath, Quote  # noqa: E402
+from pmb.schemas.snapshot import LeverageMath, Quote, SectorReturn, YieldPoint  # noqa: E402
 
 _POSITIVE = "#2e7d32"
 _NEGATIVE = "#c62828"
@@ -59,6 +59,89 @@ def render_leverage_decay(
     ax.set_title("波動耗損:槓桿越高,複利被磨掉越多")
     ax.legend(fontsize=8)
     ax.grid(True, alpha=0.3)
+    fig.tight_layout()
+    fig.savefig(out_path, dpi=120)
+    plt.close(fig)
+    return out_path
+
+
+def render_vix_regime(
+    out_path: str | Path,
+    vix_history: Sequence[float],
+    params: dict | None = None,
+) -> Path:
+    """VIX 近期走勢 + 區間門檻帶(預設 15/20/30),標示恐慌/平靜分界。"""
+    out_path = Path(out_path)
+    params = params or {}
+    bands = params.get("bands", [15, 20, 30])
+
+    fig, ax = plt.subplots(figsize=(7, 4))
+    ax.plot(range(len(vix_history)), list(vix_history), color="#1565c0", linewidth=2)
+    for band in bands:
+        ax.axhline(band, color="#888", linestyle="--", linewidth=0.8)
+        ax.annotate(str(band), (0, band), color="#888", fontsize=8, va="bottom")
+    if vix_history:
+        ax.annotate(
+            f"{vix_history[-1]:.1f}",
+            (len(vix_history) - 1, vix_history[-1]),
+            fontsize=10,
+            fontweight="bold",
+            ha="right",
+        )
+    ax.set_xlabel("近期交易日")
+    ax.set_ylabel("VIX")
+    ax.set_title("VIX 波動率與區間門檻")
+    ax.grid(True, alpha=0.3)
+    fig.tight_layout()
+    fig.savefig(out_path, dpi=120)
+    plt.close(fig)
+    return out_path
+
+
+def render_yield_curve(
+    out_path: str | Path,
+    yield_curve: Sequence[YieldPoint],
+    params: dict | None = None,
+) -> Path:
+    """美債殖利率曲線(各到期點的殖利率),標出倒掛或正斜率。"""
+    out_path = Path(out_path)
+    points = sorted(yield_curve, key=lambda p: p.months)
+    labels = [p.label for p in points]
+    values = [p.value for p in points]
+
+    fig, ax = plt.subplots(figsize=(7, 4))
+    ax.plot(range(len(points)), values, marker="o", color="#6a1b9a", linewidth=2)
+    ax.set_xticks(range(len(points)))
+    ax.set_xticklabels(labels)
+    for i, v in enumerate(values):
+        ax.annotate(f"{v:.2f}%", (i, v), fontsize=9, va="bottom", ha="center")
+    ax.set_xlabel("到期")
+    ax.set_ylabel("殖利率 (%)")
+    ax.set_title("美債殖利率曲線")
+    ax.grid(True, alpha=0.3)
+    fig.tight_layout()
+    fig.savefig(out_path, dpi=120)
+    plt.close(fig)
+    return out_path
+
+
+def render_breadth(
+    out_path: str | Path,
+    sector_returns: Sequence[SectorReturn],
+    params: dict | None = None,
+) -> Path:
+    """各類股當日報酬水平長條(市場廣度/輪動),綠漲紅跌、由高到低排序。"""
+    out_path = Path(out_path)
+    ordered = sorted(sector_returns, key=lambda s: s.change_pct)
+    names = [s.sector for s in ordered]
+    pcts = [s.change_pct for s in ordered]
+    colors = [_POSITIVE if p >= 0 else _NEGATIVE for p in pcts]
+
+    fig, ax = plt.subplots(figsize=(7, 4.5))
+    ax.barh(names, pcts, color=colors)
+    ax.axvline(0, color="black", linewidth=0.8)
+    ax.set_xlabel("當日漲跌 (%)")
+    ax.set_title("類股表現(市場廣度)")
     fig.tight_layout()
     fig.savefig(out_path, dpi=120)
     plt.close(fig)

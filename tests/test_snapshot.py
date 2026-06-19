@@ -6,7 +6,14 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from pmb.data.snapshot import build_snapshot, compute_leverage_math, compute_regime
+from pmb.data import universe
+from pmb.data.snapshot import (
+    build_snapshot,
+    build_yield_curve,
+    compute_leverage_math,
+    compute_regime,
+    compute_sector_returns,
+)
 from pmb.schemas.snapshot import FredObservation, Quote, Snapshot
 
 
@@ -59,6 +66,36 @@ def test_compute_leverage_math_skips_missing_history():
     assert compute_leverage_math({}, [("^GSPC", "S&P 500")], reference_vol=0.15) == []
 
 
+def test_compute_sector_returns_labels_and_pct():
+    idx = pd.date_range("2026-06-17", periods=2, freq="D")
+    histories = {
+        "XLK": pd.Series([100.0, 101.0], index=idx),
+        "XLF": pd.Series([100.0, 99.0], index=idx),
+    }
+    out = compute_sector_returns(histories, ["XLK", "XLF"])
+    assert (out[0].sector, out[0].change_pct) == ("科技", pytest.approx(1.0))
+    assert (out[1].sector, out[1].change_pct) == ("金融", pytest.approx(-1.0))
+
+
+class _FakeFredCurve:
+    def get_latest(self, series_id, label, units=None):
+        vals = {"DGS3MO": 4.30, "DGS2": 4.20, "DGS10": 4.49}
+        return FredObservation(
+            series_id=series_id, label=label, value=vals[series_id],
+            date=dt.date(2026, 6, 18), units=units,
+        )
+
+
+def test_build_yield_curve_orders_points_with_months():
+    specs = [("DGS3MO", "3M", 3), ("DGS2", "2Y", 24), ("DGS10", "10Y", 120)]
+    out = build_yield_curve(_FakeFredCurve(), specs)
+    assert [(p.label, p.months, p.value) for p in out] == [
+        ("3M", 3, pytest.approx(4.30)),
+        ("2Y", 24, pytest.approx(4.20)),
+        ("10Y", 120, pytest.approx(4.49)),
+    ]
+
+
 class _FakeYF:
     """對任何 ticker 都回固定報價;歷史只回 provided 字典中有的。"""
 
@@ -79,12 +116,19 @@ class _FakeFred:
             for sid, lab, u in specs
         ]
 
+    def get_latest(self, series_id, label, units=None):
+        return FredObservation(
+            series_id=series_id, label=label, value=4.0, date=dt.date(2026, 6, 18), units=units
+        )
+
 
 def test_build_snapshot_wires_all_sections():
     idx = pd.date_range("2026-01-01", periods=60, freq="D")
     histories = {
         "^GSPC": pd.Series(np.linspace(100, 110, 60), index=idx),
         "TLT": pd.Series(np.linspace(90, 80, 60), index=idx),
+        "^VIX": pd.Series(np.linspace(20, 16, 60), index=idx),
+        "XLK": pd.Series(np.linspace(100, 105, 60), index=idx),
     }
     snap = build_snapshot(
         dt.date(2026, 6, 18),
@@ -104,3 +148,6 @@ def test_build_snapshot_wires_all_sections():
     assert any(o.series_id == "DGS10" for o in snap.macro)
     assert snap.regime.realized_vol_20d is not None
     assert any(m.market == "S&P 500" for m in snap.leverage_math)  # 由 ^GSPC 歷史算出
+    assert len(snap.yield_curve) == len(universe.YIELD_CURVE_SERIES)
+    assert snap.vix_history  # 由 ^VIX 歷史帶入
+    assert any(s.sector == "科技" for s in snap.sector_returns)  # XLK → 科技

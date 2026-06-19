@@ -20,7 +20,14 @@ from pmb.data.derived import (
     vol_target_leverage,
     volatility_drag,
 )
-from pmb.schemas.snapshot import LeverageMath, Quote, RegimeMetrics, Snapshot
+from pmb.schemas.snapshot import (
+    LeverageMath,
+    Quote,
+    RegimeMetrics,
+    SectorReturn,
+    Snapshot,
+    YieldPoint,
+)
 
 
 def compute_regime(
@@ -92,6 +99,35 @@ def compute_leverage_math(
     return out
 
 
+def compute_sector_returns(
+    histories: dict[str, pd.Series], sector_tickers: list[str]
+) -> list[SectorReturn]:
+    """各類股當日報酬(市場廣度長條圖用)。缺歷史的類股跳過。"""
+    out: list[SectorReturn] = []
+    for ticker in sector_tickers:
+        series = histories.get(ticker)
+        if series is None or len(series) < 2:
+            continue
+        change_pct = float(series.pct_change().iloc[-1] * 100)
+        out.append(
+            SectorReturn(sector=universe.SECTOR_LABELS.get(ticker, ticker), change_pct=change_pct)
+        )
+    return out
+
+
+def build_yield_curve(fred_client, specs: list[tuple[str, str, int]]) -> list[YieldPoint]:
+    """組殖利率曲線到期點(各 FRED 序列的最新值)。單點失敗跳過。"""
+    out: list[YieldPoint] = []
+    for series_id, label, months in specs:
+        try:
+            obs = fred_client.get_latest(series_id, label, "percent")
+        except Exception as exc:  # noqa: BLE001
+            logger.warning("略過殖利率點 {}:{}", series_id, exc)
+            continue
+        out.append(YieldPoint(label=label, months=months, value=obs.value))
+    return out
+
+
 def _first(quotes: list[Quote]) -> Quote | None:
     return quotes[0] if quotes else None
 
@@ -104,6 +140,7 @@ def build_snapshot(
     generated_at: dt.datetime,
     history_period: str = "6mo",
     reference_vol: float = 0.15,
+    vix_lookback: int = 60,
 ) -> Snapshot:
     """取數並組出 ``Snapshot``。client 以注入方式提供(便於測試與替換)。"""
     logger.info("組裝 {} 的市場快照", session_date)
@@ -117,9 +154,11 @@ def build_snapshot(
 
     macro = fred_client.get_observations(universe.FRED_SERIES)
 
+    vix_ticker = universe.VIX[0]
     index_tickers = [t for t, _ in universe.INDEX_CASH]
-    history_tickers = [universe.BOND_PROXY, *index_tickers, *universe.SECTOR_ETFS]
+    history_tickers = [vix_ticker, universe.BOND_PROXY, *index_tickers, *universe.SECTOR_ETFS]
     histories = yf_client.get_histories(history_tickers, period=history_period)
+
     regime = compute_regime(
         histories,
         vix=volatility.last if volatility else None,
@@ -127,6 +166,14 @@ def build_snapshot(
     )
     leverage_math = compute_leverage_math(
         histories, universe.INDEX_CASH, reference_vol=reference_vol
+    )
+    sector_returns = compute_sector_returns(histories, universe.SECTOR_ETFS)
+    yield_curve = build_yield_curve(fred_client, universe.YIELD_CURVE_SERIES)
+    vix_series = histories.get(vix_ticker)
+    vix_history = (
+        [float(x) for x in vix_series.dropna().tail(vix_lookback)]
+        if vix_series is not None
+        else []
     )
 
     snapshot = Snapshot(
@@ -142,12 +189,16 @@ def build_snapshot(
         regime=regime,
         reference_vol=reference_vol,
         leverage_math=leverage_math,
+        yield_curve=yield_curve,
+        sector_returns=sector_returns,
+        vix_history=vix_history,
     )
     logger.info(
-        "快照組裝完成:指數 {} 期貨 {} 槓桿教育 {} 總經 {} 筆",
+        "快照組裝完成:指數 {} 槓桿教育 {} 殖利率點 {} 類股 {} 總經 {} 筆",
         len(indices),
-        len(futures),
         len(leverage_math),
+        len(yield_curve),
+        len(sector_returns),
         len(macro),
     )
     return snapshot

@@ -55,6 +55,21 @@ class LeverageMath(BaseModel):
     drag_3x: float
 
 
+class YieldPoint(BaseModel):
+    """殖利率曲線上的一個到期點。"""
+
+    label: str
+    months: int
+    value: float
+
+
+class SectorReturn(BaseModel):
+    """單一類股當日報酬(市場廣度用)。"""
+
+    sector: str
+    change_pct: float
+
+
 class RegimeMetrics(BaseModel):
     """市場 regime 的數值輸入(自算衍生指標)。
 
@@ -83,3 +98,6 @@ class Snapshot(BaseModel):
     regime: RegimeMetrics = RegimeMetrics()
     reference_vol: float = 0.15
     leverage_math: list[LeverageMath] = []
+    yield_curve: list[YieldPoint] = []
+    sector_returns: list[SectorReturn] = []
+    vix_history: list[float] = []

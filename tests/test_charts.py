@@ -5,10 +5,22 @@ import datetime as dt
 import pytest
 from pydantic import ValidationError
 
-from pmb.charts.library import render_index_overnight_grid, render_leverage_decay
+from pmb.charts.library import (
+    render_breadth,
+    render_index_overnight_grid,
+    render_leverage_decay,
+    render_vix_regime,
+    render_yield_curve,
+)
 from pmb.charts.select import render_chart
 from pmb.schemas.chart import ChartSpec
-from pmb.schemas.snapshot import LeverageMath, Quote, Snapshot
+from pmb.schemas.snapshot import (
+    LeverageMath,
+    Quote,
+    SectorReturn,
+    Snapshot,
+    YieldPoint,
+)
 
 
 def _snapshot() -> Snapshot:
@@ -37,6 +49,18 @@ def _snapshot() -> Snapshot:
                 drag_3x=0.2950,
             ),
         ],
+        vix_history=[22.0, 20.5, 19.0, 18.2, 17.1, 16.4],
+        yield_curve=[
+            YieldPoint(label="3M", months=3, value=4.30),
+            YieldPoint(label="2Y", months=24, value=4.20),
+            YieldPoint(label="10Y", months=120, value=4.49),
+            YieldPoint(label="30Y", months=360, value=4.70),
+        ],
+        sector_returns=[
+            SectorReturn(sector="科技", change_pct=2.1),
+            SectorReturn(sector="能源", change_pct=-0.8),
+            SectorReturn(sector="金融", change_pct=0.5),
+        ],
     )
 
 
@@ -63,6 +87,24 @@ def test_render_leverage_decay_writes_png(tmp_path):
 def test_render_index_overnight_grid_writes_png(tmp_path):
     out = tmp_path / "grid.png"
     render_index_overnight_grid(out, _snapshot().indices, {})
+    assert out.exists() and out.stat().st_size > 0
+
+
+def test_render_vix_regime_writes_png(tmp_path):
+    out = tmp_path / "vix.png"
+    render_vix_regime(out, _snapshot().vix_history, {"bands": [15, 20, 30]})
+    assert out.exists() and out.stat().st_size > 0
+
+
+def test_render_yield_curve_writes_png(tmp_path):
+    out = tmp_path / "curve.png"
+    render_yield_curve(out, _snapshot().yield_curve, {})
+    assert out.exists() and out.stat().st_size > 0
+
+
+def test_render_breadth_writes_png(tmp_path):
+    out = tmp_path / "breadth.png"
+    render_breadth(out, _snapshot().sector_returns, {})
     assert out.exists() and out.stat().st_size > 0
 
 

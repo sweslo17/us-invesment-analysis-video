@@ -45,6 +45,21 @@ SECTOR_ETFS: list[str] = [
     "XLK", "XLF", "XLE", "XLV", "XLY", "XLP", "XLI", "XLB", "XLRE", "XLU", "XLC",
 ]
 
+SECTOR_LABELS: dict[str, str] = {
+    "XLK": "科技", "XLF": "金融", "XLE": "能源", "XLV": "醫療", "XLY": "非必需消費",
+    "XLP": "必需消費", "XLI": "工業", "XLB": "原物料", "XLRE": "房地產",
+    "XLU": "公用事業", "XLC": "通訊服務",
+}
+
+# 殖利率曲線到期點:(FRED series_id, 顯示標籤, 月數)
+YIELD_CURVE_SERIES: list[tuple[str, str, int]] = [
+    ("DGS3MO", "3M", 3),
+    ("DGS2", "2Y", 24),
+    ("DGS5", "5Y", 60),
+    ("DGS10", "10Y", 120),
+    ("DGS30", "30Y", 360),
+]
+
 # (series_id, 顯示名稱, 單位)
 FRED_SERIES: list[tuple[str, str, str | None]] = [
     ("DGS10", "10 年期公債殖利率", "percent"),

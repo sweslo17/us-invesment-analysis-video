@@ -11,7 +11,13 @@ from pathlib import Path
 
 from loguru import logger
 
-from pmb.charts.library import render_index_overnight_grid, render_leverage_decay
+from pmb.charts.library import (
+    render_breadth,
+    render_index_overnight_grid,
+    render_leverage_decay,
+    render_vix_regime,
+    render_yield_curve,
+)
 from pmb.schemas.chart import ChartSpec
 from pmb.schemas.snapshot import Snapshot
 
@@ -23,6 +29,9 @@ _RENDERERS: dict[str, Callable[[Path, Snapshot, dict], Path]] = {
     "index_overnight_grid": lambda out, snap, params: render_index_overnight_grid(
         out, snap.indices, params
     ),
+    "vix_regime": lambda out, snap, params: render_vix_regime(out, snap.vix_history, params),
+    "yield_curve": lambda out, snap, params: render_yield_curve(out, snap.yield_curve, params),
+    "breadth": lambda out, snap, params: render_breadth(out, snap.sector_returns, params),
 }
 
 
