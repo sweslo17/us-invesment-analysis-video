@@ -43,6 +43,10 @@ class Settings(BaseSettings):
     slogan_intro: str = "30 秒看懂今天美股盤前"
     slogan_outro: str = "每天盤前見,記得追蹤;非投資建議"
 
+    # 影片字幕 CJK 字型:雲端 Linux 預設 Noto(setup 裝 fonts-noto-cjk);
+    # 本機 macOS 在 .env 設 VIDEO_FONT=PingFang TC
+    video_font: str = "Noto Sans CJK TC"
+
     def ensure_dirs(self) -> None:
         """確保 runtime 產出目錄存在。"""
         self.artifacts_dir.mkdir(parents=True, exist_ok=True)

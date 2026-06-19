@@ -47,8 +47,8 @@ _ASS_TEMPLATE = "\n".join(
         "",
         "[V4+ Styles]",
         _STYLE_FORMAT,
-        "Style: sub,PingFang TC,62,&H00FFFFFF,&H00000000,&HA0000000,1,3,6,0,2,70,70,230",
-        "Style: title,PingFang TC,120,&H0066D9FF,&H00202020,&H00000000,1,1,7,0,8,40,40,64",
+        "Style: sub,{font},62,&H00FFFFFF,&H00000000,&HA0000000,1,3,6,0,2,70,70,230",
+        "Style: title,{font},120,&H0066D9FF,&H00202020,&H00000000,1,1,7,0,8,40,40,64",
         "",
         "[Events]",
         _EVENT_FORMAT,
@@ -116,13 +116,18 @@ def _ass_time(seconds: float) -> str:
     return f"{h}:{m:02d}:{s:02d}.{cs:02d}"
 
 
-def build_ass(sentence: str, duration: float, *, title: str | None = None) -> str:
-    """組一段子片用的 .ass:底部逐句字幕 + (選配)頂部主題標題,皆全片長顯示。"""
+def build_ass(
+    sentence: str, duration: float, *, title: str | None = None, font: str = "Noto Sans CJK TC"
+) -> str:
+    """組一段子片用的 .ass:底部逐句字幕 + (選配)頂部主題標題,皆全片長顯示。
+
+    ``font`` 為 CJK 字型名(雲端 Linux 用 Noto Sans CJK TC,本機 macOS 用 PingFang TC)。
+    """
     end = _ass_time(duration)
     events = [f"Dialogue: 0,0:00:00.00,{end},sub,,0,0,0,,{wrap_caption(sentence)}"]
     if title:
         events.append(f"Dialogue: 0,0:00:00.00,{end},title,,0,0,0,,{title}")
-    return _ASS_TEMPLATE.format(events="\n".join(events))
+    return _ASS_TEMPLATE.format(font=font, events="\n".join(events))
 
 
 def segment_timeline(durations: list[float]) -> tuple[list[float], float]:
@@ -181,6 +186,7 @@ def assemble_video(
     *,
     synth_fn: SynthFn,
     work_dir: str | Path,
+    font: str = "Noto Sans CJK TC",
 ) -> Path:
     """合成直式短影片並回傳 mp4 路徑。段內逐句配音 + 逐句字幕。"""
     out_path = Path(out_path).resolve()
@@ -215,7 +221,7 @@ def assemble_video(
             result = synth_fn(sentence, work_dir / audio_name, planned_each)
             ass_name = f"s{i}_{j}.ass"
             (work_dir / ass_name).write_text(
-                build_ass(sentence, result.duration, title=seg.title), encoding="utf-8"
+                build_ass(sentence, result.duration, title=seg.title, font=font), encoding="utf-8"
             )
             clip_name = f"c{i}_{j}.mp4"
             _make_subclip(chart, audio_name, ass_name, clip_name, result.duration, work_dir)

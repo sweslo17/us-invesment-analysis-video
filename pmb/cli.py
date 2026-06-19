@@ -282,7 +282,9 @@ def cmd_assemble(args: argparse.Namespace) -> int:
 
     out_path = settings.artifacts_dir / f"video_{target}.mp4"
     work_dir = settings.artifacts_dir / f"video_{target}_work"
-    assemble_video(script, snapshot, out_path, synth_fn=synth_fn, work_dir=work_dir)
+    assemble_video(
+        script, snapshot, out_path, synth_fn=synth_fn, work_dir=work_dir, font=settings.video_font
+    )
 
     duration = probe_duration(out_path)
     print(f"影片合成完成:{out_path}({duration:.1f}s,{len(script.segments)} 段)")

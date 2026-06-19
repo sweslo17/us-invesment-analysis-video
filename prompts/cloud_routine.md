@@ -6,6 +6,27 @@
 
 ---
 
+## 雲端環境前置需求(部署前必做,否則跑不完)
+
+雲端 routine 跑在 Anthropic 的 Ubuntu 24.04 沙箱,**預設網路是 Trusted(擋未列名網域)、無 ffmpeg、無 CJK 字型**。建立 routine 的 environment 時要設定:
+
+1. **網路出口改 Custom,allowlist 這些網域**(否則 fetch / 配音失敗):
+   - `query1.finance.yahoo.com`、`query2.finance.yahoo.com`、`fc.yahoo.com`、`*.finance.yahoo.com`(yfinance)
+   - `api.stlouisfed.org`(FRED)
+   - `speech.platform.bing.com`、`*.bing.com`(edge-tts 配音)
+   - 勾「包含常見套件管理器預設清單」(pip/apt)
+2. **setup script(只跑一次、會快取)裝 ffmpeg + CJK 字型**:
+   ```bash
+   apt-get update && apt-get install -y ffmpeg fonts-noto-cjk
+   ```
+   裝了 `fonts-noto-cjk` 後,圖表(matplotlib)與字幕(libass)的中文才不會變豆腐方塊;`video_font` 預設就是 `Noto Sans CJK TC`。
+3. **環境變數**:`FRED_API_KEY=...`(雲端環境變數是明文,只放這種可輪替的低敏感 key)。研究用 web search,**不需要 ANTHROPIC_API_KEY**。**YouTube OAuth 不要放雲端**(見下方發布)。
+4. **跨日狀態**:routine 每次從 repo 預設分支重新 clone、`artifacts/` 不保留。要讓 thesis 與去重跨日生效,routine 結束要把 `state/thesis.json`(+ 當日 brief)**commit/push**,經人工 gate 合併回主分支,隔天才讀得到。
+
+> **建議的分工(風險最低)**:雲端 routine 只做 **fetch + 研究 + commit 產物**(只需 yahoo/fred/web search,完全不碰 ffmpeg/edge-tts/字型/OAuth);**影片合成 + 發布在你信任的機器/CI** 上 `pmb assemble` + `pmb publish --approve`(影片可由 committed 的 script+snapshot 確定性重建,不必經 git 傳 mp4)。
+
+---
+
 ## 每次執行,依序做這些
 
 1. **取數(確定性)**:在 repo 根目錄執行 `poetry run pmb fetch`。
