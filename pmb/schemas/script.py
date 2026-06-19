@@ -20,6 +20,7 @@ class Segment(BaseModel):
     vo: str  # 旁白逐字稿
     chart_id: str | None = None
     headline: str | None = None
+    title: str | None = None  # 圖表段頂部標題(主題);標題卡不需要
     t_start: float
     duration: float
 

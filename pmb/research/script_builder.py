@@ -7,24 +7,34 @@
 
 from __future__ import annotations
 
-from pmb.schemas.brief import Brief, Regime
+from pmb.schemas.brief import Brief
 from pmb.schemas.chart import ChartSpec
 from pmb.schemas.script import Script, Segment
 
+# 圖表段頂部主題標題(放畫面上方,與底部字幕分開)
+_CHART_TITLES: dict[str, str] = {
+    "index_overnight_grid": "四大指數",
+    "breadth": "類股輪動",
+    "vix_regime": "恐慌指數 VIX",
+    "yield_curve": "殖利率曲線",
+    "rates_trend": "10 年期殖利率",
+    "stock_bond_corr": "股債相關",
+    "econ_print": "總經數據",
+    "leverage_decay": "槓桿耗損",
+}
 
-def _regime_chart_module(regime: Regime) -> str:
-    """依 regime 規則挑一張最能幫觀眾理解今天市場的圖。"""
-    if regime.rates == "rising":
-        return "yield_curve"
-    if regime.vol in ("elevated", "high"):
-        return "vix_regime"
-    if regime.stock_bond_corr == "positive":
-        return "stock_bond_corr"
-    return "vix_regime"
+_DEFAULT_INTRO = "30 秒看懂今天美股盤前"
+_DEFAULT_OUTRO = "每天盤前見,記得追蹤;非投資建議"
 
 
 def build_script_from_brief(
-    brief: Brief, *, total_seconds: float = 30.0, max_charts: int = 6, max_cards: int = 3
+    brief: Brief,
+    *,
+    total_seconds: float = 30.0,
+    max_charts: int = 6,
+    max_cards: int = 3,
+    intro_slogan: str = _DEFAULT_INTRO,
+    outro_slogan: str = _DEFAULT_OUTRO,
 ) -> Script:
     """回傳一份合法、**高視覺變化**的直式短影片講稿。
 
@@ -75,26 +85,43 @@ def build_script_from_brief(
         ordered = [ordered[0], *ordered[1:-1][: max_charts - 2], ordered[-1]]
 
     charts = [ChartSpec(id=f"c{i}", module=module) for i, (module, _) in enumerate(ordered)]
-
-    # 開場時事標題卡(取 top item 標題,快速閃過,增加視覺變化)
     card_texts = [it.headline for it in items[:max_cards]]
+
+    # 時長配置:卡片/slogan 各 2s 快閃,其餘平分給圖表段
     card_dur = 2.0
-    charts_total = max(total_seconds - len(card_texts) * card_dur, float(len(ordered)))
+    n_cardlike = len(card_texts) + 2  # + 開頭/結尾 slogan
+    charts_total = max(total_seconds - n_cardlike * card_dur, float(len(ordered)))
     per_chart = charts_total / len(ordered)
 
-    segments: list[Segment] = []
-    cursor = 0.0
-    for text in card_texts:
-        segments.append(
-            Segment(vo=text, headline=text, t_start=round(cursor, 3), duration=card_dur)
-        )
-        cursor += card_dur
-    for i, (_, vo) in enumerate(ordered):
-        segments.append(
-            Segment(
-                vo=vo, chart_id=charts[i].id, t_start=round(cursor, 3), duration=round(per_chart, 3)
-            )
-        )
-        cursor += per_chart
+    def card(text: str) -> Segment:
+        return Segment(vo=text, headline=text, t_start=0.0, duration=card_dur)
 
-    return Script(segments=segments, charts=charts)
+    def chart_seg(idx: int, module: str, vo: str) -> Segment:
+        return Segment(
+            vo=vo,
+            chart_id=charts[idx].id,
+            title=_CHART_TITLES.get(module),
+            t_start=0.0,
+            duration=per_chart,
+        )
+
+    # 編排:開頭 slogan →(時事卡、圖表交錯)→ 結尾 slogan,讓視覺一直變
+    sequence: list[Segment] = [card(intro_slogan)]
+    ci = 0
+    for idx, (module, vo) in enumerate(ordered):
+        if ci < len(card_texts):
+            sequence.append(card(card_texts[ci]))
+            ci += 1
+        sequence.append(chart_seg(idx, module, vo))
+    while ci < len(card_texts):
+        sequence.append(card(card_texts[ci]))
+        ci += 1
+    sequence.append(card(outro_slogan))
+
+    cursor = 0.0
+    for seg in sequence:
+        seg.t_start = round(cursor, 3)
+        seg.duration = round(seg.duration, 3)
+        cursor += seg.duration
+
+    return Script(segments=sequence, charts=charts)

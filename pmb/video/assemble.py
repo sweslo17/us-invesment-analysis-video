@@ -26,12 +26,35 @@ SynthFn = Callable[[str, Path, float], SynthResult]
 _WIDTH, _HEIGHT = 1080, 1920
 _BG = "0x0D1B2A"
 _CHART_W = 1040
-_CHART_Y = 430
-# 字幕樣式(ASS):置中、半透明黑底框、白粗體;字幕 ≠ 圖表標題,且逐句播放
-_SUB_STYLE = (
-    "Alignment=2,MarginV=115,FontName=PingFang TC,Fontsize=14,"
-    "PrimaryColour=&H00FFFFFF,BorderStyle=3,Outline=4,Shadow=0,"
-    "BackColour=&HC0101010,Bold=1"
+_CHART_Y = 560  # 圖表置於畫面中段(上方留給標題、下方留給字幕)
+# 用 .ass 並指定 PlayResY=1920,字級/邊界都以實際像素計(避免 SRT force_style 的 288 縮放)。
+# 字幕在底(Alignment=2)、標題在頂(Alignment=8),都不蓋到中間的圖表。
+_STYLE_FORMAT = (
+    "Format: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, "
+    "Bold, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV"
+)
+_EVENT_FORMAT = (
+    "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
+)
+_ASS_TEMPLATE = "\n".join(
+    [
+        "[Script Info]",
+        "ScriptType: v4.00+",
+        "PlayResX: 1080",
+        "PlayResY: 1920",
+        "WrapStyle: 0",
+        "ScaledBorderAndShadow: yes",
+        "",
+        "[V4+ Styles]",
+        _STYLE_FORMAT,
+        "Style: sub,PingFang TC,60,&H00FFFFFF,&H00000000,&HA0000000,1,3,6,0,2,70,70,230",
+        "Style: title,PingFang TC,54,&H0066D9FF,&H00202020,&H00000000,1,1,4,0,8,60,60,90",
+        "",
+        "[Events]",
+        _EVENT_FORMAT,
+        "{events}",
+        "",
+    ]
 )
 
 # 句尾標點不含 ASCII 句點「.」,否則 3.8% 這類小數會被誤切
@@ -62,6 +85,23 @@ def build_srt(cues: list[tuple[str, float, float]]) -> str:
     return "\n".join(blocks)
 
 
+def _ass_time(seconds: float) -> str:
+    cs = int(round(seconds * 100))
+    h, cs = divmod(cs, 360000)
+    m, cs = divmod(cs, 6000)
+    s, cs = divmod(cs, 100)
+    return f"{h}:{m:02d}:{s:02d}.{cs:02d}"
+
+
+def build_ass(sentence: str, duration: float, *, title: str | None = None) -> str:
+    """組一段子片用的 .ass:底部逐句字幕 + (選配)頂部主題標題,皆全片長顯示。"""
+    end = _ass_time(duration)
+    events = [f"Dialogue: 0,0:00:00.00,{end},sub,,0,0,0,,{sentence}"]
+    if title:
+        events.append(f"Dialogue: 0,0:00:00.00,{end},title,,0,0,0,,{title}")
+    return _ASS_TEMPLATE.format(events="\n".join(events))
+
+
 def segment_timeline(durations: list[float]) -> tuple[list[float], float]:
     """由各段實際長度算累積起點與總長。"""
     starts: list[float] = []
@@ -79,18 +119,18 @@ def _run_ffmpeg(args: list[str], cwd: Path) -> None:
         raise RuntimeError(f"ffmpeg 失敗(rc={proc.returncode})")
 
 
-def _make_subclip(image: str, audio: str, srt: str, out: str, duration: float, cwd: Path) -> None:
-    """單句子片:直式畫布 = 深色底 + 上方圖表 + 下方逐句字幕,配該句語音。"""
-    filter_complex = (
+def _make_subclip(image: str, audio: str, ass: str, out: str, duration: float, cwd: Path) -> None:
+    """單句子片:直式畫布 = 上方主題標題 + 中間圖表 + 下方逐句字幕(互不重疊),配該句語音。"""
+    chain = (
         f"color=c={_BG}:s={_WIDTH}x{_HEIGHT}:d={duration}[bg];"
         f"[0:v]scale={_CHART_W}:-1[ch];"
-        f"[bg][ch]overlay=(W-w)/2:{_CHART_Y}[bgc];"
-        f"[bgc]subtitles={srt}:force_style='{_SUB_STYLE}',setsar=1[v]"
+        f"[bg][ch]overlay=(W-w)/2:{_CHART_Y}[v0];"
+        f"[v0]subtitles={ass},setsar=1[v]"
     )
     _run_ffmpeg(
         [
             "ffmpeg", "-y", "-loop", "1", "-i", image, "-i", audio,
-            "-filter_complex", filter_complex,
+            "-filter_complex", chain,
             "-map", "[v]", "-map", "1:a", "-t", f"{duration}", "-r", "25",
             "-c:v", "libx264", "-pix_fmt", "yuv420p", "-c:a", "aac", "-shortest", out,
         ],
@@ -147,12 +187,12 @@ def assemble_video(
         for j, sentence in enumerate(sentences):
             audio_name = f"s{i}_{j}.mp3"
             result = synth_fn(sentence, work_dir / audio_name, planned_each)
-            srt_name = f"s{i}_{j}.srt"
-            (work_dir / srt_name).write_text(
-                build_srt([(sentence, 0.0, result.duration)]), encoding="utf-8"
+            ass_name = f"s{i}_{j}.ass"
+            (work_dir / ass_name).write_text(
+                build_ass(sentence, result.duration, title=seg.title), encoding="utf-8"
             )
             clip_name = f"c{i}_{j}.mp4"
-            _make_subclip(chart, audio_name, srt_name, clip_name, result.duration, work_dir)
+            _make_subclip(chart, audio_name, ass_name, clip_name, result.duration, work_dir)
             clip_names.append(clip_name)
 
     listing = work_dir / "clips.txt"
