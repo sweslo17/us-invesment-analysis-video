@@ -60,3 +60,13 @@ def test_upload_without_approve_never_calls_network(tmp_path):
     # approve=False 路徑不得需要任何憑證/網路:沒給 settings 也能跑
     result = upload_video(tmp_path / "v.mp4", title="t", description="d", approve=False)
     assert result["published"] is False
+
+
+def test_upload_privacy_is_recorded_and_never_public_by_default(tmp_path):
+    # 可見度可設(private/unlisted),且預設不是 public(絕不自動公開)
+    result = upload_video(
+        tmp_path / "v.mp4", title="t", description="d", privacy="unlisted", approve=False
+    )
+    assert result["privacy"] == "unlisted"
+    default = upload_video(tmp_path / "v.mp4", title="t", description="d", approve=False)
+    assert default["privacy"] != "public"

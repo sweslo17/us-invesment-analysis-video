@@ -10,6 +10,7 @@ import argparse
 import datetime as dt
 import sys
 from collections.abc import Callable
+from pathlib import Path
 from zoneinfo import ZoneInfo
 
 from loguru import logger
@@ -299,7 +300,11 @@ def cmd_assemble(args: argparse.Namespace) -> int:
 
 
 def cmd_run(args: argparse.Namespace) -> int:
-    """全流程(開發用):fetch → research → assemble → 人工 gate。絕不自動發布。"""
+    """全流程:fetch → research → assemble → gate。
+
+    預設停在 gate(不上傳)。加 ``--approve`` 則跑完直接上傳 YouTube(以 ``private``,
+    絕不自動公開)——人工只需到 Studio 改成公開。
+    """
     settings = get_settings()
     settings.ensure_dirs()
     explicit = dt.date.fromisoformat(args.date) if args.date else None
@@ -319,6 +324,10 @@ def cmd_run(args: argparse.Namespace) -> int:
     build_review_manifest(target, settings.artifacts_dir)
     print()
     print(review_summary(target, settings.artifacts_dir))
+
+    if getattr(args, "approve", False):
+        print()
+        return cmd_publish(argparse.Namespace(date=date_arg, approve=True))
     return 0
 
 
@@ -340,17 +349,27 @@ def cmd_publish(args: argparse.Namespace) -> int:
 
     brief = Brief.model_validate_json(brief_path.read_text(encoding="utf-8"))
     title, description = build_youtube_metadata(brief, channel_name=settings.channel_name)
+
+    # --approve 但沒憑證時,優雅退回 dry-run(排程不會炸),並提示如何取得憑證
+    approve = args.approve
+    if approve and not settings.youtube_refresh_token:
+        approve = False
+        print("⚠️ 指定 --approve 但缺 YouTube OAuth 憑證,退回 dry-run。")
+        print("   先跑一次:pmb auth-youtube --client-secrets <桌面用戶端.json>")
+
     result = upload_video(
         video,
         title=title,
         description=description,
-        approve=args.approve,
+        privacy=settings.youtube_privacy,
+        approve=approve,
         manifest_path=settings.artifacts_dir / f"publish_{target}.json",
         settings=settings,
     )
 
     if result["published"]:
-        print(f"✅ 已上傳 YouTube:{result.get('video_id')}")
+        print(f"✅ 已上傳 YouTube(可見度 {settings.youtube_privacy}):{result.get('video_id')}")
+        print("   → 到 YouTube Studio 確認後,手動改成『公開』即可。")
     else:
         print(f"[dry-run] 未發布。標題:{title}")
         print(f"  manifest:{settings.artifacts_dir / f'publish_{target}.json'}")
@@ -358,6 +377,28 @@ def cmd_publish(args: argparse.Namespace) -> int:
     report_path = settings.artifacts_dir / f"report_{target}.md"
     print(f"  報告(人工貼上):{report_path}")
     print("※ 本內容為市場資訊與風險教育,非投資建議。")
+    return 0
+
+
+def cmd_auth_youtube(args: argparse.Namespace) -> int:
+    """一次性:跑 OAuth 同意流程,印出 refresh token 供貼進 .env(密鑰不入庫)。"""
+    secrets = Path(args.client_secrets)
+    if not secrets.exists():
+        print(f"找不到 OAuth 用戶端 JSON:{secrets}")
+        print("到 Google Cloud Console → API 與服務 → 憑證 → 建立「OAuth 用戶端 ID")
+        print("(應用程式類型:桌面應用程式)」,下載 JSON 後再跑本指令。")
+        return 1
+
+    from google_auth_oauthlib.flow import InstalledAppFlow
+
+    scopes = ["https://www.googleapis.com/auth/youtube.upload"]
+    flow = InstalledAppFlow.from_client_secrets_file(str(secrets), scopes=scopes)
+    creds = flow.run_local_server(port=args.port)
+    print("\n✅ OAuth 完成。把下面三行貼進 .env(.gitignore 已排除,勿提交):\n")
+    print(f"YOUTUBE_CLIENT_ID={creds.client_id}")
+    print(f"YOUTUBE_CLIENT_SECRET={creds.client_secret}")
+    print(f"YOUTUBE_REFRESH_TOKEN={creds.refresh_token}")
+    print("\n之後 pmb publish --approve(或 pmb run --approve)即會以 private 自動上傳。")
     return 0
 
 
@@ -397,10 +438,18 @@ def build_parser() -> argparse.ArgumentParser:
     publish.add_argument("--approve", action="store_true", help="人工放行:實際上傳 YouTube")
     publish.set_defaults(func=cmd_publish)
 
-    run = sub.add_parser("run", help="全流程 fetch→research→assemble→gate(不自動發布)")
+    run = sub.add_parser("run", help="全流程 fetch→research→assemble→gate(預設不上傳)")
     run.add_argument("--date", help="指定交易日 YYYY-MM-DD")
     run.add_argument("--dry-run", action="store_true", help="研究用範例、配音用靜音(不打 LLM/TTS)")
+    run.add_argument(
+        "--approve", action="store_true", help="跑完直接上傳 YouTube(private,需手動改公開)"
+    )
     run.set_defaults(func=cmd_run)
+
+    authyt = sub.add_parser("auth-youtube", help="一次性:取得 YouTube OAuth refresh token")
+    authyt.add_argument("--client-secrets", required=True, help="OAuth 桌面用戶端 JSON 路徑")
+    authyt.add_argument("--port", type=int, default=0, help="本機回呼埠(預設自動選)")
+    authyt.set_defaults(func=cmd_auth_youtube)
 
     return parser
 

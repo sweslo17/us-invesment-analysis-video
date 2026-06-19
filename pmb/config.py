@@ -27,6 +27,8 @@ class Settings(BaseSettings):
     youtube_client_id: str | None = None
     youtube_client_secret: str | None = None
     youtube_refresh_token: str | None = None
+    # 自動上傳的可見度:固定 private/unlisted,人工再到 Studio 改 public(絕不自動公開)
+    youtube_privacy: str = "private"
 
     # 路徑
     artifacts_dir: Path = Path("artifacts")
