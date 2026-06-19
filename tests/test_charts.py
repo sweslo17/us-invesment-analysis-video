@@ -1,20 +1,25 @@
 """圖表模組庫測試:spec 驗證、render 產 PNG、選圖 dispatch、非法模組/參數被擋。"""
 
 import datetime as dt
+from typing import get_args
 
 import pytest
 from pydantic import ValidationError
 
 from pmb.charts.library import (
     render_breadth,
+    render_econ_print,
     render_index_overnight_grid,
     render_leverage_decay,
+    render_rates_trend,
+    render_stock_bond_corr,
     render_vix_regime,
     render_yield_curve,
 )
-from pmb.charts.select import render_chart
-from pmb.schemas.chart import ChartSpec
+from pmb.charts.select import implemented_modules, render_chart
+from pmb.schemas.chart import ChartModule, ChartSpec
 from pmb.schemas.snapshot import (
+    EconSeries,
     LeverageMath,
     Quote,
     SectorReturn,
@@ -61,6 +66,9 @@ def _snapshot() -> Snapshot:
             SectorReturn(sector="能源", change_pct=-0.8),
             SectorReturn(sector="金融", change_pct=0.5),
         ],
+        tnx_history=[4.30, 4.35, 4.42, 4.49, 4.45],
+        stock_bond_corr_history=[0.2, 0.35, 0.5, 0.53],
+        econ_series=EconSeries(label="失業率 (%)", values=[4.0, 4.1, 4.2, 4.3]),
     )
 
 
@@ -108,6 +116,24 @@ def test_render_breadth_writes_png(tmp_path):
     assert out.exists() and out.stat().st_size > 0
 
 
+def test_render_rates_trend_writes_png(tmp_path):
+    out = tmp_path / "rates.png"
+    render_rates_trend(out, _snapshot().tnx_history, {})
+    assert out.exists() and out.stat().st_size > 0
+
+
+def test_render_stock_bond_corr_writes_png(tmp_path):
+    out = tmp_path / "corr.png"
+    render_stock_bond_corr(out, _snapshot().stock_bond_corr_history, {})
+    assert out.exists() and out.stat().st_size > 0
+
+
+def test_render_econ_print_writes_png(tmp_path):
+    out = tmp_path / "econ.png"
+    render_econ_print(out, _snapshot().econ_series, {})
+    assert out.exists() and out.stat().st_size > 0
+
+
 # --- 選圖 dispatch ---
 
 def test_render_chart_dispatches_to_module(tmp_path):
@@ -117,8 +143,6 @@ def test_render_chart_dispatches_to_module(tmp_path):
     assert path.name == "lev.png"
 
 
-def test_render_chart_rejects_unimplemented_module(tmp_path):
-    # econ_print 在 Literal 內合法,但本階段尚未實作 → 應明確擋下
-    spec = ChartSpec(id="e", module="econ_print")
-    with pytest.raises(NotImplementedError):
-        render_chart(spec, _snapshot(), tmp_path)
+def test_every_chart_module_has_a_renderer():
+    # 固定模組庫(Literal)的每個模組都要有對應 render,不能有缺口
+    assert set(get_args(ChartModule)) == set(implemented_modules())

@@ -51,6 +51,9 @@ SECTOR_LABELS: dict[str, str] = {
     "XLU": "公用事業", "XLC": "通訊服務",
 }
 
+# econ_print 圖表的預設總經序列:(FRED series_id, 顯示標籤)
+ECON_PRINT_SERIES: tuple[str, str] = ("UNRATE", "失業率 (%)")
+
 # 殖利率曲線到期點:(FRED series_id, 顯示標籤, 月數)
 YIELD_CURVE_SERIES: list[tuple[str, str, int]] = [
     ("DGS3MO", "3M", 3),

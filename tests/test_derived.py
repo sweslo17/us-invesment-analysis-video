@@ -7,6 +7,7 @@ from pmb.data.derived import (
     pct_above_ma,
     pct_positive,
     realized_volatility,
+    rolling_stock_bond_correlation,
     stock_bond_correlation,
     vol_target_leverage,
     volatility_drag,
@@ -40,6 +41,13 @@ def test_stock_bond_correlation_opposite_returns_is_minus_one():
     bond_ret = -s.pct_change()
     bond = (1 + bond_ret.fillna(0)).cumprod() * 100
     assert stock_bond_correlation(s, bond, window=6) == pytest.approx(-1.0)
+
+
+def test_rolling_stock_bond_correlation_returns_series_ending_near_one():
+    s = pd.Series([100, 102, 101, 105, 103, 108, 107, 110], dtype=float)
+    out = rolling_stock_bond_correlation(s, s.copy(), window=4)
+    assert len(out) >= 1
+    assert out.iloc[-1] == pytest.approx(1.0)
 
 
 def test_pct_above_ma_counts_fraction_above_moving_average():

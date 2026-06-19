@@ -67,6 +67,17 @@ def volatility_drag(realized_vol: float, leverage: float) -> float:
     return (leverage**2) * (realized_vol**2) / 2.0
 
 
+def rolling_stock_bond_correlation(
+    stock_prices: pd.Series,
+    bond_prices: pd.Series,
+    window: int = 20,
+) -> pd.Series:
+    """股債日報酬的滾動相關係數**序列**(供 stock_bond_corr 圖表畫趨勢)。"""
+    stock_returns = stock_prices.pct_change()
+    bond_returns = bond_prices.pct_change()
+    return stock_returns.rolling(window).corr(bond_returns).dropna()
+
+
 def pct_above_ma(prices: pd.DataFrame, window: int = 50) -> float:
     """市場廣度:最後一日收在自身 ``window`` 期均線之上的比例(0~1)。"""
     ma = prices.rolling(window).mean().iloc[-1]

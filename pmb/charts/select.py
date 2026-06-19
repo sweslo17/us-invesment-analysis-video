@@ -13,8 +13,11 @@ from loguru import logger
 
 from pmb.charts.library import (
     render_breadth,
+    render_econ_print,
     render_index_overnight_grid,
     render_leverage_decay,
+    render_rates_trend,
+    render_stock_bond_corr,
     render_vix_regime,
     render_yield_curve,
 )
@@ -32,6 +35,11 @@ _RENDERERS: dict[str, Callable[[Path, Snapshot, dict], Path]] = {
     "vix_regime": lambda out, snap, params: render_vix_regime(out, snap.vix_history, params),
     "yield_curve": lambda out, snap, params: render_yield_curve(out, snap.yield_curve, params),
     "breadth": lambda out, snap, params: render_breadth(out, snap.sector_returns, params),
+    "rates_trend": lambda out, snap, params: render_rates_trend(out, snap.tnx_history, params),
+    "stock_bond_corr": lambda out, snap, params: render_stock_bond_corr(
+        out, snap.stock_bond_corr_history, params
+    ),
+    "econ_print": lambda out, snap, params: render_econ_print(out, snap.econ_series, params),
 }
 
 

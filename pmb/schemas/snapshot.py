@@ -70,6 +70,13 @@ class SectorReturn(BaseModel):
     change_pct: float
 
 
+class EconSeries(BaseModel):
+    """總經序列(econ_print 圖表用):一條時間序列 + 標籤。"""
+
+    label: str
+    values: list[float] = []
+
+
 class RegimeMetrics(BaseModel):
     """市場 regime 的數值輸入(自算衍生指標)。
 
@@ -101,3 +108,6 @@ class Snapshot(BaseModel):
     yield_curve: list[YieldPoint] = []
     sector_returns: list[SectorReturn] = []
     vix_history: list[float] = []
+    tnx_history: list[float] = []
+    stock_bond_corr_history: list[float] = []
+    econ_series: EconSeries | None = None

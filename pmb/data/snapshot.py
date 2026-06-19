@@ -16,11 +16,13 @@ from pmb.data.derived import (
     pct_above_ma,
     pct_positive,
     realized_volatility,
+    rolling_stock_bond_correlation,
     stock_bond_correlation,
     vol_target_leverage,
     volatility_drag,
 )
 from pmb.schemas.snapshot import (
+    EconSeries,
     LeverageMath,
     Quote,
     RegimeMetrics,
@@ -155,8 +157,15 @@ def build_snapshot(
     macro = fred_client.get_observations(universe.FRED_SERIES)
 
     vix_ticker = universe.VIX[0]
+    tnx_ticker = universe.TREASURY_10Y[0]
     index_tickers = [t for t, _ in universe.INDEX_CASH]
-    history_tickers = [vix_ticker, universe.BOND_PROXY, *index_tickers, *universe.SECTOR_ETFS]
+    history_tickers = [
+        vix_ticker,
+        tnx_ticker,
+        universe.BOND_PROXY,
+        *index_tickers,
+        *universe.SECTOR_ETFS,
+    ]
     histories = yf_client.get_histories(history_tickers, period=history_period)
 
     regime = compute_regime(
@@ -169,12 +178,28 @@ def build_snapshot(
     )
     sector_returns = compute_sector_returns(histories, universe.SECTOR_ETFS)
     yield_curve = build_yield_curve(fred_client, universe.YIELD_CURVE_SERIES)
-    vix_series = histories.get(vix_ticker)
-    vix_history = (
-        [float(x) for x in vix_series.dropna().tail(vix_lookback)]
-        if vix_series is not None
-        else []
-    )
+
+    def _recent(ticker: str) -> list[float]:
+        series = histories.get(ticker)
+        return [] if series is None else [float(x) for x in series.dropna().tail(vix_lookback)]
+
+    vix_history = _recent(vix_ticker)
+    tnx_history = _recent(tnx_ticker)
+
+    stock_bond_corr_history: list[float] = []
+    if universe.STOCK_PROXY in histories and universe.BOND_PROXY in histories:
+        corr_series = rolling_stock_bond_correlation(
+            histories[universe.STOCK_PROXY], histories[universe.BOND_PROXY]
+        )
+        stock_bond_corr_history = [float(x) for x in corr_series.tail(vix_lookback)]
+
+    econ_id, econ_label = universe.ECON_PRINT_SERIES
+    try:
+        econ_values = fred_client.get_recent_values(econ_id, 24)
+        econ_series = EconSeries(label=econ_label, values=econ_values)
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("略過 econ_print 序列 {}:{}", econ_id, exc)
+        econ_series = None
 
     snapshot = Snapshot(
         session_date=session_date,
@@ -192,6 +217,9 @@ def build_snapshot(
         yield_curve=yield_curve,
         sector_returns=sector_returns,
         vix_history=vix_history,
+        tnx_history=tnx_history,
+        stock_bond_corr_history=stock_bond_corr_history,
+        econ_series=econ_series,
     )
     logger.info(
         "快照組裝完成:指數 {} 槓桿教育 {} 殖利率點 {} 類股 {} 總經 {} 筆",

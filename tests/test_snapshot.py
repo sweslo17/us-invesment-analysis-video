@@ -121,6 +121,9 @@ class _FakeFred:
             series_id=series_id, label=label, value=4.0, date=dt.date(2026, 6, 18), units=units
         )
 
+    def get_recent_values(self, series_id, n=24):
+        return [4.0, 4.1, 4.2, 4.3]
+
 
 def test_build_snapshot_wires_all_sections():
     idx = pd.date_range("2026-01-01", periods=60, freq="D")

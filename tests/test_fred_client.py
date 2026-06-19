@@ -71,6 +71,13 @@ def test_get_observations_skips_failing_series():
     assert [o.series_id for o in out] == ["GOOD"]
 
 
+def test_get_recent_values_drops_nan_and_takes_last_n():
+    s = _series([1.0, 2.0, np.nan, 4.0, 5.0],
+                ["2026-01-01", "2026-02-01", "2026-03-01", "2026-04-01", "2026-05-01"])
+    client = FredClient(series_provider=lambda sid: s)
+    assert client.get_recent_values("UNRATE", n=3) == [2.0, 4.0, 5.0]
+
+
 def test_default_provider_requires_api_key():
     client = FredClient(retries=1, retry_delay=0)  # 無 key、無注入 provider
     with pytest.raises(RuntimeError):

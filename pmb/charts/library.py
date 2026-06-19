@@ -16,7 +16,13 @@ matplotlib.use("Agg")  # 無 GUI 後端,供批次渲染
 import matplotlib.pyplot as plt  # noqa: E402
 from matplotlib import font_manager  # noqa: E402
 
-from pmb.schemas.snapshot import LeverageMath, Quote, SectorReturn, YieldPoint  # noqa: E402
+from pmb.schemas.snapshot import (  # noqa: E402
+    EconSeries,
+    LeverageMath,
+    Quote,
+    SectorReturn,
+    YieldPoint,
+)
 
 _POSITIVE = "#2e7d32"
 _NEGATIVE = "#c62828"
@@ -142,6 +148,92 @@ def render_breadth(
     ax.axvline(0, color="black", linewidth=0.8)
     ax.set_xlabel("當日漲跌 (%)")
     ax.set_title("類股表現(市場廣度)")
+    fig.tight_layout()
+    fig.savefig(out_path, dpi=120)
+    plt.close(fig)
+    return out_path
+
+
+def render_rates_trend(
+    out_path: str | Path,
+    tnx_history: Sequence[float],
+    params: dict | None = None,
+) -> Path:
+    """美國 10 年期公債殖利率走勢,標最新值。"""
+    out_path = Path(out_path)
+    fig, ax = plt.subplots(figsize=(7, 4))
+    ax.plot(range(len(tnx_history)), list(tnx_history), color="#00695c", linewidth=2)
+    if tnx_history:
+        ax.annotate(
+            f"{tnx_history[-1]:.2f}%",
+            (len(tnx_history) - 1, tnx_history[-1]),
+            fontsize=10,
+            fontweight="bold",
+            ha="right",
+        )
+    ax.set_xlabel("近期交易日")
+    ax.set_ylabel("10Y 殖利率 (%)")
+    ax.set_title("10 年期公債殖利率走勢")
+    ax.grid(True, alpha=0.3)
+    fig.tight_layout()
+    fig.savefig(out_path, dpi=120)
+    plt.close(fig)
+    return out_path
+
+
+def render_stock_bond_corr(
+    out_path: str | Path,
+    corr_history: Sequence[float],
+    params: dict | None = None,
+) -> Path:
+    """股債滾動相關係數走勢:正相關時分散效果失效(對所有投資人重要)。"""
+    out_path = Path(out_path)
+    fig, ax = plt.subplots(figsize=(7, 4))
+    ax.plot(range(len(corr_history)), list(corr_history), color="#ad1457", linewidth=2)
+    ax.axhline(0, color="black", linewidth=0.8)
+    ax.set_ylim(-1.05, 1.05)
+    if corr_history:
+        ax.annotate(
+            f"{corr_history[-1]:+.2f}",
+            (len(corr_history) - 1, corr_history[-1]),
+            fontsize=10,
+            fontweight="bold",
+            ha="right",
+        )
+    ax.set_xlabel("近期交易日")
+    ax.set_ylabel("股債相關係數")
+    ax.set_title("股債滾動相關性")
+    ax.grid(True, alpha=0.3)
+    fig.tight_layout()
+    fig.savefig(out_path, dpi=120)
+    plt.close(fig)
+    return out_path
+
+
+def render_econ_print(
+    out_path: str | Path,
+    econ_series: EconSeries | None,
+    params: dict | None = None,
+) -> Path:
+    """總經序列走勢,highlight 最新一筆數據。"""
+    out_path = Path(out_path)
+    fig, ax = plt.subplots(figsize=(7, 4))
+    values = list(econ_series.values) if econ_series else []
+    label = econ_series.label if econ_series else "總經序列"
+    ax.plot(range(len(values)), values, color="#ef6c00", linewidth=2)
+    if values:
+        ax.scatter([len(values) - 1], [values[-1]], color="#ef6c00", zorder=5)
+        ax.annotate(
+            f"{values[-1]:.2f}",
+            (len(values) - 1, values[-1]),
+            fontsize=10,
+            fontweight="bold",
+            ha="right",
+        )
+    ax.set_xlabel("近期期數")
+    ax.set_ylabel(label)
+    ax.set_title(f"{label}(highlight 最新)")
+    ax.grid(True, alpha=0.3)
     fig.tight_layout()
     fig.savefig(out_path, dpi=120)
     plt.close(fig)

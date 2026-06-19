@@ -63,6 +63,17 @@ class FredClient:
             prior_value=prior_value,
         )
 
+    def get_recent_values(self, series_id: str, n: int = 24) -> list[float]:
+        """序列最近 ``n`` 筆有效觀測值(去 NaN),供 econ_print 圖表畫趨勢。"""
+        series = call_with_retry(
+            lambda: self._series_provider(series_id),
+            retries=self.retries,
+            delay=self.retry_delay,
+            what=f"FRED series {series_id}",
+        )
+        clean = series.dropna().tail(n)
+        return [float(x) for x in clean]
+
     def get_observations(
         self, specs: Iterable[tuple[str, str, str | None]]
     ) -> list[FredObservation]:
