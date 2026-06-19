@@ -20,7 +20,9 @@ from pmb.data.calendar import is_trading_day
 from pmb.data.fred import FredClient
 from pmb.data.snapshot import build_snapshot
 from pmb.data.yfinance import YFinanceClient
+from pmb.orchestrator import build_review_manifest, review_summary
 from pmb.publish.report import render_report
+from pmb.publish.youtube import build_youtube_metadata, upload_video
 from pmb.research.dedup import load_previous_brief
 from pmb.research.runner import make_anthropic_caller, research_once
 from pmb.research.sample import sample_brief_json
@@ -287,6 +289,69 @@ def cmd_assemble(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_run(args: argparse.Namespace) -> int:
+    """全流程(開發用):fetch → research → assemble → 人工 gate。絕不自動發布。"""
+    settings = get_settings()
+    settings.ensure_dirs()
+    explicit = dt.date.fromisoformat(args.date) if args.date else None
+    target = resolve_fetch_target(today_eastern(), explicit)
+    if target is None:
+        print("今天非 NYSE 交易日,skip。")
+        return 0
+
+    date_arg = args.date or str(target)
+    logger.info("pmb run:{}(dry_run={})", target, args.dry_run)
+    cmd_fetch(argparse.Namespace(date=date_arg, json=False, dry_run=False))
+    if cmd_research(argparse.Namespace(date=date_arg, dry_run=args.dry_run)) != 0:
+        return 1
+    if cmd_assemble(argparse.Namespace(date=date_arg, dry_run=args.dry_run)) != 0:
+        return 1
+
+    build_review_manifest(target, settings.artifacts_dir)
+    print()
+    print(review_summary(target, settings.artifacts_dir))
+    return 0
+
+
+def cmd_publish(args: argparse.Namespace) -> int:
+    """發布(預設 dry-run / 需 --approve 放行)。報告走人工貼上,影片走 YouTube gate。"""
+    settings = get_settings()
+    settings.ensure_dirs()
+    explicit = dt.date.fromisoformat(args.date) if args.date else None
+    target = resolve_fetch_target(today_eastern(), explicit)
+    if target is None:
+        print("今天非 NYSE 交易日,skip。")
+        return 0
+
+    video = settings.artifacts_dir / f"video_{target}.mp4"
+    brief_path = settings.artifacts_dir / f"brief_{target}.json"
+    if not video.exists() or not brief_path.exists():
+        print(f"缺 video 或 brief({target}),請先跑 pmb run。")
+        return 1
+
+    brief = Brief.model_validate_json(brief_path.read_text(encoding="utf-8"))
+    title, description = build_youtube_metadata(brief)
+    result = upload_video(
+        video,
+        title=title,
+        description=description,
+        approve=args.approve,
+        manifest_path=settings.artifacts_dir / f"publish_{target}.json",
+        settings=settings,
+    )
+
+    if result["published"]:
+        print(f"✅ 已上傳 YouTube:{result.get('video_id')}")
+    else:
+        print(f"[dry-run] 未發布。標題:{title}")
+        print(f"  manifest:{settings.artifacts_dir / f'publish_{target}.json'}")
+        print("  要真正上傳:pmb publish --approve(需 YouTube OAuth 憑證)。")
+    report_path = settings.artifacts_dir / f"report_{target}.md"
+    print(f"  報告(人工貼上):{report_path}")
+    print("※ 本內容為市場資訊與風險教育,非投資建議。")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="pmb", description="Pre-Market Macro Brief CLI")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -317,6 +382,16 @@ def build_parser() -> argparse.ArgumentParser:
         "--dry-run", action="store_true", help="用靜音配音(不打 edge-tts),只驗證合成"
     )
     assemble.set_defaults(func=cmd_assemble)
+
+    publish = sub.add_parser("publish", help="發布(預設 dry-run;--approve 才上傳)")
+    publish.add_argument("--date", help="指定交易日 YYYY-MM-DD")
+    publish.add_argument("--approve", action="store_true", help="人工放行:實際上傳 YouTube")
+    publish.set_defaults(func=cmd_publish)
+
+    run = sub.add_parser("run", help="全流程 fetch→research→assemble→gate(不自動發布)")
+    run.add_argument("--date", help="指定交易日 YYYY-MM-DD")
+    run.add_argument("--dry-run", action="store_true", help="研究用範例、配音用靜音(不打 LLM/TTS)")
+    run.set_defaults(func=cmd_run)
 
     return parser
 

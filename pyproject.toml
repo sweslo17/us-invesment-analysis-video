@@ -19,6 +19,8 @@ anthropic = "^0.111.0"
 matplotlib = "^3.11.0"
 mplfinance = "^0.12.10b0"
 edge-tts = "^7.2.8"
+google-api-python-client = "^2.197.0"
+google-auth-oauthlib = "^1.4.0"
 
 [tool.poetry.scripts]
 pmb = "pmb.cli:main"

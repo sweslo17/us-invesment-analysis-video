@@ -23,6 +23,11 @@ class Settings(BaseSettings):
     fred_api_key: str | None = None
     anthropic_api_key: str | None = None
 
+    # YouTube 上傳(Phase 5,僅 --approve 實際上傳時需要)
+    youtube_client_id: str | None = None
+    youtube_client_secret: str | None = None
+    youtube_refresh_token: str | None = None
+
     # 路徑
     artifacts_dir: Path = Path("artifacts")
     state_dir: Path = Path("state")
