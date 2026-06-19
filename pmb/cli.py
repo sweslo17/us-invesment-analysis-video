@@ -206,7 +206,7 @@ def cmd_research(args: argparse.Namespace) -> int:
     brief_path.write_text(brief.model_dump_json(indent=2), encoding="utf-8")
 
     # 同一次研究的另外兩種 renderer:30 秒講稿 + 長文報告
-    script = build_script_from_brief(brief)
+    script = build_script_from_brief(brief, thesis=thesis)
     script_path = settings.artifacts_dir / f"script_{target}.json"
     script_path.write_text(script.model_dump_json(indent=2), encoding="utf-8")
 

@@ -8,6 +8,7 @@
 from __future__ import annotations
 
 from pmb.research.punchlines import punchline_for
+from pmb.research.thesis import Thesis
 from pmb.schemas.brief import Brief
 from pmb.schemas.chart import ChartSpec
 from pmb.schemas.script import Script, Segment
@@ -31,6 +32,7 @@ _DEFAULT_OUTRO = "每天盤前見,記得追蹤;非投資建議"
 def build_script_from_brief(
     brief: Brief,
     *,
+    thesis: Thesis | None = None,
     total_seconds: float = 30.0,
     max_charts: int = 7,
     max_cards: int = 3,
@@ -136,6 +138,16 @@ def build_script_from_brief(
     if brief.catalysts:
         cats = "、".join(brief.catalysts[:3])
         sequence.append(card("今天盤中要看", vo=f"今天盤中要盯這幾件事:{cats}。", tag="今日催化劑"))
+    # 盤前以短線為主,但收尾拉遠一點看中長期(連到 thesis),不讓整支都是今天的雜訊
+    mt_text = (
+        brief.thesis_delta.summary
+        if (brief.thesis_delta.changed and brief.thesis_delta.summary)
+        else (thesis.summary if thesis and thesis.summary else None)
+    )
+    if mt_text:
+        sequence.append(
+            card("拉遠看 · 中長期", vo=f"最後拉遠一點:{mt_text}", tag="中長期")
+        )
     sequence.append(couplet)
 
     cursor = 0.0

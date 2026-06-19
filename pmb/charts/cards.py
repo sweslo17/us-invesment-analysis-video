@@ -23,14 +23,44 @@ def accent_for(index: int) -> str:
     return _ACCENTS[index % len(_ACCENTS)]
 
 
-def _wrap_cjk(text: str, width: int = 9) -> str:
-    """每 ``width`` 個字斷一行;保留原本就有的換行(對句兩行不會被打散)。"""
+_CARD_BREAK = "，、,。!?!?;;；…)）」』】"
+
+
+def _seg_width(s: str) -> float:
+    return sum(1.0 if not c.isascii() else 0.55 for c in s)
+
+
+def _balanced_index(s: str) -> int:
+    """回傳寬度約一半的切點。"""
+    half = _seg_width(s) / 2
+    acc = 0.0
+    for i, ch in enumerate(s):
+        acc += 1.0 if not ch.isascii() else 0.55
+        if acc >= half:
+            return i + 1
+    return max(1, len(s) // 2)
+
+
+def _wrap_segment(s: str, max_units: float) -> list[str]:
+    if _seg_width(s) <= max_units:
+        return [s]
+    # 候選切點:標點「之後」,但不可在最後一字(避免標點落單成孤兒行)
+    n = len(s)
+    cands = [i + 1 for i, ch in enumerate(s) if ch in _CARD_BREAK and 0 < i + 1 < n]
+    target = n / 2
+    split = min(cands, key=lambda p: abs(p - target)) if cands else _balanced_index(s)
+    left, right = s[:split], s[split:]
+    out: list[str] = []
+    out += _wrap_segment(left, max_units) if _seg_width(left) > max_units else [left]
+    out += _wrap_segment(right, max_units) if _seg_width(right) > max_units else [right]
+    return out
+
+
+def _wrap_cjk(text: str, max_units: float = 9) -> str:
+    """字卡大標題斷行:保留原有換行(對句),過長時在標點或平衡點斷,避免標點落單。"""
     out: list[str] = []
     for line in text.split("\n"):
-        if line:
-            out.extend(line[i : i + width] for i in range(0, len(line), width))
-        else:
-            out.append("")
+        out.extend(_wrap_segment(line, max_units) if line else [""])
     return "\n".join(out)
 
 
