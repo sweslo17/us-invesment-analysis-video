@@ -20,9 +20,11 @@ from pmb.data.calendar import is_trading_day
 from pmb.data.fred import FredClient
 from pmb.data.snapshot import build_snapshot
 from pmb.data.yfinance import YFinanceClient
+from pmb.publish.report import render_report
 from pmb.research.dedup import load_previous_brief
 from pmb.research.runner import make_anthropic_caller, research_once
 from pmb.research.sample import sample_brief_json
+from pmb.research.script_builder import build_script_from_brief
 from pmb.research.thesis import load_thesis
 from pmb.schemas.brief import Brief
 from pmb.schemas.chart import ChartSpec
@@ -195,9 +197,18 @@ def cmd_research(args: argparse.Namespace) -> int:
         previous_brief=previous_brief,
     )
 
-    out_path = settings.artifacts_dir / f"brief_{target}.json"
-    out_path.write_text(brief.model_dump_json(indent=2), encoding="utf-8")
-    logger.info("brief 已寫入 {}", out_path)
+    brief_path = settings.artifacts_dir / f"brief_{target}.json"
+    brief_path.write_text(brief.model_dump_json(indent=2), encoding="utf-8")
+
+    # 同一次研究的另外兩種 renderer:30 秒講稿 + 長文報告
+    script = build_script_from_brief(brief)
+    script_path = settings.artifacts_dir / f"script_{target}.json"
+    script_path.write_text(script.model_dump_json(indent=2), encoding="utf-8")
+
+    report_md = render_report(brief, snapshot)
+    report_path = settings.artifacts_dir / f"report_{target}.md"
+    report_path.write_text(report_md, encoding="utf-8")
+    logger.info("產出 brief / script / report → {}", settings.artifacts_dir)
 
     print(f"=== brief · {brief.date}(lead_horizon={brief.lead_horizon})===")
     for item in brief.items:
@@ -205,7 +216,11 @@ def cmd_research(args: argparse.Namespace) -> int:
         print(f"      → {item.audience_value}")
     if not brief.items:
         print("  (今日無項目)")
-    print("\n※ 本內容為市場資訊與風險教育,非投資建議。")
+    print(f"\n=== script({script.total_duration:.0f}s,{len(script.segments)} 段)===")
+    for seg in script.segments:
+        print(f"  [{seg.t_start:>4.0f}s +{seg.duration:.0f}s · {seg.chart_id}] {seg.vo}")
+    print(f"\n報告:{report_path}")
+    print("※ 本內容為市場資訊與風險教育,非投資建議。")
     return 0
 
 
