@@ -39,6 +39,7 @@ def _brief() -> Brief:
                     "sources": [{"url": "https://example.com/fed"}],
                 }
             ],
+            "catalysts": ["20:30 公布 CPI", "盤後 NVIDIA 財報"],
             "thesis_delta": {"changed": True, "summary": "基準轉為升息風險浮現", "horizon": "LT"},
             "lead_horizon": "LT",
         }
@@ -80,3 +81,9 @@ def test_report_injects_leverage_numbers_from_snapshot():
 def test_report_works_without_snapshot():
     md = render_report(_brief())
     assert "Fed 轉鷹" in md and "非投資建議" in md
+
+
+def test_report_lists_today_catalysts():
+    md = render_report(_brief())
+    assert "今日要看" in md
+    assert "CPI" in md

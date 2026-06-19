@@ -86,6 +86,13 @@ def render_report(brief: Brief, snapshot: Snapshot | None = None) -> str:
             lines.append(srcs)
         lines.append("")
 
+    # 今日催化劑(盤中要看的排程事件)
+    if brief.catalysts:
+        lines.append("## 今日要看(盤中催化劑)")
+        for cat in brief.catalysts:
+            lines.append(f"- {cat}")
+        lines.append("")
+
     # thesis 與當日 delta
     if brief.thesis_delta.changed and brief.thesis_delta.summary:
         lines.append("## 中長期 thesis 更新")

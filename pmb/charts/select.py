@@ -29,8 +29,9 @@ _RENDERERS: dict[str, Callable[[Path, Snapshot, dict], Path]] = {
     "leverage_decay": lambda out, snap, params: render_leverage_decay(
         out, snap.leverage_math, params
     ),
+    # 盤前影片:四大指數「隔夜期貨」是今天的領先訊號(現貨是昨日收盤,屬回顧)
     "index_overnight_grid": lambda out, snap, params: render_index_overnight_grid(
-        out, snap.indices, params
+        out, snap.futures or snap.indices, params
     ),
     "vix_regime": lambda out, snap, params: render_vix_regime(out, snap.vix_history, params),
     "yield_curve": lambda out, snap, params: render_yield_curve(out, snap.yield_curve, params),

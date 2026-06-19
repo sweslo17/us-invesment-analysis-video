@@ -76,5 +76,6 @@ class Brief(BaseModel):
     leverage_context: list[LeverageContext] = []
     regime: Regime
     items: list[BriefItem] = []
+    catalysts: list[str] = []  # 今日盤中要看的排程事件(數據、Fed、財報…)
     thesis_delta: ThesisDelta
     lead_horizon: Horizon

@@ -254,8 +254,8 @@ def render_index_overnight_grid(
     fig, ax = plt.subplots(figsize=(7, 4))
     bars = ax.bar(names, pcts, color=colors)
     ax.axhline(0, color="black", linewidth=0.8)
-    ax.set_ylabel("漲跌 (%)")
-    ax.set_title("主要指數")
+    ax.set_ylabel("隔夜漲跌 (%)")
+    ax.set_title("四大指數・盤前期貨")
     for bar, pct in zip(bars, pcts, strict=True):
         ax.annotate(
             f"{pct:+.2f}%",

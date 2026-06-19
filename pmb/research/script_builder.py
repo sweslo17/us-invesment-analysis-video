@@ -60,7 +60,7 @@ def build_script_from_brief(
     ordered: list[tuple[str, str]] = [
         (
             "index_overnight_grid",
-            explain(0) or "先看隔夜四大指數怎麼收,漲跌幅一次看懂今天的盤勢基調。",
+            explain(0) or "先看今天盤前,四大指數期貨的隔夜方向,看看昨天的氣氛延續到今天沒有。",
         ),
         ("breadth", "看類股輪動,誰領漲、誰殺尾盤,就知道資金往哪跑、這波漲是不是全面。"),
         ("vix_regime", "VIX 是市場的恐慌溫度計,它在這個位置,代表現在大家有多緊張或多鬆懈。"),
@@ -133,6 +133,9 @@ def build_script_from_brief(
     while ci < len(card_texts):
         sequence.append(card(card_texts[ci]))
         ci += 1
+    if brief.catalysts:
+        cats = "、".join(brief.catalysts[:3])
+        sequence.append(card("今天盤中要看", vo=f"今天盤中要盯這幾件事:{cats}。", tag="今日催化劑"))
     sequence.append(couplet)
 
     cursor = 0.0
