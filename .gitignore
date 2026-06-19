@@ -17,5 +17,11 @@ venv/
 # Runtime artifacts (每日產出,不入庫)
 artifacts/
 
+# 桌面控台(Tauri)build 產物
+desktop/node_modules/
+desktop/dist/
+desktop/src-tauri/target/
+desktop/src-tauri/gen/
+
 # OS
 .DS_Store

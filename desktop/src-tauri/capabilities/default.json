@@ -1,0 +1,7 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "PMB 控台預設權限:核心 invoke + 事件監聽",
+  "windows": ["main"],
+  "permissions": ["core:default"]
+}
