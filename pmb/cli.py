@@ -373,8 +373,13 @@ def cmd_publish(args: argparse.Namespace) -> int:
     title, description, tags = build_youtube_metadata(brief, channel_name=settings.channel_name)
     cover = _render_cover(target, settings)
 
-    # --approve 但沒憑證時,優雅退回 dry-run(排程不會炸),並提示如何取得憑證
     approve = args.approve
+    # 安全:dry-run 範例內容(headline 帶「dry-run」標記)絕不上傳到頻道
+    if approve and ("dry-run" in title or any("dry-run" in it.headline for it in brief.items)):
+        approve = False
+        print("⛔ 偵測到 dry-run 範例內容,拒絕上傳到頻道。")
+        print("   請改用真研究:pmb research --date <交易日>(接 LLM)或雲端 routine 產出後再發布。")
+    # --approve 但沒憑證時,優雅退回 dry-run(排程不會炸),並提示如何取得憑證
     if approve and not settings.youtube_refresh_token:
         approve = False
         print("⚠️ 指定 --approve 但缺 YouTube OAuth 憑證,退回 dry-run。")
@@ -404,6 +409,10 @@ def cmd_publish(args: argparse.Namespace) -> int:
         print(f"  封面:{cover}")
     report_path = settings.artifacts_dir / f"report_{target}.md"
     print(f"  報告(人工貼上):{report_path}")
+    print("\n  ⚠️ 上傳後到 YouTube Studio 還要手動補(API 不會設):")
+    print("   • 變造/合成內容揭露:用了合成語音(TTS)→『變造內容』要選「是」(政策要求)")
+    print("   • 加入播放清單(例:每日盤前快報)")
+    print("   • 確認:語言=中文(繁體)、非兒童內容、直式會自動判定為 Shorts")
     print("※ 本內容為市場資訊與風險教育,非投資建議。")
     return 0
 

@@ -130,7 +130,13 @@ def _do_upload(
         scopes=["https://www.googleapis.com/auth/youtube.upload"],
     )
     youtube = build("youtube", "v3", credentials=creds)
-    snippet = {"title": title, "description": description, "categoryId": "27"}
+    snippet = {
+        "title": title,
+        "description": description,
+        "categoryId": "27",  # Education
+        "defaultLanguage": "zh-TW",  # 影片語言:繁中
+        "defaultAudioLanguage": "zh-TW",  # 旁白語言(edge-tts zh-TW)
+    }
     if tags:
         snippet["tags"] = tags
     request = youtube.videos().insert(
