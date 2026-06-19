@@ -26,6 +26,7 @@ class Settings(BaseSettings):
     # 路徑
     artifacts_dir: Path = Path("artifacts")
     state_dir: Path = Path("state")
+    prompt_path: Path = Path("prompts/daily_research.md")
 
     # 資料層參數
     history_period: str = "6mo"

@@ -19,6 +19,11 @@ from pmb.data.calendar import is_trading_day
 from pmb.data.fred import FredClient
 from pmb.data.snapshot import build_snapshot
 from pmb.data.yfinance import YFinanceClient
+from pmb.research.dedup import load_previous_brief
+from pmb.research.runner import make_anthropic_caller, research_once
+from pmb.research.sample import sample_brief_json
+from pmb.research.thesis import load_thesis
+from pmb.schemas.brief import Brief
 from pmb.schemas.snapshot import Quote, Snapshot
 
 _EASTERN = ZoneInfo("America/New_York")
@@ -138,6 +143,70 @@ def cmd_fetch(args: argparse.Namespace) -> int:
     return 0
 
 
+def _load_snapshot_for_research(target: dt.date, settings, *, dry_run: bool) -> Snapshot:
+    """研究用快照:優先讀 fetch 落下的 artifact;dry-run 缺檔時用最小占位(不連網)。"""
+    snap_path = settings.artifacts_dir / f"snapshot_{target}.json"
+    if snap_path.exists():
+        return Snapshot.model_validate_json(snap_path.read_text(encoding="utf-8"))
+    if dry_run:
+        logger.warning("找不到 {},dry-run 用最小占位快照", snap_path)
+        return Snapshot(session_date=target, generated_at=dt.datetime.now(tz=dt.UTC))
+    logger.info("找不到 {},改即時取數建快照", snap_path)
+    return build_snapshot(
+        target,
+        yf_client=YFinanceClient(),
+        fred_client=FredClient(settings.fred_api_key),
+        generated_at=dt.datetime.now(tz=dt.UTC),
+        history_period=settings.history_period,
+    )
+
+
+def cmd_research(args: argparse.Namespace) -> int:
+    settings = get_settings()
+    settings.ensure_dirs()
+
+    explicit = dt.date.fromisoformat(args.date) if args.date else None
+    target = resolve_fetch_target(today_eastern(), explicit)
+    if target is None:
+        print("今天非 NYSE 交易日,skip。")
+        return 0
+
+    snapshot = _load_snapshot_for_research(target, settings, dry_run=args.dry_run)
+    thesis = load_thesis(settings.state_dir / "thesis.json")
+    previous_brief = load_previous_brief(settings.artifacts_dir, target)
+    prompt_template = settings.prompt_path.read_text(encoding="utf-8")
+
+    if args.dry_run:
+        logger.info("dry-run:用範例 brief 跑通 pipeline,不呼叫 LLM")
+        llm = lambda _prompt: sample_brief_json(target)  # noqa: E731
+    else:
+        if not settings.anthropic_api_key:
+            print("缺少 ANTHROPIC_API_KEY,無法跑 live 研究(或用 --dry-run)。")
+            return 1
+        llm = make_anthropic_caller(settings.anthropic_api_key)
+
+    brief: Brief = research_once(
+        snapshot,
+        thesis,
+        llm=llm,
+        prompt_template=prompt_template,
+        previous_brief=previous_brief,
+    )
+
+    out_path = settings.artifacts_dir / f"brief_{target}.json"
+    out_path.write_text(brief.model_dump_json(indent=2), encoding="utf-8")
+    logger.info("brief 已寫入 {}", out_path)
+
+    print(f"=== brief · {brief.date}(lead_horizon={brief.lead_horizon})===")
+    for item in brief.items:
+        print(f"  [{item.horizon}/{item.confidence}/m{item.materiality}] {item.headline}")
+        print(f"      → {item.audience_value}")
+    if not brief.items:
+        print("  (今日無項目)")
+    print("\n※ 本內容為市場資訊與風險教育,非投資建議。")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="pmb", description="Pre-Market Macro Brief CLI")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -147,6 +216,13 @@ def build_parser() -> argparse.ArgumentParser:
     fetch.add_argument("--json", action="store_true", help="以 JSON 輸出")
     fetch.add_argument("--dry-run", action="store_true", help="不取數,只印目標日")
     fetch.set_defaults(func=cmd_fetch)
+
+    research = sub.add_parser("research", help="研究 + 產出 brief.json(LLM)")
+    research.add_argument("--date", help="指定交易日 YYYY-MM-DD(開發/重跑用)")
+    research.add_argument(
+        "--dry-run", action="store_true", help="用範例 brief 跑通 pipeline,不呼叫 LLM"
+    )
+    research.set_defaults(func=cmd_research)
 
     return parser
 
