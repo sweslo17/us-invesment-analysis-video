@@ -13,6 +13,7 @@ from pathlib import Path
 
 from loguru import logger
 
+from pmb.charts.cards import accent_for, render_headline_card
 from pmb.charts.select import render_chart
 from pmb.schemas.script import Script
 from pmb.schemas.snapshot import Snapshot
@@ -84,13 +85,26 @@ def _make_subclip(image: str, audio: str, srt: str, out: str, duration: float, c
         f"color=c={_BG}:s={_WIDTH}x{_HEIGHT}:d={duration}[bg];"
         f"[0:v]scale={_CHART_W}:-1[ch];"
         f"[bg][ch]overlay=(W-w)/2:{_CHART_Y}[bgc];"
-        f"[bgc]subtitles={srt}:force_style='{_SUB_STYLE}'[v]"
+        f"[bgc]subtitles={srt}:force_style='{_SUB_STYLE}',setsar=1[v]"
     )
     _run_ffmpeg(
         [
             "ffmpeg", "-y", "-loop", "1", "-i", image, "-i", audio,
             "-filter_complex", filter_complex,
             "-map", "[v]", "-map", "1:a", "-t", f"{duration}", "-r", "25",
+            "-c:v", "libx264", "-pix_fmt", "yuv420p", "-c:a", "aac", "-shortest", out,
+        ],
+        cwd=cwd,
+    )
+
+
+def _make_card_clip(card: str, audio: str, out: str, duration: float, cwd: Path) -> None:
+    """時事標題卡片段:全屏卡片(大字已烤進圖)+ 旁白,快速閃過,無額外字幕。"""
+    _run_ffmpeg(
+        [
+            "ffmpeg", "-y", "-loop", "1", "-i", card, "-i", audio,
+            "-vf", f"scale={_WIDTH}:{_HEIGHT},setsar=1",
+            "-t", f"{duration}", "-r", "25",
             "-c:v", "libx264", "-pix_fmt", "yuv420p", "-c:a", "aac", "-shortest", out,
         ],
         cwd=cwd,
@@ -114,9 +128,22 @@ def assemble_video(
 
     clip_names: list[str] = []
     for i, seg in enumerate(script.segments):
+        if seg.headline is not None:
+            # 時事標題卡:全屏大字、快速閃過(增加視覺變化)
+            card_name = f"card{i}.png"
+            render_headline_card(
+                str(work_dir / card_name), seg.headline, accent=accent_for(i), tag="盤前快報"
+            )
+            audio_name = f"card{i}.mp3"
+            result = synth_fn(seg.vo, work_dir / audio_name, seg.duration)
+            clip_name = f"k{i}.mp4"
+            _make_card_clip(card_name, audio_name, clip_name, result.duration, work_dir)
+            clip_names.append(clip_name)
+            continue
+
+        chart = chart_paths[seg.chart_id]
         sentences = split_sentences(seg.vo) or [seg.vo]
         planned_each = seg.duration / len(sentences)
-        chart = chart_paths[seg.chart_id]
         for j, sentence in enumerate(sentences):
             audio_name = f"s{i}_{j}.mp3"
             result = synth_fn(sentence, work_dir / audio_name, planned_each)

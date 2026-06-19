@@ -36,18 +36,19 @@ def _brief(rates="rising", vol="low", corr="positive") -> Brief:
     )
 
 
-def test_build_script_is_dense_and_about_30s():
+def test_build_script_mixes_cards_and_charts_about_30s():
     script = build_script_from_brief(_brief())
-    assert script.total_duration == pytest.approx(30.0)
-    # 短影片要高資訊密度:至少 6 張圖/段
+    assert script.total_duration == pytest.approx(30.0, abs=0.1)  # 每段四捨五入會有微小誤差
+
+    cards = [s for s in script.segments if s.headline]
+    chart_segs = [s for s in script.segments if s.chart_id]
+    assert len(cards) >= 1  # 有時事標題卡(視覺變化)
+    assert len(chart_segs) == len(script.charts)  # 圖表段一一對應 charts
     assert len(script.segments) >= 6
-    assert len(script.charts) == len(script.segments)
+
     modules = {c.module for c in script.charts}
     assert "index_overnight_grid" in modules
     assert "leverage_decay" in modules
-    # segment 綁定都對得上(能建構就代表通過 Script 的交叉驗證)
-    chart_ids = {c.id for c in script.charts}
-    assert all(seg.chart_id in chart_ids for seg in script.segments)
 
 
 def test_rising_rates_picks_yield_curve_as_regime_chart():

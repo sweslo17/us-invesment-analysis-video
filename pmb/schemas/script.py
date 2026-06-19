@@ -12,10 +12,22 @@ from pmb.schemas.chart import ChartSpec
 
 
 class Segment(BaseModel):
+    """一段畫面:綁一張圖表(chart_id)**或**一張時事標題卡(headline),兩者擇一。
+
+    標題卡是全屏大字、快速閃過,用來增加視覺變化、打破純圖表的沉悶。
+    """
+
     vo: str  # 旁白逐字稿
-    chart_id: str
+    chart_id: str | None = None
+    headline: str | None = None
     t_start: float
     duration: float
+
+    @model_validator(mode="after")
+    def _exactly_one_visual(self) -> Segment:
+        if bool(self.chart_id) == bool(self.headline):
+            raise ValueError("每個 segment 必須剛好有 chart_id 或 headline 其中之一")
+        return self
 
 
 class Script(BaseModel):
@@ -33,6 +45,6 @@ class Script(BaseModel):
             raise ValueError("charts[].id 不可重複")
         valid = set(chart_ids)
         for seg in self.segments:
-            if seg.chart_id not in valid:
+            if seg.chart_id is not None and seg.chart_id not in valid:
                 raise ValueError(f"segment.chart_id「{seg.chart_id}」對不到任何 charts[].id")
         return self

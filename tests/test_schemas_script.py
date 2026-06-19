@@ -44,3 +44,27 @@ def test_unknown_chart_module_is_rejected():
     data["charts"][0]["module"] = "hologram"
     with pytest.raises(ValidationError):
         Script.model_validate(data)
+
+
+def test_headline_card_segment_is_valid_without_chart():
+    data = _valid_script()
+    data["segments"].insert(
+        0, {"vo": "Fed 轉鷹了!", "headline": "Fed 轉鷹 🦅", "t_start": 0, "duration": 2}
+    )
+    script = Script.model_validate(data)
+    assert script.segments[0].headline == "Fed 轉鷹 🦅"
+    assert script.segments[0].chart_id is None
+
+
+def test_segment_must_have_chart_or_headline():
+    data = _valid_script()
+    data["segments"][0] = {"vo": "空的", "t_start": 0, "duration": 2}
+    with pytest.raises(ValidationError):
+        Script.model_validate(data)
+
+
+def test_segment_cannot_have_both_chart_and_headline():
+    data = _valid_script()
+    data["segments"][0]["headline"] = "兩個都填"
+    with pytest.raises(ValidationError):
+        Script.model_validate(data)

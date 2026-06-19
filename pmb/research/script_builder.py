@@ -24,12 +24,13 @@ def _regime_chart_module(regime: Regime) -> str:
 
 
 def build_script_from_brief(
-    brief: Brief, *, total_seconds: float = 30.0, max_segments: int = 8
+    brief: Brief, *, total_seconds: float = 30.0, max_charts: int = 6, max_cards: int = 3
 ) -> Script:
-    """回傳一份合法、**高資訊密度**的 30 秒講稿(6–8 段、6–8 張圖,快節奏)。
+    """回傳一份合法、**高視覺變化**的直式短影片講稿。
 
-    短影片靠多圖 + 快語速堆資訊量:每段一張圖、一句短旁白。圖序依 regime 動態增減,
-    短語優先取 brief 的 item 標題,其餘用圖表用途短句。正式版由雲端 routine 編輯式產出。
+    結構:開場幾張「時事標題卡」快速閃過(top item 標題)→ 圖表段,每段一張圖配完整解說
+    (內容 + 代表意義,脫離畫面也聽得懂)。圖序依 regime 動態增減,一定含指數與槓桿教育。
+    正式版由雲端 routine 編輯式產出(含網路梗/時事梗)。
     """
     items = sorted(brief.items, key=lambda it: it.materiality, reverse=True)
     regime = brief.regime
@@ -39,17 +40,13 @@ def build_script_from_brief(
         else "高槓桿在高波動下侵蝕複利。"
     )
 
-    def headline(i: int) -> str | None:
-        return items[i].headline if i < len(items) else None
-
     def explain(i: int) -> str:
-        """item 標題 + 「對一般人代表什麼」,讓人不看畫面也聽得懂。"""
         if i < len(items):
             return f"{items[i].headline}。{items[i].audience_value}"
         return ""
 
-    # (module, 完整旁白)候選;每段講內容 + 代表意義(脫離畫面也懂),每個模組最多一次
-    candidates: list[tuple[str, str]] = [
+    # 圖表段候選(依序);index 開頭、leverage 結尾,中間依 regime 增減
+    ordered: list[tuple[str, str]] = [
         (
             "index_overnight_grid",
             explain(0) or "先看隔夜四大指數怎麼收,漲跌幅一次看懂今天的盤勢基調。",
@@ -58,35 +55,46 @@ def build_script_from_brief(
         ("vix_regime", "VIX 是市場的恐慌溫度計,它在這個位置,代表現在大家有多緊張或多鬆懈。"),
     ]
     if regime.rates == "rising":
-        candidates.append(
+        ordered.append(
             ("yield_curve", explain(1) or "殖利率曲線的形狀,藏著市場對利率和景氣的預期,別小看它。")
         )
-    candidates.append(
+    ordered.append(
         ("rates_trend", "十年期殖利率是全球資產的定價錨,它一動,股票和債券的估值都得重算。")
     )
     if regime.stock_bond_corr == "positive":
-        candidates.append(
+        ordered.append(
             ("stock_bond_corr", "股債正相關時,股票殺低、債券不一定救你,傳統分散風險的效果會打折。")
         )
-    candidates.append(
+    ordered.append(
         ("econ_print", explain(2) or "最新總經數據直接牽動 Fed 下一步,也牽動你的荷包。")
     )
-    candidates.append(("leverage_decay", f"{lev_note}槓桿放大的不只是報酬,還有風險。"))
+    ordered.append(("leverage_decay", f"{lev_note}槓桿放大的不只是報酬,還有風險。"))
 
-    chosen: list[tuple[str, str]] = []
-    seen: set[str] = set()
-    for module, vo in candidates:
-        if module in seen:
-            continue
-        seen.add(module)
-        chosen.append((module, vo))
-        if len(chosen) >= max_segments:
-            break
+    # 超過上限時保留開頭(指數)與結尾(槓桿教育),修剪中間
+    if len(ordered) > max_charts:
+        ordered = [ordered[0], *ordered[1:-1][: max_charts - 2], ordered[-1]]
 
-    charts = [ChartSpec(id=f"c{i}", module=module) for i, (module, _) in enumerate(chosen)]
-    per = total_seconds / len(chosen)
-    segments = [
-        Segment(vo=vo, chart_id=charts[i].id, t_start=round(i * per, 3), duration=round(per, 3))
-        for i, (_, vo) in enumerate(chosen)
-    ]
+    charts = [ChartSpec(id=f"c{i}", module=module) for i, (module, _) in enumerate(ordered)]
+
+    # 開場時事標題卡(取 top item 標題,快速閃過,增加視覺變化)
+    card_texts = [it.headline for it in items[:max_cards]]
+    card_dur = 2.0
+    charts_total = max(total_seconds - len(card_texts) * card_dur, float(len(ordered)))
+    per_chart = charts_total / len(ordered)
+
+    segments: list[Segment] = []
+    cursor = 0.0
+    for text in card_texts:
+        segments.append(
+            Segment(vo=text, headline=text, t_start=round(cursor, 3), duration=card_dur)
+        )
+        cursor += card_dur
+    for i, (_, vo) in enumerate(ordered):
+        segments.append(
+            Segment(
+                vo=vo, chart_id=charts[i].id, t_start=round(cursor, 3), duration=round(per_chart, 3)
+            )
+        )
+        cursor += per_chart
+
     return Script(segments=segments, charts=charts)
