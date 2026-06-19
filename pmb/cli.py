@@ -277,7 +277,8 @@ def cmd_assemble(args: argparse.Namespace) -> int:
         logger.info("dry-run:用靜音配音合成,不打 edge-tts")
         synth_fn = lambda vo, path, planned: silent_synth(vo, path, duration=planned)  # noqa: E731
     else:
-        synth_fn = lambda vo, path, planned: edge_synthesize(vo, path)  # noqa: E731
+        rate = settings.tts_rate
+        synth_fn = lambda vo, path, planned: edge_synthesize(vo, path, rate=rate)  # noqa: E731
 
     out_path = settings.artifacts_dir / f"video_{target}.mp4"
     work_dir = settings.artifacts_dir / f"video_{target}_work"

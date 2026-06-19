@@ -30,10 +30,10 @@ class SynthResult(BaseModel):
     words: list[WordBoundary] = []
 
 
-async def _edge_async(text: str, out_path: Path, voice: str) -> SynthResult:
+async def _edge_async(text: str, out_path: Path, voice: str, rate: str) -> SynthResult:
     import edge_tts
 
-    communicate = edge_tts.Communicate(text, voice)
+    communicate = edge_tts.Communicate(text, voice, rate=rate)
     words: list[WordBoundary] = []
     with open(out_path, "wb") as fh:
         async for chunk in communicate.stream():
@@ -56,13 +56,14 @@ def edge_synthesize(
     out_path: str | Path,
     *,
     voice: str = DEFAULT_VOICE,
+    rate: str = "+30%",
     retries: int = 3,
     retry_delay: float = 2.0,
 ) -> SynthResult:
-    """以 edge-tts 合成單段語音(含逐字時間戳)。網路步驟,包 retry。"""
+    """以 edge-tts 合成單段語音(含逐字時間戳)。``rate`` 控制語速(短影片用快語速)。"""
     out_path = Path(out_path)
     return call_with_retry(
-        lambda: asyncio.run(_edge_async(text, out_path, voice)),
+        lambda: asyncio.run(_edge_async(text, out_path, voice, rate)),
         retries=retries,
         delay=retry_delay,
         what=f"edge-tts {out_path.name}",

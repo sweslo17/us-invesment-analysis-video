@@ -23,33 +23,53 @@ def _regime_chart_module(regime: Regime) -> str:
     return "vix_regime"
 
 
-def build_script_from_brief(brief: Brief, *, total_seconds: float = 30.0) -> Script:
-    """回傳一份合法的 30 秒講稿:指數 → regime 重點 → 槓桿教育,三段三圖。"""
+def build_script_from_brief(
+    brief: Brief, *, total_seconds: float = 30.0, max_segments: int = 8
+) -> Script:
+    """回傳一份合法、**高資訊密度**的 30 秒講稿(6–8 段、6–8 張圖,快節奏)。
+
+    短影片靠多圖 + 快語速堆資訊量:每段一張圖、一句短旁白。圖序依 regime 動態增減,
+    短語優先取 brief 的 item 標題,其餘用圖表用途短句。正式版由雲端 routine 編輯式產出。
+    """
     items = sorted(brief.items, key=lambda it: it.materiality, reverse=True)
-    lead = items[0] if items else None
+    regime = brief.regime
     lev_note = (
         brief.leverage_context[0].edu_note
         if brief.leverage_context
         else "高槓桿在高波動下侵蝕複利。"
     )
 
-    charts = [
-        ChartSpec(id="idx", module="index_overnight_grid"),
-        ChartSpec(id="regime", module=_regime_chart_module(brief.regime)),
-        ChartSpec(id="lev", module="leverage_decay"),
+    def headline(i: int) -> str | None:
+        return items[i].headline if i < len(items) else None
+
+    # (module, 短旁白)候選,依序;每個模組最多出現一次
+    candidates: list[tuple[str, str]] = [
+        ("index_overnight_grid", headline(0) or "隔夜四大指數這樣收"),
+        ("breadth", "看類股輪動:誰領漲、誰殺尾"),
+        ("vix_regime", "波動 VIX 在這個位置"),
     ]
+    if regime.rates == "rising":
+        candidates.append(("yield_curve", headline(1) or "殖利率曲線:利率往哪走"))
+    candidates.append(("rates_trend", "10 年期殖利率走勢"))
+    if regime.stock_bond_corr == "positive":
+        candidates.append(("stock_bond_corr", "股債同向,分散效果打折"))
+    candidates.append(("econ_print", headline(2) or "最新總經數據"))
+    candidates.append(("leverage_decay", lev_note))
 
-    vos = [
-        lead.headline if lead else "隔夜主要指數動向。",
-        lead.audience_value if lead else "今天的市場 regime。",
-        lev_note,
+    chosen: list[tuple[str, str]] = []
+    seen: set[str] = set()
+    for module, vo in candidates:
+        if module in seen:
+            continue
+        seen.add(module)
+        chosen.append((module, vo))
+        if len(chosen) >= max_segments:
+            break
+
+    charts = [ChartSpec(id=f"c{i}", module=module) for i, (module, _) in enumerate(chosen)]
+    per = total_seconds / len(chosen)
+    segments = [
+        Segment(vo=vo, chart_id=charts[i].id, t_start=round(i * per, 3), duration=round(per, 3))
+        for i, (_, vo) in enumerate(chosen)
     ]
-
-    per = total_seconds / len(charts)
-    segments: list[Segment] = []
-    for i, (chart, vo) in enumerate(zip(charts, vos, strict=True)):
-        segments.append(
-            Segment(vo=vo, chart_id=chart.id, t_start=round(i * per, 3), duration=round(per, 3))
-        )
-
     return Script(segments=segments, charts=charts)

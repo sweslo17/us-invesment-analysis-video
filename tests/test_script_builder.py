@@ -36,9 +36,12 @@ def _brief(rates="rising", vol="low", corr="positive") -> Brief:
     )
 
 
-def test_build_script_is_valid_and_about_30s():
+def test_build_script_is_dense_and_about_30s():
     script = build_script_from_brief(_brief())
     assert script.total_duration == pytest.approx(30.0)
+    # 短影片要高資訊密度:至少 6 張圖/段
+    assert len(script.segments) >= 6
+    assert len(script.charts) == len(script.segments)
     modules = {c.module for c in script.charts}
     assert "index_overnight_grid" in modules
     assert "leverage_decay" in modules

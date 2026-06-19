@@ -36,6 +36,9 @@ class Settings(BaseSettings):
     # 資料層參數
     history_period: str = "6mo"
 
+    # 配音:短影片用快語速,高資訊密度
+    tts_rate: str = "+35%"
+
     def ensure_dirs(self) -> None:
         """確保 runtime 產出目錄存在。"""
         self.artifacts_dir.mkdir(parents=True, exist_ok=True)
