@@ -15,7 +15,10 @@ def _valid_brief_dict() -> dict:
             {"name": "S&P 500", "level": 7492.58, "overnight_pct": 0.95, "drivers": ["科技股領漲"]}
         ],
         "leverage_context": [
-            {"ticker": "UPRO", "overnight_pct": 0.95, "edu_note": "波動放大下耗損加劇"}
+            {
+                "market": "S&P 500",
+                "edu_note": "目前波動偏低,維持一般風險的曝險約 1x;固定 3x 的波動耗損已可觀。",
+            }
         ],
         "regime": {
             "vol": "normal",

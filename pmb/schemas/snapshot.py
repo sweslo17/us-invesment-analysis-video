@@ -40,6 +40,21 @@ class FredObservation(BaseModel):
     prior_value: float | None = None
 
 
+class LeverageMath(BaseModel):
+    """單一市場/指數的槓桿教育數值(全數據驅動,非投資建議)。
+
+    ``vol_target_leverage`` = 參考風險 / 當前已實現波動;``drag_*`` 為 L²σ²/2 的年化
+    波動耗損。圖表(leverage_decay)與報告用這些數字,LLM 只寫文字說明、不產生數字。
+    """
+
+    market: str
+    realized_vol: float
+    vol_target_leverage: float
+    drag_1x: float
+    drag_2x: float
+    drag_3x: float
+
+
 class RegimeMetrics(BaseModel):
     """市場 regime 的數值輸入(自算衍生指標)。
 
@@ -66,3 +81,5 @@ class Snapshot(BaseModel):
     leverage: list[Quote] = []
     macro: list[FredObservation] = []
     regime: RegimeMetrics = RegimeMetrics()
+    reference_vol: float = 0.15
+    leverage_math: list[LeverageMath] = []

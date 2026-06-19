@@ -8,6 +8,8 @@ from pmb.data.derived import (
     pct_positive,
     realized_volatility,
     stock_bond_correlation,
+    vol_target_leverage,
+    volatility_drag,
 )
 
 
@@ -52,6 +54,29 @@ def test_pct_above_ma_counts_fraction_above_moving_average():
         dtype=float,
     )
     assert pct_above_ma(df, window=3) == pytest.approx(0.75)
+
+
+def test_vol_target_leverage_equals_one_when_vol_matches_target():
+    assert vol_target_leverage(0.15, target_vol=0.15) == pytest.approx(1.0)
+
+
+def test_vol_target_leverage_halves_when_vol_doubles():
+    # 波動翻倍 → 維持同樣風險的曝險砍半
+    assert vol_target_leverage(0.30, target_vol=0.15) == pytest.approx(0.5)
+
+
+def test_vol_target_leverage_allows_above_one_in_calm_markets():
+    assert vol_target_leverage(0.075, target_vol=0.15) == pytest.approx(2.0)
+
+
+def test_volatility_drag_scales_with_leverage_squared():
+    # L²σ²/2:σ=0.16 → 1x≈1.28%、3x≈11.52%(9 倍)
+    assert volatility_drag(0.16, leverage=1) == pytest.approx(0.0128)
+    assert volatility_drag(0.16, leverage=3) == pytest.approx(0.1152)
+
+
+def test_volatility_drag_zero_leverage_is_zero():
+    assert volatility_drag(0.16, leverage=0) == pytest.approx(0.0)
 
 
 def test_pct_positive_counts_fraction_up_on_day():

@@ -17,8 +17,10 @@ from pmb.data.derived import (
     pct_positive,
     realized_volatility,
     stock_bond_correlation,
+    vol_target_leverage,
+    volatility_drag,
 )
-from pmb.schemas.snapshot import Quote, RegimeMetrics, Snapshot
+from pmb.schemas.snapshot import LeverageMath, Quote, RegimeMetrics, Snapshot
 
 
 def compute_regime(
@@ -60,6 +62,36 @@ def compute_regime(
     )
 
 
+def compute_leverage_math(
+    histories: dict[str, pd.Series],
+    index_specs: list[tuple[str, str]],
+    *,
+    reference_vol: float = 0.15,
+    vol_window: int = 20,
+) -> list[LeverageMath]:
+    """每個指數的槓桿教育數值(波動目標槓桿 + 波動耗損)。缺歷史的指數跳過。
+
+    全數據驅動:用各指數自身的已實現波動,不假設任何預期報酬。
+    """
+    out: list[LeverageMath] = []
+    for ticker, name in index_specs:
+        series = histories.get(ticker)
+        if series is None:
+            continue
+        realized_vol = realized_volatility(series, window=vol_window)
+        out.append(
+            LeverageMath(
+                market=name,
+                realized_vol=realized_vol,
+                vol_target_leverage=vol_target_leverage(realized_vol, target_vol=reference_vol),
+                drag_1x=volatility_drag(realized_vol, 1),
+                drag_2x=volatility_drag(realized_vol, 2),
+                drag_3x=volatility_drag(realized_vol, 3),
+            )
+        )
+    return out
+
+
 def _first(quotes: list[Quote]) -> Quote | None:
     return quotes[0] if quotes else None
 
@@ -71,6 +103,7 @@ def build_snapshot(
     fred_client,
     generated_at: dt.datetime,
     history_period: str = "6mo",
+    reference_vol: float = 0.15,
 ) -> Snapshot:
     """取數並組出 ``Snapshot``。client 以注入方式提供(便於測試與替換)。"""
     logger.info("組裝 {} 的市場快照", session_date)
@@ -84,12 +117,16 @@ def build_snapshot(
 
     macro = fred_client.get_observations(universe.FRED_SERIES)
 
-    history_tickers = [universe.STOCK_PROXY, universe.BOND_PROXY, *universe.SECTOR_ETFS]
+    index_tickers = [t for t, _ in universe.INDEX_CASH]
+    history_tickers = [universe.BOND_PROXY, *index_tickers, *universe.SECTOR_ETFS]
     histories = yf_client.get_histories(history_tickers, period=history_period)
     regime = compute_regime(
         histories,
         vix=volatility.last if volatility else None,
         sector_tickers=universe.SECTOR_ETFS,
+    )
+    leverage_math = compute_leverage_math(
+        histories, universe.INDEX_CASH, reference_vol=reference_vol
     )
 
     snapshot = Snapshot(
@@ -103,12 +140,14 @@ def build_snapshot(
         leverage=leverage,
         macro=macro,
         regime=regime,
+        reference_vol=reference_vol,
+        leverage_math=leverage_math,
     )
     logger.info(
-        "快照組裝完成:指數 {} 期貨 {} 槓桿 {} 總經 {} 筆",
+        "快照組裝完成:指數 {} 期貨 {} 槓桿教育 {} 總經 {} 筆",
         len(indices),
         len(futures),
-        len(leverage),
+        len(leverage_math),
         len(macro),
     )
     return snapshot

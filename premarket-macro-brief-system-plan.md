@@ -127,7 +127,8 @@ flowchart TD
 {
   "date": "2026-06-19",
   "indices": [{ "name": "S&P 500", "level": 0, "overnight_pct": 0, "drivers": [] }],
-  "leverage_context": [{ "ticker": "UPRO", "overnight_pct": 0, "edu_note": "波動放大下耗損加劇" }],
+  "leverage_context": [{ "market": "S&P 500", "edu_note": "當前波動下維持一般股市風險的曝險約 1x;固定高槓桿的波動耗損隨倍數平方放大" }],
+  "// leverage_math(數值,放快照層)": "每指數:realized_vol / vol_target_leverage(=參考風險/波動) / drag_1x,2x,3x(≈L²σ²/2)",
   "regime": { "vol": "elevated", "rates": "rising", "stock_bond_corr": "positive", "breadth": "narrow" },
   "items": [{
     "headline": "...", "horizon": "LT", "vs_thesis": "challenges",
@@ -285,7 +286,7 @@ AI 只集中在**一個** Claude Code routine(研究 + 講稿 + 報告 + 選圖)
 ## 14. 待決策
 
 - 研究層日更工具:Claude Code routine vs Perplexity Pro Search——建議先試前者。
-- **槓桿的編輯立場:純風險教育、輕量帶過,還是較常出現的市場訊號角度(公開受眾下建議偏前者)。**
+- ~~槓桿的編輯立場~~ **已定案(2026-06):走「全市場/各指數的最適槓桿教育」——以波動數據(已實現波動 → 波動目標槓桿、波動耗損 L²σ²/2)說明合理曝險與高槓桿為何傷複利,與任何槓桿 ETF 商品脫鉤、不點名代號、零買賣建議。**
 - 報告發布:Medium 人工貼上 vs 自動發 Hashnode/Ghost。
 - human gate 長期保留還是觀察後轉全自動。
 - 圖表模組庫第一版收哪幾個(建議 index_grid / vix_regime / yield_curve / breadth 起步)。

@@ -35,10 +35,13 @@ class BriefIndex(BaseModel):
 
 
 class LeverageContext(BaseModel):
-    """槓桿載具的資訊/風險教育脈絡(非可跟單策略)。"""
+    """每個市場/指數的「最適槓桿」教育(全市場視角,非任何 ETF 商品的投資建議)。
 
-    ticker: str
-    overnight_pct: float
+    具體數字(已實現波動、波動目標槓桿、波動耗損)由資料層 ``snapshot.leverage_math``
+    提供;此處只放 LLM 寫的文字說明,LLM 不產生數字。
+    """
+
+    market: str
     edu_note: str
 
 

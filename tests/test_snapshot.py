@@ -4,8 +4,9 @@ import datetime as dt
 
 import numpy as np
 import pandas as pd
+import pytest
 
-from pmb.data.snapshot import build_snapshot, compute_regime
+from pmb.data.snapshot import build_snapshot, compute_leverage_math, compute_regime
 from pmb.schemas.snapshot import FredObservation, Quote, Snapshot
 
 
@@ -34,6 +35,28 @@ def test_compute_regime_handles_missing_series_gracefully():
     assert regime.stock_bond_corr_20d is None
     assert regime.breadth_pct_above_ma50 is None
     assert regime.breadth_pct_positive is None
+
+
+def test_compute_leverage_math_per_index():
+    idx = pd.date_range("2026-01-01", periods=60, freq="D")
+    histories = {
+        "^GSPC": pd.Series(np.linspace(100, 110, 60) + np.sin(range(60)), index=idx),
+        "^RUT": pd.Series(np.linspace(50, 60, 60) + 2 * np.sin(range(60)), index=idx),
+    }
+    out = compute_leverage_math(
+        histories,
+        [("^GSPC", "S&P 500"), ("^RUT", "Russell 2000")],
+        reference_vol=0.15,
+    )
+    assert [m.market for m in out] == ["S&P 500", "Russell 2000"]
+    m = out[0]
+    assert m.realized_vol > 0
+    assert m.vol_target_leverage == pytest.approx(0.15 / m.realized_vol)
+    assert m.drag_3x == pytest.approx(9 * m.drag_1x)  # 耗損隨槓桿平方
+
+
+def test_compute_leverage_math_skips_missing_history():
+    assert compute_leverage_math({}, [("^GSPC", "S&P 500")], reference_vol=0.15) == []
 
 
 class _FakeYF:
@@ -80,3 +103,4 @@ def test_build_snapshot_wires_all_sections():
     assert any(q.ticker == "UPRO" for q in snap.leverage)
     assert any(o.series_id == "DGS10" for o in snap.macro)
     assert snap.regime.realized_vol_20d is not None
+    assert any(m.market == "S&P 500" for m in snap.leverage_math)  # 由 ^GSPC 歷史算出

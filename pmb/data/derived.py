@@ -48,6 +48,25 @@ def stock_bond_correlation(
     return float(paired.iloc[:, 0].corr(paired.iloc[:, 1]))
 
 
+def vol_target_leverage(realized_vol: float, target_vol: float = 0.15) -> float:
+    """波動目標槓桿:維持 ``target_vol`` 風險水準對應的曝險 = target_vol / realized_vol。
+
+    波動越高、合理曝險越低(高波動環境連 1x 都可能超過風險預算)。realized_vol 為 0
+    時無法定義,回傳 NaN。純教育用,不含買賣建議。
+    """
+    if realized_vol <= 0:
+        return float("nan")
+    return target_vol / realized_vol
+
+
+def volatility_drag(realized_vol: float, leverage: float) -> float:
+    """固定槓桿的年化波動耗損 ≈ L²σ²/2(對複利成長的拖累)。
+
+    耗損隨槓桿平方放大,這就是固定高槓桿在高波動環境侵蝕複利的原因。
+    """
+    return (leverage**2) * (realized_vol**2) / 2.0
+
+
 def pct_above_ma(prices: pd.DataFrame, window: int = 50) -> float:
     """市場廣度:最後一日收在自身 ``window`` 期均線之上的比例(0~1)。"""
     ma = prices.rolling(window).mean().iloc[-1]
