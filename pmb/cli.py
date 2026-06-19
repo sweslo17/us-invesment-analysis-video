@@ -398,6 +398,8 @@ def cmd_publish(args: argparse.Namespace) -> int:
 
     if result["published"]:
         print(f"✅ 已上傳 YouTube(可見度 {settings.youtube_privacy}):{result.get('video_id')}")
+        ch = result.get("channel_title") or result.get("channel_id") or "(未知)"
+        print(f"   📺 上傳到頻道:{ch} — 確認是「美股早發車」!")
         print("   → 到 YouTube Studio 確認後,手動改成『公開』即可。")
     else:
         print(f"[dry-run] 未發布。標題:{title}")

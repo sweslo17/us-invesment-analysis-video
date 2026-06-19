@@ -96,10 +96,18 @@ def upload_video(
             manifest_path.write_text(json.dumps(record, ensure_ascii=False, indent=2), "utf-8")
         return record
 
-    video_id = _do_upload(video_path, title, description, tags, privacy, settings, thumbnail)
+    uploaded = _do_upload(video_path, title, description, tags, privacy, settings, thumbnail)
     record["published"] = True
-    record["video_id"] = video_id
-    logger.info("已上傳 YouTube:{}", video_id)
+    record["video_id"] = uploaded["id"]
+    record["channel_id"] = uploaded.get("channel_id")
+    record["channel_title"] = uploaded.get("channel_title")
+    logger.info(
+        "已上傳 YouTube:{}(頻道 {})", uploaded["id"], uploaded.get("channel_title") or "?"
+    )
+    if manifest_path is not None:
+        manifest_path = Path(manifest_path)
+        manifest_path.parent.mkdir(parents=True, exist_ok=True)
+        manifest_path.write_text(json.dumps(record, ensure_ascii=False, indent=2), "utf-8")
     return record
 
 
@@ -111,8 +119,11 @@ def _do_upload(
     privacy: str,
     settings,
     thumbnail: str | Path | None = None,
-) -> str:
-    """實際上傳(僅 approve=True 時呼叫)。需 OAuth refresh token。"""
+) -> dict:
+    """實際上傳(僅 approve=True 時呼叫)。需 OAuth refresh token。
+
+    回傳 {id, channel_id, channel_title} —— 含上傳到哪個頻道,供確認目的地。
+    """
     if settings is None or not settings.youtube_refresh_token:
         raise RuntimeError("缺少 YouTube OAuth 憑證(youtube_client_id/secret/refresh_token)")
 
@@ -149,6 +160,7 @@ def _do_upload(
     )
     response = request.execute()
     video_id = response["id"]
+    snip = response.get("snippet", {})
 
     # 自訂封面:best-effort(Shorts / 頻道資格可能拒絕,失敗不擋上傳)
     if thumbnail and Path(thumbnail).exists():
@@ -159,4 +171,8 @@ def _do_upload(
             logger.info("已設定自訂封面:{}", thumbnail)
         except Exception as exc:  # noqa: BLE001 — 封面失敗不應讓整支上傳失敗
             logger.warning("自訂封面設定失敗(略過):{}", exc)
-    return video_id
+    return {
+        "id": video_id,
+        "channel_id": snip.get("channelId"),
+        "channel_title": snip.get("channelTitle"),
+    }
