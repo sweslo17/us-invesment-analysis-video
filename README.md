@@ -38,9 +38,9 @@ poetry run ruff check .     # lint
 
 ## 開發進度
 
-- [x] Phase 0 — 資料層
-- [ ] Phase 1 — 研究 prompt + schema
-- [ ] Phase 2 — 圖表模組庫
+- [x] Phase 0 — 資料層(FRED + yfinance + 衍生指標 + 快照)
+- [x] Phase 1 — 研究 prompt + schema(確定性骨架完成;品質 burn-in 進行中)
+- [x] Phase 2 — 圖表模組庫(§6.1 全 8 模組)
 - [ ] Phase 3 — 講稿 + 報告
 - [ ] Phase 4 — 配音 + 合成
 - [ ] Phase 5 — 發布 + 人工 gate
