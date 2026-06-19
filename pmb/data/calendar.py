@@ -39,3 +39,15 @@ def most_recent_trading_day(date: dt.date) -> dt.date:
     prior = previous_trading_day(date)
     logger.debug("{} 非交易日,回退至最近交易日 {}", date, prior)
     return prior
+
+
+def next_trading_day(date: dt.date, *, lookahead_days: int = 10) -> dt.date:
+    """``date`` 之後(不含當日)最近的一個交易日。
+
+    往後看 ``lookahead_days`` 天搜尋(足以跨越任何週末 + 連假)。
+    """
+    end = date + dt.timedelta(days=lookahead_days)
+    valid = _NYSE.valid_days(start_date=str(date + dt.timedelta(days=1)), end_date=str(end))
+    if len(valid) == 0:
+        raise ValueError(f"{date} 後 {lookahead_days} 天內找不到交易日;請加大 lookahead_days")
+    return valid[0].date()

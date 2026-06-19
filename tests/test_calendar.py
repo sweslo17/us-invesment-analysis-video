@@ -5,6 +5,7 @@ import datetime as dt
 from pmb.data.calendar import (
     is_trading_day,
     most_recent_trading_day,
+    next_trading_day,
     previous_trading_day,
 )
 
@@ -39,3 +40,13 @@ def test_most_recent_trading_day_on_holiday_returns_prior_session():
 
 def test_most_recent_trading_day_on_session_returns_same_day():
     assert most_recent_trading_day(dt.date(2026, 6, 18)) == dt.date(2026, 6, 18)
+
+
+def test_next_trading_day_skips_weekend_and_holiday():
+    # 週六 6/20 往後:6/22 週一(6/19 Juneteenth 已過、週末跳過)
+    assert next_trading_day(dt.date(2026, 6, 20)) == dt.date(2026, 6, 22)
+
+
+def test_next_trading_day_from_session_is_strictly_after():
+    # 週四 6/18 的下一交易日:週五 6/19 休市 → 週一 6/22
+    assert next_trading_day(dt.date(2026, 6, 18)) == dt.date(2026, 6, 22)

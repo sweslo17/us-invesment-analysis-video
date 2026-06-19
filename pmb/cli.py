@@ -17,7 +17,7 @@ from loguru import logger
 
 from pmb.charts.select import implemented_modules, render_chart
 from pmb.config import get_settings
-from pmb.data.calendar import is_trading_day
+from pmb.data.calendar import is_trading_day, next_trading_day
 from pmb.data.fred import FredClient
 from pmb.data.snapshot import build_snapshot
 from pmb.data.yfinance import YFinanceClient
@@ -416,6 +416,29 @@ def cmd_publish(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_next_session(args: argparse.Namespace) -> int:
+    """印出今天是否交易日 + 下一個交易日(=盤前 routine 下次啟動日)。"""
+    today = today_eastern()
+    trading = is_trading_day(today)
+    nxt = next_trading_day(today)
+    if args.json:
+        import json as _json
+
+        print(
+            _json.dumps(
+                {"today": str(today), "is_trading_day": trading, "next_session": str(nxt)},
+                ensure_ascii=False,
+            )
+        )
+        return 0
+    mark = "交易日" if trading else "休市"
+    print(f"今天 {today}({today.strftime('%A')}):{mark}")
+    print(f"下一個交易日(下次盤前啟動):{nxt}({nxt.strftime('%A')})")
+    if trading:
+        print("→ 今天就是交易日,可直接 pmb run。")
+    return 0
+
+
 def cmd_auth_youtube(args: argparse.Namespace) -> int:
     """一次性:跑 OAuth 同意流程,印出 refresh token 供貼進 .env(密鑰不入庫)。"""
     secrets = Path(args.client_secrets)
@@ -481,6 +504,10 @@ def build_parser() -> argparse.ArgumentParser:
         "--approve", action="store_true", help="跑完直接上傳 YouTube(private,需手動改公開)"
     )
     run.set_defaults(func=cmd_run)
+
+    nexts = sub.add_parser("next-session", help="顯示今天是否交易日 + 下一個交易日")
+    nexts.add_argument("--json", action="store_true", help="以 JSON 輸出")
+    nexts.set_defaults(func=cmd_next_session)
 
     authyt = sub.add_parser("auth-youtube", help="一次性:取得 YouTube OAuth refresh token")
     authyt.add_argument("--client-secrets", required=True, help="OAuth 桌面用戶端 JSON 路徑")
