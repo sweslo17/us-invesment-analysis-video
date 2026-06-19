@@ -21,6 +21,7 @@ class Segment(BaseModel):
     chart_id: str | None = None
     headline: str | None = None
     title: str | None = None  # 圖表段頂部標題(主題);標題卡不需要
+    tag: str | None = None  # 標題卡頂部小標籤(放日期 / 金句出處等)
     t_start: float
     duration: float
 

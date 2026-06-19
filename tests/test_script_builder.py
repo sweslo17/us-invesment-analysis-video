@@ -51,6 +51,14 @@ def test_build_script_mixes_cards_and_charts_about_30s():
     assert "leverage_decay" in modules
 
 
+def test_intro_card_carries_date_and_outro_is_daily_couplet():
+    script = build_script_from_brief(_brief())
+    assert "2026-06-18" in (script.segments[0].tag or "")  # 首卡帶日期
+    last = script.segments[-1]
+    assert last.headline and "\n" in last.headline  # 對句兩行
+    assert last.tag and "改編自" in last.tag
+
+
 def test_rising_rates_picks_yield_curve_as_regime_chart():
     script = build_script_from_brief(_brief(rates="rising"))
     assert "yield_curve" in {c.module for c in script.charts}

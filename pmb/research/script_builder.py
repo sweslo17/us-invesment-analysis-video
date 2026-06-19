@@ -7,6 +7,7 @@
 
 from __future__ import annotations
 
+from pmb.research.punchlines import punchline_for
 from pmb.schemas.brief import Brief
 from pmb.schemas.chart import ChartSpec
 from pmb.schemas.script import Script, Segment
@@ -31,7 +32,7 @@ def build_script_from_brief(
     brief: Brief,
     *,
     total_seconds: float = 30.0,
-    max_charts: int = 6,
+    max_charts: int = 7,
     max_cards: int = 3,
     intro_slogan: str = _DEFAULT_INTRO,
     outro_slogan: str = _DEFAULT_OUTRO,
@@ -93,8 +94,10 @@ def build_script_from_brief(
     charts_total = max(total_seconds - n_cardlike * card_dur, float(len(ordered)))
     per_chart = charts_total / len(ordered)
 
-    def card(text: str) -> Segment:
-        return Segment(vo=text, headline=text, t_start=0.0, duration=card_dur)
+    def card(headline: str, *, vo: str | None = None, tag: str | None = None) -> Segment:
+        return Segment(
+            vo=vo or headline, headline=headline, tag=tag, t_start=0.0, duration=card_dur
+        )
 
     def chart_seg(idx: int, module: str, vo: str) -> Segment:
         return Segment(
@@ -105,8 +108,22 @@ def build_script_from_brief(
             duration=per_chart,
         )
 
-    # 編排:開頭 slogan →(時事卡、圖表交錯)→ 結尾 slogan,讓視覺一直變
-    sequence: list[Segment] = [card(intro_slogan)]
+    # 開場卡帶日期;結尾放每日投資金句梗(改編自投資名人)
+    d = brief.date
+    intro = card(
+        intro_slogan,
+        vo=f"{d.month} 月 {d.day} 號,{intro_slogan}。",
+        tag=f"{d.isoformat()} · 盤前快報",
+    )
+    line1, line2, source = punchline_for(d)
+    couplet = card(
+        f"{line1}\n{line2}",
+        vo=f"最後送你今天的盤前金句:{line1},{line2}。改編自{source}。{outro_slogan}。",
+        tag=f"改編自 {source}",
+    )
+
+    # 編排:開場(含日期)→(時事卡、圖表交錯)→ 每日金句,讓視覺一直變
+    sequence: list[Segment] = [intro]
     ci = 0
     for idx, (module, vo) in enumerate(ordered):
         if ci < len(card_texts):
@@ -116,7 +133,7 @@ def build_script_from_brief(
     while ci < len(card_texts):
         sequence.append(card(card_texts[ci]))
         ci += 1
-    sequence.append(card(outro_slogan))
+    sequence.append(couplet)
 
     cursor = 0.0
     for seg in sequence:

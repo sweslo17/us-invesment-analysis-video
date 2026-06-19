@@ -24,7 +24,14 @@ def accent_for(index: int) -> str:
 
 
 def _wrap_cjk(text: str, width: int = 9) -> str:
-    return "\n".join(text[i : i + width] for i in range(0, len(text), width))
+    """每 ``width`` 個字斷一行;保留原本就有的換行(對句兩行不會被打散)。"""
+    out: list[str] = []
+    for line in text.split("\n"):
+        if line:
+            out.extend(line[i : i + width] for i in range(0, len(line), width))
+        else:
+            out.append("")
+    return "\n".join(out)
 
 
 def render_headline_card(

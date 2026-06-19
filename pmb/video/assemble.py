@@ -47,8 +47,8 @@ _ASS_TEMPLATE = "\n".join(
         "",
         "[V4+ Styles]",
         _STYLE_FORMAT,
-        "Style: sub,PingFang TC,60,&H00FFFFFF,&H00000000,&HA0000000,1,3,6,0,2,70,70,230",
-        "Style: title,PingFang TC,54,&H0066D9FF,&H00202020,&H00000000,1,1,4,0,8,60,60,90",
+        "Style: sub,PingFang TC,62,&H00FFFFFF,&H00000000,&HA0000000,1,3,6,0,2,70,70,230",
+        "Style: title,PingFang TC,80,&H0066D9FF,&H00202020,&H00000000,1,1,5,0,8,60,60,80",
         "",
         "[Events]",
         _EVENT_FORMAT,
@@ -169,10 +169,13 @@ def assemble_video(
     clip_names: list[str] = []
     for i, seg in enumerate(script.segments):
         if seg.headline is not None:
-            # 時事標題卡:全屏大字、快速閃過(增加視覺變化)
+            # 時事標題卡 / slogan / 金句:全屏大字、快速閃過(增加視覺變化)
             card_name = f"card{i}.png"
             render_headline_card(
-                str(work_dir / card_name), seg.headline, accent=accent_for(i), tag="盤前快報"
+                str(work_dir / card_name),
+                seg.headline,
+                accent=accent_for(i),
+                tag=seg.tag or "盤前快報",
             )
             audio_name = f"card{i}.mp3"
             result = synth_fn(seg.vo, work_dir / audio_name, seg.duration)

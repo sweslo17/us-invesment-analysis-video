@@ -37,7 +37,7 @@ class Settings(BaseSettings):
     history_period: str = "6mo"
 
     # 配音:短影片用快語速,高資訊密度
-    tts_rate: str = "+35%"
+    tts_rate: str = "+40%"
 
     # 短影片開頭 / 結尾 slogan
     slogan_intro: str = "30 秒看懂今天美股盤前"
