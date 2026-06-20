@@ -316,6 +316,11 @@ function OutputView({
     );
   }
 
+  // 防止用「上一步的資料」渲染這一步:view.kind 必須對得上目前選的步驟/分頁,
+  // 否則顯示載入中,等非同步重載完成(不然會 JSON.parse 到別的檔而 crash)。
+  const expected = sel === "fetch" ? "snapshot" : sel === "publish" ? "publish" : rtab;
+  if (view.kind !== expected) return <p className="empty">載入中…</p>;
+
   if (sel === "publish") {
     if (!view.ok) return <p className="empty">尚未發布。按「預演」會產出標題/描述/tags 供檢視。</p>;
     let m: Record<string, unknown>;
@@ -360,6 +365,7 @@ function OutputView({
   if (rtab === "script") {
     let doc: ScriptDoc;
     try { doc = JSON.parse(view.raw); } catch { return <pre className="raw">{view.raw}</pre>; }
+    if (!doc || !Array.isArray(doc.segments)) return <pre className="raw">{view.raw}</pre>;
     return (
       <div>
         <div className="section-title">
@@ -393,6 +399,8 @@ function OutputView({
   // brief
   let b: BriefDoc;
   try { b = JSON.parse(view.raw); } catch { return <pre className="raw">{view.raw}</pre>; }
+  if (!b || !Array.isArray(b.items) || !b.regime || !b.thesis_delta)
+    return <pre className="raw">{view.raw}</pre>;
   return (
     <div>
       <div className="section-title">市場 regime · lead {b.lead_horizon}</div>
