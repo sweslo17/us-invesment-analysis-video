@@ -161,6 +161,14 @@ export default function App() {
   ].filter(Boolean) as string[];
   const canRunToday = !!date && todayMissing.length === 0;
 
+  const remoteHint = gitStat.includes("behind")
+    ? "☁️ 雲端有新研究 — 請先 Pull"
+    : gitStat.includes("ahead")
+    ? "本機有未推送的修正"
+    : gitStat
+    ? "已與雲端同步"
+    : "";
+
   const refreshGit = () => gitStatus().then(setGitStat).catch(() => setGitStat(""));
 
   const doPull = async () => {
@@ -216,22 +224,12 @@ export default function App() {
 
       <div className="main">
         <div className="steps">
-          <div className="today">
-            <button
-              className="today-btn"
-              disabled={running || !canRunToday}
-              title={canRunToday ? "合成 → 上傳(private)" : "前置未完成"}
-              onClick={() => trigger("today", false)}
-            >
-              🚀 一鍵完成今日作業
+          <div className="pullbar">
+            <button className="pull-btn" disabled={gitBusy} onClick={doPull}>
+              ⬇ Pull 雲端研究
             </button>
-            <div className="today-hint">
-              {!date
-                ? "先選交易日"
-                : canRunToday
-                ? "合成 → 發佈(上傳 private),完成後到 Studio 改公開"
-                : `缺前置:${todayMissing.join("、")}`}
-            </div>
+            <div className="pull-hint">{remoteHint}</div>
+            {gitStat && <pre className="gitstat">{gitStat}</pre>}
           </div>
           <div className="steps-legend">
             <span className="owner cloud">☁️ Claude Code</span>
@@ -251,9 +249,7 @@ export default function App() {
           ))}
 
           <div className="gitbar">
-            <div className="gitbar-title">本機 Git</div>
-            {gitStat && <pre className="gitstat">{gitStat}</pre>}
-            <button disabled={gitBusy} onClick={doPull}>⬇ Pull 雲端研究</button>
+            <div className="gitbar-title">本機修正回推(改了研究才需要)</div>
             <input
               value={commitMsg}
               onChange={(e) => setCommitMsg(e.target.value)}
@@ -262,6 +258,24 @@ export default function App() {
             <button disabled={gitBusy || !commitMsg.trim()} onClick={doCommitPush}>
               ⬆ 提交 + 推送 main
             </button>
+          </div>
+
+          <div className="today">
+            <button
+              className="today-btn"
+              disabled={running || !canRunToday}
+              title={canRunToday ? "合成 → 上傳(private)" : "前置未完成"}
+              onClick={() => trigger("today", false)}
+            >
+              🚀 一鍵完成今日作業
+            </button>
+            <div className="today-hint">
+              {!date
+                ? "先選交易日"
+                : canRunToday
+                ? "合成 → 發佈(上傳 private),完成後到 Studio 改公開"
+                : `缺前置:${todayMissing.join("、")}`}
+            </div>
           </div>
         </div>
 

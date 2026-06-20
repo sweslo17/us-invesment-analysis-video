@@ -323,6 +323,7 @@ fn git(args: &[&str]) -> Result<String, String> {
 
 #[tauri::command]
 fn git_status() -> Result<String, String> {
+    let _ = git(&["fetch", "--quiet"]); // best-effort:先抓遠端,才知道雲端是否已推研究(離線則略過)
     git(&["status", "-sb"])
 }
 

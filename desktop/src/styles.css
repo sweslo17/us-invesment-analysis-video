@@ -171,8 +171,29 @@ button.danger {
   overflow: auto;
   background: #0c1826;
 }
-.today {
+.pullbar {
   margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.pull-btn {
+  width: 100%;
+  background: #163049;
+  border: 1px solid var(--blue);
+  color: #cfe4f7;
+  border-radius: 11px;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 700;
+}
+.pull-hint {
+  font-size: 11.5px;
+  color: var(--muted);
+  text-align: center;
+}
+.today {
+  margin-top: 14px;
 }
 .today-btn {
   width: 100%;
