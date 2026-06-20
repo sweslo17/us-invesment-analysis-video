@@ -146,6 +146,14 @@ export default function App() {
     }
   };
 
+  // 一鍵作業前置:取數 + 研究(brief + 講稿)須齊全,否則不給按
+  const todayMissing = [
+    !status?.snapshot && "取數",
+    !status?.brief && "研究(brief)",
+    !status?.script && "研究(講稿)",
+  ].filter(Boolean) as string[];
+  const canRunToday = !!date && todayMissing.length === 0;
+
   return (
     <div className="app">
       <div className="topbar">
@@ -166,6 +174,23 @@ export default function App() {
 
       <div className="main">
         <div className="steps">
+          <div className="today">
+            <button
+              className="today-btn"
+              disabled={running || !canRunToday}
+              title={canRunToday ? "合成 → 上傳(private)" : "前置未完成"}
+              onClick={() => trigger("today", false)}
+            >
+              🚀 一鍵完成今日作業
+            </button>
+            <div className="today-hint">
+              {!date
+                ? "先選交易日"
+                : canRunToday
+                ? "合成 → 發佈(上傳 private),完成後到 Studio 改公開"
+                : `缺前置:${todayMissing.join("、")}`}
+            </div>
+          </div>
           <div className="steps-legend">
             <span className="owner cloud">☁️ Claude Code</span>
             <span className="owner local">💻 本機(可點)</span>

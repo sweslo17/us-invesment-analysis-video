@@ -23,7 +23,7 @@ export interface Status {
 }
 
 export type ArtifactKind = "snapshot" | "brief" | "script" | "report" | "publish";
-export type Step = "fetch" | "research" | "assemble" | "publish" | "run";
+export type Step = "fetch" | "research" | "assemble" | "publish" | "run" | "today";
 
 export const listDates = () => invoke<string[]>("list_dates");
 export const getStatus = (date: string) => invoke<Status>("get_status", { date });

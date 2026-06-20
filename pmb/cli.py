@@ -418,6 +418,48 @@ def cmd_publish(args: argparse.Namespace) -> int:
     return 0
 
 
+def today_blockers(artifacts_dir: Path, target: str) -> list[str]:
+    """一鍵作業的前置檢查:回傳缺少的前置產物標籤(空 = 可執行)。
+
+    合成/發佈是本機步驟,但需要「取數(snapshot)」與「研究(brief + 講稿)」先完成。
+    """
+    need = [
+        ("snapshot", "取數"),
+        ("brief", "研究(brief)"),
+        ("script", "研究(講稿)"),
+    ]
+    return [
+        label for kind, label in need if not (artifacts_dir / f"{kind}_{target}.json").exists()
+    ]
+
+
+def cmd_today(args: argparse.Namespace) -> int:
+    """一鍵完成今日本機作業:合成 → 發佈。前置(取數+研究)缺則中止、不執行。
+
+    供桌面控台一鍵與之後 cron 共用。預設上傳(private);``--no-upload`` 只合成+產發布資訊。
+    """
+    settings = get_settings()
+    settings.ensure_dirs()
+    explicit = dt.date.fromisoformat(args.date) if args.date else None
+    target = resolve_fetch_target(today_eastern(), explicit)
+    if target is None:
+        print("今天非 NYSE 交易日,skip。")
+        return 0
+
+    blockers = today_blockers(settings.artifacts_dir, str(target))
+    if blockers:
+        print(f"⛔ 前置步驟未完成,不執行一鍵作業:缺 {'、'.join(blockers)}。")
+        print("   請先完成「取數」+「研究(Claude Code)」,產出齊全再執行。")
+        return 1
+
+    print(f"🚀 一鍵完成今日作業({target}):合成 → 發佈")
+    rc = cmd_assemble(argparse.Namespace(date=str(target), dry_run=False))
+    if rc != 0:
+        print("✗ 合成失敗,中止,不發佈。")
+        return rc
+    return cmd_publish(argparse.Namespace(date=str(target), approve=not args.no_upload))
+
+
 def cmd_research_prompt(args: argparse.Namespace) -> int:
     """輸出今日「研究 prompt」(模板 + 真實快照 + thesis + 昨日 brief),供貼進 Claude Code。
 
@@ -544,6 +586,11 @@ def build_parser() -> argparse.ArgumentParser:
     rprompt.add_argument("--date", help="指定交易日 YYYY-MM-DD")
     rprompt.add_argument("--out", help="寫到檔案而非印出")
     rprompt.set_defaults(func=cmd_research_prompt)
+
+    todaycmd = sub.add_parser("today", help="一鍵完成今日本機作業:合成→發佈(前置缺則中止)")
+    todaycmd.add_argument("--date", help="指定交易日 YYYY-MM-DD")
+    todaycmd.add_argument("--no-upload", action="store_true", help="只合成+產發布資訊,不上傳")
+    todaycmd.set_defaults(func=cmd_today)
 
     authyt = sub.add_parser("auth-youtube", help="一次性:取得 YouTube OAuth refresh token")
     authyt.add_argument("--client-secrets", required=True, help="OAuth 桌面用戶端 JSON 路徑")

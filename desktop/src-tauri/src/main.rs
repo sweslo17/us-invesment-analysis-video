@@ -27,7 +27,8 @@ fn artifacts_dir() -> PathBuf {
 }
 
 /// 允許觸發的 pmb 子指令(白名單,避免任意指令注入)。
-const ALLOWED_STEPS: [&str; 6] = ["fetch", "research", "render", "assemble", "publish", "run"];
+const ALLOWED_STEPS: [&str; 7] =
+    ["fetch", "research", "render", "assemble", "publish", "run", "today"];
 
 fn is_valid_date(d: &str) -> bool {
     d.len() == 10
