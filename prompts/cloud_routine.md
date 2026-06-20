@@ -39,24 +39,24 @@
    - `artifacts/report_<date>.md`(§7.1)
    - 重大且**夠確認**才保守更新 `state/thesis.json`;否則不動。
    - 驗證:`poetry run python -c "from pmb.schemas.brief import Brief; from pathlib import Path; Brief.model_validate_json(Path('artifacts/brief_<date>.json').read_text())"`(script 同理);不過就修正重寫。
-5. **commit 供人工 gate**(`artifacts/` 被 gitignore,text 產物用 `-f` 強制加):
+5. **commit 並直接 push 到 `main`**(審查在本機做,不開 PR;`artifacts/` 被 gitignore,text 產物用 `-f`):
    ```bash
    D=<date>
-   git checkout -b pmb/$D
    git add -f artifacts/brief_$D.json artifacts/script_$D.json artifacts/report_$D.md
    git add state/thesis.json
-   git commit -m "research: $D 盤前研究產出(待人工 gate)"
-   git push -u origin pmb/$D
+   git commit -m "research: $D 盤前研究產出"
+   git pull --rebase origin main    # 先同步本機可能的修正
+   git push origin main
    ```
-   並開 PR(供你審查與合併回 main,thesis/去重隔天才生效)。
 6. **絕不執行 `pmb assemble` / `pmb publish`**(那在你本機跑)。任一步失敗 → 清楚說明,不要硬產半成品。
 
 ---
 
 ## 本機後續(你 / 之後 cron;不在雲端)
 
-`git pull` 該分支 → 控台「🚀 一鍵完成今日作業」或 `poetry run pmb today`(合成 → 上傳 private)→
-到 YouTube Studio 揭露合成內容、加播放清單、改公開。
+`git pull`(或控台「⬇ Pull」)取雲端研究 → 控台檢視講稿/Brief/報告 → 有問題就本機改、用控台
+「⬆ 提交+推送」回推 main → 控台「🚀 一鍵完成今日作業」或 `poetry run pmb today`(合成 → 上傳 private)
+→ 到 YouTube Studio 揭露合成內容、加播放清單、改公開。
 
 ---
 

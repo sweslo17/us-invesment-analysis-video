@@ -10,6 +10,9 @@ import {
   convertFileSrc,
   coverPath,
   getStatus,
+  gitCommitPush,
+  gitPull,
+  gitStatus,
   listDates,
   nextSession,
   openPath,
@@ -45,6 +48,9 @@ export default function App() {
   const [date, setDate] = useState("");
   const [status, setStatus] = useState<Status | null>(null);
   const [nextInfo, setNextInfo] = useState<NextSession | null>(null);
+  const [gitStat, setGitStat] = useState<string>("");
+  const [gitBusy, setGitBusy] = useState(false);
+  const [commitMsg, setCommitMsg] = useState("");
   const [sel, setSel] = useState<StepId>("research");
   const [rtab, setRtab] = useState<RTab>("script");
 
@@ -93,6 +99,7 @@ export default function App() {
   useEffect(() => {
     refreshDates();
     nextSession().then(setNextInfo).catch(() => setNextInfo(null));
+    gitStatus().then(setGitStat).catch(() => setGitStat(""));
   }, [refreshDates]);
 
   useEffect(() => { refreshStatus(date); }, [date, refreshStatus]);
@@ -154,6 +161,41 @@ export default function App() {
   ].filter(Boolean) as string[];
   const canRunToday = !!date && todayMissing.length === 0;
 
+  const refreshGit = () => gitStatus().then(setGitStat).catch(() => setGitStat(""));
+
+  const doPull = async () => {
+    if (gitBusy) return;
+    setGitBusy(true);
+    setLogs((p) => [...p, "\n⬇ git pull --ff-only"]);
+    try {
+      const out = await gitPull();
+      setLogs((p) => [...p, out || "(已是最新)"]);
+      refreshDates();
+      refreshStatus(dateRef.current);
+    } catch (e) {
+      setLogs((p) => [...p, `✗ ${e}`]);
+    } finally {
+      setGitBusy(false);
+      refreshGit();
+    }
+  };
+
+  const doCommitPush = async () => {
+    if (gitBusy || !commitMsg.trim()) return;
+    setGitBusy(true);
+    setLogs((p) => [...p, `\n⬆ 提交+推送:${commitMsg}`]);
+    try {
+      const out = await gitCommitPush(commitMsg, date);
+      setLogs((p) => [...p, out]);
+      setCommitMsg("");
+    } catch (e) {
+      setLogs((p) => [...p, `✗ ${e}`]);
+    } finally {
+      setGitBusy(false);
+      refreshGit();
+    }
+  };
+
   return (
     <div className="app">
       <div className="topbar">
@@ -207,6 +249,20 @@ export default function App() {
               <div className="sc-desc">{s.desc}</div>
             </button>
           ))}
+
+          <div className="gitbar">
+            <div className="gitbar-title">本機 Git</div>
+            {gitStat && <pre className="gitstat">{gitStat}</pre>}
+            <button disabled={gitBusy} onClick={doPull}>⬇ Pull 雲端研究</button>
+            <input
+              value={commitMsg}
+              onChange={(e) => setCommitMsg(e.target.value)}
+              placeholder="修正說明(例:修講稿用字)"
+            />
+            <button disabled={gitBusy || !commitMsg.trim()} onClick={doCommitPush}>
+              ⬆ 提交 + 推送 main
+            </button>
+          </div>
         </div>
 
         <div className="right">

@@ -35,6 +35,10 @@ export const openPath = (path: string) => invoke<void>("open_path", { path });
 export const openRel = (rel: string) => invoke<void>("open_rel", { rel });
 export const nextSession = () => invoke<NextSession>("next_session");
 export const researchPrompt = (date: string) => invoke<string>("research_prompt", { date });
+export const gitStatus = () => invoke<string>("git_status");
+export const gitPull = () => invoke<string>("git_pull");
+export const gitCommitPush = (message: string, date: string) =>
+  invoke<string>("git_commit_push", { message, date: date || null });
 
 export const runStep = (step: Step, date: string, dryrun: boolean, approve: boolean) =>
   invoke<void>("run_step", { step, date: date || null, dryrun, approve });

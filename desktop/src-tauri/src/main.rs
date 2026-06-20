@@ -304,6 +304,60 @@ fn run_step(
     Ok(())
 }
 
+fn git(args: &[&str]) -> Result<String, String> {
+    let root = project_root();
+    let out = Command::new("git")
+        .args(args)
+        .current_dir(&root)
+        .output()
+        .map_err(|e| format!("git 執行失敗:{e}"))?;
+    let mut s = String::from_utf8_lossy(&out.stdout).to_string();
+    s.push_str(&String::from_utf8_lossy(&out.stderr));
+    let s = s.trim().to_string();
+    if out.status.success() {
+        Ok(s)
+    } else {
+        Err(s)
+    }
+}
+
+#[tauri::command]
+fn git_status() -> Result<String, String> {
+    git(&["status", "-sb"])
+}
+
+/// 取雲端推到 main 的研究產物(fast-forward;本機若有未推送提交會擋下,提示先推送)。
+#[tauri::command]
+fn git_pull() -> Result<String, String> {
+    git(&["pull", "--ff-only"])
+}
+
+/// 本機審查後回推修正:強制加當日 text 產物(artifacts/ 被 gitignore)+ 已追蹤檔修改 → commit → push。
+#[tauri::command]
+fn git_commit_push(message: String, date: Option<String>) -> Result<String, String> {
+    if message.trim().is_empty() {
+        return Err("請填修正說明".to_string());
+    }
+    if let Some(d) = date.as_deref() {
+        if is_valid_date(d) {
+            for (kind, ext) in [("brief", "json"), ("script", "json"), ("report", "md")] {
+                let rel = format!("artifacts/{kind}_{d}.{ext}");
+                if project_root().join(&rel).exists() {
+                    let _ = git(&["add", "-f", &rel]);
+                }
+            }
+        }
+    }
+    git(&["add", "-u"])?; // 已追蹤檔(state/、prompts/、pmb/…)的修改
+    let staged = git(&["diff", "--cached", "--name-only"])?;
+    if staged.is_empty() {
+        return Err("沒有可提交的變更".to_string());
+    }
+    git(&["commit", "-m", &message])?;
+    let pushed = git(&["push"])?;
+    Ok(format!("已提交並推送:\n{staged}\n{pushed}"))
+}
+
 fn main() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
@@ -316,6 +370,9 @@ fn main() {
             open_rel,
             next_session,
             research_prompt,
+            git_status,
+            git_pull,
+            git_commit_push,
             run_step
         ])
         .run(tauri::generate_context!())
