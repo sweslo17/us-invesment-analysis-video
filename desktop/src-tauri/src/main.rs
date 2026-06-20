@@ -181,6 +181,29 @@ fn cover_path(date: String) -> Option<String> {
     }
 }
 
+/// 取得今日「研究 prompt」(模板 + 快照 + thesis),供貼進 Claude Code 做研究。
+#[tauri::command]
+fn research_prompt(date: String) -> Result<String, String> {
+    if !is_valid_date(&date) {
+        return Err(format!("日期格式錯誤:{date}"));
+    }
+    let root = project_root();
+    let out = Command::new("/bin/zsh")
+        .arg("-lc")
+        .arg(format!(
+            "cd '{}' && poetry run pmb research-prompt --date {}",
+            root.display(),
+            date
+        ))
+        .current_dir(&root)
+        .output()
+        .map_err(|e| format!("執行失敗:{e}"))?;
+    if !out.status.success() {
+        return Err(String::from_utf8_lossy(&out.stderr).trim().to_string());
+    }
+    Ok(String::from_utf8_lossy(&out.stdout).to_string())
+}
+
 /// 查今天是否交易日 + 下一個交易日(呼叫 `pmb next-session --json`)。
 #[tauri::command]
 fn next_session() -> Result<serde_json::Value, String> {
@@ -291,6 +314,7 @@ fn main() {
             open_path,
             open_rel,
             next_session,
+            research_prompt,
             run_step
         ])
         .run(tauri::generate_context!())

@@ -34,6 +34,7 @@ export const coverPath = (date: string) => invoke<string | null>("cover_path", {
 export const openPath = (path: string) => invoke<void>("open_path", { path });
 export const openRel = (rel: string) => invoke<void>("open_rel", { rel });
 export const nextSession = () => invoke<NextSession>("next_session");
+export const researchPrompt = (date: string) => invoke<string>("research_prompt", { date });
 
 export const runStep = (step: Step, date: string, dryrun: boolean, approve: boolean) =>
   invoke<void>("run_step", { step, date: date || null, dryrun, approve });
