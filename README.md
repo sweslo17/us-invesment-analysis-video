@@ -35,6 +35,7 @@ poetry run ruff check .     # lint
 | `pmb assemble [--date] [--dry-run]` | Phase 4 | 配音 + 合成 30s mp4(`--dry-run` 用靜音) |
 | `pmb publish [--date] [--approve]` | Phase 5 | 發布(**預設 dry-run**;`--approve` 才上傳 YouTube,固定 private) |
 | `pmb run [--date] [--dry-run] [--approve]` | — | 全流程 fetch→research→assemble→gate(`--approve` 才以 private 上傳) |
+| `pmb today [--date] [--no-upload]` | — | 一鍵完成今日**本機**作業:合成→發佈(前置缺則中止);供控台一鍵 / cron |
 | `pmb next-session [--json]` | — | 顯示今天是否交易日 + 下一個交易日(=盤前下次啟動) |
 | `pmb research-prompt [--date] [--out]` | — | 輸出今日研究 prompt(模板+快照)貼進 Claude Code 做研究 |
 | `pmb auth-youtube --client-secrets X` | — | 一次性:取得 YouTube OAuth refresh token(貼進 `.env`) |
@@ -76,6 +77,14 @@ routine 貼上 [`prompts/cloud_routine.md`](prompts/cloud_routine.md):它會 `pm
 2. **☁️ 研究(Claude Code)**:雲端 routine 盤前自動跑;或本機「複製研究 Prompt」貼進 Claude Code → 產 brief/講稿/報告、更新 thesis。
 3. **🧑 審研究 + 💻 合成**:控台看講稿/Brief/報告(+⚠️圖表缺口);OK 就按「合成」→ 直式 mp4。
 4. **🧑 審影片 + 💻 發布**:控台內嵌看片;OK 按「上傳 YouTube(private)」→ 輸出會印「上傳到頻道」確認是美股早發車 → 到 YouTube Studio 補「合成內容揭露(用了 TTS)」、加播放清單、改公開。
+
+**一鍵完成本機作業**:研究產出齊全後(控台會檢查),按控台「🚀 一鍵完成今日作業」或跑 `pmb today` → 合成 → 發佈(上傳 private)一氣呵成;**前置缺(取數/研究)會中止不執行**。最後到 YouTube Studio 揭露合成內容 + 改公開。
+
+**綁 cron(流程跑順後)**:`pmb today` 適合排程,例如交易日早上 8:40(台灣):
+```cron
+40 8 * * 1-5  cd /path/to/repo && /path/to/poetry run pmb today >> ~/pmb.log 2>&1
+```
+(休市日 `pmb today` 會自動 skip;前置缺也會中止,不會誤發。)
 
 **手動介入點**:選題/語氣 → `prompts/daily_research.md`;當日內容 → `artifacts/script_<date>.json` 後重 `assemble`;中長期 → `state/thesis.json`;風格/頻道名/語速/類別 → `pmb/config.py`(或 `.env`)。
 
