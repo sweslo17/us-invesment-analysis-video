@@ -99,17 +99,27 @@ export default function App() {
   useEffect(() => { loadView(sel, rtab, date); }, [sel, rtab, date, loadView]);
 
   useEffect(() => {
+    // listen() 是非同步的;StrictMode 會掛載→卸載→再掛載。用 disposed 旗標確保
+    // 第一輪的監聽器在 resolve 後若已卸載就立刻解除,避免累積成重複監聽(日誌印兩次)。
+    let disposed = false;
     const unsubs: Array<() => void> = [];
-    listen<string>("pmb-log", (e) => setLogs((p) => [...p, e.payload])).then((u) => unsubs.push(u));
-    listen<number>("pmb-done", (e) => {
-      setRunning(false);
-      setExitCode(e.payload);
-      setLogs((p) => [...p, `— 結束(code ${e.payload})—`]);
-      refreshDates();
-      refreshStatus(dateRef.current);
-      loadView(selRef.current, rtabRef.current, dateRef.current);
-    }).then((u) => unsubs.push(u));
-    return () => unsubs.forEach((u) => u());
+    const track = (p: Promise<() => void>) =>
+      p.then((u) => (disposed ? u() : unsubs.push(u)));
+    track(listen<string>("pmb-log", (e) => setLogs((p) => [...p, e.payload])));
+    track(
+      listen<number>("pmb-done", (e) => {
+        setRunning(false);
+        setExitCode(e.payload);
+        setLogs((p) => [...p, `— 結束(code ${e.payload})—`]);
+        refreshDates();
+        refreshStatus(dateRef.current);
+        loadView(selRef.current, rtabRef.current, dateRef.current);
+      })
+    );
+    return () => {
+      disposed = true;
+      unsubs.forEach((u) => u());
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
