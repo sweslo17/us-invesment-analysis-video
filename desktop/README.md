@@ -4,12 +4,18 @@
 
 ## 它做什麼
 
-- **狀態儀表板**:選交易日 → 顯示 快照 / Brief / 講稿 / 報告 / 影片 / 發布 是否已產出。
-- **執行按鈕**:`1 取數` `2 研究` `3 合成` `4 發布` 與 `▶ 全流程 run`,可切換 `dry-run`(範例/靜音)與 `approve`(真上傳)。
-- **內容檢視**:講稿(逐段 vo/字卡/圖)、Brief(研判/regime/催化劑/thesis)、報告(markdown)、影片(系統播放器開啟 + 發布狀態)。
-- **即時日誌**:把 `poetry run pmb …` 的 stdout/stderr 逐行串到右側。
+**以「步驟」為主導**。左欄是 4 個步驟,每步標明誰做、是否完成;點步驟,右側顯示該步的動作與產出,下方是即時日誌。
 
-> 後端是 Rust(Tauri v2),用 login shell 跑 `poetry run pmb`(取得 poetry PATH),並讀專案根的 `artifacts/`。確定性、無任何外部呼叫。
+- **① 取數 💻 本機**:點「執行取數」→ 今日真實快照。
+- **② 研究 ☁️ Claude Code**:**不是本機按鈕**。雲端 routine 盤前自動跑;或在本機按「複製研究 Prompt」→ 貼進 Claude Code → 它研究並寫出 brief/講稿/報告。右側可看講稿/Brief/報告與「研究 Prompt」。
+- **③ 合成 💻 本機**:點「執行合成」→ 直式短片(右側內嵌播放 + 封面)。
+- **④ 發布 💻 本機**:「預演(不上傳)」看發布資訊,或「上傳 YouTube(private)」實際上傳;右側顯示標題/tags/上傳到的頻道。
+- **即時日誌**:本機步驟的 `poetry run pmb …` 輸出逐行串到右下。
+- 頂列顯示「今天開市/休市 · 下次啟動日」。
+
+> **沒有 dry-run 開關**:取數/合成都直接跑真的(免費);唯一的 gate 是發布要不要上傳。研究不走 API key,是 Claude Code 做的。
+>
+> 後端是 Rust(Tauri v2),用 login shell 跑 `poetry run pmb`(取得 poetry PATH),讀專案根的 `artifacts/`。確定性、無外部呼叫。
 
 ## 前置需求
 

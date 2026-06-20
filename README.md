@@ -36,7 +36,12 @@ poetry run ruff check .     # lint
 | `pmb publish [--date] [--approve]` | Phase 5 | 發布(**預設 dry-run**;`--approve` 才上傳 YouTube,固定 private) |
 | `pmb run [--date] [--dry-run] [--approve]` | — | 全流程 fetch→research→assemble→gate(`--approve` 才以 private 上傳) |
 | `pmb next-session [--json]` | — | 顯示今天是否交易日 + 下一個交易日(=盤前下次啟動) |
+| `pmb research-prompt [--date] [--out]` | — | 輸出今日研究 prompt(模板+快照)貼進 Claude Code 做研究 |
 | `pmb auth-youtube --client-secrets X` | — | 一次性:取得 YouTube OAuth refresh token(貼進 `.env`) |
+
+> **研究這步是 Claude Code 做的,不走 API key**:雲端 routine 自動跑,或本機把 `pmb research-prompt` 的輸出貼進 Claude Code。`pmb research`(API 路徑)只供自動化測試/選配。
+>
+> **dry-run 的意義**:正常營運**唯一的 gate 是「上不上傳」**(`publish` / `run` 加 `--approve` 才上傳,且固定 private)。取數/合成都是免費、直接跑真的;`research`/`assemble` 的 `--dry-run`(範例/靜音)只給自動化測試用。
 
 典型開發跑法(完全不對外、免 LLM/TTS 金鑰):
 
@@ -60,16 +65,17 @@ routine 貼上 [`prompts/cloud_routine.md`](prompts/cloud_routine.md):它會 `pm
 
 > 頻道:**美股早發車**(類別:教育)。所有產出皆為市場資訊與風險教育、**非投資建議**;上線前先過 GoodFinance 合規。
 
+每步標明誰做:**☁️ Claude Code**(研究)/ **💻 本機**(取數、合成、發布)。控台以「步驟」為主導:本機步驟可點,研究步顯示 prompt 供貼進 Claude Code。
+
 **一次性設定**
-1. `.env` 填 `FRED_API_KEY`(研究若在本機測試另填 `ANTHROPIC_API_KEY`;雲端 routine 用 agent 本身、免金鑰)。
+1. `.env` 填 `FRED_API_KEY`。**研究不需 API key**(Claude Code 做)。
 2. YouTube:Google Cloud 建 OAuth 桌面用戶端 → `pmb auth-youtube --client-secrets X` → 三行貼進 `.env`(憑證**只放信任本機/CI、勿放雲端**)。
 
-**每個交易日**
-1. **☁️ 研究(雲端 routine)**:盤前自動 `fetch` + 研究 → 產 brief/script/report、更新 thesis(commit / 落 artifacts)。
-2. **🧑 gate①(人工審研究)**:用控台或直接看 `artifacts/`,檢查 insight、講稿、thesis、⚠️圖表缺口;要改就編 `prompts/daily_research.md` 或當日 `script_<date>.json`。
-3. **💻 合成**:`pmb assemble`(或控台「3 合成」)→ 直式 mp4。
-4. **🧑 gate②(人工審影片)**:控台內嵌播放確認。
-5. **💻 發布**:`pmb publish --approve`(或控台勾 approve)→ 以 **private** 上傳 → 印出「上傳到頻道」確認是美股早發車 → 自己到 YouTube Studio 補「合成內容揭露(用了 TTS)」、加播放清單、改公開。
+**每個交易日(4 步)**
+1. **💻 取數**:`pmb fetch`(或控台「取數」)→ 今日真實快照。
+2. **☁️ 研究(Claude Code)**:雲端 routine 盤前自動跑;或本機「複製研究 Prompt」貼進 Claude Code → 產 brief/講稿/報告、更新 thesis。
+3. **🧑 審研究 + 💻 合成**:控台看講稿/Brief/報告(+⚠️圖表缺口);OK 就按「合成」→ 直式 mp4。
+4. **🧑 審影片 + 💻 發布**:控台內嵌看片;OK 按「上傳 YouTube(private)」→ 輸出會印「上傳到頻道」確認是美股早發車 → 到 YouTube Studio 補「合成內容揭露(用了 TTS)」、加播放清單、改公開。
 
 **手動介入點**:選題/語氣 → `prompts/daily_research.md`;當日內容 → `artifacts/script_<date>.json` 後重 `assemble`;中長期 → `state/thesis.json`;風格/頻道名/語速/類別 → `pmb/config.py`(或 `.env`)。
 
