@@ -33,10 +33,14 @@ def build_research_prompt(
     thesis: Thesis,
     prompt_template: str,
     previous_brief: Brief | None = None,
+    *,
+    output_mode: str = "json",
 ) -> str:
     """把研究 prompt 模板 + 真實數據快照 + thesis(+ 昨日 brief)組成完整 prompt。
 
     數字只來自快照,LLM 不得編造。
+    ``output_mode="json"``(預設,給 API runner 解析)要求只輸出單一 brief JSON;
+    ``output_mode="files"``(給本機 Claude Code agent)要求把產物寫成檔案。
     """
     parts = [
         prompt_template,
@@ -48,7 +52,21 @@ def build_research_prompt(
     if previous_brief is not None:
         parts.append("\n=== 昨日 brief(短期去重 / 中長期 open threads 參考)===")
         parts.append(previous_brief.model_dump_json(indent=2))
-    parts.append("\n請嚴格依 brief schema 輸出單一 JSON 物件,不要加任何說明文字。")
+    if output_mode == "files":
+        date = snapshot.session_date.isoformat()
+        parts.append(
+            "\n【本機輸出 — 請把結果寫成檔案,不要只印在對話裡】\n"
+            f"完成研究後,把產物寫到專案目錄(日期 = {date}):\n"
+            f"- artifacts/brief_{date}.json — 過 Brief schema(pmb/schemas/brief.py)\n"
+            f"- artifacts/script_{date}.json — 過 Script schema"
+            "(每段 chart_id 對得上 charts[].id;模組限 8 個固定模組)\n"
+            f"- artifacts/report_{date}.md — 面向一般讀者的長文\n"
+            "- 有重大且夠確認的變化才保守更新 state/thesis.json;否則不動\n"
+            "寫完用 pmb/schemas 驗證(載入 Brief / Script 做 model_validate_json),不過就修正重寫。\n"
+            "不要執行 pmb assemble 或 pmb publish(那是後續本機步驟)。"
+        )
+    else:
+        parts.append("\n請嚴格依 brief schema 輸出單一 JSON 物件,不要加任何說明文字。")
     return "\n".join(parts)
 
 

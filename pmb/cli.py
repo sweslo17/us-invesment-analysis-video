@@ -480,7 +480,9 @@ def cmd_research_prompt(args: argparse.Namespace) -> int:
     thesis = load_thesis(settings.state_dir / "thesis.json")
     previous_brief = load_previous_brief(settings.artifacts_dir, target)
     template = settings.prompt_path.read_text(encoding="utf-8")
-    prompt = build_research_prompt(snapshot, thesis, template, previous_brief)
+    prompt = build_research_prompt(
+        snapshot, thesis, template, previous_brief, output_mode="files"
+    )
     if args.out:
         Path(args.out).write_text(prompt, encoding="utf-8")
         print(f"研究 prompt 已寫入 {args.out}")
