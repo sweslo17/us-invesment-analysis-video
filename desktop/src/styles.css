@@ -366,6 +366,15 @@ button.danger {
   flex-wrap: wrap;
   margin-bottom: 14px;
 }
+.window-banner {
+  border: 1px solid #6b5320;
+  background: #221a0e;
+  color: #f0c987;
+  border-radius: 10px;
+  padding: 9px 12px;
+  font-size: 13px;
+  margin-bottom: 12px;
+}
 .cloudbox {
   border: 1px solid #2c4d6b;
   background: #0f1f2e;

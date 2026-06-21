@@ -51,6 +51,7 @@ export default function App() {
   const [gitStat, setGitStat] = useState<string>("");
   const [gitBusy, setGitBusy] = useState(false);
   const [commitMsg, setCommitMsg] = useState("");
+  const [coverage, setCoverage] = useState<{ prev: string | null; gap: number } | null>(null);
   const [sel, setSel] = useState<StepId>("research");
   const [rtab, setRtab] = useState<RTab>("script");
 
@@ -96,6 +97,21 @@ export default function App() {
     catch (e) { setView({ kind, ok: false, raw: String(e) }); }
   }, []);
 
+  // 研究涵蓋窗:從快照的 session_date / previous_session_date 算回看天數
+  const loadCoverage = useCallback(async (d: string) => {
+    if (!d) return setCoverage(null);
+    try {
+      const s = JSON.parse(await readArtifact(d, "snapshot"));
+      const prev: string | null = s.previous_session_date ?? null;
+      const gap = prev
+        ? Math.round((Date.parse(s.session_date) - Date.parse(prev)) / 86400000)
+        : 0;
+      setCoverage({ prev, gap });
+    } catch {
+      setCoverage(null);
+    }
+  }, []);
+
   useEffect(() => {
     refreshDates();
     nextSession().then(setNextInfo).catch(() => setNextInfo(null));
@@ -104,6 +120,7 @@ export default function App() {
 
   useEffect(() => { refreshStatus(date); }, [date, refreshStatus]);
   useEffect(() => { loadView(sel, rtab, date); }, [sel, rtab, date, loadView]);
+  useEffect(() => { loadCoverage(date); }, [date, loadCoverage]);
 
   useEffect(() => {
     // listen() 是非同步的;StrictMode 會掛載→卸載→再掛載。用 disposed 旗標確保
@@ -121,6 +138,7 @@ export default function App() {
         refreshDates();
         refreshStatus(dateRef.current);
         loadView(selRef.current, rtabRef.current, dateRef.current);
+        loadCoverage(dateRef.current);
       })
     );
     return () => {
@@ -290,6 +308,7 @@ export default function App() {
               rtab={rtab}
               setRtab={setRtab}
               running={running}
+              coverage={coverage}
               onTrigger={trigger}
               onCopy={copyPrompt}
             />
@@ -328,10 +347,12 @@ function StepDetail(props: {
   rtab: RTab;
   setRtab: (t: RTab) => void;
   running: boolean;
+  coverage: { prev: string | null; gap: number } | null;
   onTrigger: (step: Step, approve: boolean) => void;
   onCopy: () => void;
 }) {
-  const { sel, status, view, vpath, cpath, rtab, setRtab, running, onTrigger, onCopy } = props;
+  const { sel, status, view, vpath, cpath, rtab, setRtab, running, coverage, onTrigger, onCopy } =
+    props;
   const def = STEPS.find((s) => s.id === sel)!;
 
   return (
@@ -351,6 +372,12 @@ function StepDetail(props: {
         </div>
       )}
 
+      {sel === "research" && coverage && coverage.prev && (
+        <div className="window-banner">
+          📅 研究涵蓋窗:回看 <b>{coverage.gap} 天</b>(自上一交易日 {coverage.prev} 收盤起)
+          {coverage.gap > 1 && " · 含假期/週末,需涵蓋整段事件,不只前一日"}
+        </div>
+      )}
       {sel === "research" && (
         <div className="cloudbox">
           <p>這步由 <b>Claude Code</b> 做,不用 API key:</p>
