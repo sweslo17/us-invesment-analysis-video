@@ -30,8 +30,10 @@
    - 若輸出「今天非 NYSE 交易日,skip」→ 休市,**直接結束、不要 commit**。
    - 否則它會寫 `artifacts/snapshot_<date>.json`。
 2. **讀** `artifacts/snapshot_<date>.json`(真實數字)與 `state/thesis.json`(中長期基準)。
-3. **研究(AI,web search 近 12–24h)**:嚴格依下方「研究任務」(= `prompts/daily_research.md` 全文):
-   盤前框架(昨收回顧 + 今日盤前期貨 + 今日催化劑)、反 AI 腔、槓桿走一般倍數風險教育、
+3. **研究(AI,web search)**:嚴格依下方「研究任務」(= `prompts/daily_research.md` 全文)。
+   ⚠️ 搜尋窗 = **自上一交易日收盤到今天盤前的整段**(假期/週末後第一個交易日要涵蓋整段休市期間,
+   不只前一日;重大事件影響常跨多日,仍在發酵的也要納入)——見快照 `previous_session_date`。
+   盤前框架(上一交易日收盤回顧 + 今日盤前期貨 + 今日催化劑)、反 AI 腔、槓桿走一般倍數風險教育、
    與 portfolio 脫鉤、非投資建議。**所有數字只能引用快照,不可編造。**
 4. **寫產物並過 schema**(`pmb/schemas/`):
    - `artifacts/brief_<date>.json`(Brief §5.7)

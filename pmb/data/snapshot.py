@@ -12,6 +12,7 @@ import pandas as pd
 from loguru import logger
 
 from pmb.data import universe
+from pmb.data.calendar import previous_trading_day
 from pmb.data.derived import (
     pct_above_ma,
     pct_positive,
@@ -203,6 +204,7 @@ def build_snapshot(
 
     snapshot = Snapshot(
         session_date=session_date,
+        previous_session_date=previous_trading_day(session_date),
         generated_at=generated_at,
         indices=indices,
         futures=futures,

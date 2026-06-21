@@ -94,6 +94,7 @@ class Snapshot(BaseModel):
     """當日盤前真實數據快照。"""
 
     session_date: dt.date
+    previous_session_date: dt.date | None = None  # 上一個交易日(假期/週末後可能跨多天)
     generated_at: dt.datetime
     indices: list[Quote] = []
     futures: list[Quote] = []

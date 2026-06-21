@@ -135,3 +135,24 @@ def test_build_research_prompt_embeds_template_snapshot_and_thesis():
     assert "<<RESEARCH TEMPLATE>>" in prompt
     assert "2026-06-18" in prompt  # 快照真實數據入 prompt
     assert "基準情境ABC" in prompt  # thesis 入 prompt
+
+
+def test_build_research_prompt_holiday_gap_widens_coverage_window():
+    # 6/22(週一)的上一交易日是 6/18(跨 Juneteenth + 週末)→ 4 天,要提醒涵蓋整段
+    snap = Snapshot(
+        session_date=dt.date(2026, 6, 22),
+        previous_session_date=dt.date(2026, 6, 18),
+        generated_at=dt.datetime(2026, 6, 22, 11, 0, tzinfo=dt.UTC),
+    )
+    prompt = build_research_prompt(snap, Thesis(), prompt_template="T")
+    assert "研究涵蓋窗" in prompt
+    assert "2026-06-18" in prompt and "共約 4 天" in prompt
+    assert "假期/週末後的第一個交易日" in prompt
+
+
+def test_build_research_prompt_files_mode_instructs_writing_artifacts():
+    prompt = build_research_prompt(
+        _snapshot(), Thesis(), prompt_template="T", output_mode="files"
+    )
+    assert "artifacts/brief_2026-06-18.json" in prompt
+    assert "不要執行 pmb assemble 或 pmb publish" in prompt

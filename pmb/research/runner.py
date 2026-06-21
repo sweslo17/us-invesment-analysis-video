@@ -42,8 +42,24 @@ def build_research_prompt(
     ``output_mode="json"``(預設,給 API runner 解析)要求只輸出單一 brief JSON;
     ``output_mode="files"``(給本機 Claude Code agent)要求把產物寫成檔案。
     """
+    cur = snapshot.session_date
+    prev = snapshot.previous_session_date
+    window = "\n=== 研究涵蓋窗(重要)==="
+    if prev is not None:
+        gap = (cur - prev).days
+        window += f"\n從上一個交易日 {prev}(收盤)到今天 {cur}(盤前),共約 {gap} 天。"
+        if gap > 1:
+            window += (
+                f"\n⚠️ 這是假期/週末後的第一個交易日:要涵蓋這 {gap} 天內的"
+                "全球事件與市場變化,不是只看前一日。"
+            )
+    window += (
+        "\n搜尋與研判涵蓋自上一交易日收盤以來的整段;重大事件影響常跨多日,"
+        "把仍在發酵的近期重大事件也納入,別只截取當天,以免失真。"
+    )
     parts = [
         prompt_template,
+        window,
         "\n=== 今日真實數據快照(只能引用,不可編造)===",
         snapshot.model_dump_json(indent=2),
         "\n=== 當前 thesis(市場中長期基準情境)===",
