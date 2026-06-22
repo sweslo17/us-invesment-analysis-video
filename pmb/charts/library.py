@@ -7,6 +7,7 @@
 
 from __future__ import annotations
 
+import logging
 from collections.abc import Sequence
 from pathlib import Path
 
@@ -53,6 +54,11 @@ def _configure_cjk_font() -> None:
     if chosen:
         plt.rcParams["font.sans-serif"] = [chosen, "sans-serif"]
     plt.rcParams["axes.unicode_minus"] = False
+    # macOS 的 PingFang TC 沒有獨立 bold(700)字面,fontweight="bold" 會 fallback 到 600(semibold)
+    # 並印出 "findfont: Failed to find font weight bold" 雜訊。渲染結果正常(semibold 看起來已夠粗),
+    # 雲端 Linux 用的 Noto Sans CJK TC 本就有真 bold、不會觸發。把這條 weight-fallback 提醒降級隱藏,
+    # 真正的缺字(tofu)警告走別的 logger、仍會顯示。
+    logging.getLogger("matplotlib.font_manager").setLevel(logging.ERROR)
 
 
 def _apply_chart_style() -> None:
