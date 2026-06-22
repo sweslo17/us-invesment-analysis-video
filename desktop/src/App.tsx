@@ -163,11 +163,18 @@ export default function App() {
   };
 
   const copyPrompt = async () => {
+    if (!date) {
+      setLogs((p) => [...p, "請先選交易日"]);
+      return;
+    }
+    setRtab("prompt"); // 切到 Prompt 分頁讓你看到內容
     try {
-      await navigator.clipboard.writeText(view.raw);
-      setLogs((p) => [...p, "📋 已複製研究 prompt 到剪貼簿 — 貼到 Claude Code 即可做研究"]);
-    } catch {
-      setLogs((p) => [...p, "複製失敗,請在下方手動選取 prompt 文字複製"]);
+      const text = await researchPrompt(date); // 直接取 prompt,不管目前停在哪個分頁
+      await navigator.clipboard.writeText(text);
+      setView({ kind: "prompt", ok: true, raw: text });
+      setLogs((p) => [...p, "📋 已複製研究 Prompt(含今日涵蓋窗)— 貼到本機 Claude Code 即可研究"]);
+    } catch (e) {
+      setLogs((p) => [...p, `✗ 取得 Prompt 失敗:${e}(先完成「取數」?)`]);
     }
   };
 
