@@ -25,8 +25,10 @@ SynthFn = Callable[[str, Path, float], SynthResult]
 # 直式短影片畫布(9:16)
 _WIDTH, _HEIGHT = 1080, 1920
 _BG = "0x0D1B2A"
-_CHART_W = 1040
-_CHART_Y = 560  # 圖表置於畫面中段(上方留給標題、下方留給字幕)
+# 圖表置於畫面中段:上方留給標題、下方留給逐句字幕。圖為直式,等比縮放後塞進此框置中。
+_CHART_BAND_TOP = 250
+_CHART_BOX_W = 1040
+_CHART_BOX_H = 1180  # 框底 = 250+1180 = 1430,仍在底部字幕帶之上
 # 用 .ass 並指定 PlayResY=1920,字級/邊界都以實際像素計(避免 SRT force_style 的 288 縮放)。
 # 字幕在底(Alignment=2)、標題在頂(Alignment=8),都不蓋到中間的圖表。
 _STYLE_FORMAT = (
@@ -151,8 +153,8 @@ def _make_subclip(image: str, audio: str, ass: str, out: str, duration: float, c
     """單句子片:直式畫布 = 上方主題標題 + 中間圖表 + 下方逐句字幕(互不重疊),配該句語音。"""
     chain = (
         f"color=c={_BG}:s={_WIDTH}x{_HEIGHT}:d={duration}[bg];"
-        f"[0:v]scale={_CHART_W}:-1[ch];"
-        f"[bg][ch]overlay=(W-w)/2:{_CHART_Y}[v0];"
+        f"[0:v]scale={_CHART_BOX_W}:{_CHART_BOX_H}:force_original_aspect_ratio=decrease[ch];"
+        f"[bg][ch]overlay=(W-w)/2:{_CHART_BAND_TOP}+({_CHART_BOX_H}-h)/2[v0];"
         f"[v0]subtitles={ass},setsar=1[v]"
     )
     _run_ffmpeg(
