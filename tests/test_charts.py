@@ -11,6 +11,7 @@ from pmb.charts.library import (
     render_econ_print,
     render_index_overnight_grid,
     render_leverage_decay,
+    render_overnight_vs_close,
     render_rates_trend,
     render_stock_bond_corr,
     render_vix_regime,
@@ -35,6 +36,10 @@ def _snapshot() -> Snapshot:
         indices=[
             Quote(ticker="^GSPC", name="S&P 500", last=7500.0, previous_close=7420.0),
             Quote(ticker="^IXIC", name="Nasdaq", last=26517.0, previous_close=26020.0),
+        ],
+        futures=[
+            Quote(ticker="ES=F", name="S&P 500 期貨", last=7540.0, previous_close=7515.0),
+            Quote(ticker="NQ=F", name="Nasdaq 期貨", last=26700.0, previous_close=26550.0),
         ],
         leverage_math=[
             LeverageMath(
@@ -96,6 +101,20 @@ def test_render_index_overnight_grid_writes_png(tmp_path):
     out = tmp_path / "grid.png"
     render_index_overnight_grid(out, _snapshot().indices, {})
     assert out.exists() and out.stat().st_size > 0
+
+
+def test_render_overnight_vs_close_writes_png(tmp_path):
+    out = tmp_path / "ovc.png"
+    snap = _snapshot()
+    render_overnight_vs_close(out, snap.indices, snap.futures, {})
+    assert out.exists() and out.stat().st_size > 0
+
+
+def test_render_overnight_vs_close_dispatches(tmp_path):
+    spec = ChartSpec(id="ovc", module="overnight_vs_close")
+    path = render_chart(spec, _snapshot(), tmp_path)
+    assert path.exists() and path.stat().st_size > 0
+    assert path.name == "ovc.png"
 
 
 def test_render_vix_regime_writes_png(tmp_path):

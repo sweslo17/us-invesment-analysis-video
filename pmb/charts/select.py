@@ -16,6 +16,7 @@ from pmb.charts.library import (
     render_econ_print,
     render_index_overnight_grid,
     render_leverage_decay,
+    render_overnight_vs_close,
     render_rates_trend,
     render_stock_bond_corr,
     render_vix_regime,
@@ -32,6 +33,10 @@ _RENDERERS: dict[str, Callable[[Path, Snapshot, dict], Path]] = {
     # 盤前影片:四大指數「隔夜期貨」是今天的領先訊號(現貨是昨日收盤,屬回顧)
     "index_overnight_grid": lambda out, snap, params: render_index_overnight_grid(
         out, snap.futures or snap.indices, params
+    ),
+    # 昨收(現貨)回顧 vs 今日盤前(期貨)領先訊號並列對照
+    "overnight_vs_close": lambda out, snap, params: render_overnight_vs_close(
+        out, snap.indices, snap.futures, params
     ),
     "vix_regime": lambda out, snap, params: render_vix_regime(out, snap.vix_history, params),
     "yield_curve": lambda out, snap, params: render_yield_curve(out, snap.yield_curve, params),

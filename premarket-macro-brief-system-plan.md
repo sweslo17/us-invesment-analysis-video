@@ -149,7 +149,7 @@ flowchart TD
 
 ### 6.1 圖表模組庫(parameterized renderers)
 
-`index_overnight_grid`(四大指數隔夜)、`yield_curve`(2s10s)、`vix_regime`(VIX 對區間 + 門檻帶)、`rates_trend`(10Y 趨勢)、`stock_bond_corr`(股債相關)、`breadth`(廣度/輪動)、`econ_print`(總經序列 highlight 最新數據)、`leverage_decay`(同一波動下槓桿 vs 標的的耗損示意,風險教育用)。
+`index_overnight_grid`(四大指數隔夜)、`overnight_vs_close`(昨收現貨回顧 vs 今日盤前期貨對照)、`yield_curve`(2s10s)、`vix_regime`(VIX 對區間 + 門檻帶)、`rates_trend`(10Y 趨勢)、`stock_bond_corr`(股債相關)、`breadth`(廣度/輪動)、`econ_print`(總經序列 highlight 最新數據)、`leverage_decay`(同一波動下槓桿 vs 標的的耗損示意,風險教育用)。
 
 ### 6.2 選圖:LLM 從固定選單挑,程式驗證 + 渲染
 

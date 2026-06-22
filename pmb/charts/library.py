@@ -15,6 +15,7 @@ matplotlib.use("Agg")  # 無 GUI 後端,供批次渲染
 
 import matplotlib.pyplot as plt  # noqa: E402
 from matplotlib import font_manager  # noqa: E402
+from matplotlib.patches import Patch  # noqa: E402
 
 from pmb.schemas.snapshot import (  # noqa: E402
     EconSeries,
@@ -234,6 +235,70 @@ def render_econ_print(
     ax.set_ylabel(label)
     ax.set_title(f"{label}(highlight 最新)")
     ax.grid(True, alpha=0.3)
+    fig.tight_layout()
+    fig.savefig(out_path, dpi=120)
+    plt.close(fig)
+    return out_path
+
+
+def render_overnight_vs_close(
+    out_path: str | Path,
+    indices: Sequence[Quote],
+    futures: Sequence[Quote],
+    params: dict | None = None,
+) -> Path:
+    """昨收回顧(現貨)vs 今日盤前(期貨)對照長條:左為上一交易日收盤漲跌,右為隔夜期貨。
+
+    盤前影片的核心對照——現貨漲跌是「上一交易日的回顧」,期貨漲跌才是「今天的領先訊號」。
+    兩者並列,一眼看出隔夜情緒是延續(同向)還是反轉(背向)。依位置配對 indices/futures
+    (資料層四大指數順序一致:S&P / Nasdaq / Dow / Russell)。
+    """
+    out_path = Path(out_path)
+    pairs = list(zip(indices, futures, strict=False))
+    names = [(spot.name or spot.ticker) for spot, _ in pairs]
+    close_pcts = [spot.change_pct if spot.change_pct is not None else 0.0 for spot, _ in pairs]
+    fut_pcts = [fut.change_pct if fut.change_pct is not None else 0.0 for _, fut in pairs]
+
+    xs = list(range(len(pairs)))
+    width = 0.38
+    fig, ax = plt.subplots(figsize=(7, 4.5))
+    bars_close = ax.bar(
+        [i - width / 2 for i in xs],
+        close_pcts,
+        width,
+        color=[_POSITIVE if p >= 0 else _NEGATIVE for p in close_pcts],
+        alpha=0.5,
+        hatch="//",
+        edgecolor="white",
+    )
+    bars_fut = ax.bar(
+        [i + width / 2 for i in xs],
+        fut_pcts,
+        width,
+        color=[_POSITIVE if p >= 0 else _NEGATIVE for p in fut_pcts],
+    )
+    ax.axhline(0, color="black", linewidth=0.8)
+    ax.set_xticks(xs)
+    ax.set_xticklabels(names, fontsize=9)
+    ax.set_ylabel("漲跌 (%)")
+    ax.set_title("昨收回顧 vs 今日盤前期貨")
+    ax.legend(
+        handles=[
+            Patch(facecolor="#999", alpha=0.5, hatch="//", edgecolor="white", label="昨收(回顧)"),
+            Patch(facecolor="#999", label="今日盤前(期貨)"),
+        ],
+        fontsize=8,
+    )
+    for bars, pcts in ((bars_close, close_pcts), (bars_fut, fut_pcts)):
+        for bar, pct in zip(bars, pcts, strict=True):
+            ax.annotate(
+                f"{pct:+.2f}%",
+                (bar.get_x() + bar.get_width() / 2, pct),
+                ha="center",
+                va="bottom" if pct >= 0 else "top",
+                fontsize=8,
+            )
+    ax.grid(True, axis="y", alpha=0.3)
     fig.tight_layout()
     fig.savefig(out_path, dpi=120)
     plt.close(fig)
