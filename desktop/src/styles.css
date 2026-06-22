@@ -375,6 +375,19 @@ button.danger {
   font-size: 13px;
   margin-bottom: 12px;
 }
+.realnote {
+  margin-top: 10px;
+  border: 1px solid #6b4a1f;
+  background: #2a1c12;
+  color: #f0c987;
+  border-radius: 9px;
+  padding: 9px 11px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.realnote b {
+  color: #ffd27a;
+}
 .cloudbox {
   border: 1px solid #2c4d6b;
   background: #0f1f2e;

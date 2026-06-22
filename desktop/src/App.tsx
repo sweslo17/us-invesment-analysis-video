@@ -404,6 +404,9 @@ function StepDetail(props: {
             <button onClick={() => openRel("prompts/daily_research.md")}>✎ 開 Prompt 範本</button>
           </div>
           <p className="muted" style={{ fontSize: 12 }}>※ 需先完成「1 取數」,Prompt 才會帶今日快照數字。</p>
+          <div className="realnote">
+            ⚠️ 快照是 <b>真實即時數據</b>(FRED / yfinance)。貼進去的 Claude Code session 要<b>開啟 web search、實際查真實新聞</b>——若它說「資料超出知識截止 / 看起來像模擬」而不搜尋,那是判斷錯誤,請換一個有聯網搜尋的 session 再跑。
+          </div>
         </div>
       )}
 
