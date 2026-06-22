@@ -63,6 +63,26 @@ class YieldPoint(BaseModel):
     value: float
 
 
+class IndexContribution(BaseModel):
+    """單一成分股對基準指數當日漲跌的貢獻(漲幅集中度用)。
+
+    ``weight_pct`` 為該股在基準 ETF 的權重(%),``change_pct`` 為其當日漲跌(%);
+    ``contribution`` = 權重 × 報酬,單位為「指數百分點」,由兩者計算得出(DRY,
+    LLM 不產生數字)。少數權值股若貢獻佔比偏高,即反映漲幅集中、廣度偏窄。
+    """
+
+    ticker: str
+    name: str | None = None
+    weight_pct: float
+    change_pct: float
+
+    @computed_field  # type: ignore[prop-decorator]
+    @property
+    def contribution(self) -> float:
+        """對指數的貢獻(百分點)= 權重% × 報酬% / 100。"""
+        return self.weight_pct * self.change_pct / 100.0
+
+
 class SectorReturn(BaseModel):
     """單一類股當日報酬(市場廣度用)。"""
 
@@ -108,6 +128,7 @@ class Snapshot(BaseModel):
     leverage_math: list[LeverageMath] = []
     yield_curve: list[YieldPoint] = []
     sector_returns: list[SectorReturn] = []
+    index_contributions: list[IndexContribution] = []  # 基準指數前 N 大成分股的漲幅貢獻
     vix_history: list[float] = []
     tnx_history: list[float] = []
     stock_bond_corr_history: list[float] = []

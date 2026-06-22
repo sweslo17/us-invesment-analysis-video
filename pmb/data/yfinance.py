@@ -16,6 +16,8 @@ from pmb.schemas.snapshot import Quote
 
 QuoteProvider = Callable[[str], tuple[float, float]]
 HistoryProvider = Callable[[str, str], pd.Series]
+# ETF ticker -> [(成分股 symbol, 名稱, 權重 %)]
+HoldingsProvider = Callable[[str], list[tuple[str, str, float]]]
 
 
 def _default_quote_provider(ticker: str) -> tuple[float, float]:
@@ -40,17 +42,38 @@ def _default_history_provider(ticker: str, period: str) -> pd.Series:
     return frame["Close"]
 
 
+def _default_holdings_provider(etf_ticker: str) -> list[tuple[str, str, float]]:
+    """以 yfinance ``funds_data.top_holdings`` 取 ETF 前 N 大持股 + 權重。
+
+    yfinance 回傳的 DataFrame 以 Symbol 為 index,含 ``Name`` 與 ``Holding Percent``
+    (小數比例),這裡轉成 (symbol, name, 權重 %)。
+    """
+    import yfinance as yf
+
+    top = yf.Ticker(etf_ticker).funds_data.top_holdings
+    if top is None or top.empty:
+        raise ValueError(f"{etf_ticker} 取不到 top_holdings")
+    out: list[tuple[str, str, float]] = []
+    for symbol, row in top.iterrows():
+        name = str(row.get("Name", symbol))
+        weight_pct = float(row["Holding Percent"]) * 100.0
+        out.append((str(symbol), name, weight_pct))
+    return out
+
+
 class YFinanceClient:
     def __init__(
         self,
         *,
         quote_provider: QuoteProvider | None = None,
         history_provider: HistoryProvider | None = None,
+        holdings_provider: HoldingsProvider | None = None,
         retries: int = 3,
         retry_delay: float = 1.0,
     ) -> None:
         self._quote_provider = quote_provider or _default_quote_provider
         self._history_provider = history_provider or _default_history_provider
+        self._holdings_provider = holdings_provider or _default_holdings_provider
         self.retries = retries
         self.retry_delay = retry_delay
 
@@ -79,6 +102,15 @@ class YFinanceClient:
             retries=self.retries,
             delay=self.retry_delay,
             what=f"yfinance history {ticker}",
+        )
+
+    def get_top_holdings(self, etf_ticker: str) -> list[tuple[str, str, float]]:
+        """取 ETF 前 N 大持股 + 權重(%);用於漲幅集中度。失敗(retry 用盡)向上拋。"""
+        return call_with_retry(
+            lambda: self._holdings_provider(etf_ticker),
+            retries=self.retries,
+            delay=self.retry_delay,
+            what=f"yfinance holdings {etf_ticker}",
         )
 
     def get_histories(self, tickers: Sequence[str], period: str = "6mo") -> dict[str, pd.Series]:

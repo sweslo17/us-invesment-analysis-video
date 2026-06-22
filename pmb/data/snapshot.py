@@ -24,6 +24,7 @@ from pmb.data.derived import (
 )
 from pmb.schemas.snapshot import (
     EconSeries,
+    IndexContribution,
     LeverageMath,
     Quote,
     RegimeMetrics,
@@ -118,6 +119,27 @@ def compute_sector_returns(
     return out
 
 
+def compute_index_contributions(
+    holdings: list[tuple[str, str, float]],
+    quotes: dict[str, Quote],
+) -> list[IndexContribution]:
+    """把前 N 大持股(權重)與其當日報價合成貢獻度。缺報價或無漲跌的個股跳過。"""
+    out: list[IndexContribution] = []
+    for ticker, name, weight_pct in holdings:
+        quote = quotes.get(ticker)
+        if quote is None or quote.change_pct is None:
+            continue
+        out.append(
+            IndexContribution(
+                ticker=ticker,
+                name=name,
+                weight_pct=weight_pct,
+                change_pct=quote.change_pct,
+            )
+        )
+    return out
+
+
 def build_yield_curve(fred_client, specs: list[tuple[str, str, int]]) -> list[YieldPoint]:
     """組殖利率曲線到期點(各 FRED 序列的最新值)。單點失敗跳過。"""
     out: list[YieldPoint] = []
@@ -180,6 +202,17 @@ def build_snapshot(
     sector_returns = compute_sector_returns(histories, universe.SECTOR_ETFS)
     yield_curve = build_yield_curve(fred_client, universe.YIELD_CURVE_SERIES)
 
+    index_contributions: list[IndexContribution] = []
+    try:
+        bench_ticker, _ = universe.CONCENTRATION_BENCHMARK
+        holdings = yf_client.get_top_holdings(bench_ticker)
+        holding_quotes = {
+            q.ticker: q for q in yf_client.get_quotes([(t, n) for t, n, _ in holdings])
+        }
+        index_contributions = compute_index_contributions(holdings, holding_quotes)
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("略過漲幅集中度(index_contributions):{}", exc)
+
     def _recent(ticker: str) -> list[float]:
         series = histories.get(ticker)
         return [] if series is None else [float(x) for x in series.dropna().tail(vix_lookback)]
@@ -218,17 +251,19 @@ def build_snapshot(
         leverage_math=leverage_math,
         yield_curve=yield_curve,
         sector_returns=sector_returns,
+        index_contributions=index_contributions,
         vix_history=vix_history,
         tnx_history=tnx_history,
         stock_bond_corr_history=stock_bond_corr_history,
         econ_series=econ_series,
     )
     logger.info(
-        "快照組裝完成:指數 {} 槓桿教育 {} 殖利率點 {} 類股 {} 總經 {} 筆",
+        "快照組裝完成:指數 {} 槓桿教育 {} 殖利率點 {} 類股 {} 成分貢獻 {} 總經 {} 筆",
         len(indices),
         len(leverage_math),
         len(yield_curve),
         len(sector_returns),
+        len(index_contributions),
         len(macro),
     )
     return snapshot

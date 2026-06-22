@@ -49,3 +49,25 @@ def test_get_history_returns_close_series_from_provider():
     client = YFinanceClient(history_provider=lambda t, period: series)
     out = client.get_history("^GSPC", period="3mo")
     pd.testing.assert_series_equal(out, series)
+
+
+def test_get_top_holdings_returns_provider_rows():
+    holdings = [("AAPL", "Apple", 7.0), ("MSFT", "Microsoft", 6.5)]
+    client = YFinanceClient(holdings_provider=lambda etf: holdings)
+    out = client.get_top_holdings("SPY")
+    assert out == holdings
+
+
+def test_get_top_holdings_retries_then_succeeds():
+    calls = {"n": 0}
+
+    def flaky(etf):
+        calls["n"] += 1
+        if calls["n"] < 2:
+            raise ConnectionError("transient")
+        return [("AAPL", "Apple", 7.0)]
+
+    client = YFinanceClient(holdings_provider=flaky, retries=3, retry_delay=0)
+    out = client.get_top_holdings("SPY")
+    assert out == [("AAPL", "Apple", 7.0)]
+    assert calls["n"] == 2

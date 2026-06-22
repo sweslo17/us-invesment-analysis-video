@@ -10,6 +10,7 @@ from pmb.data import universe
 from pmb.data.snapshot import (
     build_snapshot,
     build_yield_curve,
+    compute_index_contributions,
     compute_leverage_math,
     compute_regime,
     compute_sector_returns,
@@ -77,6 +78,19 @@ def test_compute_sector_returns_labels_and_pct():
     assert (out[1].sector, out[1].change_pct) == ("金融", pytest.approx(-1.0))
 
 
+def test_compute_index_contributions_weight_times_return():
+    holdings = [("AAPL", "Apple", 7.0), ("MSFT", "Microsoft", 6.5), ("MISS", "Missing", 1.0)]
+    quotes = {
+        "AAPL": Quote(ticker="AAPL", name="Apple", last=101.0, previous_close=100.0),  # +1%
+        "MSFT": Quote(ticker="MSFT", name="Microsoft", last=99.0, previous_close=100.0),  # -1%
+        # MISS 無報價 → 跳過
+    }
+    out = compute_index_contributions(holdings, quotes)
+    assert [c.ticker for c in out] == ["AAPL", "MSFT"]
+    assert out[0].contribution == pytest.approx(7.0 * 1.0 / 100.0)
+    assert out[1].contribution == pytest.approx(6.5 * -1.0 / 100.0)
+
+
 class _FakeFredCurve:
     def get_latest(self, series_id, label, units=None):
         vals = {"DGS3MO": 4.30, "DGS2": 4.20, "DGS10": 4.49}
@@ -107,6 +121,9 @@ class _FakeYF:
 
     def get_histories(self, tickers, period="6mo"):
         return {t: self._histories[t] for t in tickers if t in self._histories}
+
+    def get_top_holdings(self, etf_ticker):
+        return [("AAPL", "Apple", 7.0), ("MSFT", "Microsoft", 6.5)]
 
 
 class _FakeFred:
@@ -154,3 +171,4 @@ def test_build_snapshot_wires_all_sections():
     assert len(snap.yield_curve) == len(universe.YIELD_CURVE_SERIES)
     assert snap.vix_history  # 由 ^VIX 歷史帶入
     assert any(s.sector == "科技" for s in snap.sector_returns)  # XLK → 科技
+    assert {c.ticker for c in snap.index_contributions} == {"AAPL", "MSFT"}  # 由 SPY 前 N 大持股

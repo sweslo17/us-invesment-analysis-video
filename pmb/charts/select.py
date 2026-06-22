@@ -14,6 +14,7 @@ from loguru import logger
 from pmb.charts.library import (
     render_breadth,
     render_catalyst_timeline,
+    render_concentration,
     render_econ_print,
     render_index_overnight_grid,
     render_leverage_decay,
@@ -42,6 +43,10 @@ _RENDERERS: dict[str, Callable[[Path, Snapshot, dict], Path]] = {
     "vix_regime": lambda out, snap, params: render_vix_regime(out, snap.vix_history, params),
     "yield_curve": lambda out, snap, params: render_yield_curve(out, snap.yield_curve, params),
     "breadth": lambda out, snap, params: render_breadth(out, snap.sector_returns, params),
+    # 漲幅集中度:基準指數前 N 大成分股的貢獻(權重 × 報酬)
+    "concentration": lambda out, snap, params: render_concentration(
+        out, snap.index_contributions, params
+    ),
     "rates_trend": lambda out, snap, params: render_rates_trend(out, snap.tnx_history, params),
     "stock_bond_corr": lambda out, snap, params: render_stock_bond_corr(
         out, snap.stock_bond_corr_history, params

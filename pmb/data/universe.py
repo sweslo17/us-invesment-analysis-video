@@ -40,6 +40,9 @@ LEVERAGE: list[tuple[str, str]] = [
 STOCK_PROXY: str = "^GSPC"
 BOND_PROXY: str = "TLT"
 
+# 漲幅集中度:用此 ETF 的前 N 大持股(權重)近似 S&P 500 的成分股貢獻
+CONCENTRATION_BENCHMARK: tuple[str, str] = ("SPY", "S&P 500")
+
 # 市場廣度代理籃子:11 檔 SPDR 類股 ETF
 SECTOR_ETFS: list[str] = [
     "XLK", "XLF", "XLE", "XLV", "XLY", "XLP", "XLI", "XLB", "XLRE", "XLU", "XLC",

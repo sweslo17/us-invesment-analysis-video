@@ -19,6 +19,7 @@ from matplotlib.patches import Patch  # noqa: E402
 
 from pmb.schemas.snapshot import (  # noqa: E402
     EconSeries,
+    IndexContribution,
     LeverageMath,
     Quote,
     SectorReturn,
@@ -299,6 +300,59 @@ def render_overnight_vs_close(
                 fontsize=8,
             )
     ax.grid(True, axis="y", alpha=0.3)
+    fig.tight_layout()
+    fig.savefig(out_path, dpi=120)
+    plt.close(fig)
+    return out_path
+
+
+def render_concentration(
+    out_path: str | Path,
+    contributions: Sequence[IndexContribution],
+    params: dict | None = None,
+) -> Path:
+    """漲幅集中度:前 N 大成分股對基準指數當日漲跌的貢獻(權重 × 報酬,單位百分點)。
+
+    凸顯漲幅有多集中——少數權值股扛了多少。依貢獻由大到小排,綠正紅負;附上前 N 大
+    合計貢獻,讓「窄反彈」一眼看穿。數字全來自快照的 IndexContribution。
+    """
+    out_path = Path(out_path)
+    params = params or {}
+    if not contributions:
+        raise ValueError("concentration 需要非空的 index_contributions")
+
+    top_n = int(params.get("top_n", 10))
+    ordered = sorted(contributions, key=lambda c: c.contribution, reverse=True)[:top_n]
+    labels = [c.name or c.ticker for c in ordered]
+    values = [c.contribution for c in ordered]
+    colors = [_POSITIVE if v >= 0 else _NEGATIVE for v in values]
+    total = sum(values)
+    title = str(params.get("title", "S&P 500 漲幅貢獻(前 N 大成分股)"))
+
+    fig, ax = plt.subplots(figsize=(7, 4.5))
+    # barh 由下而上;反轉讓貢獻最大者在最上方
+    ax.barh(labels[::-1], values[::-1], color=colors[::-1])
+    ax.axvline(0, color="black", linewidth=0.8)
+    ax.set_xlabel("對指數的貢獻(百分點)")
+    ax.set_title(title)
+    for i, v in enumerate(values[::-1]):
+        ax.annotate(
+            f"{v:+.3f}",
+            (v, i),
+            va="center",
+            ha="left" if v >= 0 else "right",
+            fontsize=8,
+        )
+    ax.annotate(
+        f"前 {len(ordered)} 大合計貢獻 {total:+.2f} 百分點",
+        xy=(0.98, 0.04),
+        xycoords="axes fraction",
+        ha="right",
+        va="bottom",
+        fontsize=8,
+        color="#555",
+    )
+    ax.margins(x=0.18)
     fig.tight_layout()
     fig.savefig(out_path, dpi=120)
     plt.close(fig)

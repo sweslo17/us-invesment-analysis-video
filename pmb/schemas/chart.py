@@ -18,6 +18,7 @@ ChartModule = Literal[
     "rates_trend",
     "stock_bond_corr",
     "breadth",
+    "concentration",
     "econ_print",
     "leverage_decay",
     "catalyst_timeline",

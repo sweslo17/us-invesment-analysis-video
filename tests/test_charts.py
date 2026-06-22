@@ -9,6 +9,7 @@ from pydantic import ValidationError
 from pmb.charts.library import (
     render_breadth,
     render_catalyst_timeline,
+    render_concentration,
     render_econ_print,
     render_index_overnight_grid,
     render_leverage_decay,
@@ -22,6 +23,7 @@ from pmb.charts.select import implemented_modules, render_chart
 from pmb.schemas.chart import ChartModule, ChartSpec
 from pmb.schemas.snapshot import (
     EconSeries,
+    IndexContribution,
     LeverageMath,
     Quote,
     SectorReturn,
@@ -72,6 +74,11 @@ def _snapshot() -> Snapshot:
             SectorReturn(sector="能源", change_pct=-0.8),
             SectorReturn(sector="金融", change_pct=0.5),
         ],
+        index_contributions=[
+            IndexContribution(ticker="AAPL", name="Apple", weight_pct=7.0, change_pct=1.5),
+            IndexContribution(ticker="MSFT", name="Microsoft", weight_pct=6.5, change_pct=-0.5),
+            IndexContribution(ticker="NVDA", name="NVIDIA", weight_pct=6.0, change_pct=3.0),
+        ],
         tnx_history=[4.30, 4.35, 4.42, 4.49, 4.45],
         stock_bond_corr_history=[0.2, 0.35, 0.5, 0.53],
         econ_series=EconSeries(label="失業率 (%)", values=[4.0, 4.1, 4.2, 4.3]),
@@ -116,6 +123,24 @@ def test_render_overnight_vs_close_dispatches(tmp_path):
     path = render_chart(spec, _snapshot(), tmp_path)
     assert path.exists() and path.stat().st_size > 0
     assert path.name == "ovc.png"
+
+
+def test_render_concentration_writes_png(tmp_path):
+    out = tmp_path / "conc.png"
+    render_concentration(out, _snapshot().index_contributions, {})
+    assert out.exists() and out.stat().st_size > 0
+
+
+def test_render_concentration_dispatches(tmp_path):
+    spec = ChartSpec(id="conc", module="concentration")
+    path = render_chart(spec, _snapshot(), tmp_path)
+    assert path.exists() and path.stat().st_size > 0
+    assert path.name == "conc.png"
+
+
+def test_render_concentration_rejects_empty(tmp_path):
+    with pytest.raises(ValueError, match="index_contributions"):
+        render_concentration(tmp_path / "x.png", [])
 
 
 def test_render_catalyst_timeline_writes_png(tmp_path):
