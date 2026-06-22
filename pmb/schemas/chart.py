@@ -20,6 +20,7 @@ ChartModule = Literal[
     "breadth",
     "econ_print",
     "leverage_decay",
+    "catalyst_timeline",
 ]
 
 

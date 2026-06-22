@@ -305,6 +305,71 @@ def render_overnight_vs_close(
     return out_path
 
 
+def render_catalyst_timeline(
+    out_path: str | Path,
+    params: dict | None = None,
+) -> Path:
+    """本週催化劑時間軸:把排程事件(PMI / 財報 / PCE…)依序鋪在一條時間線上。
+
+    事件由研究 LLM 經 ``params`` 提供(日期屬排程事實、非市場數字),格式::
+
+        {"events": [{"date": "6/25", "label": "核心 PCE", "highlight": true}, ...],
+         "title": "本週催化劑"}
+
+    每個 event 至少要有 ``label``;``date`` 與 ``highlight`` 可選。非法/空 events 直接擋下。
+    """
+    params = params or {}
+    events = params.get("events")
+    if not isinstance(events, list) or not events:
+        raise ValueError("catalyst_timeline 需要非空的 params.events")
+    max_events = 8
+    truncated = max(0, len(events) - max_events)
+    events = events[:max_events]
+
+    out_path = Path(out_path)
+    labels: list[str] = []
+    dates: list[str] = []
+    highlights: list[bool] = []
+    for ev in events:
+        if not isinstance(ev, dict) or not ev.get("label"):
+            raise ValueError("catalyst_timeline 的每個 event 需含 label")
+        labels.append(str(ev["label"]))
+        dates.append(str(ev.get("date", "")))
+        highlights.append(bool(ev.get("highlight", False)))
+
+    title = str(params.get("title", "本週催化劑"))
+    if truncated:
+        title = f"{title}(另有 {truncated} 項未顯示)"
+
+    xs = list(range(len(labels)))
+    levels = [1.0, -1.0, 1.7, -1.7]
+    fig, ax = plt.subplots(figsize=(7, 4))
+    ax.axhline(0, color="#555", linewidth=1.2, zorder=1)
+    for i, (x, label, date, hi) in enumerate(zip(xs, labels, dates, highlights, strict=True)):
+        level = levels[i % len(levels)]
+        color = "#ef6c00" if hi else "#1565c0"
+        ax.plot([x, x], [0, level], color=color, linewidth=1.3, zorder=1)
+        ax.scatter([x], [0], s=140 if hi else 70, color=color, edgecolor="white", zorder=3)
+        text = f"{date}\n{label}" if date else label
+        ax.annotate(
+            text,
+            (x, level),
+            ha="center",
+            va="bottom" if level > 0 else "top",
+            fontsize=9,
+            fontweight="bold" if hi else "normal",
+            color=color,
+        )
+    ax.set_xlim(-0.6, len(labels) - 0.4)
+    ax.set_ylim(-2.5, 2.5)
+    ax.set_title(title)
+    ax.axis("off")
+    fig.tight_layout()
+    fig.savefig(out_path, dpi=120)
+    plt.close(fig)
+    return out_path
+
+
 def render_index_overnight_grid(
     out_path: str | Path,
     indices: Sequence[Quote],

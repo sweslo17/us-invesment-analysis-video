@@ -13,6 +13,7 @@ from loguru import logger
 
 from pmb.charts.library import (
     render_breadth,
+    render_catalyst_timeline,
     render_econ_print,
     render_index_overnight_grid,
     render_leverage_decay,
@@ -46,6 +47,8 @@ _RENDERERS: dict[str, Callable[[Path, Snapshot, dict], Path]] = {
         out, snap.stock_bond_corr_history, params
     ),
     "econ_print": lambda out, snap, params: render_econ_print(out, snap.econ_series, params),
+    # 本週催化劑時間軸:事件由研究 LLM 經 params 提供(排程事實,非市場數字),不取快照
+    "catalyst_timeline": lambda out, snap, params: render_catalyst_timeline(out, params),
 }
 
 

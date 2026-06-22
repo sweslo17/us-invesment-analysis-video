@@ -8,6 +8,7 @@ from pydantic import ValidationError
 
 from pmb.charts.library import (
     render_breadth,
+    render_catalyst_timeline,
     render_econ_print,
     render_index_overnight_grid,
     render_leverage_decay,
@@ -115,6 +116,41 @@ def test_render_overnight_vs_close_dispatches(tmp_path):
     path = render_chart(spec, _snapshot(), tmp_path)
     assert path.exists() and path.stat().st_size > 0
     assert path.name == "ovc.png"
+
+
+def test_render_catalyst_timeline_writes_png(tmp_path):
+    out = tmp_path / "cal.png"
+    params = {
+        "title": "本週催化劑",
+        "events": [
+            {"date": "6/23", "label": "PMI 初值"},
+            {"date": "6/24", "label": "Micron 財報"},
+            {"date": "6/25", "label": "核心 PCE", "highlight": True},
+        ],
+    }
+    render_catalyst_timeline(out, params)
+    assert out.exists() and out.stat().st_size > 0
+
+
+def test_render_catalyst_timeline_dispatches(tmp_path):
+    spec = ChartSpec(
+        id="cal",
+        module="catalyst_timeline",
+        params={"events": [{"date": "6/25", "label": "核心 PCE", "highlight": True}]},
+    )
+    path = render_chart(spec, _snapshot(), tmp_path)
+    assert path.exists() and path.stat().st_size > 0
+    assert path.name == "cal.png"
+
+
+def test_render_catalyst_timeline_rejects_empty_events(tmp_path):
+    with pytest.raises(ValueError, match="events"):
+        render_catalyst_timeline(tmp_path / "x.png", {"events": []})
+
+
+def test_render_catalyst_timeline_rejects_event_without_label(tmp_path):
+    with pytest.raises(ValueError, match="label"):
+        render_catalyst_timeline(tmp_path / "x.png", {"events": [{"date": "6/25"}]})
 
 
 def test_render_vix_regime_writes_png(tmp_path):
