@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { listen } from "@tauri-apps/api/event";
+import { writeText } from "@tauri-apps/plugin-clipboard-manager";
 import {
   type ArtifactKind,
   type BriefDoc,
@@ -168,13 +169,19 @@ export default function App() {
       return;
     }
     setRtab("prompt"); // 切到 Prompt 分頁讓你看到內容
+    let text: string;
     try {
-      const text = await researchPrompt(date); // 直接取 prompt,不管目前停在哪個分頁
-      await navigator.clipboard.writeText(text);
-      setView({ kind: "prompt", ok: true, raw: text });
-      setLogs((p) => [...p, "📋 已複製研究 Prompt(含今日涵蓋窗)— 貼到本機 Claude Code 即可研究"]);
+      text = await researchPrompt(date); // 直接取 prompt,不管目前停在哪個分頁
     } catch (e) {
       setLogs((p) => [...p, `✗ 取得 Prompt 失敗:${e}(先完成「取數」?)`]);
+      return;
+    }
+    setView({ kind: "prompt", ok: true, raw: text }); // 先顯示,複製失敗也能手動選取
+    try {
+      await writeText(text); // Tauri 剪貼簿外掛(webview navigator.clipboard 會被擋)
+      setLogs((p) => [...p, "📋 已複製研究 Prompt(含今日涵蓋窗)— 貼到本機 Claude Code 即可研究"]);
+    } catch {
+      setLogs((p) => [...p, "Prompt 已顯示在下方(研究 Prompt 分頁),請全選複製"]);
     }
   };
 

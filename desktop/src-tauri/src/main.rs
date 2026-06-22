@@ -361,6 +361,7 @@ fn git_commit_push(message: String, date: Option<String>) -> Result<String, Stri
 
 fn main() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_clipboard_manager::init())
         .invoke_handler(tauri::generate_handler![
             list_dates,
             get_status,
