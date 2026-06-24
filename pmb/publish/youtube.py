@@ -39,7 +39,10 @@ def build_youtube_metadata(
     headline = lead.headline if lead else "今日美股盤前"
     body = lead.audience_value if lead else "今日盤前市場觀察。"
     d = brief.date
-    title = f"{headline}｜{d.month}/{d.day} 美股盤前 #shorts"
+    # 標題優先用研究端寫的 title_hook(當天最強、最即時的鉤子);沒有才退回最高 materiality 的
+    # item headline——後者常是「昨天…」這類回顧型,對當天滑到的觀眾像舊聞、CTR 偏低。
+    title_lead = (brief.title_hook or "").strip() or headline
+    title = f"{title_lead}｜{d.month}/{d.day} 美股盤前 #shorts"
 
     parts = [f"{headline}。{body}"]
     if items:

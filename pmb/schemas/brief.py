@@ -79,3 +79,6 @@ class Brief(BaseModel):
     catalysts: list[str] = []  # 今日盤中要看的排程事件(數據、Fed、財報…)
     thesis_delta: ThesisDelta
     lead_horizon: Horizon
+    # YouTube Shorts 標題鉤子:當天最強、最即時的單一角度(前瞻 / 當下優先,避免「昨天…」起手)。
+    # 由研究端撰寫;publish 端優先用它當標題,缺漏時退回最高 materiality 的 item headline。
+    title_hook: str | None = None

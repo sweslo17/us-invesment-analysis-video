@@ -42,6 +42,25 @@ def test_metadata_has_date_lead_and_disclaimer():
     assert "#美股" in description  # SEO hashtag
 
 
+def test_title_uses_title_hook_when_present():
+    # 有 title_hook 時,標題用研究端寫的前瞻鉤子(而非最高 materiality 的回顧型 headline)
+    brief = _brief()
+    brief.title_hook = "今晚 Micron 財報,AI 多頭要當場交卷"
+    title, description, _tags = build_youtube_metadata(brief, channel_name="美股早發車")
+    assert title.startswith("今晚 Micron 財報,AI 多頭要當場交卷｜")
+    assert "6/18 美股盤前 #shorts" in title  # 日期 / 後綴仍自動接上
+    assert "Fed 轉鷹" in description  # 描述仍以最高 materiality 的 item 為主
+
+
+def test_title_falls_back_to_materiality_lead_without_hook():
+    # 無 title_hook(或空字串)時,退回原本「最高 materiality 的 headline」行為
+    for hook in (None, "", "   "):
+        brief = _brief()
+        brief.title_hook = hook
+        title, _desc, _tags = build_youtube_metadata(brief, channel_name="美股早發車")
+        assert title.startswith("Fed 轉鷹｜")
+
+
 def test_metadata_tags_field_populated():
     _title, _desc, tags = build_youtube_metadata(_brief(), channel_name="美股早發車")
     assert "美股盤前" in tags  # YouTube 專屬 tags 欄位有填
