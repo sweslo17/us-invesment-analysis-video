@@ -11,6 +11,8 @@ from pmb.charts.library import (
     render_catalyst_timeline,
     render_concentration,
     render_econ_print,
+    render_fed_path,
+    render_global_equity_overnight,
     render_index_overnight_grid,
     render_leverage_decay,
     render_overnight_vs_close,
@@ -23,6 +25,8 @@ from pmb.charts.select import implemented_modules, render_chart
 from pmb.schemas.chart import ChartModule, ChartSpec
 from pmb.schemas.snapshot import (
     EconSeries,
+    FedPath,
+    FedPathPoint,
     IndexContribution,
     LeverageMath,
     Quote,
@@ -79,6 +83,20 @@ def _snapshot() -> Snapshot:
             IndexContribution(ticker="MSFT", name="Microsoft", weight_pct=6.5, change_pct=-0.5),
             IndexContribution(ticker="NVDA", name="NVIDIA", weight_pct=6.0, change_pct=3.0),
         ],
+        global_equities=[
+            Quote(ticker="^KS11", name="南韓 KOSPI", last=2900.0, previous_close=3100.0),
+            Quote(ticker="^N225", name="日經 225", last=42000.0, previous_close=42500.0),
+            Quote(ticker="^STOXX50E", name="歐洲 STOXX50", last=5200.0, previous_close=5180.0),
+        ],
+        fed_path=FedPath(
+            source="futures",
+            current_rate=3.63,
+            points=[
+                FedPathPoint(label="7月", implied_rate=3.70, hike_prob=0.28, change_bps=7.0),
+                FedPathPoint(label="9月", implied_rate=3.88, hike_prob=0.72, change_bps=25.0),
+                FedPathPoint(label="12月", implied_rate=4.05, hike_prob=0.68, change_bps=42.0),
+            ],
+        ),
         tnx_history=[4.30, 4.35, 4.42, 4.49, 4.45],
         stock_bond_corr_history=[0.2, 0.35, 0.5, 0.53],
         econ_series=EconSeries(label="失業率 (%)", values=[4.0, 4.1, 4.2, 4.3]),
@@ -176,6 +194,56 @@ def test_render_catalyst_timeline_rejects_empty_events(tmp_path):
 def test_render_catalyst_timeline_rejects_event_without_label(tmp_path):
     with pytest.raises(ValueError, match="label"):
         render_catalyst_timeline(tmp_path / "x.png", {"events": [{"date": "6/25"}]})
+
+
+def test_render_global_equity_overnight_writes_png(tmp_path):
+    out = tmp_path / "glob.png"
+    render_global_equity_overnight(out, _snapshot().global_equities, {})
+    assert out.exists() and out.stat().st_size > 0
+
+
+def test_render_global_equity_overnight_dispatches(tmp_path):
+    spec = ChartSpec(id="glob", module="global_equity_overnight")
+    path = render_chart(spec, _snapshot(), tmp_path)
+    assert path.exists() and path.stat().st_size > 0
+    assert path.name == "glob.png"
+
+
+def test_render_global_equity_overnight_rejects_empty(tmp_path):
+    with pytest.raises(ValueError, match="global_equity_overnight"):
+        render_global_equity_overnight(tmp_path / "x.png", [])
+
+
+def test_render_fed_path_futures_writes_png(tmp_path):
+    out = tmp_path / "fed.png"
+    render_fed_path(out, _snapshot().fed_path, {})
+    assert out.exists() and out.stat().st_size > 0
+
+
+def test_render_fed_path_curve_writes_png(tmp_path):
+    out = tmp_path / "fedc.png"
+    fp = FedPath(
+        source="curve",
+        current_rate=3.63,
+        points=[
+            FedPathPoint(label="3個月", implied_rate=3.85, change_bps=22.0),
+            FedPathPoint(label="2年", implied_rate=4.24, change_bps=61.0),
+        ],
+    )
+    render_fed_path(out, fp, {})
+    assert out.exists() and out.stat().st_size > 0
+
+
+def test_render_fed_path_dispatches(tmp_path):
+    spec = ChartSpec(id="fed", module="fed_path")
+    path = render_chart(spec, _snapshot(), tmp_path)
+    assert path.exists() and path.stat().st_size > 0
+    assert path.name == "fed.png"
+
+
+def test_render_fed_path_rejects_empty(tmp_path):
+    with pytest.raises(ValueError, match="fed_path"):
+        render_fed_path(tmp_path / "x.png", None)
 
 
 def test_render_vix_regime_writes_png(tmp_path):

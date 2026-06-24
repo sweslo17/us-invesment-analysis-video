@@ -8,6 +8,7 @@ FRED / yfinance,LLM 只能引用、不能編造。漲跌幅計算集中在 ``Quo
 from __future__ import annotations
 
 import datetime as dt
+from typing import Literal
 
 from pydantic import BaseModel, computed_field
 
@@ -110,6 +111,34 @@ class RegimeMetrics(BaseModel):
     breadth_pct_positive: float | None = None
 
 
+class FedPathPoint(BaseModel):
+    """市場隱含 Fed 政策路徑上的一個節點(某次 FOMC 會議,或保底模式的某到期點)。
+
+    ``implied_rate`` 為市場隱含的政策利率水準(%);``hike_prob`` 僅 futures 模式有值——
+    該次會議相對前一節點的升息機率(0–1,>1 表市場定價超過一碼);``change_bps`` 為
+    相對現行政策利率的累計變動(bps)。數字一律來自資料層(期貨價 / FRED),LLM 不產生。
+    """
+
+    label: str
+    implied_rate: float
+    hike_prob: float | None = None
+    change_bps: float | None = None
+
+
+class FedPath(BaseModel):
+    """市場隱含的 Fed 政策利率路徑——期貨優先、Treasury 曲線保底(混合)。
+
+    ``source="futures"``:由 Fed funds 期貨(100 − 價)推算各次會議後的政策利率與升息機率;
+    ``source="curve"``:保底——以 Treasury 短端殖利率(含期限溢價)相對現行政策利率,呈現
+    市場對未來利率的定價方向。``note`` 為口徑說明(資料層產生,非市場數字)。
+    """
+
+    source: Literal["futures", "curve"]
+    current_rate: float
+    points: list[FedPathPoint] = []
+    note: str | None = None
+
+
 class Snapshot(BaseModel):
     """當日盤前真實數據快照。"""
 
@@ -129,6 +158,8 @@ class Snapshot(BaseModel):
     yield_curve: list[YieldPoint] = []
     sector_returns: list[SectorReturn] = []
     index_contributions: list[IndexContribution] = []  # 基準指數前 N 大成分股的漲幅貢獻
+    global_equities: list[Quote] = []  # 海外/亞歐股隔夜對照(contagion 領先訊號)
+    fed_path: FedPath | None = None  # 市場隱含 Fed 政策路徑(期貨優先、曲線保底)
     vix_history: list[float] = []
     tnx_history: list[float] = []
     stock_bond_corr_history: list[float] = []

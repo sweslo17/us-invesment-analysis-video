@@ -21,6 +21,7 @@ from matplotlib.patches import Patch  # noqa: E402
 
 from pmb.schemas.snapshot import (  # noqa: E402
     EconSeries,
+    FedPath,
     IndexContribution,
     LeverageMath,
     Quote,
@@ -430,6 +431,110 @@ def render_catalyst_timeline(
             fontsize=_ANNOT - 4,
             color="#888",
         )
+    return _finalize(fig, out_path)
+
+
+def render_global_equity_overnight(
+    out_path: str | Path,
+    indices: Sequence[Quote],
+    params: dict | None = None,
+) -> Path:
+    """海外/亞歐股隔夜對照:各國指數最近一筆漲跌的水平長條(綠漲紅跌,由高到低排)。
+
+    盤前影片用來「指出 contagion 從哪來」——亞股收盤 + 歐股盤中,作為今日美股盤前的外溢
+    領先訊號。數字全來自快照的 ``global_equities``(各指數 ``change_pct``)。
+    """
+    if not indices:
+        raise ValueError("global_equity_overnight 需要非空的海外指數報價")
+
+    ordered = sorted(indices, key=lambda q: (q.change_pct if q.change_pct is not None else 0.0))
+    names = [q.name or q.ticker for q in ordered]
+    pcts = [q.change_pct if q.change_pct is not None else 0.0 for q in ordered]
+    colors = [_POSITIVE if p >= 0 else _NEGATIVE for p in pcts]
+
+    fig, ax = plt.subplots(figsize=_FIG)
+    ax.barh(names, pcts, color=colors)
+    ax.axvline(0, color="black", linewidth=1.0)
+    ax.set_xlabel("最近一盤漲跌 (%)")
+    # 數值標在長條尖端外側、用 offset(點)留固定間隙;x 軸範圍另留非對稱留白,
+    # 確保最長的負向長條(如熔斷日 -10%)的數值也不會壓到左側 y 軸國名。
+    for i, p in enumerate(pcts):
+        ax.annotate(
+            f"{p:+.2f}%",
+            (p, i),
+            textcoords="offset points",
+            xytext=(6 if p >= 0 else -6, 0),
+            va="center",
+            ha="left" if p >= 0 else "right",
+            fontsize=_ANNOT - 4,
+        )
+    lo = min([*pcts, 0.0])
+    hi = max([*pcts, 0.0])
+    span = max(hi - lo, 1.0)
+    ax.set_xlim(lo - 0.50 * span, hi + 0.28 * span)
+    ax.grid(True, axis="x", alpha=0.3)
+    return _finalize(fig, out_path)
+
+
+def render_fed_path(
+    out_path: str | Path,
+    fed_path: FedPath | None,
+    params: dict | None = None,
+) -> Path:
+    """市場隱含 Fed 政策路徑:從現行政策利率往未來各節點的階梯線。
+
+    ``source="futures"`` 時於各節點標出該次會議的升息機率;``source="curve"`` 為 Treasury
+    短端保底路徑(只標利率水準)。數字全來自快照的 ``fed_path``,LLM 不產生。
+    """
+    if fed_path is None or not fed_path.points:
+        raise ValueError("fed_path 需要非空的 FedPath")
+
+    labels = ["現行", *[p.label for p in fed_path.points]]
+    rates = [fed_path.current_rate, *[p.implied_rate for p in fed_path.points]]
+    xs = list(range(len(labels)))
+
+    fig, ax = plt.subplots(figsize=_FIG)
+    ax.step(xs, rates, where="mid", color="#3949ab", linewidth=3, marker="o", markersize=11)
+    ax.axhline(fed_path.current_rate, color="#888", linestyle="--", linewidth=1.4)
+    for i, r in enumerate(rates):
+        ax.annotate(
+            f"{r:.2f}%",
+            (i, r),
+            fontsize=_ANNOT,
+            fontweight="bold" if i == 0 else "normal",
+            va="bottom",
+            ha="center",
+        )
+    if fed_path.source == "futures":
+        for i, p in enumerate(fed_path.points, start=1):
+            if p.hike_prob:
+                ax.annotate(
+                    f"升息 {min(p.hike_prob, 9.99) * 100:.0f}%",
+                    (i, rates[i]),
+                    fontsize=_ANNOT - 6,
+                    color="#c62828",
+                    va="top",
+                    ha="center",
+                )
+    ax.set_xticks(xs)
+    ax.set_xticklabels(labels)
+    ax.set_ylabel("政策利率 (%)")
+    ax.margins(y=0.22)
+    ax.grid(True, alpha=0.3)
+    source_tag = (
+        "Fed funds 期貨隱含"
+        if fed_path.source == "futures"
+        else "Treasury 短端隱含(含期限溢價)"
+    )
+    ax.annotate(
+        source_tag,
+        xy=(0.98, 0.02),
+        xycoords="axes fraction",
+        ha="right",
+        va="bottom",
+        fontsize=_ANNOT - 6,
+        color="#555",
+    )
     return _finalize(fig, out_path)
 
 

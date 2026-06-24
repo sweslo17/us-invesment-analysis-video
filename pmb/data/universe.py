@@ -6,6 +6,8 @@ sector ETF 作為市場廣度的代理籃子。
 
 from __future__ import annotations
 
+import datetime as dt
+
 # (ticker, 顯示名稱)
 INDEX_FUTURES: list[tuple[str, str]] = [
     ("ES=F", "S&P 500 期貨"),
@@ -53,6 +55,55 @@ SECTOR_LABELS: dict[str, str] = {
     "XLP": "必需消費", "XLI": "工業", "XLB": "原物料", "XLRE": "房地產",
     "XLU": "公用事業", "XLC": "通訊服務",
 }
+
+# 海外 / 亞歐股(隔夜對照圖):亞洲收盤 + 歐股盤中,作為今日盤前外溢的領先訊號。
+# yfinance 指數代碼;單檔失敗會在 get_quotes 跳過,不影響其餘。
+GLOBAL_EQUITY: list[tuple[str, str]] = [
+    ("^KS11", "南韓 KOSPI"),
+    ("^N225", "日經 225"),
+    ("^TWII", "台灣加權"),
+    ("^HSI", "香港恆生"),
+    ("000001.SS", "上海綜合"),
+    ("^STOXX50E", "歐洲 STOXX50"),
+    ("^GDAXI", "德國 DAX"),
+    ("^FTSE", "英國 FTSE"),
+]
+
+# Fed 政策路徑 baseline:現行政策利率(FRED 聯邦基金有效利率)
+POLICY_RATE_SERIES: tuple[str, str] = ("FEDFUNDS", "聯邦基金有效利率")
+
+# Fed 路徑「曲線保底」用的短端到期點:(FRED series_id, 顯示標籤, 月數)
+FED_PATH_CURVE_SERIES: list[tuple[str, str, int]] = [
+    ("DGS3MO", "3個月", 3),
+    ("DGS6MO", "6個月", 6),
+    ("DGS1", "1年", 12),
+    ("DGS2", "2年", 24),
+]
+
+# Fed funds 期貨月份代碼(CME 慣例)
+_FUTURES_MONTH_CODE: dict[int, str] = {
+    1: "F", 2: "G", 3: "H", 4: "J", 5: "K", 6: "M",
+    7: "N", 8: "Q", 9: "U", 10: "V", 11: "X", 12: "Z",
+}
+
+
+def fed_funds_future_ticker(year: int, month: int) -> str:
+    """組 Yahoo Finance 上的 Fed funds 期貨合約代碼:``ZQ{月碼}{YY}.CBT``。"""
+    return f"ZQ{_FUTURES_MONTH_CODE[month]}{year % 100:02d}.CBT"
+
+
+# FOMC 會議日(排程事實,非市場數字)——Fed 路徑期貨模式用來對應各次會議。
+# 2026 年八次例會(以會議第二天/決議日為準)。
+FOMC_MEETINGS: list[tuple[dt.date, str]] = [
+    (dt.date(2026, 1, 28), "1月"),
+    (dt.date(2026, 3, 18), "3月"),
+    (dt.date(2026, 4, 29), "4月"),
+    (dt.date(2026, 6, 17), "6月"),
+    (dt.date(2026, 7, 29), "7月"),
+    (dt.date(2026, 9, 16), "9月"),
+    (dt.date(2026, 10, 28), "10月"),
+    (dt.date(2026, 12, 9), "12月"),
+]
 
 # econ_print 圖表的預設總經序列:(FRED series_id, 顯示標籤)
 ECON_PRINT_SERIES: tuple[str, str] = ("UNRATE", "失業率 (%)")

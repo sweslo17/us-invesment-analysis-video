@@ -8,8 +8,11 @@ import pytest
 
 from pmb.data import universe
 from pmb.data.snapshot import (
+    build_fed_path,
     build_snapshot,
     build_yield_curve,
+    compute_fed_path_from_curve,
+    compute_fed_path_from_futures,
     compute_index_contributions,
     compute_leverage_math,
     compute_regime,
@@ -110,6 +113,71 @@ def test_build_yield_curve_orders_points_with_months():
     ]
 
 
+# --- Fed 政策路徑(期貨優先、曲線保底)---
+
+def test_compute_fed_path_from_futures_probabilities():
+    pts = compute_fed_path_from_futures([("9月", 3.88), ("12月", 4.05)], current_rate=3.63)
+    assert pts[0].hike_prob == pytest.approx((3.88 - 3.63) / 0.25)  # ≈1.0(約一碼)
+    assert pts[0].change_bps == pytest.approx(25.0)
+    assert pts[1].hike_prob == pytest.approx((4.05 - 3.88) / 0.25)
+    assert pts[1].change_bps == pytest.approx(42.0)
+    # 隱含利率下降的節點不給負機率
+    down = compute_fed_path_from_futures([("x", 3.50)], current_rate=3.63)
+    assert down[0].hike_prob == 0.0
+
+
+def test_compute_fed_path_from_curve_has_no_probabilities():
+    pts = compute_fed_path_from_curve([("3個月", 3.85), ("2年", 4.24)], current_rate=3.63)
+    assert [p.label for p in pts] == ["3個月", "2年"]
+    assert all(p.hike_prob is None for p in pts)
+    assert pts[1].change_bps == pytest.approx((4.24 - 3.63) * 100)
+
+
+class _FakeFredPolicy:
+    """政策利率 + 短端殖利率的假 FRED。"""
+
+    _VALS = {"FEDFUNDS": 3.63, "DGS3MO": 3.85, "DGS6MO": 4.00, "DGS1": 4.10, "DGS2": 4.24}
+
+    def get_latest(self, series_id, label, units=None):
+        return FredObservation(
+            series_id=series_id, label=label, value=self._VALS.get(series_id, 4.0),
+            date=dt.date(2026, 6, 24), units=units,
+        )
+
+
+class _FakeYFFutures:
+    """回遞增隱含利率(price 遞減)的 Fed funds 期貨,模擬升息路徑。"""
+
+    def get_quotes(self, specs):
+        implied = [3.70, 3.90, 4.05, 4.05]
+        out = []
+        for (ticker, name), r in zip(specs, implied, strict=False):
+            out.append(Quote(ticker=ticker, name=name, last=100.0 - r, previous_close=100.0 - r))
+        return out
+
+
+class _FakeYFNoFutures:
+    """期貨抓不到(回空)→ 應觸發曲線保底。"""
+
+    def get_quotes(self, specs):
+        return []
+
+
+def test_build_fed_path_uses_futures_when_available():
+    fp = build_fed_path(_FakeYFFutures(), _FakeFredPolicy(), dt.date(2026, 6, 24))
+    assert fp is not None and fp.source == "futures"
+    assert fp.current_rate == pytest.approx(3.63)
+    assert [p.label for p in fp.points] == ["7月", "9月", "10月", "12月"]  # 6/24 之後的會議
+    assert fp.points[0].hike_prob is not None
+
+
+def test_build_fed_path_falls_back_to_curve_without_futures():
+    fp = build_fed_path(_FakeYFNoFutures(), _FakeFredPolicy(), dt.date(2026, 6, 24))
+    assert fp is not None and fp.source == "curve"
+    assert [p.label for p in fp.points] == ["3個月", "6個月", "1年", "2年"]
+    assert all(p.hike_prob is None for p in fp.points)
+
+
 class _FakeYF:
     """對任何 ticker 都回固定報價;歷史只回 provided 字典中有的。"""
 
@@ -172,3 +240,5 @@ def test_build_snapshot_wires_all_sections():
     assert snap.vix_history  # 由 ^VIX 歷史帶入
     assert any(s.sector == "科技" for s in snap.sector_returns)  # XLK → 科技
     assert {c.ticker for c in snap.index_contributions} == {"AAPL", "MSFT"}  # 由 SPY 前 N 大持股
+    assert {q.ticker for q in snap.global_equities} >= {"^KS11", "^N225"}  # 海外股對照
+    assert snap.fed_path is not None  # Fed 政策路徑(期貨優先、曲線保底)

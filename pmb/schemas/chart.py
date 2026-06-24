@@ -13,6 +13,7 @@ from pydantic import BaseModel
 ChartModule = Literal[
     "index_overnight_grid",
     "overnight_vs_close",
+    "global_equity_overnight",
     "yield_curve",
     "vix_regime",
     "rates_trend",
@@ -22,6 +23,7 @@ ChartModule = Literal[
     "econ_print",
     "leverage_decay",
     "catalyst_timeline",
+    "fed_path",
 ]
 
 

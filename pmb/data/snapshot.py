@@ -24,6 +24,8 @@ from pmb.data.derived import (
 )
 from pmb.schemas.snapshot import (
     EconSeries,
+    FedPath,
+    FedPathPoint,
     IndexContribution,
     LeverageMath,
     Quote,
@@ -153,6 +155,120 @@ def build_yield_curve(fred_client, specs: list[tuple[str, str, int]]) -> list[Yi
     return out
 
 
+def _next_month(year: int, month: int) -> tuple[int, int]:
+    """回傳 ``(year, month)`` 的下一個月份(跨年進位)。"""
+    return (year, month + 1) if month < 12 else (year + 1, 1)
+
+
+def compute_fed_path_from_futures(
+    meetings: list[tuple[str, float]],
+    current_rate: float,
+) -> list[FedPathPoint]:
+    """由各次會議後的市場隱含政策利率算出路徑 + 逐次升息機率(純函式)。
+
+    ``meetings`` 為時間序的 ``[(會議標籤, 該會議後隱含政策利率 %)]``(隱含利率 = 100 − 期貨價)。
+    逐次升息機率 = max(0, 本次隱含 − 前次隱含) / 0.25(>1 表市場定價超過一碼);
+    ``change_bps`` 為相對現行政策利率的累計變動。
+    """
+    points: list[FedPathPoint] = []
+    prev = current_rate
+    for label, implied in meetings:
+        step = implied - prev
+        prob = step / 0.25 if step > 0 else 0.0
+        points.append(
+            FedPathPoint(
+                label=label,
+                implied_rate=round(implied, 4),
+                hike_prob=round(prob, 4),
+                change_bps=round((implied - current_rate) * 100, 1),
+            )
+        )
+        prev = implied
+    return points
+
+
+def compute_fed_path_from_curve(
+    points_in: list[tuple[str, float]],
+    current_rate: float,
+) -> list[FedPathPoint]:
+    """保底:Treasury 短端各到期點殖利率 vs 現行政策利率(純函式,不算逐次會議機率)。"""
+    return [
+        FedPathPoint(
+            label=label,
+            implied_rate=round(value, 4),
+            hike_prob=None,
+            change_bps=round((value - current_rate) * 100, 1),
+        )
+        for label, value in points_in
+    ]
+
+
+def build_fed_path(yf_client, fred_client, session_date: dt.date) -> FedPath | None:
+    """市場隱含 Fed 政策路徑:期貨優先、Treasury 曲線保底(混合)。
+
+    1) baseline = 現行政策利率(FEDFUNDS)。
+    2) 期貨:取「會議後第一個整月」的 Fed funds 期貨合約,以 100−價 作該次會議後的隱含政策
+       利率;任一合約缺報價、或隱含利率落在 [0,10] 之外即視為不可用,退回曲線保底。
+    3) 曲線保底:Treasury 短端殖利率相對現行政策利率,呈現市場對未來利率的定價方向。
+    """
+    try:
+        pol = fred_client.get_latest(*universe.POLICY_RATE_SERIES, "percent")
+        current_rate = pol.value
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("Fed 路徑:取不到現行政策利率,跳過:{}", exc)
+        return None
+
+    upcoming = [(d, lbl) for d, lbl in universe.FOMC_MEETINGS if d > session_date]
+    if upcoming:
+        try:
+            specs: list[tuple[str, str]] = []
+            for d, lbl in upcoming:
+                yy, mm = _next_month(d.year, d.month)
+                specs.append((universe.fed_funds_future_ticker(yy, mm), lbl))
+            quotes = {q.ticker: q for q in yf_client.get_quotes(specs)}
+            meetings: list[tuple[str, float]] = []
+            for ticker, lbl in specs:
+                q = quotes.get(ticker)
+                if q is None:
+                    raise ValueError(f"缺 {ticker} 期貨報價")
+                implied = 100.0 - q.last
+                if not 0.0 <= implied <= 10.0:
+                    raise ValueError(f"{ticker} 隱含利率異常({implied:.2f}%)")
+                meetings.append((lbl, implied))
+            points = compute_fed_path_from_futures(meetings, current_rate)
+            logger.info("Fed 路徑:用 Fed funds 期貨,涵蓋 {} 次會議", len(points))
+            return FedPath(
+                source="futures",
+                current_rate=current_rate,
+                points=points,
+                note="市場隱含:Fed funds 期貨(100−價)推算各次 FOMC 會議後政策利率與升息機率",
+            )
+        except Exception as exc:  # noqa: BLE001
+            logger.warning("Fed 路徑:期貨不可用,改用 Treasury 曲線保底:{}", exc)
+
+    try:
+        curve_pts: list[tuple[str, float]] = []
+        for series_id, label, _months in universe.FED_PATH_CURVE_SERIES:
+            obs = fred_client.get_latest(series_id, label, "percent")
+            curve_pts.append((label, obs.value))
+        if not curve_pts:
+            return None
+        points = compute_fed_path_from_curve(curve_pts, current_rate)
+        logger.info("Fed 路徑:用 Treasury 短端曲線保底,{} 個到期點", len(points))
+        return FedPath(
+            source="curve",
+            current_rate=current_rate,
+            points=points,
+            note=(
+                "保底:Treasury 短端殖利率(含期限溢價)相對現行政策利率,"
+                "反映市場對未來利率的定價方向"
+            ),
+        )
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("Fed 路徑:曲線保底也失敗,跳過:{}", exc)
+        return None
+
+
 def _first(quotes: list[Quote]) -> Quote | None:
     return quotes[0] if quotes else None
 
@@ -213,6 +329,9 @@ def build_snapshot(
     except Exception as exc:  # noqa: BLE001
         logger.warning("略過漲幅集中度(index_contributions):{}", exc)
 
+    global_equities = yf_client.get_quotes(universe.GLOBAL_EQUITY)
+    fed_path = build_fed_path(yf_client, fred_client, session_date)
+
     def _recent(ticker: str) -> list[float]:
         series = histories.get(ticker)
         return [] if series is None else [float(x) for x in series.dropna().tail(vix_lookback)]
@@ -252,18 +371,23 @@ def build_snapshot(
         yield_curve=yield_curve,
         sector_returns=sector_returns,
         index_contributions=index_contributions,
+        global_equities=global_equities,
+        fed_path=fed_path,
         vix_history=vix_history,
         tnx_history=tnx_history,
         stock_bond_corr_history=stock_bond_corr_history,
         econ_series=econ_series,
     )
     logger.info(
-        "快照組裝完成:指數 {} 槓桿教育 {} 殖利率點 {} 類股 {} 成分貢獻 {} 總經 {} 筆",
+        "快照組裝完成:指數 {} 槓桿教育 {} 殖利率點 {} 類股 {} 成分貢獻 {} 海外股 {} "
+        "Fed路徑 {} 總經 {} 筆",
         len(indices),
         len(leverage_math),
         len(yield_curve),
         len(sector_returns),
         len(index_contributions),
+        len(global_equities),
+        (fed_path.source if fed_path else "無"),
         len(macro),
     )
     return snapshot

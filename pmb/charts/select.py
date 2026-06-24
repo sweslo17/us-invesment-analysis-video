@@ -16,6 +16,8 @@ from pmb.charts.library import (
     render_catalyst_timeline,
     render_concentration,
     render_econ_print,
+    render_fed_path,
+    render_global_equity_overnight,
     render_index_overnight_grid,
     render_leverage_decay,
     render_overnight_vs_close,
@@ -40,6 +42,12 @@ _RENDERERS: dict[str, Callable[[Path, Snapshot, dict], Path]] = {
     "overnight_vs_close": lambda out, snap, params: render_overnight_vs_close(
         out, snap.indices, snap.futures, params
     ),
+    # 海外/亞歐股隔夜對照:指出今日盤前外溢的 contagion 源頭
+    "global_equity_overnight": lambda out, snap, params: render_global_equity_overnight(
+        out, snap.global_equities, params
+    ),
+    # 市場隱含 Fed 政策路徑(期貨優先、Treasury 曲線保底)
+    "fed_path": lambda out, snap, params: render_fed_path(out, snap.fed_path, params),
     "vix_regime": lambda out, snap, params: render_vix_regime(out, snap.vix_history, params),
     "yield_curve": lambda out, snap, params: render_yield_curve(out, snap.yield_curve, params),
     "breadth": lambda out, snap, params: render_breadth(out, snap.sector_returns, params),
