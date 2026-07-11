@@ -37,28 +37,33 @@
    與 portfolio 脫鉤、非投資建議。**所有數字只能引用快照,不可編造。**
 4. **寫產物並過 schema**(`pmb/schemas/`):
    - `artifacts/brief_<date>.json`(Brief §5.7)
-   - `artifacts/script_<date>.json`(Script:每段 `chart_id` 對得上 `charts[].id`;模組限 8 個固定模組)
+   - `artifacts/script_<date>.json`(Script:每段 `chart_id` 對得上 `charts[].id`;模組限 `charts/select.py` 的固定清單)
    - `artifacts/report_<date>.md`(§7.1)
    - 重大且**夠確認**才保守更新 `state/thesis.json`;否則不動。
    - 驗證:`poetry run python -c "from pmb.schemas.brief import Brief; from pathlib import Path; Brief.model_validate_json(Path('artifacts/brief_<date>.json').read_text())"`(script 同理);不過就修正重寫。
 5. **commit 並直接 push 到 `main`**(審查在本機做,不開 PR;`artifacts/` 被 gitignore,text 產物用 `-f`):
    ```bash
    D=<date>
-   git add -f artifacts/brief_$D.json artifacts/script_$D.json artifacts/report_$D.md
+   git add -f artifacts/snapshot_$D.json artifacts/brief_$D.json artifacts/script_$D.json artifacts/report_$D.md
    git add state/thesis.json
    git commit -m "research: $D 盤前研究產出"
    git pull --rebase origin main    # 先同步本機可能的修正
    git push origin main
    ```
+   ⚠️ **snapshot 一定要一起 commit**:本機合成直接沿用這份快照,圖表數字才與講稿一致(本機重抓會有時間差)。
 6. **絕不執行 `pmb assemble` / `pmb publish`**(那在你本機跑)。任一步失敗 → 清楚說明,不要硬產半成品。
 
 ---
 
-## 本機後續(你 / 之後 cron;不在雲端)
+## 本機後續(不在雲端)
 
-`git pull`(或控台「⬇ Pull」)取雲端研究 → 控台檢視講稿/Brief/報告 → 有問題就本機改、用控台
-「⬆ 提交+推送」回推 main → 控台「🚀 一鍵完成今日作業」或 `poetry run pmb today`(合成 → 上傳 private)
-→ 到 YouTube Studio 揭露合成內容、加播放清單、改公開。
+**全自動(預設)**:本機 launchd 排程(`pmb autopilot install --time 19:30`)每個平日傍晚
+自動跑 `pmb auto`:git pull 輪詢等本 routine 的 commit → 合成 → 上傳 YouTube(private,
+API 已自動帶合成內容揭露/播放清單/語言)→ 桌面通知。**人工只剩:到 YouTube Studio 看片、
+改『公開』**(鐵則:絕不自動公開)。
+
+**手動(備援)**:`git pull` → 控台檢視講稿/Brief/報告(要改就本機改、「⬆ 提交+推送」回推
+main)→ 控台「🚀 一鍵完成今日作業」或 `poetry run pmb today` → Studio 改公開。
 
 ---
 
