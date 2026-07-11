@@ -21,6 +21,7 @@ mplfinance = "^0.12.10b0"
 edge-tts = "^7.2.8"
 google-api-python-client = "^2.197.0"
 google-auth-oauthlib = "^1.4.0"
+numpy = "^2.5.1"
 
 [tool.poetry.scripts]
 pmb = "pmb.cli:main"

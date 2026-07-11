@@ -256,6 +256,23 @@ def cmd_render(args: argparse.Namespace) -> int:
     return 0
 
 
+def _resolve_bgm(settings, target: dt.date, work_dir: Path) -> Path | None:
+    """挑 BGM:assets/bgm 有音檔就按日輪播;沒有就程序化合成預設 pad;停用回 None。"""
+    if not settings.bgm_enable:
+        return None
+    exts = {".mp3", ".m4a", ".wav", ".aac", ".flac", ".ogg"}
+    files = (
+        sorted(p for p in settings.bgm_dir.iterdir() if p.suffix.lower() in exts)
+        if settings.bgm_dir.is_dir()
+        else []
+    )
+    if files:
+        return files[target.toordinal() % len(files)]
+    from pmb.audio.bgm import generate_default_pad
+
+    return generate_default_pad(work_dir / "bgm_pad.wav")
+
+
 def cmd_assemble(args: argparse.Namespace) -> int:
     settings = get_settings()
     settings.ensure_dirs()
@@ -275,7 +292,7 @@ def cmd_assemble(args: argparse.Namespace) -> int:
     snapshot = Snapshot.model_validate_json(snap_path.read_text(encoding="utf-8"))
 
     if args.dry_run:
-        logger.info("dry-run:用靜音配音合成,不打 edge-tts")
+        logger.info("dry-run:用靜音配音合成,不打 edge-tts;跳過 BGM/響度母帶")
         synth_fn = lambda vo, path, planned: silent_synth(vo, path, duration=planned)  # noqa: E731
     else:
         rate = settings.tts_rate
@@ -283,6 +300,8 @@ def cmd_assemble(args: argparse.Namespace) -> int:
 
     out_path = settings.artifacts_dir / f"video_{target}.mp4"
     work_dir = settings.artifacts_dir / f"video_{target}_work"
+    work_dir.mkdir(parents=True, exist_ok=True)
+    bgm_path = None if args.dry_run else _resolve_bgm(settings, target, work_dir)
     assemble_video(
         script,
         snapshot,
@@ -291,6 +310,9 @@ def cmd_assemble(args: argparse.Namespace) -> int:
         work_dir=work_dir,
         font=settings.video_font,
         channel_name=settings.channel_name,
+        bgm_path=bgm_path,
+        bgm_gain_db=settings.bgm_gain_db,
+        master_audio=not args.dry_run,
     )
 
     duration = probe_duration(out_path)

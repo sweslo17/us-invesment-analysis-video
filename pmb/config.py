@@ -43,6 +43,12 @@ class Settings(BaseSettings):
     # 配音:短影片用快語速,高資訊密度
     tts_rate: str = "+40%"
 
+    # BGM:資料夾內放 royalty-free 音檔(mp3/m4a/wav…)按日輪播;
+    # 資料夾空/不存在時,程序化合成低調 pad(零版權疑慮)。音量壓在 VO 下,另有 ducking。
+    bgm_enable: bool = True
+    bgm_dir: Path = Path("assets/bgm")
+    bgm_gain_db: float = -20.0
+
     # 頻道品牌
     channel_name: str = "美股早發車"
 
