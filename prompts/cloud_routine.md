@@ -1,6 +1,8 @@
 # PMB 日更雲端 routine(貼進 claude.ai/code scheduled routine)
 
-> 排程:**美股交易日盤前**(ET 07:00–08:00 ≈ 台灣平日傍晚/晚上)。電腦關機也照跑。
+> 排程:**美股交易日盤前**——建議**台北 19:30 平日**(= ET 夏令 07:30 / 冬令 06:30,皆在盤前)。
+> 電腦關機也照跑。本機 `pmb autopilot` 設 **19:45** 接手(先生產、後消費;本機端輪詢 90 分,
+> 雲端偶爾跑慢也接得住)。
 > **拓樸 A**:雲端只做 **取數 + 研究 + commit**(只碰 yahoo/FRED/web search);
 > 影片**合成 + 發佈在你本機**跑(`pmb today`)——雲端不需 ffmpeg / 字型 / edge-tts / YouTube OAuth。
 
@@ -69,7 +71,7 @@
 
 ## 本機後續(不在雲端)
 
-**全自動(預設)**:本機 launchd 排程(`pmb autopilot install --time 19:30`)每個平日傍晚
+**全自動(預設)**:本機 launchd 排程(`pmb autopilot install --time 19:45`)每個平日傍晚
 自動跑 `pmb auto`:git pull 輪詢等本 routine 的 commit → 合成 → 上傳 YouTube(private,
 API 已自動帶合成內容揭露/播放清單/語言)→ 桌面通知。**人工只剩:到 YouTube Studio 看片、
 改『公開』**(鐵則:絕不自動公開)。

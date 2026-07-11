@@ -77,7 +77,7 @@ commit 上 main(**雲端不合成、不發布**)。本機由 `pmb auto`(launchd)
 
 **每個交易日 — 全自動模式(預設,人工只剩 1 步)**
 
-一次性 `pmb autopilot install --time 19:30` 後,每個平日傍晚本機自動:
+一次性 `pmb autopilot install --time 19:45` 後,每個平日傍晚本機自動:
 
 1. **☁️ 雲端 routine**(美東盤前)自動 fetch + 研究,把 snapshot/brief/script/report commit 上 main。
 2. **💻 `pmb auto`**(launchd 觸發)`git pull` 輪詢等產物 → 合成(深色圖表 + 卡拉OK字幕 + BGM 母帶)→ 上傳 YouTube(**private**,API 自動帶:合成內容揭露、播放清單、語言、非兒童)→ 桌面通知附 Studio 連結。

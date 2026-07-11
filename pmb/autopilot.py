@@ -168,7 +168,7 @@ def uninstall_autopilot() -> int:
 def autopilot_status() -> int:
     path = plist_path()
     if not path.exists():
-        print("autopilot:未安裝(pmb autopilot install --time 19:30)")
+        print("autopilot:未安裝(pmb autopilot install --time 19:45)")
         return 0
     data = plistlib.loads(path.read_bytes())
     times = data.get("StartCalendarInterval", [])
