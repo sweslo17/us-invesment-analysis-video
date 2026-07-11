@@ -29,8 +29,22 @@ from pmb.schemas.snapshot import (  # noqa: E402
     YieldPoint,
 )
 
-_POSITIVE = "#2e7d32"
-_NEGATIVE = "#c62828"
+# 深色主題:圖底色 = 影片畫布色,合成後圖「長在畫面上」而非白色貼紙
+_CANVAS = "#0D1B2A"  # 與 video/assemble 的 _BG 一致
+_PANEL = "#13253C"  # 繪圖區稍亮一階,提供圖面邊界
+_FG = "#E6EDF5"  # 主要文字
+_MUTED = "#9AA8BC"  # 次要文字/註記
+_ZERO = "#8FA1B8"  # 零軸/基準線
+_GOLD = "#FFD166"  # 品牌強調(與標題/進度條同色)
+_POSITIVE = "#2EBD85"
+_NEGATIVE = "#F6465D"
+# 亮色系數據色(深底可讀)
+_BLUE = "#4FC3F7"
+_ORANGE = "#FFB74D"
+_PURPLE = "#B388FF"
+_TEAL = "#4DD0E1"
+_PINK = "#F48FB1"
+_INDIGO = "#8C9EFF"
 
 # 直式短影片畫布:圖比例約 9:10(填滿手機畫面中段),解析度與字級都放大
 _FIG: tuple[float, float] = (9.0, 10.0)
@@ -63,7 +77,9 @@ def _configure_cjk_font() -> None:
 
 
 def _apply_chart_style() -> None:
-    """直式短影片用:整體放大字級,讓手機上看得清楚(又大又清楚)。"""
+    """直式短影片用:深色主題 + 放大字級,合成後圖直接融入畫布(不再是白色貼紙)。"""
+    from cycler import cycler
+
     plt.rcParams.update(
         {
             "font.size": 24,
@@ -72,6 +88,24 @@ def _apply_chart_style() -> None:
             "ytick.labelsize": 26,
             "legend.fontsize": 24,
             "figure.dpi": _DPI,
+            # 深色主題:圖底 = 影片畫布色,繪圖區稍亮一階
+            "figure.facecolor": _CANVAS,
+            "savefig.facecolor": _CANVAS,
+            "axes.facecolor": _PANEL,
+            "text.color": _FG,
+            "axes.labelcolor": _FG,
+            "xtick.color": _FG,
+            "ytick.color": _FG,
+            "axes.edgecolor": "#33475E",
+            "axes.linewidth": 1.2,
+            "grid.color": "#FFFFFF",
+            "grid.alpha": 0.10,
+            "legend.facecolor": _PANEL,
+            "legend.edgecolor": "#33475E",
+            "legend.labelcolor": _FG,
+            "axes.prop_cycle": cycler(
+                color=[_BLUE, _ORANGE, _POSITIVE, _NEGATIVE, _PURPLE, _PINK]
+            ),
         }
     )
 
@@ -125,10 +159,10 @@ def render_vix_regime(
     bands = params.get("bands", [15, 20, 30])
 
     fig, ax = plt.subplots(figsize=_FIG)
-    ax.plot(range(len(vix_history)), list(vix_history), color="#1565c0", linewidth=3)
+    ax.plot(range(len(vix_history)), list(vix_history), color=_BLUE, linewidth=3)
     for band in bands:
-        ax.axhline(band, color="#888", linestyle="--", linewidth=1.2)
-        ax.annotate(str(band), (0, band), color="#888", fontsize=_ANNOT, va="bottom")
+        ax.axhline(band, color=_MUTED, linestyle="--", linewidth=1.2)
+        ax.annotate(str(band), (0, band), color=_MUTED, fontsize=_ANNOT, va="bottom")
     if vix_history:
         ax.annotate(
             f"{vix_history[-1]:.1f}",
@@ -154,7 +188,7 @@ def render_yield_curve(
     values = [p.value for p in points]
 
     fig, ax = plt.subplots(figsize=_FIG)
-    ax.plot(range(len(points)), values, marker="o", color="#6a1b9a", linewidth=3, markersize=11)
+    ax.plot(range(len(points)), values, marker="o", color=_PURPLE, linewidth=3, markersize=11)
     ax.set_xticks(range(len(points)))
     ax.set_xticklabels(labels)
     for i, v in enumerate(values):
@@ -179,7 +213,7 @@ def render_breadth(
 
     fig, ax = plt.subplots(figsize=_FIG)
     ax.barh(names, pcts, color=colors)
-    ax.axvline(0, color="black", linewidth=1.0)
+    ax.axvline(0, color=_ZERO, linewidth=1.2)
     ax.set_xlabel("當日漲跌 (%)")
     ax.margins(x=0.16)
     return _finalize(fig, out_path)
@@ -192,7 +226,7 @@ def render_rates_trend(
 ) -> Path:
     """美國 10 年期公債殖利率走勢,標最新值。"""
     fig, ax = plt.subplots(figsize=_FIG)
-    ax.plot(range(len(tnx_history)), list(tnx_history), color="#00695c", linewidth=3)
+    ax.plot(range(len(tnx_history)), list(tnx_history), color=_TEAL, linewidth=3)
     if tnx_history:
         ax.annotate(
             f"{tnx_history[-1]:.2f}%",
@@ -214,8 +248,8 @@ def render_stock_bond_corr(
 ) -> Path:
     """股債滾動相關係數走勢:正相關時分散效果失效(對所有投資人重要)。"""
     fig, ax = plt.subplots(figsize=_FIG)
-    ax.plot(range(len(corr_history)), list(corr_history), color="#ad1457", linewidth=3)
-    ax.axhline(0, color="black", linewidth=1.0)
+    ax.plot(range(len(corr_history)), list(corr_history), color=_PINK, linewidth=3)
+    ax.axhline(0, color=_ZERO, linewidth=1.2)
     ax.set_ylim(-1.05, 1.05)
     if corr_history:
         ax.annotate(
@@ -240,9 +274,9 @@ def render_econ_print(
     fig, ax = plt.subplots(figsize=_FIG)
     values = list(econ_series.values) if econ_series else []
     label = econ_series.label if econ_series else "總經序列"
-    ax.plot(range(len(values)), values, color="#ef6c00", linewidth=3)
+    ax.plot(range(len(values)), values, color=_ORANGE, linewidth=3)
     if values:
-        ax.scatter([len(values) - 1], [values[-1]], color="#ef6c00", s=120, zorder=5)
+        ax.scatter([len(values) - 1], [values[-1]], color=_ORANGE, s=120, zorder=5)
         ax.annotate(
             f"{values[-1]:.2f}",
             (len(values) - 1, values[-1]),
@@ -283,7 +317,7 @@ def render_overnight_vs_close(
         color=[_POSITIVE if p >= 0 else _NEGATIVE for p in close_pcts],
         alpha=0.5,
         hatch="//",
-        edgecolor="white",
+        edgecolor=_FG,
     )
     bars_fut = ax.barh(
         [i - height / 2 for i in ys],
@@ -291,15 +325,15 @@ def render_overnight_vs_close(
         height,
         color=[_POSITIVE if p >= 0 else _NEGATIVE for p in fut_pcts],
     )
-    ax.axvline(0, color="black", linewidth=1.0)
+    ax.axvline(0, color=_ZERO, linewidth=1.2)
     ax.set_yticks(ys)
     ax.set_yticklabels(names)
     ax.set_xlabel("漲跌 (%)")
     # 圖例放在圖區上方(橫排),避開長條與數值標註
     ax.legend(
         handles=[
-            Patch(facecolor="#999", alpha=0.5, hatch="//", edgecolor="white", label="昨收(斜線)"),
-            Patch(facecolor="#999", label="盤前(實心)"),
+            Patch(facecolor=_MUTED, alpha=0.5, hatch="//", edgecolor=_FG, label="昨收(斜線)"),
+            Patch(facecolor=_MUTED, label="盤前(實心)"),
         ],
         loc="lower center",
         bbox_to_anchor=(0.5, 1.0),
@@ -323,6 +357,32 @@ def render_overnight_vs_close(
     return _finalize(fig, out_path)
 
 
+# 權值股中文短名(手機上一眼看懂,也避免英文全名擠壓圖面);缺映射時退回清理後的英文名
+_ZH_NAMES = {
+    "NVDA": "輝達", "META": "Meta", "AAPL": "蘋果", "MSFT": "微軟", "AMZN": "亞馬遜",
+    "GOOGL": "Google A", "GOOG": "Google C", "AVGO": "博通", "TSLA": "特斯拉", "MU": "美光",
+    "LLY": "禮來", "JPM": "摩根大通", "BRK-B": "波克夏", "UNH": "聯合健康", "XOM": "埃克森",
+    "WMT": "沃爾瑪", "V": "Visa", "MA": "萬事達", "COST": "好市多", "HD": "家得寶",
+    "PG": "寶僑", "JNJ": "嬌生", "ORCL": "甲骨文", "NFLX": "網飛", "AMD": "超微",
+    "PLTR": "Palantir", "INTC": "英特爾", "QCOM": "高通", "TSM": "台積電 ADR", "CRM": "賽富時",
+}
+_NAME_NOISE = (" Incorporated", " Corporation", " Platforms", " Technologies", " Technology",
+               " Holdings", " Interactive", ".com", " Inc", " Corp", " Class A", " Class B",
+               " Class C", " Co", " Ltd", " PLC")
+
+
+def _short_name(ticker: str, name: str | None) -> str:
+    """權值股顯示名:優先中文短名,否則剝掉公司後綴的英文名(過長再截斷)。"""
+    zh = _ZH_NAMES.get(ticker.upper())
+    if zh:
+        return zh
+    cleaned = name or ticker
+    for noise in _NAME_NOISE:
+        cleaned = cleaned.replace(noise, "")
+    cleaned = cleaned.strip(" ,.")
+    return cleaned[:12] if cleaned else ticker
+
+
 def render_concentration(
     out_path: str | Path,
     contributions: Sequence[IndexContribution],
@@ -330,8 +390,8 @@ def render_concentration(
 ) -> Path:
     """漲幅集中度:前 N 大成分股對基準指數當日漲跌的貢獻(權重 × 報酬,單位百分點)。
 
-    凸顯漲幅有多集中——少數權值股扛了多少。依貢獻由大到小排,綠正紅負;附上前 N 大
-    合計貢獻,讓「窄反彈」一眼看穿。數字全來自快照的 IndexContribution。
+    凸顯漲幅有多集中——少數權值股扛了多少。依貢獻由大到小排,綠正紅負;前 N 大合計
+    貢獻放在 x 軸標籤第二行,讓「窄反彈」一眼看穿。數字全來自快照的 IndexContribution。
     """
     params = params or {}
     if not contributions:
@@ -339,7 +399,7 @@ def render_concentration(
 
     top_n = int(params.get("top_n", 10))
     ordered = sorted(contributions, key=lambda c: c.contribution, reverse=True)[:top_n]
-    labels = [c.name or c.ticker for c in ordered]
+    labels = [_short_name(c.ticker, c.name) for c in ordered]
     values = [c.contribution for c in ordered]
     colors = [_POSITIVE if v >= 0 else _NEGATIVE for v in values]
     total = sum(values)
@@ -347,26 +407,23 @@ def render_concentration(
     fig, ax = plt.subplots(figsize=_FIG)
     # barh 由下而上;反轉讓貢獻最大者在最上方
     ax.barh(labels[::-1], values[::-1], color=colors[::-1])
-    ax.axvline(0, color="black", linewidth=1.0)
-    ax.set_xlabel("對指數的貢獻(百分點)")
+    ax.axvline(0, color=_ZERO, linewidth=1.2)
+    ax.set_xlabel(f"對指數的貢獻(百分點)\n前 {len(ordered)} 大合計 {total:+.2f} 百分點")
     for i, v in enumerate(values[::-1]):
         ax.annotate(
             f"{v:+.3f}",
             (v, i),
+            textcoords="offset points",
+            xytext=(6 if v >= 0 else -6, 0),
             va="center",
             ha="left" if v >= 0 else "right",
             fontsize=_ANNOT,
         )
-    ax.annotate(
-        f"前 {len(ordered)} 大合計貢獻 {total:+.2f} 百分點",
-        xy=(0.98, 0.02),
-        xycoords="axes fraction",
-        ha="right",
-        va="bottom",
-        fontsize=_ANNOT,
-        color="#555",
-    )
-    ax.margins(x=0.2)
+    lo = min([*values, 0.0])
+    hi = max([*values, 0.0])
+    span = max(hi - lo, 0.05)
+    ax.set_xlim(lo - 0.55 * span, hi + 0.42 * span)
+    ax.grid(True, axis="x", alpha=0.3)
     return _finalize(fig, out_path)
 
 
@@ -403,11 +460,11 @@ def render_catalyst_timeline(
 
     n = len(labels)
     fig, ax = plt.subplots(figsize=_FIG)
-    ax.plot([0, 0], [-0.5, n - 0.5], color="#555", linewidth=2.4, zorder=1)
+    ax.plot([0, 0], [-0.5, n - 0.5], color="#55677F", linewidth=2.4, zorder=1)
     for i, (label, date, hi) in enumerate(zip(labels, dates, highlights, strict=True)):
         y = n - 1 - i  # 第一個事件放最上面
-        color = "#ef6c00" if hi else "#1565c0"
-        ax.scatter([0], [y], s=420 if hi else 230, color=color, edgecolor="white", zorder=3)
+        color = _GOLD if hi else _BLUE
+        ax.scatter([0], [y], s=420 if hi else 230, color=color, edgecolor=_CANVAS, zorder=3)
         text = f"{date}  {label}" if date else label
         ax.annotate(
             text,
@@ -429,7 +486,7 @@ def render_catalyst_timeline(
             ha="center",
             va="bottom",
             fontsize=_ANNOT - 4,
-            color="#888",
+            color=_MUTED,
         )
     return _finalize(fig, out_path)
 
@@ -454,7 +511,7 @@ def render_global_equity_overnight(
 
     fig, ax = plt.subplots(figsize=_FIG)
     ax.barh(names, pcts, color=colors)
-    ax.axvline(0, color="black", linewidth=1.0)
+    ax.axvline(0, color=_ZERO, linewidth=1.2)
     ax.set_xlabel("最近一盤漲跌 (%)")
     # 數值標在長條尖端外側、用 offset(點)留固定間隙;x 軸範圍另留非對稱留白,
     # 確保最長的負向長條(如熔斷日 -10%)的數值也不會壓到左側 y 軸國名。
@@ -494,8 +551,8 @@ def render_fed_path(
     xs = list(range(len(labels)))
 
     fig, ax = plt.subplots(figsize=_FIG)
-    ax.step(xs, rates, where="mid", color="#3949ab", linewidth=3, marker="o", markersize=11)
-    ax.axhline(fed_path.current_rate, color="#888", linestyle="--", linewidth=1.4)
+    ax.step(xs, rates, where="mid", color=_INDIGO, linewidth=3, marker="o", markersize=11)
+    ax.axhline(fed_path.current_rate, color=_MUTED, linestyle="--", linewidth=1.4)
     for i, r in enumerate(rates):
         ax.annotate(
             f"{r:.2f}%",
@@ -512,7 +569,7 @@ def render_fed_path(
                     f"升息 {min(p.hike_prob, 9.99) * 100:.0f}%",
                     (i, rates[i]),
                     fontsize=_ANNOT - 6,
-                    color="#c62828",
+                    color=_NEGATIVE,
                     va="top",
                     ha="center",
                 )
@@ -533,7 +590,7 @@ def render_fed_path(
         ha="right",
         va="bottom",
         fontsize=_ANNOT - 6,
-        color="#555",
+        color=_MUTED,
     )
     return _finalize(fig, out_path)
 
@@ -543,23 +600,33 @@ def render_index_overnight_grid(
     indices: Sequence[Quote],
     params: dict | None = None,
 ) -> Path:
-    """主要指數的隔夜/當日漲跌長條圖,綠漲紅跌。"""
+    """主要指數的隔夜/當日漲跌水平長條,綠漲紅跌。
+
+    水平排列讓「S&P 500 期貨」這類長名稱放 y 軸,不再旋轉重疊;第一個指數在最上方。
+    """
     names = [q.name or q.ticker for q in indices]
     pcts = [q.change_pct if q.change_pct is not None else 0.0 for q in indices]
     colors = [_POSITIVE if p >= 0 else _NEGATIVE for p in pcts]
 
     fig, ax = plt.subplots(figsize=_FIG)
-    bars = ax.bar(names, pcts, color=colors)
-    ax.axhline(0, color="black", linewidth=1.0)
-    ax.set_ylabel("隔夜漲跌 (%)")
-    ax.tick_params(axis="x", labelrotation=20)
-    for bar, pct in zip(bars, pcts, strict=True):
+    ax.barh(names[::-1], pcts[::-1], color=colors[::-1])
+    ax.axvline(0, color=_ZERO, linewidth=1.2)
+    ax.set_xlabel("隔夜漲跌 (%)")
+    for i, p in enumerate(pcts[::-1]):
         ax.annotate(
-            f"{pct:+.2f}%",
-            (bar.get_x() + bar.get_width() / 2, pct),
-            ha="center",
-            va="bottom" if pct >= 0 else "top",
+            f"{p:+.2f}%",
+            (p, i),
+            textcoords="offset points",
+            xytext=(8 if p >= 0 else -8, 0),
+            va="center",
+            ha="left" if p >= 0 else "right",
             fontsize=_ANNOT,
+            fontweight="bold",
         )
-    ax.margins(y=0.16)
+    lo = min([*pcts, 0.0])
+    hi = max([*pcts, 0.0])
+    span = max(hi - lo, 0.5)
+    # 負向標註往左長,左側留白要比右側大,避免壓到 y 軸的指數名稱
+    ax.set_xlim(lo - 0.62 * span, hi + 0.45 * span)
+    ax.grid(True, axis="x", alpha=0.3)
     return _finalize(fig, out_path)
