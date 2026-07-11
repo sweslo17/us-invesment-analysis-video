@@ -510,8 +510,8 @@ def finalize_master(
             f"[0:a]{vo_polish},asplit=2[vo][sc];"
             f"[1:a]aresample=44100,aformat=channel_layouts=mono,volume={bgm_gain_db}dB,"
             f"atrim=0:{total:.3f}[bgt];"
-            # VO 一開口就把 BGM 往下壓,句間空隙讓它微微浮上來
-            f"[bgt][sc]sidechaincompress=threshold=0.02:ratio=8:attack=20:release=600[duck];"
+            # VO 一開口把 BGM 往下帶、句間浮回來;柔性壓(ratio 3),BGM 在講話時仍聽得見
+            f"[bgt][sc]sidechaincompress=threshold=0.06:ratio=3:attack=80:release=900[duck];"
             f"[vo][duck]amix=inputs=2:duration=first:dropout_transition=0:normalize=0[mix];"
             f"[mix]{loudnorm},afade=t=out:st={fade_start:.3f}:d=0.8[a]"
         )

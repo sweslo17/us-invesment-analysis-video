@@ -717,7 +717,10 @@ def build_parser() -> argparse.ArgumentParser:
     auto.add_argument("--no-pull", action="store_true", help="不 git pull(用本機現有產物)")
     auto.add_argument("--no-upload", action="store_true", help="只合成,不上傳")
     auto.add_argument(
-        "--wait-minutes", type=float, default=45.0, help="等雲端研究產物的上限(預設 45 分)"
+        "--wait-minutes",
+        type=float,
+        default=90.0,
+        help="等雲端研究產物的上限(預設 90 分,涵蓋美東冬令/夏令的落地時間差)",
     )
     auto.set_defaults(func=cmd_auto)
 

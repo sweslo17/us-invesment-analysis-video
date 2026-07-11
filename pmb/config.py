@@ -52,9 +52,10 @@ class Settings(BaseSettings):
 
     # BGM:資料夾內放 royalty-free 音檔(mp3/m4a/wav…)按日輪播;
     # 資料夾空/不存在時,程序化合成低調 pad(零版權疑慮)。音量壓在 VO 下,另有 ducking。
+    # -14dB 實測讓 BGM 落在人聲下方約 17–18dB(解說影片典型水位);嫌吵改 -18、想更明顯改 -11
     bgm_enable: bool = True
     bgm_dir: Path = Path("assets/bgm")
-    bgm_gain_db: float = -20.0
+    bgm_gain_db: float = -14.0
 
     # 頻道品牌
     channel_name: str = "美股早發車"
