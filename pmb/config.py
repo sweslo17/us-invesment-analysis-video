@@ -44,8 +44,11 @@ class Settings(BaseSettings):
     # 資料層參數
     history_period: str = "6mo"
 
-    # 配音:短影片用快語速,高資訊密度
+    # 配音:短影片用快語速,高資訊密度。voice 可換(HsiaoYu 較暖、YunJhe 男聲);
+    # pitch 微調音高(如 "+5Hz")可降低單調感,幅度別超過 ±15Hz
     tts_rate: str = "+40%"
+    tts_voice: str = "zh-TW-HsiaoChenNeural"
+    tts_pitch: str = "+0Hz"
 
     # BGM:資料夾內放 royalty-free 音檔(mp3/m4a/wav…)按日輪播;
     # 資料夾空/不存在時,程序化合成低調 pad(零版權疑慮)。音量壓在 VO 下,另有 ducking。

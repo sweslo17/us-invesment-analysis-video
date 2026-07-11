@@ -489,11 +489,13 @@ def finalize_master(
         logger.warning("量不到響度(可能是靜音 dry-run),跳過 loudnorm 增益校正")
 
     fade_start = max(total - 0.8, 0.0)
+    # VO 打磨:70Hz 高通去低頻嗡聲 + 3kHz 輕微臨場感,TTS 人聲更乾淨清晰
+    vo_polish = "highpass=f=70,equalizer=f=3000:t=q:w=1:g=1.5"
     args = ["ffmpeg", "-y", "-i", str(concat_path)]
     if bgm_path is not None and Path(bgm_path).exists():
         args += ["-stream_loop", "-1", "-i", str(bgm_path)]
         graph = (
-            f"[0:a]asplit=2[vo][sc];"
+            f"[0:a]{vo_polish},asplit=2[vo][sc];"
             f"[1:a]aresample=44100,aformat=channel_layouts=mono,volume={bgm_gain_db}dB,"
             f"atrim=0:{total:.3f}[bgt];"
             # VO 一開口就把 BGM 往下壓,句間空隙讓它微微浮上來
@@ -502,7 +504,7 @@ def finalize_master(
             f"[mix]{loudnorm},afade=t=out:st={fade_start:.3f}:d=0.8[a]"
         )
     else:
-        graph = f"[0:a]{loudnorm},afade=t=out:st={fade_start:.3f}:d=0.8[a]"
+        graph = f"[0:a]{vo_polish},{loudnorm},afade=t=out:st={fade_start:.3f}:d=0.8[a]"
     args += [
         "-filter_complex", graph,
         "-map", "0:v", "-map", "[a]",
