@@ -382,20 +382,32 @@ def _render_segment_clip(
     frames = max(1, math.ceil(seg_duration * _FPS))
     img_w, img_h = _png_size(work_dir / image)
     if is_card:
-        fit_w, fit_h = _WIDTH, _HEIGHT
+        # 全屏卡:標準 Ken Burns(邊緣裁進來沒關係,卡片留白極大)
+        out_w, out_h = _WIDTH, _HEIGHT
         ox, oy = 0, 0
+        prep = f"[0:v]scale={out_w * 2}:{out_h * 2}:flags=lanczos"
     else:
-        fit_w, fit_h = _fit_box(img_w, img_h, _CHART_BOX_W, _CHART_BOX_H)
-        ox = (_WIDTH - fit_w) // 2
-        oy = _CHART_BAND_TOP + (_CHART_BOX_H - fit_h) // 2
+        # 圖表:縮小一階塞進框,再用畫布同色 padding 墊回;zoompan 只推進 padding,
+        # 圖上貼邊的字(數值標註/時間軸文字)永遠不會被裁掉
+        inner_w = int(_CHART_BOX_W / (1 + _ZOOM_AMOUNT))
+        inner_h = int(_CHART_BOX_H / (1 + _ZOOM_AMOUNT))
+        fit_w, fit_h = _fit_box(img_w, img_h, inner_w, inner_h)
+        out_w = int(fit_w * (1 + _ZOOM_AMOUNT)) // 2 * 2
+        out_h = int(fit_h * (1 + _ZOOM_AMOUNT)) // 2 * 2
+        ox = (_WIDTH - out_w) // 2
+        oy = _CHART_BAND_TOP + (_CHART_BOX_H - out_h) // 2
+        prep = (
+            f"[0:v]scale={fit_w * 2}:{fit_h * 2}:flags=lanczos,"
+            f"pad={out_w * 2}:{out_h * 2}:(ow-iw)/2:(oh-ih)/2:color=0x{_BG_HEX}"
+        )
 
     chain: list[str] = [
         f"color=c=0x{_BG_HEX}:s={_WIDTH}x{_HEIGHT}:r={_FPS}:d={seg_duration:.3f}[bg]",
         # 先放大 2 倍再 zoompan,消除整數座標取樣的抖動;緩推 {_ZOOM_AMOUNT:.0%}
         (
-            f"[0:v]scale={fit_w * 2}:{fit_h * 2}:flags=lanczos,"
+            f"{prep},"
             f"zoompan=z='1+{_ZOOM_AMOUNT}*on/{frames}':"
-            f"x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=1:s={fit_w}x{fit_h}:fps={_FPS}[ken]"
+            f"x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=1:s={out_w}x{out_h}:fps={_FPS}[ken]"
         ),
         f"[bg][ken]overlay={ox}:{oy}[v0]",
     ]

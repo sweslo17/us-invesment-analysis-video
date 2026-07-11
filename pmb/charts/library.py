@@ -371,6 +371,32 @@ _NAME_NOISE = (" Incorporated", " Corporation", " Platforms", " Technologies", "
                " Class C", " Co", " Ltd", " PLC")
 
 
+_WRAP_BREAK = "，、,。;；:：…)）」』】 "
+
+
+def _wrap_units(text: str, max_units: float, max_lines: int = 2) -> str:
+    """依顯示寬度換行(中文 1、英數 0.55),優先在標點/空白後斷;超過行數截斷加「…」。
+
+    matplotlib 的 annotate 不會自動換行,長標籤(如催化劑事件)不換行會直接爆出圖框。
+    """
+    lines: list[str] = []
+    cur: list[str] = []
+    width = 0.0
+    for ch in text:
+        cur.append(ch)
+        width += 1.0 if not ch.isascii() else 0.55
+        if (ch in _WRAP_BREAK and width >= max_units * 0.6) or width >= max_units:
+            lines.append("".join(cur))
+            cur = []
+            width = 0.0
+    if cur:
+        lines.append("".join(cur))
+    if len(lines) > max_lines:
+        lines = lines[:max_lines]
+        lines[-1] = lines[-1][:-1] + "…"
+    return "\n".join(lines)
+
+
 def _short_name(ticker: str, name: str | None) -> str:
     """權值股顯示名:優先中文短名,否則剝掉公司後綴的英文名(過長再截斷)。"""
     zh = _ZH_NAMES.get(ticker.upper())
@@ -466,6 +492,9 @@ def render_catalyst_timeline(
         color = _GOLD if hi else _BLUE
         ax.scatter([0], [y], s=420 if hi else 230, color=color, edgecolor=_CANVAS, zorder=3)
         text = f"{date}  {label}" if date else label
+        # 長標籤換行(highlight 字大、每行塞得少),最多兩行、再長就截斷——
+        # 版寬有限,事件寫太長時保重點而非爆框
+        text = _wrap_units(text, max_units=16 if hi else 19, max_lines=2)
         ax.annotate(
             text,
             (0.16, y),
@@ -474,6 +503,7 @@ def render_catalyst_timeline(
             fontsize=_ANNOT_BIG if hi else _ANNOT,
             fontweight="bold" if hi else "normal",
             color=color,
+            linespacing=1.25,
         )
     ax.set_xlim(-0.4, 2.4)
     ax.set_ylim(-0.7, n - 0.3)
