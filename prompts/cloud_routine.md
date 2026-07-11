@@ -11,9 +11,13 @@
 1. **連接 GitHub repo** `sweslo17/us-invesment-analysis-video`,授權 claude.ai 讀寫(才能 clone 與開 PR/push 分支)。
 2. **Setup script**(只跑一次、會快取;拓樸 A 不需 ffmpeg/字型):
    ```bash
-   pipx install poetry || pip install --user poetry
+   set -e
+   command -v poetry >/dev/null || python3 -m pip install poetry
    poetry install
    ```
+   ⚠️ **不要** `pip install --upgrade pip`:雲端 Ubuntu 的 pip 是 debian 套件(無 RECORD 檔),
+   pip 無法解除安裝自己,升級必炸(`Cannot uninstall pip 24.0, RECORD file not found`)。
+   映像通常已內建 poetry,先偵測、缺了才裝。
 3. **環境變數**:`FRED_API_KEY=<你的 key>`(明文、低敏感、可輪替)。
    **不要放** YouTube OAuth、也不需 `ANTHROPIC_API_KEY`(研究用 routine 自帶的 web search,免 key)。
 4. **網路出口改 Custom,allowlist**(否則 `pmb fetch` 失敗):
