@@ -6,9 +6,9 @@ from pmb.tts.edge import WordBoundary
 from pmb.video.assemble import (
     _audio_graph,
     _fit_box,
+    _Take,
     build_caption_pages,
     build_segment_ass,
-    _Take,
 )
 
 
@@ -17,7 +17,10 @@ def _units(s: str) -> float:
 
 
 def test_pages_never_exceed_two_lines_and_cover_whole_sentence():
-    text = "VIX睡到十五點五、標普波動降到十三點六,公式回推的合理槓桿反而升到一點一倍,最平靜時數學反而鼓勵你加最多,這就是陷阱。"
+    text = (
+        "VIX睡到十五點五、標普波動降到十三點六,公式回推的合理槓桿反而升到一點一倍,"
+        "最平靜時數學反而鼓勵你加最多,這就是陷阱。"
+    )
     pages = build_caption_pages(text, [], 12.0)
     assert len(pages) >= 2  # 長句必須分頁,不能一頁七行蓋掉圖表
     joined = "".join(p.text.replace("\\N", "") for p in pages)
