@@ -11,16 +11,20 @@
 1. **連接 GitHub repo** `sweslo17/us-invesment-analysis-video`,授權 claude.ai 讀寫(才能 clone 與開 PR/push 分支)。
 2. **Setup script**(只跑一次、會快取;拓樸 A 不需 ffmpeg/字型):
    ```bash
-   set -e
    command -v poetry >/dev/null || python3 -m pip install poetry
-   poetry install
    ```
-   ⚠️ **不要** `pip install --upgrade pip`:雲端 Ubuntu 的 pip 是 debian 套件(無 RECORD 檔),
-   pip 無法解除安裝自己,升級必炸(`Cannot uninstall pip 24.0, RECORD file not found`)。
-   映像通常已內建 poetry,先偵測、缺了才裝。
-3. **環境變數**:`FRED_API_KEY=<你的 key>`(明文、低敏感、可輪替)。
+   ⚠️ 兩個坑,都踩過了:
+   - **不要** `pip install --upgrade pip`:雲端 Ubuntu 的 pip 是 debian 套件(無 RECORD 檔),
+     pip 無法解除安裝自己,升級必炸(`Cannot uninstall pip 24.0, RECORD file not found`)。
+   - **不要在這裡 `poetry install`**:環境建置階段 repo 尚未 checkout(cwd 是空的 home),
+     找不到 pyproject.toml。依賴安裝放在「每次執行」第 1 步。
+3. **Routine 的 Prompt 欄**建議只貼這一行(每次執行讀 repo 內最新版,改 prompt 免重貼):
+   > 你是 repo `sweslo17/us-invesment-analysis-video` 的雲端排程 session。讀取 repo 內的
+   > `prompts/cloud_routine.md`,嚴格依其「每次執行,依序做這些」章節執行;其餘章節是給
+   > 人類的一次性設定說明,略過。
+4. **環境變數**:`FRED_API_KEY=<你的 key>`(明文、低敏感、可輪替)。
    **不要放** YouTube OAuth、也不需 `ANTHROPIC_API_KEY`(研究用 routine 自帶的 web search,免 key)。
-4. **網路出口改 Custom,allowlist**(否則 `pmb fetch` 失敗):
+5. **網路出口改 Custom,allowlist**(否則 `pmb fetch` 失敗):
    - `query1.finance.yahoo.com`、`query2.finance.yahoo.com`、`*.finance.yahoo.com`、`fc.yahoo.com`
    - `api.stlouisfed.org`
    - 勾「包含常見套件管理器預設清單」(pip/apt);web search 內建,無需額外網域。
@@ -30,7 +34,11 @@
 
 ## 每次執行,依序做這些
 
-1. **取數**:`poetry run pmb fetch`。
+1. **裝依賴 + 取數**(session 是新容器,repo 這時才在):
+   ```bash
+   poetry install --quiet    # 每次都要;setup 階段沒有 repo 裝不了
+   poetry run pmb fetch
+   ```
    - 若輸出「今天非 NYSE 交易日,skip」→ 休市,**直接結束、不要 commit**。
    - 否則它會寫 `artifacts/snapshot_<date>.json`。
 2. **讀** `artifacts/snapshot_<date>.json`(真實數字)與 `state/thesis.json`(中長期基準)。
