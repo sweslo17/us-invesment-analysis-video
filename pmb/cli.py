@@ -416,13 +416,22 @@ def cmd_publish(args: argparse.Namespace) -> int:
         approve=approve,
         manifest_path=settings.artifacts_dir / f"publish_{target}.json",
         settings=settings,
+        disclose_synthetic=settings.youtube_disclose_synthetic,
+        playlist_id=settings.youtube_playlist_id,
     )
 
     if result["published"]:
         print(f"✅ 已上傳 YouTube(可見度 {settings.youtube_privacy}):{result.get('video_id')}")
         ch = result.get("channel_title") or result.get("channel_id") or "(未知)"
         print(f"   📺 上傳到頻道:{ch} — 確認是「美股早發車」!")
-        print("   → 到 YouTube Studio 確認後,手動改成『公開』即可。")
+        disclosed = "已揭露" if settings.youtube_disclose_synthetic else "未揭露(依設定)"
+        print(f"   🏷️ 合成內容(TTS):{disclosed};語言 zh-TW;非兒童內容 —— 已由 API 設定")
+        if settings.youtube_playlist_id:
+            mark = "✓ 已加入" if result.get("playlist_added") else "✗ 失敗(見 log,不擋上傳)"
+            print(f"   🎞️ 播放清單:{mark}")
+        else:
+            print("   🎞️ 播放清單:未設定(在 .env 填 YOUTUBE_PLAYLIST_ID 可自動加入)")
+        print("   → 剩最後一步:到 YouTube Studio 看片確認,改成『公開』。")
     else:
         print(f"[dry-run] 未發布。標題:{title}")
         print(f"  manifest:{settings.artifacts_dir / f'publish_{target}.json'}")
@@ -432,10 +441,6 @@ def cmd_publish(args: argparse.Namespace) -> int:
         print(f"  封面:{cover}")
     report_path = settings.artifacts_dir / f"report_{target}.md"
     print(f"  報告(人工貼上):{report_path}")
-    print("\n  ⚠️ 上傳後到 YouTube Studio 還要手動補(API 不會設):")
-    print("   • 變造/合成內容揭露:用了合成語音(TTS)→『變造內容』要選「是」(政策要求)")
-    print("   • 加入播放清單(例:每日盤前快報)")
-    print("   • 確認:語言=中文(繁體)、非兒童內容、直式會自動判定為 Shorts")
     print("※ 本內容為市場資訊與風險教育,非投資建議。")
     return 0
 
@@ -547,7 +552,11 @@ def cmd_auth_youtube(args: argparse.Namespace) -> int:
 
     from google_auth_oauthlib.flow import InstalledAppFlow
 
-    scopes = ["https://www.googleapis.com/auth/youtube.upload"]
+    # youtube.upload:上傳影片/封面;youtube:playlistItems.insert(自動加播放清單)
+    scopes = [
+        "https://www.googleapis.com/auth/youtube.upload",
+        "https://www.googleapis.com/auth/youtube",
+    ]
     flow = InstalledAppFlow.from_client_secrets_file(str(secrets), scopes=scopes)
     creds = flow.run_local_server(port=args.port)
     print("\n✅ OAuth 完成。把下面三行貼進 .env(.gitignore 已排除,勿提交):\n")

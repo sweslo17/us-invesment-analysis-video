@@ -97,3 +97,17 @@ def test_upload_privacy_is_recorded_and_never_public_by_default(tmp_path):
     assert result["privacy"] == "unlisted"
     default = upload_video(tmp_path / "v.mp4", title="t", description="d", approve=False)
     assert default["privacy"] != "public"
+
+
+def test_upload_records_synthetic_disclosure_and_playlist(tmp_path):
+    # 合成內容揭露預設開;播放清單設定與結果都落 manifest(dry-run 不觸網)
+    result = upload_video(
+        tmp_path / "v.mp4",
+        title="t",
+        description="d",
+        approve=False,
+        playlist_id="PL123",
+    )
+    assert result["contains_synthetic_media"] is True
+    assert result["playlist_id"] == "PL123"
+    assert result["playlist_added"] is False  # 未上傳自然未加入

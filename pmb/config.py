@@ -31,6 +31,10 @@ class Settings(BaseSettings):
     youtube_privacy: str = "private"
     # 影片類別:27=教育(預設,切合風險教育定位)、25=新聞與政治、22=人物與網誌
     youtube_category_id: str = "27"
+    # 合成內容揭露(Studio「變造內容」):TTS 旁白依頻道政策預設主動揭露
+    youtube_disclose_synthetic: bool = True
+    # 每日影片自動加入的播放清單(如「每日盤前快報」);需 auth-youtube 取得 youtube scope
+    youtube_playlist_id: str | None = None
 
     # 路徑
     artifacts_dir: Path = Path("artifacts")

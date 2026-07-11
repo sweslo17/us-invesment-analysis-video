@@ -76,8 +76,14 @@ def upload_video(
     approve: bool = False,
     manifest_path: str | Path | None = None,
     settings=None,
+    disclose_synthetic: bool = True,
+    playlist_id: str | None = None,
 ) -> dict:
-    """上傳影片。``approve=False``(預設)只寫 manifest 不上傳。"""
+    """上傳影片。``approve=False``(預設)只寫 manifest 不上傳。
+
+    上傳時一併補齊 Studio 原本要手動點的欄位:合成內容揭露(``containsSyntheticMedia``,
+    對應 TTS 旁白)、加入播放清單(``playlist_id``,需較大 OAuth scope,失敗不擋上傳)。
+    """
     video_path = Path(video_path)
     tags = tags or []
     record = {
@@ -89,6 +95,9 @@ def upload_video(
         "privacy": privacy,
         "approved": approve,
         "published": False,
+        "contains_synthetic_media": disclose_synthetic,
+        "playlist_id": playlist_id,
+        "playlist_added": False,
     }
 
     if not approve:
@@ -99,11 +108,22 @@ def upload_video(
             manifest_path.write_text(json.dumps(record, ensure_ascii=False, indent=2), "utf-8")
         return record
 
-    uploaded = _do_upload(video_path, title, description, tags, privacy, settings, thumbnail)
+    uploaded = _do_upload(
+        video_path,
+        title,
+        description,
+        tags,
+        privacy,
+        settings,
+        thumbnail,
+        disclose_synthetic=disclose_synthetic,
+        playlist_id=playlist_id,
+    )
     record["published"] = True
     record["video_id"] = uploaded["id"]
     record["channel_id"] = uploaded.get("channel_id")
     record["channel_title"] = uploaded.get("channel_title")
+    record["playlist_added"] = uploaded.get("playlist_added", False)
     logger.info(
         "已上傳 YouTube:{}(頻道 {})", uploaded["id"], uploaded.get("channel_title") or "?"
     )
@@ -122,10 +142,13 @@ def _do_upload(
     privacy: str,
     settings,
     thumbnail: str | Path | None = None,
+    *,
+    disclose_synthetic: bool = True,
+    playlist_id: str | None = None,
 ) -> dict:
     """實際上傳(僅 approve=True 時呼叫)。需 OAuth refresh token。
 
-    回傳 {id, channel_id, channel_title} —— 含上傳到哪個頻道,供確認目的地。
+    回傳 {id, channel_id, channel_title, playlist_added} —— 含上傳到哪個頻道,供確認目的地。
     """
     if settings is None or not settings.youtube_refresh_token:
         raise RuntimeError("缺少 YouTube OAuth 憑證(youtube_client_id/secret/refresh_token)")
@@ -140,8 +163,10 @@ def _do_upload(
         client_id=settings.youtube_client_id,
         client_secret=settings.youtube_client_secret,
         token_uri="https://oauth2.googleapis.com/token",
-        # youtube.upload 同時涵蓋影片上傳與 thumbnails.set(自訂封面)
-        scopes=["https://www.googleapis.com/auth/youtube.upload"],
+        # 不指定 scopes:refresh 後拿到「當初授權時同意的全部 scope」。
+        # 舊 token 只授權 youtube.upload 也能上傳;播放清單需要重跑 pmb auth-youtube
+        # 取得含 youtube scope 的新 token。
+        scopes=None,
     )
     youtube = build("youtube", "v3", credentials=creds)
     snippet = {
@@ -153,12 +178,16 @@ def _do_upload(
     }
     if tags:
         snippet["tags"] = tags
+    status = {
+        "privacyStatus": privacy,
+        "selfDeclaredMadeForKids": False,
+        # 合成內容揭露(Studio「變造內容」問題):TTS 旁白依頻道政策主動揭露,
+        # 可用 YOUTUBE_DISCLOSE_SYNTHETIC=false 關閉(純圖表+TTS 依官方說明未必需要)
+        "containsSyntheticMedia": disclose_synthetic,
+    }
     request = youtube.videos().insert(
         part="snippet,status",
-        body={
-            "snippet": snippet,
-            "status": {"privacyStatus": privacy, "selfDeclaredMadeForKids": False},
-        },
+        body={"snippet": snippet, "status": status},
         media_body=MediaFileUpload(str(video_path), resumable=True),
     )
     response = request.execute()
@@ -174,8 +203,40 @@ def _do_upload(
             logger.info("已設定自訂封面:{}", thumbnail)
         except Exception as exc:  # noqa: BLE001 — 封面失敗不應讓整支上傳失敗
             logger.warning("自訂封面設定失敗(略過):{}", exc)
+
+    playlist_added = False
+    if playlist_id:
+        playlist_added = _add_to_playlist(youtube, video_id, playlist_id)
     return {
         "id": video_id,
         "channel_id": snip.get("channelId"),
         "channel_title": snip.get("channelTitle"),
+        "playlist_added": playlist_added,
     }
+
+
+def _add_to_playlist(youtube, video_id: str, playlist_id: str) -> bool:
+    """把影片加進播放清單(best-effort,失敗不擋上傳)。
+
+    需要 ``youtube``(或 ``youtube.force-ssl``)scope;只有 ``youtube.upload`` 的舊
+    refresh token 會 403 —— 提示重跑 ``pmb auth-youtube`` 換新 token 即可。
+    """
+    try:
+        youtube.playlistItems().insert(
+            part="snippet",
+            body={
+                "snippet": {
+                    "playlistId": playlist_id,
+                    "resourceId": {"kind": "youtube#video", "videoId": video_id},
+                }
+            },
+        ).execute()
+        logger.info("已加入播放清單:{}", playlist_id)
+        return True
+    except Exception as exc:  # noqa: BLE001 — 播放清單失敗不應讓整支上傳失敗
+        logger.warning(
+            "加入播放清單失敗(略過):{}。若為權限不足(403),重跑 pmb auth-youtube "
+            "取得含 youtube scope 的新憑證即可自動加清單。",
+            exc,
+        )
+        return False
