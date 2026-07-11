@@ -487,6 +487,89 @@ def cmd_today(args: argparse.Namespace) -> int:
     return cmd_publish(argparse.Namespace(date=str(target), approve=not args.no_upload))
 
 
+def cmd_auto(args: argparse.Namespace) -> int:
+    """每日全自動:等雲端研究 → 合成 → 上傳(private)→ 通知;人工只剩改公開。
+
+    給 launchd / cron 排程呼叫(``pmb autopilot install``),手動跑也行。冪等:
+    當天已上傳過會直接跳過。非交易日 skip。
+    """
+    from pmb import autopilot
+
+    settings = get_settings()
+    settings.ensure_dirs()
+    explicit = dt.date.fromisoformat(args.date) if args.date else None
+    target = resolve_fetch_target(today_eastern(), explicit)
+    if target is None:
+        print("今天非 NYSE 交易日,skip。")
+        return 0
+
+    if (vid := autopilot.already_published(settings.artifacts_dir, target)) is not None:
+        print(f"今天({target})已上傳過:{autopilot.studio_url(vid)},不重複執行。")
+        return 0
+
+    logger.info("pmb auto:{} 開始(等待研究上限 {} 分鐘)", target, args.wait_minutes)
+    ready = autopilot.wait_for_research(
+        settings.artifacts_dir,
+        target,
+        pull=not args.no_pull,
+        wait_minutes=args.wait_minutes,
+    )
+    if not ready:
+        autopilot.notify(
+            "PMB 自動流程失敗",
+            f"{target} 等不到雲端研究產物(brief/script),請檢查雲端 routine。",
+        )
+        print(f"⛔ 等了 {args.wait_minutes:.0f} 分鐘仍缺研究產物,中止。")
+        return 1
+
+    # 雲端已 commit snapshot 的話直接沿用(數字與講稿一致);缺才本機補取
+    snap_path = settings.artifacts_dir / f"snapshot_{target}.json"
+    if not snap_path.exists():
+        logger.warning("缺 snapshot_{},本機補 fetch(數字可能與講稿有時間差)", target)
+        rc = cmd_fetch(argparse.Namespace(date=str(target), json=False, dry_run=False))
+        if rc != 0:
+            autopilot.notify("PMB 自動流程失敗", f"{target} 補取快照失敗。")
+            return rc
+
+    if (rc := cmd_assemble(argparse.Namespace(date=str(target), dry_run=False))) != 0:
+        autopilot.notify("PMB 自動流程失敗", f"{target} 影片合成失敗,見 autopilot.log。")
+        return rc
+    if (rc := cmd_publish(argparse.Namespace(date=str(target), approve=not args.no_upload))) != 0:
+        autopilot.notify("PMB 自動流程失敗", f"{target} 上傳失敗,見 autopilot.log。")
+        return rc
+
+    vid = autopilot.already_published(settings.artifacts_dir, target)
+    if vid:
+        autopilot.notify(
+            "PMB 影片已上傳(private)",
+            f"{target} 完成,到 Studio 看片改公開:{autopilot.studio_url(vid)}",
+        )
+        print(f"🎬 最後一步:{autopilot.studio_url(vid)} → 改『公開』")
+    else:
+        autopilot.notify(
+            "PMB 完成合成(未上傳)",
+            f"{target} 影片已產出;上傳未執行(缺憑證或 --no-upload)。",
+        )
+    return 0
+
+
+def cmd_autopilot(args: argparse.Namespace) -> int:
+    """管理每日排程(launchd):install / uninstall / status。"""
+    from pmb import autopilot
+
+    if args.action == "install":
+        try:
+            hour, minute = (int(x) for x in args.time.split(":"))
+            assert 0 <= hour <= 23 and 0 <= minute <= 59
+        except (ValueError, AssertionError):
+            print(f"--time 格式錯誤:{args.time}(要 HH:MM,例 19:30)")
+            return 1
+        return autopilot.install_autopilot(hour, minute)
+    if args.action == "uninstall":
+        return autopilot.uninstall_autopilot()
+    return autopilot.autopilot_status()
+
+
 def cmd_research_prompt(args: argparse.Namespace) -> int:
     """輸出今日「研究 prompt」(模板 + 真實快照 + thesis + 昨日 brief),供貼進 Claude Code。
 
@@ -624,6 +707,22 @@ def build_parser() -> argparse.ArgumentParser:
     todaycmd.add_argument("--date", help="指定交易日 YYYY-MM-DD")
     todaycmd.add_argument("--no-upload", action="store_true", help="只合成+產發布資訊,不上傳")
     todaycmd.set_defaults(func=cmd_today)
+
+    auto = sub.add_parser(
+        "auto", help="每日全自動:等雲端研究→合成→上傳 private→通知(給排程呼叫)"
+    )
+    auto.add_argument("--date", help="指定交易日 YYYY-MM-DD")
+    auto.add_argument("--no-pull", action="store_true", help="不 git pull(用本機現有產物)")
+    auto.add_argument("--no-upload", action="store_true", help="只合成,不上傳")
+    auto.add_argument(
+        "--wait-minutes", type=float, default=45.0, help="等雲端研究產物的上限(預設 45 分)"
+    )
+    auto.set_defaults(func=cmd_auto)
+
+    ap = sub.add_parser("autopilot", help="管理每日排程(macOS launchd)")
+    ap.add_argument("action", choices=["install", "uninstall", "status"])
+    ap.add_argument("--time", default="19:30", help="平日觸發時間 HH:MM(本地,預設 19:30)")
+    ap.set_defaults(func=cmd_autopilot)
 
     authyt = sub.add_parser("auth-youtube", help="一次性:取得 YouTube OAuth refresh token")
     authyt.add_argument("--client-secrets", required=True, help="OAuth 桌面用戶端 JSON 路徑")
