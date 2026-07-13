@@ -40,3 +40,12 @@ def test_build_plist_schedules_weekdays_at_given_time():
     assert data["RunAtLoad"] is False  # 只在排定時間跑
     joined = " ".join(data["ProgramArguments"])
     assert "pmb auto" in joined and "/repo" in joined
+
+
+def test_build_plist_bakes_absolute_poetry_and_path_env():
+    # launchd 不讀 .zshrc:poetry 必須是絕對路徑,且 PATH 要烤進 EnvironmentVariables
+    data = plistlib.loads(build_plist(Path("/repo"), 19, 45))
+    cmd = data["ProgramArguments"][-1]
+    poetry_part = cmd.split("&&")[1].strip().split()[0]
+    assert poetry_part.startswith("/")  # 絕對路徑,不靠 shell PATH 找 poetry
+    assert data["EnvironmentVariables"]["PATH"]  # 子行程(ffmpeg/git)靠這個

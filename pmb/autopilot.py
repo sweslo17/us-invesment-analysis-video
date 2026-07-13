@@ -115,14 +115,22 @@ def plist_path() -> Path:
 def build_plist(repo: Path, hour: int, minute: int) -> bytes:
     """組 launchd plist:平日(週一~五)本地時間定時跑 ``pmb auto``。
 
-    以 login shell 執行,帶入使用者 PATH(poetry / ffmpeg);log 落在 artifacts/。
-    交易日判斷在 ``pmb auto`` 內做,美國假日自動 skip。
+    launchd 不讀 .zshrc、預設 PATH 也沒有 homebrew/pipx——poetry 用安裝當下解析的
+    **絕對路徑**,並把安裝 shell 的完整 PATH 烤進 EnvironmentVariables(pmb 的子行程
+    ffmpeg/git 才找得到)。log 落在 artifacts/。交易日判斷在 ``pmb auto`` 內做。
     """
-    cmd = f"cd {repo} && poetry run pmb auto >> artifacts/autopilot.log 2>&1"
+    import os
+    import shutil
+
+    poetry = shutil.which("poetry")
+    if not poetry:
+        raise RuntimeError("找不到 poetry(請先確認 `which poetry` 有結果再安裝排程)")
+    cmd = f"cd {repo} && {poetry} run pmb auto >> artifacts/autopilot.log 2>&1"
     payload = {
         "Label": _LABEL,
-        "ProgramArguments": ["/bin/zsh", "-lc", cmd],
+        "ProgramArguments": ["/bin/zsh", "-c", cmd],
         "WorkingDirectory": str(repo),
+        "EnvironmentVariables": {"PATH": os.environ.get("PATH", "/usr/bin:/bin")},
         "StartCalendarInterval": [
             {"Weekday": wd, "Hour": hour, "Minute": minute} for wd in range(1, 6)
         ],
