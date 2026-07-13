@@ -509,19 +509,38 @@ def cmd_auto(args: argparse.Namespace) -> int:
         print(f"今天({target})已上傳過:{autopilot.studio_url(vid)},不重複執行。")
         return 0
 
-    logger.info("pmb auto:{} 開始(等待研究上限 {} 分鐘)", target, args.wait_minutes)
-    ready = autopilot.wait_for_research(
-        settings.artifacts_dir,
-        target,
-        pull=not args.no_pull,
-        wait_minutes=args.wait_minutes,
-    )
+    if args.research_local:
+        ready = False  # 直接走本機研究,不等雲端
+    else:
+        logger.info("pmb auto:{} 開始(等待研究上限 {} 分鐘)", target, args.wait_minutes)
+        ready = autopilot.wait_for_research(
+            settings.artifacts_dir,
+            target,
+            pull=not args.no_pull,
+            wait_minutes=args.wait_minutes,
+        )
+
+    if not ready and settings.local_research_fallback:
+        # 雲端等不到(或指定 --research-local):本機 headless Claude Code 跑同一份研究
+        logger.info("改走本機研究(headless claude -p)…")
+        snap_path = settings.artifacts_dir / f"snapshot_{target}.json"
+        if not snap_path.exists():
+            rc = cmd_fetch(argparse.Namespace(date=str(target), json=False, dry_run=False))
+            if rc != 0:
+                autopilot.notify("PMB 自動流程失敗", f"{target} 取快照失敗,無法本機研究。")
+                return rc
+        from pmb.research.local_runner import run_local_research
+
+        if run_local_research(target, settings):
+            autopilot.commit_and_push_research(target, autopilot.repo_root())
+            ready = True
+
     if not ready:
         autopilot.notify(
             "PMB 自動流程失敗",
-            f"{target} 等不到雲端研究產物(brief/script),請檢查雲端 routine。",
+            f"{target} 雲端等不到研究產物、本機研究也未成功,請看 autopilot.log。",
         )
-        print(f"⛔ 等了 {args.wait_minutes:.0f} 分鐘仍缺研究產物,中止。")
+        print("⛔ 雲端 + 本機研究皆未取得合法產物,中止。")
         return 1
 
     # 雲端已 commit snapshot 的話直接沿用(數字與講稿一致);缺才本機補取
@@ -570,6 +589,37 @@ def cmd_autopilot(args: argparse.Namespace) -> int:
     if args.action == "uninstall":
         return autopilot.uninstall_autopilot()
     return autopilot.autopilot_status()
+
+
+def cmd_research_local(args: argparse.Namespace) -> int:
+    """本機研究:headless Claude Code(claude -p)跑研究 prompt → 驗證 → commit+push。
+
+    雲端 routine 的純本地替代;用本機 Claude Code 登入,免 API key、有 web search。
+    """
+    from pmb import autopilot
+    from pmb.research.local_runner import run_local_research
+
+    settings = get_settings()
+    settings.ensure_dirs()
+    explicit = dt.date.fromisoformat(args.date) if args.date else None
+    target = resolve_fetch_target(today_eastern(), explicit)
+    if target is None:
+        print("今天非 NYSE 交易日,skip。")
+        return 0
+
+    snap_path = settings.artifacts_dir / f"snapshot_{target}.json"
+    if not snap_path.exists():
+        rc = cmd_fetch(argparse.Namespace(date=str(target), json=False, dry_run=False))
+        if rc != 0:
+            return rc
+
+    if not run_local_research(target, settings):
+        print("⛔ 本機研究未通過驗證(重試已用盡),見 log。")
+        return 1
+    if not args.no_push:
+        autopilot.commit_and_push_research(target, autopilot.repo_root())
+    print(f"✅ 本機研究完成:brief/script/report_{target} 已產出並驗證。")
+    return 0
 
 
 def cmd_research_prompt(args: argparse.Namespace) -> int:
@@ -719,10 +769,22 @@ def build_parser() -> argparse.ArgumentParser:
     auto.add_argument(
         "--wait-minutes",
         type=float,
-        default=90.0,
-        help="等雲端研究產物的上限(預設 90 分,涵蓋美東冬令/夏令的落地時間差)",
+        default=30.0,
+        help="等雲端研究產物的上限(預設 30 分;逾時且開啟本機備援時改跑本機研究)",
+    )
+    auto.add_argument(
+        "--research-local",
+        action="store_true",
+        help="不等雲端,直接本機研究(headless claude -p)",
     )
     auto.set_defaults(func=cmd_auto)
+
+    rlocal = sub.add_parser(
+        "research-local", help="本機研究:headless Claude Code 跑研究→驗證→commit+push"
+    )
+    rlocal.add_argument("--date", help="指定交易日 YYYY-MM-DD")
+    rlocal.add_argument("--no-push", action="store_true", help="只產出驗證,不 commit/push")
+    rlocal.set_defaults(func=cmd_research_local)
 
     ap = sub.add_parser("autopilot", help="管理每日排程(macOS launchd)")
     ap.add_argument("action", choices=["install", "uninstall", "status"])

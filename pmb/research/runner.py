@@ -75,7 +75,7 @@ def build_research_prompt(
             f"完成研究後,把產物寫到專案目錄(日期 = {date}):\n"
             f"- artifacts/brief_{date}.json — 過 Brief schema(pmb/schemas/brief.py)\n"
             f"- artifacts/script_{date}.json — 過 Script schema"
-            "(每段 chart_id 對得上 charts[].id;模組限 8 個固定模組)\n"
+            "(每段 chart_id 對得上 charts[].id;模組限 charts/select.py 的固定清單)\n"
             f"- artifacts/report_{date}.md — 面向一般讀者的長文\n"
             "- 有重大且夠確認的變化才保守更新 state/thesis.json;否則不動\n"
             "寫完用 pmb/schemas 驗證(載入 Brief / Script 做 model_validate_json),不過就修正重寫。\n"

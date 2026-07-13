@@ -36,6 +36,10 @@ class Settings(BaseSettings):
     # 每日影片自動加入的播放清單(如「每日盤前快報」);需 auth-youtube 取得 youtube scope
     youtube_playlist_id: str | None = None
 
+    # 研究本機備援:pmb auto 等不到雲端研究時,用 headless Claude Code(claude -p,
+    # 本機登入、免 API key)在本機跑同一份研究 prompt,產物自動 commit+push 回 main
+    local_research_fallback: bool = True
+
     # 路徑
     artifacts_dir: Path = Path("artifacts")
     state_dir: Path = Path("state")

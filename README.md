@@ -36,7 +36,8 @@ poetry run ruff check .     # lint
 | `pmb publish [--date] [--approve]` | Phase 5 | 發布(**預設 dry-run**;`--approve` 才上傳 YouTube,固定 private) |
 | `pmb run [--date] [--dry-run] [--approve]` | — | 全流程 fetch→research→assemble→gate(`--approve` 才以 private 上傳) |
 | `pmb today [--date] [--no-upload]` | — | 一鍵完成今日**本機**作業:合成→發佈(前置缺則中止);供控台一鍵 / cron |
-| `pmb auto [--wait-minutes N] [--no-pull] [--no-upload]` | — | **每日全自動**:git pull 輪詢等雲端研究→合成→上傳 private→桌面通知;冪等、休市自動 skip |
+| `pmb auto [--wait-minutes N] [--research-local] [--no-pull] [--no-upload]` | — | **每日全自動**:等雲端研究(含 `claude/*` 分支退路)→等不到改本機研究→合成→上傳 private→通知;冪等、休市 skip |
+| `pmb research-local [--date] [--no-push]` | — | 本機研究:headless Claude Code(`claude -p`,本機登入免 key)跑研究→驗證→commit+push main |
 | `pmb autopilot install\|uninstall\|status [--time HH:MM]` | — | 管理 macOS launchd 排程:平日定時自動跑 `pmb auto` |
 | `pmb next-session [--json]` | — | 顯示今天是否交易日 + 下一個交易日(=盤前下次啟動) |
 | `pmb research-prompt [--date] [--out]` | — | 輸出今日研究 prompt(模板+快照)貼進 Claude Code 做研究 |
@@ -83,7 +84,12 @@ commit 上 main(**雲端不合成、不發布**)。本機由 `pmb auto`(launchd)
 2. **💻 `pmb auto`**(launchd 觸發)`git pull` 輪詢等產物 → 合成(深色圖表 + 卡拉OK字幕 + BGM 母帶)→ 上傳 YouTube(**private**,API 自動帶:合成內容揭露、播放清單、語言、非兒童)→ 桌面通知附 Studio 連結。
 3. **🧑 你**:點通知進 YouTube Studio 看片 → 改『**公開**』。完成。
 
-(休市自動 skip;當天已上傳過不會重跑;等不到雲端研究會通知失敗。報告仍為人工貼上。)
+(休市自動 skip;當天已上傳過不會重跑。報告仍為人工貼上。)
+
+**研究來源三層 fallback**(`pmb auto` 內建,全自動):
+1. 雲端 routine push main → 直接用。
+2. 雲端推不上 main(權限)→ 它退推 `claude/*` 分支 → 本機自動併回 main。
+3. 雲端整個沒跑(預設等 30 分)→ **本機 headless Claude Code**(`claude -p`,用本機登入)跑同一份研究 prompt → 過 schema 驗證 → 自動 commit+push main。雲端 routine 從必經之路變成加速器。
 
 **每個交易日 — 手動模式(備援/想逐步看)**
 1. **💻 取數**:`pmb fetch`(或控台「取數」);雲端已 commit snapshot 則 `git pull` 即可。

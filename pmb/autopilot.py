@@ -145,6 +145,36 @@ def wait_for_research(
         time.sleep(min(poll_seconds, max(remaining, 1)))
 
 
+def commit_and_push_research(target: dt.date, cwd: Path) -> bool:
+    """把本機研究產物 commit 並 push 回 origin main(與雲端 routine 的 commit 格式一致)。
+
+    push 失敗只警告不擋——本機已有產物,影片照做;repo 歷史下次再補推。
+    """
+    files = [
+        f"artifacts/snapshot_{target}.json",
+        f"artifacts/brief_{target}.json",
+        f"artifacts/script_{target}.json",
+        f"artifacts/report_{target}.md",
+    ]
+    _git(["add", "-f", *files], cwd)
+    _git(["add", "state/thesis.json"], cwd)
+    staged = _git(["diff", "--cached", "--quiet"], cwd)
+    if staged.returncode == 0:
+        logger.info("研究產物無變更,不需 commit")
+        return True
+    commit = _git(["commit", "-m", f"research: {target} 盤前研究產出(本機)"], cwd)
+    if commit.returncode != 0:
+        logger.warning("commit 研究產物失敗:{}", commit.stderr.strip()[-300:])
+        return False
+    _git(["pull", "--rebase", "--autostash", "origin", "main"], cwd)
+    push = _git(["push", "origin", "main"], cwd)
+    if push.returncode != 0:
+        logger.warning("push origin main 失敗(不擋本機流程):{}", push.stderr.strip()[-200:])
+    else:
+        logger.info("研究產物已推回 origin main")
+    return True
+
+
 def studio_url(video_id: str) -> str:
     return f"https://studio.youtube.com/video/{video_id}/edit"
 
