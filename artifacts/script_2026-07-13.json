@@ -1,0 +1,93 @@
+{
+  "segments": [
+    {
+      "headline": "南韓崩了 9%",
+      "tag": "2026-07-13 · 盤前快報",
+      "vo": "先講今天最炸的:南韓股市崩了快 9%、觸發熔斷。這把火會不會燒到美股?",
+      "t_start": 0.0,
+      "duration": 6.0
+    },
+    {
+      "chart_id": "asia_overnight",
+      "title": "亞股隔夜崩盤",
+      "vo": "先看外圍。南韓 KOSPI 單日崩 8.95%、觸發熔斷。主角是兩檔記憶體巨頭——SK 海力士暴跌超過 15%、三星跌近 11%,兩家就佔 KOSPI 六成以上。諷刺的是,SK 海力士上週五才在美國掛牌、當天飆 13%,兩天後就被獲利了結,買事實、賣新聞。",
+      "t_start": 6.0,
+      "duration": 22.0
+    },
+    {
+      "chart_id": "us_futures",
+      "title": "美股期指",
+      "vo": "照理說亞洲崩成這樣,美股該嚇一跳。可是盤前期貨:標普 ES 漲 0.23%、那斯達克 NQ 漲 0.32%、小型股 RTY 領先漲 0.58%,一片紅。美股暫時不甩韓國,但先別鬆口氣。",
+      "t_start": 28.0,
+      "duration": 17.0
+    },
+    {
+      "chart_id": "vix_now",
+      "title": "VIX 恐慌指數",
+      "vo": "因為平靜是裝出來的。VIX 從上週五的 15、盤前彈到 16.3,跳超過 8%;十年期公債殖利率也升到 4.57%。期指亮綠燈,市場卻一手買股、一手偷偷買保險——最怕開盤後半導體補跌。",
+      "t_start": 45.0,
+      "duration": 16.0
+    },
+    {
+      "chart_id": "conc_now",
+      "title": "漲幅集中度",
+      "vo": "這是今天最重要的一課。KOSPI 為什麼一天崩 9%?因為它根本是兩三檔記憶體股撐起來的指數,它們一倒、整座橋就垮。美國標普其實也很集中,前十大權值扛著大盤;差別只在它分散於 AI 和大型科技,這波記憶體雷痛得比韓國輕。但集中的本質一樣。",
+      "t_start": 61.0,
+      "duration": 21.0
+    },
+    {
+      "headline": "集中度",
+      "tag": "名詞小教室",
+      "vo": "名詞小教室:集中度,就是指數的漲跌其實由少數幾檔權值股決定,它們一倒、指數就跟著倒。",
+      "t_start": 82.0,
+      "duration": 6.0
+    },
+    {
+      "chart_id": "week_catalysts",
+      "title": "本週催化劑",
+      "vo": "再看行事曆。今天週一很安靜,重頭戲在明天週二:六月 CPI、Fed 主席 Warsh 上國會作證,加上摩根大通、高盛、美銀、富國、花旗五大銀行財報一起開跑。市場預估標普第二季獲利年增約 24%。今天,是暴風前的平靜。",
+      "t_start": 88.0,
+      "duration": 19.0
+    },
+    {
+      "chart_id": "lev_decay",
+      "title": "槓桿與波動耗損",
+      "vo": "來上一堂槓桿課。標普已實現波動只有 13.6%,但用波動目標回推,合理倍數也才約 1.1 倍;那斯達克波動 23%、只到 0.65 倍。今天的 KOSPI 就是血淋淋的教材:上週五 VIX 才 15,週一直接 -9%,3 倍槓桿一天就 -27%。波動睡著時,數學叫你加最多槓桿——那正是陷阱。",
+      "t_start": 107.0,
+      "duration": 25.0
+    },
+    {
+      "chart_id": "fed_now",
+      "title": "Fed 政策路徑",
+      "vo": "最後拉遠看結構。壓著這一切的還是利率。市場定價九月升息機率 58%、年底利率隱含爬到 4%,現在才 3.63%。higher for longer 沒走——這也是資金從科技轉向原物料、必需消費的原因。明天的 CPI,就是這條利率劇本的下一頁。",
+      "t_start": 132.0,
+      "duration": 21.0
+    },
+    {
+      "headline": "退潮見真章",
+      "tag": "巴菲特 不知道有沒有說過",
+      "vo": "漲的時候,全押記憶體的都是天才;崩 9% 那天,才知道誰把雞蛋全放同一個籃子。分散不性感,但它讓你活到明天。以上非投資建議,明天見。",
+      "t_start": 153.0,
+      "duration": 11.0
+    }
+  ],
+  "charts": [
+    {"id": "asia_overnight", "module": "global_equity_overnight", "params": {}},
+    {"id": "us_futures", "module": "index_overnight_grid", "params": {}},
+    {"id": "vix_now", "module": "vix_regime", "params": {"bands": [15, 20, 30]}},
+    {"id": "conc_now", "module": "concentration", "params": {"top_n": 10}},
+    {"id": "week_catalysts", "module": "catalyst_timeline", "params": {"events": [
+      {"date": "7/13", "label": "今日無重量級數據", "highlight": false},
+      {"date": "7/14", "label": "6月 CPI 通膨數據", "highlight": true},
+      {"date": "7/14", "label": "Fed 主席 Warsh 作證", "highlight": true},
+      {"date": "7/14", "label": "五大銀行財報開跑", "highlight": true},
+      {"date": "7/15", "label": "BlackRock、大摩財報", "highlight": false}
+    ]}},
+    {"id": "lev_decay", "module": "leverage_decay", "params": {}},
+    {"id": "fed_now", "module": "fed_path", "params": {}}
+  ],
+  "coverage_gaps": [
+    "缺『油價/布蘭特原油走勢』序列圖:今日地緣與通膨主軸需要油價,目前只能用外電數字口述,固定模組清單無對應圖,暫以文字帶過。",
+    "缺『海外個股 vs 美股 ADR』對照圖(如 SK 海力士本地股價與其美股 ADR 掛牌後背離),想更直觀呈現『買事實賣新聞』,現用 global_equity_overnight 指數層級頂替。"
+  ]
+}

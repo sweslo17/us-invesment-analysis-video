@@ -1,0 +1,147 @@
+{
+  "date": "2026-07-13",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7575.39,
+      "overnight_pct": 0.23,
+      "drivers": ["上週五(7/10)收 +0.42%,廣度偏廣、收在高檔", "今日盤前 ES 期貨 +0.23%,沒被亞股崩盤帶下去"]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 26281.61,
+      "overnight_pct": 0.32,
+      "drivers": ["上週五 +0.29%", "NQ 期貨 +0.32%,但半導體個股開盤恐補跌"]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 52637.01,
+      "overnight_pct": 0.39,
+      "drivers": ["上週五 +0.29%", "YM 期貨 +0.39%,盤前領先"]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 2977.81,
+      "overnight_pct": 0.58,
+      "drivers": ["上週五 -0.49% 墊底", "RTY 期貨 +0.58%,小型股盤前反而領先"]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普最近的已實現波動只有約 13.6%,表面一片祥和;但把它換算成波動目標下的合理倍數,也不過約 1.1 倍——市場愈平靜,數學給你的加碼空間其實愈有限。真正的陷阱是像今天 KOSPI 那樣、平靜到一半突然單日崩近 9%,那一刻高槓桿會被瞬間放大成災難。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克波動更高(約 23%),同一套波動目標邏輯下,合理倍數掉到約 0.65 倍;若硬開 3 倍,光是波動耗損一年就侵蝕約兩成的複利,還沒算方向做錯的風險。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊波動最低(約 10.4%),波動目標倍數約 1.44 倍是四大指數裡最高的;但『波動低=可以多開槓桿』只在波動真的持續低的時候成立,一旦 regime 翻轉,低波動的假象崩得最快。"
+    }
+  ],
+  "regime": {
+    "vol": "normal",
+    "rates": "rising",
+    "stock_bond_corr": "neutral",
+    "breadth": "broad"
+  },
+  "items": [
+    {
+      "headline": "南韓 KOSPI 觸發熔斷、單日崩 8.95%,SK 海力士 -15%、三星 -11%,記憶體『買事實賣新聞』",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "記憶體與 AI 硬體是這輪領漲的核心引擎,韓國兩大權值股(合計佔 KOSPI 逾六成)崩盤、觸發今年第 7 次熔斷,等於對『AI 資本支出撐不撐得住記憶體漲價』投下最重的一票。對重壓半導體、AI 的一般投資人,這是集中度風險活生生現形。",
+      "sources": [
+        {"url": "https://www.koreatimes.co.kr/economy/20260713/kospi-tumbles-below-7000-in-black-monday-sell-off"},
+        {"url": "https://www.tradingkey.com/analysis/stocks/more/262025472-kospi-samsung-skhynix-ai-adr-skhy-tradingkey"},
+        {"url": "https://invezz.com/news/2026/07/13/heres-why-the-kospi-index-is-in-a-freefall-today-july-13/"}
+      ]
+    },
+    {
+      "headline": "亞股崩、美股期指卻開紅(ES +0.23%,小型股 RTY +0.58% 盤前領先)",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 3,
+      "confidence": "developing",
+      "audience_value": "美股指數不像 KOSPI 被單一產業綁死,所以能暫時裝沒事;但別把期指的綠燈當作警報解除——半導體個股(SK 海力士美股 ADR 盤前 -8%)開盤仍可能補跌,今天真正要盯的是這道背離會不會收斂。",
+      "sources": [
+        {"url": "https://www.cnbc.com/2026/07/12/stock-market-today-live-updates.html"},
+        {"url": "https://www.schwab.com/learn/story/stock-market-update-open"}
+      ]
+    },
+    {
+      "headline": "平靜表面下 VIX 從 15 彈到 16.29(+8.4%)、10 年期殖利率升到 4.57%",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "期指綠,但恐慌指數與殖利率同步往上,代表市場一邊買股一邊買保險。這種『表面漲、底下緊』的組合,提醒一般人別只看指數紅綠燈,真正的考驗在開盤後與明天的數據。",
+      "sources": [
+        {"url": "https://www.cnbc.com/2026/07/12/stock-market-today-live-updates.html"}
+      ]
+    },
+    {
+      "headline": "成長→價值/防禦輪動延續:上週五原物料 +1.25%、必需消費 +1.11%、公用 +0.62%,醫療 -0.82% 墊底",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "developing",
+      "audience_value": "higher-for-longer 的利率環境在替市場篩選估值,偏好便宜、穩、有現金流的類股。對一般人這是『別只追最熱門那幾檔』的提醒——當領漲棒子開始換手,分散反而是朋友。",
+      "sources": [
+        {"url": "https://www.cnbc.com/2026/07/10/stock-market-next-week-outlook-for-july-13-17-2026.html"}
+      ]
+    },
+    {
+      "headline": "本週催化劑到齊:週二 6 月 CPI、Fed 主席 Warsh 國會作證、五大銀行財報開跑",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "今天(週一)平靜,但明天一次到齊通膨數據、Fed 態度與財報季開局(JPMorgan、美銀、高盛、富國、花旗)。S&P 第二季獲利市場預估年增約 24%,是驗證這波 AI 多頭撐不撐得住的關鍵一週。",
+      "sources": [
+        {"url": "https://www.cnbc.com/2026/07/10/stock-market-next-week-outlook-for-july-13-17-2026.html"},
+        {"url": "https://finance.yahoo.com/markets/stocks/articles/us-stock-market-today-p-081032919.html"}
+      ]
+    },
+    {
+      "headline": "油價地緣溢價未消:布蘭特約 76–79 美元,德黑蘭稱荷莫茲海峽『關閉至另行通知』(美軍否認)",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "developing",
+      "audience_value": "能源風險溢價還掛在盤面上,是通膨端揮之不去的成本線。對一般人代表『通膨與利率下不去』的大背景沒變——這也是 Fed 不急著降息的理由之一。快照無油價序列,油價引用外電。",
+      "sources": [
+        {"url": "https://www.cnbc.com/2026/07/08/oil-prices-brent-wti-iran-us-hormuz.html"},
+        {"url": "https://www.aljazeera.com/economy/2026/6/17/oil-prices-continue-slide-amid-hopes-for-peace-opening-of-strait-of-hormuz"}
+      ]
+    },
+    {
+      "headline": "Fed 路徑仍偏鷹:市場定價九月升息機率 58%、年底隱含利率約 4%(現行 3.63%)",
+      "horizon": "LT",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "升息風險仍高於降息,是壓著高估值成長股的地心引力,也是資金往價值/現金流靠攏的根因。這條利率主軸,是決定今年資產配置最大的背景變數。",
+      "sources": [
+        {"url": "https://www.cnbc.com/2026/07/10/stock-market-next-week-outlook-for-july-13-17-2026.html"}
+      ]
+    }
+  ],
+  "catalysts": [
+    "今日(週一 7/13):無重量級經濟數據或財報,盤面多在為明日布局",
+    "週二 7/14:美國 6 月 CPI(通膨是否續降的關鍵數據)",
+    "週二 7/14:Fed 主席 Warsh 國會作證(市場緊盯利率語氣)",
+    "週二 7/14:JPMorgan、美銀、高盛、富國、花旗 五大銀行財報開跑,財報季揭幕",
+    "週三 7/15:BlackRock、Morgan Stanley 財報"
+  ],
+  "thesis_delta": {
+    "changed": true,
+    "summary": "AI/半導體『窄且不穩』的判定獲最強確認:記憶體熊市升級為外部市場的熔斷事件——KOSPI 因 SK 海力士(-15%)、三星(-11%)兩檔佔逾六成權值而單日崩 8.95%、觸發今年第 7 次熔斷;SK 海力士美股 ADR 掛牌僅兩日即『買事實賣新聞』,坐實『敘事真、價已先跑』與集中度風險。基準方向不變(利率地心引力、AI 雙面刃、集中度制度化),此為確認性升級,並結案『SK 海力士掛牌後表現』的 open thread。",
+    "horizon": "MT"
+  },
+  "lead_horizon": "MT",
+  "title_hook": "南韓半導體崩 9%、觸發熔斷,美股期指卻開紅——這把火燒不燒得過來"
+}
