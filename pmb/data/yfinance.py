@@ -19,12 +19,33 @@ HistoryProvider = Callable[[str, str], pd.Series]
 # ETF ticker -> [(成分股 symbol, 名稱, 權重 %)]
 HoldingsProvider = Callable[[str], list[tuple[str, str, float]]]
 
+# Yahoo 已對 yfinance 內建的 curl_cffi client 直接回 429/斷線;帶瀏覽器 UA 的一般
+# requests session 才放行。改用可注入的 session 而非 yfinance 預設,同時尊重 HTTPS_PROXY
+# 與系統 CA(curl_cffi 的 TLS 指紋在 MITM proxy 下會被 reset)。
+_BROWSER_UA = (
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+    "(KHTML, like Gecko) Chrome/120.0 Safari/537.36"
+)
+_SESSION = None
+
+
+def _yahoo_session():
+    """回傳共用的、帶瀏覽器 UA 的 requests session(避免 Yahoo 對 yfinance 預設 UA 的封鎖)。"""
+    global _SESSION
+    if _SESSION is None:
+        import requests
+
+        session = requests.Session()
+        session.headers["User-Agent"] = _BROWSER_UA
+        _SESSION = session
+    return _SESSION
+
 
 def _default_quote_provider(ticker: str) -> tuple[float, float]:
     """以 yfinance fast_info 取 (最新價, 前收)。"""
     import yfinance as yf
 
-    fast = yf.Ticker(ticker).fast_info
+    fast = yf.Ticker(ticker, session=_yahoo_session()).fast_info
     last = fast.last_price
     previous_close = fast.previous_close
     if last is None or previous_close is None:
@@ -36,7 +57,7 @@ def _default_history_provider(ticker: str, period: str) -> pd.Series:
     """以 yfinance 取歷史收盤序列。"""
     import yfinance as yf
 
-    frame = yf.Ticker(ticker).history(period=period)
+    frame = yf.Ticker(ticker, session=_yahoo_session()).history(period=period)
     if frame.empty:
         raise ValueError(f"{ticker} 取不到歷史資料(period={period})")
     return frame["Close"]
@@ -50,7 +71,7 @@ def _default_holdings_provider(etf_ticker: str) -> list[tuple[str, str, float]]:
     """
     import yfinance as yf
 
-    top = yf.Ticker(etf_ticker).funds_data.top_holdings
+    top = yf.Ticker(etf_ticker, session=_yahoo_session()).funds_data.top_holdings
     if top is None or top.empty:
         raise ValueError(f"{etf_ticker} 取不到 top_holdings")
     out: list[tuple[str, str, float]] = []
