@@ -1,5 +1,9 @@
 # PMB 日更雲端 routine(貼進 claude.ai/code scheduled routine)
 
+> ⚠️ **2026-07-13 起改為選配**:正式日更已改成**全本機**(`pmb auto` local-first,研究用
+> headless `claude -p`,見 README「日更營運 SOP」)。本 routine 可留作加速器/備援
+> (雲端先推 main 或 claude/* 分支,本機直接沿用、省一次本機研究),不想維護就直接停用。
+
 > 排程:**美股交易日盤前**——建議**台北 19:30 平日**(= ET 夏令 07:30 / 冬令 06:30,皆在盤前)。
 > 電腦關機也照跑。本機 `pmb autopilot` 設 **19:45** 接手(先生產、後消費;本機端輪詢 90 分,
 > 雲端偶爾跑慢也接得住)。

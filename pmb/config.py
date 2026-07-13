@@ -36,8 +36,10 @@ class Settings(BaseSettings):
     # 每日影片自動加入的播放清單(如「每日盤前快報」);需 auth-youtube 取得 youtube scope
     youtube_playlist_id: str | None = None
 
-    # 研究本機備援:pmb auto 等不到雲端研究時,用 headless Claude Code(claude -p,
-    # 本機登入、免 API key)在本機跑同一份研究 prompt,產物自動 commit+push 回 main
+    # 研究來源:"local"(預設)= pmb auto 直接在本機用 headless Claude Code(claude -p,
+    # 本機登入、免 API key)跑研究,不等雲端;"cloud" = 等雲端 routine push(含 claude/*
+    # 分支退路),逾時才依 local_research_fallback 決定是否本機補跑
+    research_source: str = "local"
     local_research_fallback: bool = True
 
     # 路徑

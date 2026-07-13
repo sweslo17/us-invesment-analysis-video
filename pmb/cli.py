@@ -509,10 +509,16 @@ def cmd_auto(args: argparse.Namespace) -> int:
         print(f"今天({target})已上傳過:{autopilot.studio_url(vid)},不重複執行。")
         return 0
 
-    if args.research_local:
-        ready = False  # 直接走本機研究,不等雲端
+    use_local = args.research_local or settings.research_source == "local"
+    if use_local:
+        # local-first:研究直接在本機跑,git pull 只為同步遠端修正(prompt 等)
+        if not args.no_pull:
+            autopilot.git_pull(autopilot.repo_root())
+        ready = autopilot.research_ready(settings.artifacts_dir, target)
+        if ready:
+            logger.info("今日研究產物已存在,跳過研究(冪等)")
     else:
-        logger.info("pmb auto:{} 開始(等待研究上限 {} 分鐘)", target, args.wait_minutes)
+        logger.info("pmb auto:{} 開始(等待雲端研究上限 {} 分鐘)", target, args.wait_minutes)
         ready = autopilot.wait_for_research(
             settings.artifacts_dir,
             target,
@@ -520,7 +526,7 @@ def cmd_auto(args: argparse.Namespace) -> int:
             wait_minutes=args.wait_minutes,
         )
 
-    if not ready and settings.local_research_fallback:
+    if not ready and (use_local or settings.local_research_fallback):
         # 雲端等不到(或指定 --research-local):本機 headless Claude Code 跑同一份研究
         logger.info("改走本機研究(headless claude -p)…")
         snap_path = settings.artifacts_dir / f"snapshot_{target}.json"

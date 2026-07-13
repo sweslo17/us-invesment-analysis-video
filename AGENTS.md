@@ -10,10 +10,10 @@
 
 **開發/執行分工(重要):**
 - **本檔供 Codex 互動式開發**這個 repo(寫 code、測試、跑 dry-run)。
-- **日更研究已部署為 Claude Code 雲端 routine**(claude.ai/code/routines,平日 19:30 台北,
-  push 研究產物到 main;設定見 `prompts/cloud_routine.md`),電腦關機也跑。**Codex 不負責日更研究。**
-- **確定性 pipeline**(圖表渲染、TTS、合成、上傳)是普通腳本,由本機 `pmb auto`(launchd)在
-  routine 產出 artifacts 後執行,**不放進 agentic session**。
+- **日更研究在本機自動跑**:launchd 觸發 `pmb auto` → headless Claude Code(`claude -p`)
+  跑研究 → 驗證 → commit+push main → 接著合成/上傳。**Codex 不負責日更研究。**
+- **確定性 pipeline**(圖表渲染、TTS、合成、上傳)是普通腳本,同一次 `pmb auto` 接續執行,
+  **不放進 agentic session**。
 
 ---
 
@@ -40,7 +40,7 @@
 - TTS:`edge-tts`(免費、zh-TW、逐字時間戳→字幕);包 retry,留 fallback 介面(OpenAI TTS / ElevenLabs)。
 - 影片合成:`ffmpeg`(subprocess)為主,或 `moviepy`;燒字幕用 edge-tts 的 word boundary 對齊。
 - 上傳:`google-api-python-client`(YouTube Data API v3,OAuth + refresh token)。
-- 研究 LLM:Claude Code 雲端 routine 本身(同一 agent 做研究+寫作,見 `prompts/cloud_routine.md`);本機開發/測試時用 Anthropic API 跑同一份 prompt。
+- 研究 LLM:本機 headless Claude Code(`claude -p`,見 `pmb/research/local_runner.py`);開發/測試可用 Anthropic API 跑同一份 prompt(選配)。
 - 測試:`pytest`;資料層與 schema 要有測試;全流程要有 `--dry-run` 煙霧測試(用 fixture 數據,不打外部)。
 - Lint/format:`ruff`。
 
