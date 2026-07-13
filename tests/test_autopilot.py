@@ -1,13 +1,80 @@
-"""autopilot 純邏輯測試:產物就緒判斷、冪等、launchd plist(不碰 launchctl/網路)。"""
+"""autopilot 測試:產物就緒判斷、冪等、launchd plist、claude/* 分支退路(本機 git,不碰網路)。"""
 
 import datetime as dt
 import json
 import plistlib
+import subprocess
 from pathlib import Path
 
-from pmb.autopilot import already_published, build_plist, research_ready
+from pmb.autopilot import (
+    adopt_research_branch,
+    already_published,
+    build_plist,
+    find_research_branch,
+    research_ready,
+)
 
 _D = dt.date(2026, 7, 10)
+
+
+def _git(args: list[str], cwd: Path) -> None:
+    subprocess.run(
+        ["git", *args],
+        cwd=cwd,
+        check=True,
+        capture_output=True,
+        env={"GIT_AUTHOR_NAME": "t", "GIT_AUTHOR_EMAIL": "t@t", "GIT_COMMITTER_NAME": "t",
+             "GIT_COMMITTER_EMAIL": "t@t", "PATH": "/usr/bin:/bin", "HOME": str(cwd)},
+    )
+
+
+def _make_relay_fixture(tmp_path: Path) -> Path:
+    """origin(bare)+ 本機 clone;雲端把研究推上 origin 的 claude/ 分支(main 沒有)。"""
+    origin = tmp_path / "origin.git"
+    origin.mkdir()
+    _git(["init", "--bare", "-b", "main"], origin)
+
+    seed = tmp_path / "seed"
+    _git(["clone", str(origin), str(seed)], tmp_path)
+    (seed / "README.md").write_text("base")
+    _git(["add", "."], seed)
+    _git(["commit", "-m", "base"], seed)
+    _git(["push", "origin", "main"], seed)
+
+    # 模擬雲端:研究產物 commit 到 claude/xxx 分支(push main 被拒的退路)
+    _git(["checkout", "-b", "claude/happy-test"], seed)
+    arts = seed / "artifacts"
+    arts.mkdir()
+    (arts / f"brief_{_D}.json").write_text("{}")
+    (arts / f"script_{_D}.json").write_text("{}")
+    _git(["add", "-f", "artifacts"], seed)
+    _git(["commit", "-m", f"research: {_D}"], seed)
+    _git(["push", "origin", "claude/happy-test"], seed)
+
+    local = tmp_path / "local"
+    _git(["clone", str(origin), str(local)], tmp_path)
+    return local
+
+
+def test_find_research_branch_locates_claude_branch_with_artifacts(tmp_path):
+    local = _make_relay_fixture(tmp_path)
+    ref = find_research_branch(_D, local)
+    assert ref == "refs/remotes/origin/claude/happy-test"
+    # 沒有該日產物的日期找不到
+    assert find_research_branch(dt.date(2020, 1, 1), local) is None
+
+
+def test_adopt_research_branch_merges_into_main_and_pushes_back(tmp_path):
+    local = _make_relay_fixture(tmp_path)
+    ref = find_research_branch(_D, local)
+    assert adopt_research_branch(ref, local)
+    assert (local / "artifacts" / f"brief_{_D}.json").exists()  # 併進 main 的工作樹
+    # 已回推 origin/main(接力補完,雲端隔天 rebase 乾淨)
+    out = subprocess.run(
+        ["git", "log", "origin/main", "--oneline", "-1"],
+        cwd=local, capture_output=True, text=True,
+    ).stdout
+    assert f"research: {_D}" in out
 
 
 def test_research_ready_requires_brief_and_script(tmp_path):

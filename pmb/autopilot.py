@@ -39,20 +39,59 @@ def notify(title: str, message: str) -> None:
         logger.warning("macOS 通知失敗:{}", exc)
 
 
+def _git(args: list[str], cwd: Path, timeout: float = 120) -> subprocess.CompletedProcess:
+    return subprocess.run(
+        ["git", *args], cwd=cwd, capture_output=True, text=True, timeout=timeout
+    )
+
+
 def git_pull(cwd: Path) -> bool:
     """拉雲端 routine 推上 main 的研究產物。失敗不擋(本機可能已有產物)。"""
-    proc = subprocess.run(
-        ["git", "pull", "--rebase", "--autostash", "origin", "main"],
-        cwd=cwd,
-        capture_output=True,
-        text=True,
-        timeout=120,
-    )
+    proc = _git(["pull", "--rebase", "--autostash", "origin", "main"], cwd)
     if proc.returncode != 0:
         logger.warning("git pull 失敗(繼續用本機現有產物):{}", proc.stderr.strip()[-300:])
         return False
     out = proc.stdout.strip().splitlines()
     logger.info("git pull:{}", out[-1] if out else "ok")
+    return True
+
+
+def find_research_branch(target: dt.date, cwd: Path) -> str | None:
+    """找出含當日研究產物的 ``claude/*`` 遠端分支。
+
+    雲端 routine 沒有 main 的 push 權限時,會退而求其次推到 ``claude/`` 開頭的分支;
+    本機掃描這些分支,撿到今天的 brief+script 就回傳 ref(接力不因權限設定而斷)。
+    """
+    _git(["fetch", "--prune", "origin", "+refs/heads/claude/*:refs/remotes/origin/claude/*"], cwd)
+    proc = _git(["for-each-ref", "--format=%(refname)", "refs/remotes/origin/claude"], cwd)
+    for ref in proc.stdout.split():
+        has_all = all(
+            _git(["cat-file", "-e", f"{ref}:artifacts/{kind}_{target}.json"], cwd).returncode
+            == 0
+            for kind in ("brief", "script")
+        )
+        if has_all:
+            return ref
+    return None
+
+
+def adopt_research_branch(ref: str, cwd: Path) -> bool:
+    """把 ``claude/*`` 研究分支併進本機 main,並回推 origin(補完中斷的接力)。
+
+    優先 fast-forward,不行再一般 merge;衝突則放棄並留給人工(不硬併)。
+    回推 main 失敗只警告——本機已有產物,影片照做。
+    """
+    merge = _git(["merge", "--ff-only", ref], cwd)
+    if merge.returncode != 0:
+        merge = _git(["merge", "--no-edit", "--autostash", ref], cwd)
+    if merge.returncode != 0:
+        _git(["merge", "--abort"], cwd)
+        logger.warning("合併 {} 失敗(留待人工處理):{}", ref, merge.stderr.strip()[-300:])
+        return False
+    logger.info("已把 {} 併進 main(雲端 push main 被拒的退路)", ref)
+    push = _git(["push", "origin", "main"], cwd)
+    if push.returncode != 0:
+        logger.warning("回推 origin main 失敗(不擋本機流程):{}", push.stderr.strip()[-200:])
     return True
 
 
@@ -83,11 +122,16 @@ def wait_for_research(
     wait_minutes: float,
     poll_seconds: float = 120.0,
 ) -> bool:
-    """輪詢等雲端研究 commit 落地:每輪先 git pull 再檢查 brief/script。"""
+    """輪詢等雲端研究 commit 落地:每輪 git pull 檢查 main,沒有就掃 claude/* 分支。"""
     deadline = time.monotonic() + wait_minutes * 60
     while True:
         if pull:
             git_pull(repo_root())
+            if not research_ready(artifacts_dir, target):
+                # 雲端 push main 被拒的退路:研究可能落在 claude/* 分支,自動併回
+                ref = find_research_branch(target, repo_root())
+                if ref:
+                    adopt_research_branch(ref, repo_root())
         if research_ready(artifacts_dir, target):
             return True
         remaining = deadline - time.monotonic()

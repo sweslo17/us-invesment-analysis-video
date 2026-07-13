@@ -65,6 +65,9 @@
    git push origin main
    ```
    ⚠️ **snapshot 一定要一起 commit**:本機合成直接沿用這份快照,圖表數字才與講稿一致(本機重抓會有時間差)。
+   若 `push origin main` 被拒(帳號未開 unrestricted branch pushes),**改推 fallback 分支**:
+   `git push origin HEAD:claude/research-$D` ——本機 `pmb auto` 會自動掃描 `claude/*` 分支、
+   把研究併回 main 並回推;接力不會斷,不需人工。
 6. **絕不執行 `pmb assemble` / `pmb publish`**(那在你本機跑)。任一步失敗 → 清楚說明,不要硬產半成品。
 
 ---
