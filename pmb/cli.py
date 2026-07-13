@@ -499,6 +499,12 @@ def cmd_auto(args: argparse.Namespace) -> int:
 
     settings = get_settings()
     settings.ensure_dirs()
+
+    if args.only_after and autopilot.is_before(args.only_after):
+        # RunAtLoad 補跑守門:早上登入觸發時還沒到點,靜靜略過(正點由排程觸發)
+        print(f"未到 {args.only_after},skip(RunAtLoad 守門)。")
+        return 0
+
     explicit = dt.date.fromisoformat(args.date) if args.date else None
     target = resolve_fetch_target(today_eastern(), explicit)
     if target is None:
@@ -782,6 +788,11 @@ def build_parser() -> argparse.ArgumentParser:
         "--research-local",
         action="store_true",
         help="不等雲端,直接本機研究(headless claude -p)",
+    )
+    auto.add_argument(
+        "--only-after",
+        metavar="HH:MM",
+        help="本地時間未到就略過(launchd RunAtLoad 補跑的守門,由 autopilot install 自動帶)",
     )
     auto.set_defaults(func=cmd_auto)
 

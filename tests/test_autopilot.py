@@ -104,9 +104,21 @@ def test_build_plist_schedules_weekdays_at_given_time():
     cal = data["StartCalendarInterval"]
     assert [c["Weekday"] for c in cal] == [1, 2, 3, 4, 5]  # 週一~五
     assert all(c["Hour"] == 19 and c["Minute"] == 30 for c in cal)
-    assert data["RunAtLoad"] is False  # 只在排定時間跑
+    # 晚開機補跑:登入也觸發(RunAtLoad),配 --only-after 守門擋掉還沒到點的登入
+    assert data["RunAtLoad"] is True
     joined = " ".join(data["ProgramArguments"])
     assert "pmb auto" in joined and "/repo" in joined
+    assert "--only-after 19:30" in joined
+
+
+def test_is_before_guards_catchup_runs():
+    import datetime as _dt
+
+    from pmb.autopilot import is_before
+
+    assert is_before("19:30", _dt.time(8, 0)) is True  # 早上登入 → 擋
+    assert is_before("19:30", _dt.time(19, 30)) is False  # 正點 → 放行
+    assert is_before("19:30", _dt.time(22, 45)) is False  # 晚開機 → 放行(補跑)
 
 
 def test_build_plist_bakes_absolute_poetry_and_path_env():

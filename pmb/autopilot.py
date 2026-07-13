@@ -145,6 +145,13 @@ def wait_for_research(
         time.sleep(min(poll_seconds, max(remaining, 1)))
 
 
+def is_before(hhmm: str, now: dt.time | None = None) -> bool:
+    """現在(本地時間)是否還沒到 ``HH:MM``。``pmb auto --only-after`` 的守門判斷。"""
+    hour, minute = (int(x) for x in hhmm.split(":"))
+    now = now if now is not None else dt.datetime.now().time()
+    return now < dt.time(hour, minute)
+
+
 def commit_and_push_research(target: dt.date, cwd: Path) -> bool:
     """把本機研究產物 commit 並 push 回 origin main(與雲端 routine 的 commit 格式一致)。
 
@@ -199,7 +206,13 @@ def build_plist(repo: Path, hour: int, minute: int) -> bytes:
     poetry = shutil.which("poetry")
     if not poetry:
         raise RuntimeError("找不到 poetry(請先確認 `which poetry` 有結果再安裝排程)")
-    cmd = f"cd {repo} && {poetry} run pmb auto >> artifacts/autopilot.log 2>&1"
+    # --only-after:RunAtLoad 補跑的守門——launchd 只補「睡眠錯過」的排程,不補「關機
+    # 錯過」的;RunAtLoad 讓每次登入也觸發一次,守門條件擋掉還沒到點的早晨登入,
+    # 冪等(已上傳過不重跑)擋掉重複。晚開機 → 登入即自動補跑當天。
+    cmd = (
+        f"cd {repo} && {poetry} run pmb auto --only-after {hour:02d}:{minute:02d}"
+        f" >> artifacts/autopilot.log 2>&1"
+    )
     payload = {
         "Label": _LABEL,
         "ProgramArguments": ["/bin/zsh", "-c", cmd],
@@ -208,7 +221,7 @@ def build_plist(repo: Path, hour: int, minute: int) -> bytes:
         "StartCalendarInterval": [
             {"Weekday": wd, "Hour": hour, "Minute": minute} for wd in range(1, 6)
         ],
-        "RunAtLoad": False,
+        "RunAtLoad": True,
         "StandardOutPath": str(repo / "artifacts" / "autopilot.launchd.log"),
         "StandardErrorPath": str(repo / "artifacts" / "autopilot.launchd.log"),
     }
@@ -230,9 +243,12 @@ def install_autopilot(hour: int, minute: int) -> int:
         return 1
     print(f"✅ 已排程:平日 {hour:02d}:{minute:02d}(本地時間)自動跑 pmb auto")
     print(f"   plist:{path}")
-    print("   流程:git pull 等雲端研究 → 合成 → 上傳 YouTube(private)→ 桌面通知")
+    print("   流程:研究(本機 headless Claude)→ 合成 → 上傳 YouTube(private)→ 桌面通知")
     print("   人工只剩:到 YouTube Studio 看片、改『公開』。")
-    print("   ⚠️ 美東日光節約切換時,雲端研究落地時間會平移一小時;pmb auto 會輪詢等待,無需調整。")
+    print(
+        f"   💤 睡眠錯過會在喚醒時補跑;關機晚開也會在登入後補跑"
+        f"(過 {hour:02d}:{minute:02d} 才執行,已跑過不重跑)。"
+    )
     return 0
 
 
