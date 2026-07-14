@@ -1,0 +1,147 @@
+{
+  "date": "2026-07-14",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7515.34,
+      "overnight_pct": 0.22,
+      "drivers": ["昨天(週一)收 -0.79%,晶片股補跌把大盤拉下來", "今日盤前 ES 期貨 +0.22%,小反彈但氣氛謹慎"]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 25873.18,
+      "overnight_pct": 0.80,
+      "drivers": ["昨天 -1.55%,科技類股 -2.42% 全場最弱,記憶體那把火終究燒了過來", "NQ 期貨 +0.80% 盤前領先,半導體試圖反彈"]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 52498.64,
+      "overnight_pct": -0.12,
+      "drivers": ["昨天 -0.26%,相對抗跌", "YM 期貨 -0.12%,盤前唯一翻黑,銀行財報前偏保守"]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 2953.17,
+      "overnight_pct": 0.37,
+      "drivers": ["昨天 -0.83%", "RTY 期貨 +0.37%,小型股盤前小幅領先大盤"]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普 20 日已實現波動約 12.8%,表面平靜到讓人想加碼;但把它換算成波動目標下的合理倍數,也只有約 1.17 倍。今天偏偏是 CPI 日、油價又殺回一個月高點,這種『數據與地緣同一天引爆』的日子,平靜是隨時會被撕破的假象——真開到 3 倍,一年光波動耗損就吃掉約 7.4% 的複利,還沒算方向做錯。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克波動高得多(約 22.3%),同一套邏輯下合理倍數掉到約 0.67 倍;硬開 3 倍,一年波動耗損逼近 22%。昨天科技 -2.42%、記憶體補跌就是提醒:波動最高的地方,才最禁不起加槓桿。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊波動最低(約 8.7%),波動目標倍數約 1.73 倍是四大指數最高;但『波動低=能多開』只在波動真的持續低時成立,今天多重催化劑一到齊,低波動的假象崩得最快。"
+    }
+  ],
+  "regime": {
+    "vol": "normal",
+    "rates": "rising",
+    "stock_bond_corr": "neutral",
+    "breadth": "mixed"
+  },
+  "items": [
+    {
+      "headline": "記憶體那把火終究燒過來:昨天科技類股 -2.42% 全場最弱、Nasdaq -1.55%",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "昨天盤前還在問『韓國半導體崩盤會不會燒到美股』,收盤答案揭曉:會。科技是唯一跌超過 2% 的類股,Nasdaq 也跟著 -1.55%,道瓊靠非科技權值只小跌 0.26%。這正是集中度的兩面——你押的是哪一種集中,決定你昨天賠多少。對重壓 AI/半導體的人,這是背離收斂、風險現形的一課。",
+      "sources": [
+        {"url": "https://www.fool.com/coverage/stock-market-today/2026/07/13/stock-market-today-july-13-sk-hynix-tumbles-15-in-south-korea-leading-semiconductor-drop-at-midday/"},
+        {"url": "https://finance.yahoo.com/markets/live/stock-market-today-monday-july-13-dow-sp-nasdaq-113249278.html"}
+      ]
+    },
+    {
+      "headline": "油價一夜殺回一個月高點:布蘭特約 87 美元(+4.5%)、WTI 約 80.8 美元,川普宣布荷莫茲 20% 過路費+封港",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "這是今天最重的一條。川普宣布對通過荷莫茲海峽的貨船課 20% 通行費、並重啟對伊朗港口封鎖(美東時間下午四點生效),油價應聲創一個月新高。關鍵在時間點:六月 CPI 之所以預期溫和,靠的正是六月汽油大跌約一成;而那個順風,現在正被油價殺回頭給抹掉。對一般人,這代表通膨端的成本線又被點著,Fed 更沒有急著降息的理由。(快照無油價序列,油價引自外電。)",
+      "sources": [
+        {"url": "https://www.cnbc.com/2026/07/14/oil-prices-today-brent-wti-hormuz-trump-toll-iran.html"},
+        {"url": "https://www.aljazeera.com/economy/2026/7/14/oil-hits-1-month-high-as-us-iran-fighting-clouds-strait-of-hormuz-outlook"}
+      ]
+    },
+    {
+      "headline": "六月 CPI 今早 8:30(美東)揭曉:市場預期整體年增降到約 3.9%、核心約 2.9%",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "developing",
+      "audience_value": "今天的方向盤在這份數據。市場預期整體 CPI 月減 0.1%、年增從 4.2% 降到約 3.9%,核心(剔除食物能源)年增仍卡在 2.9%。看起來像好消息,但溫和的頭條靠的是六月汽油大跌——而油價昨晚已經漲回來。若核心比預期熱,九月升息的劇本會被重新搬上檯面。數據還沒出,先別急著下結論;所有數字以官方公布為準。",
+      "sources": [
+        {"url": "https://www.ig.com/uk/trading-strategies/us-cpi-june-2026-preview-what-to-expect-tomorrow-260713"},
+        {"url": "https://quasa.io/media/june-2026-cpi-release-scheduled-for-july-14-at-8-30-a-m-et"}
+      ]
+    },
+    {
+      "headline": "五大銀行財報開跑:摩根大通 EPS 6.14 美元、富國 2.00 美元皆遠超預期,股價卻『好消息壞反應』",
+      "horizon": "MT",
+      "vs_thesis": "new",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "財報季由銀行揭幕,數字很漂亮:摩根大通每股獲利 6.14 美元(預期約 5.85)、營收 580 億;富國銀行 2.00 美元也打敗預期。執行長 Dimon 說『美國經濟展現明顯韌性』。但盤前摩根大通反跌逾 2%、美銀跌約 1%,只有高盛小漲——這種『財報打敗預期、股價反而賣壓』的組合,提醒一般人:當估值已經站在利率的逆風上,單純的『比預期好』不夠,市場要的是更多。",
+      "sources": [
+        {"url": "https://www.cnbc.com/2026/07/14/jpm-bank-of-america-citi-bank-earnings-live-updates.html"},
+        {"url": "https://finance.yahoo.com/markets/stocks/articles/jpmorganchase-reports-second-quarter-2026-103800420.html"}
+      ]
+    },
+    {
+      "headline": "資金往能源靠:昨天能源類股 +3.01% 領漲、金融 +0.65%,科技墊底",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "developing",
+      "audience_value": "輪動的方向盤昨天很清楚:油價漲、能源就是最強的類股(+3.01%),必需消費、公用這些防禦型也收紅,科技獨自墊底。這不只是『成長換價值』的老故事,而是地緣與通膨在替盤面重新排序。對一般人,這是『別只盯著最熱門那幾檔』的又一次提醒——當領漲棒子換手,分散才是朋友。",
+      "sources": [
+        {"url": "https://finance.yahoo.com/markets/live/stock-market-today-sp-500-nasdaq-futures-slip-after-samsung-results-spark-chip-sell-off-223015294.html"}
+      ]
+    },
+    {
+      "headline": "Fed 主席 Warsh 今早 10:00 首度上國會作證;Waller 放話『通膨若續熱,近期可能得升息』",
+      "horizon": "LT",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "新任主席 Warsh 今天首度到國會交半年度貨幣政策報告,市場緊盯他對利率的語氣。理事 Waller 已先放鷹:通膨若持續高於目標,近期可能得升息。市場定價九月升息機率約六成、七月會議也有約四成機率動作。升息風險仍高於降息,這條利率主軸是壓著高估值股票、也是資金往能源/價值靠攏的地心引力。",
+      "sources": [
+        {"url": "https://stocktwits.com/news-articles/markets/equity/nasdaq-sp500-futures-drift-cpi-bank-earnings-warsh-testimony-why-uso-jpm-bac-nvda-crcl-sls-srxh-are-in-focus/cZZbpw7R7pX"},
+        {"url": "https://www.investing.com/news/stock-market-news/wall-st-futures-mixed-ahead-of-cpi-bank-earnings-usiran-tensions-in-focus-4790080"}
+      ]
+    },
+    {
+      "headline": "平靜底下暗流:VIX 17.35、十年期殖利率升到 4.61%",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "盤前期指小綠,但恐慌指數 VIX 站在 17.35、十年期公債殖利率又升到 4.61%,是六週來的高檔區。油價、利率同步往上,說明市場在替今天的 CPI 與地緣風險預繳保費。指數紅綠燈會騙人,底下的波動與利率才是真情緒。",
+      "sources": [
+        {"url": "https://www.aljazeera.com/economy/2026/7/14/oil-hits-1-month-high-as-us-iran-fighting-clouds-strait-of-hormuz-outlook"}
+      ]
+    }
+  ],
+  "catalysts": [
+    "今日 8:30(美東):美國六月 CPI——今天的方向盤,市場預期年增降到約 3.9%、核心 2.9%",
+    "今日 10:00(美東):Fed 主席 Warsh 首度國會作證,交半年度貨幣政策報告",
+    "今日:摩根大通、美銀、高盛、富國、花旗五大銀行財報開跑,財報季揭幕",
+    "今日下午 4:00(美東):美方對伊朗港口封鎖生效、荷莫茲 20% 過路費——盤中盯油價與能源股",
+    "週三 7/15:BlackRock、Morgan Stanley 財報;PPI 生產者物價"
+  ],
+  "thesis_delta": {
+    "changed": true,
+    "summary": "通膨與地緣支柱獲確認性升級:油價地緣溢價不是暫歇、而是升級。川普宣布荷莫茲海峽 20% 過路費+重啟對伊朗港口封鎖(美東今日下午四點生效),布蘭特殺回約 87 美元、創一個月新高。關鍵是它正好抵消六月 CPI 溫和頭條所倚賴的『汽油大跌一成』順風——通膨端『沒有順風』的結構因此更硬。同步確認 AI/半導體『窄且不穩』:昨天記憶體補跌讓科技 -2.42%、Nasdaq -1.55%,道瓊靠非科技權值只跌 0.26%,集中度風險再次現形。基準方向(higher-for-longer、AI 雙面刃、集中度制度化)不變,屬確認性升級。",
+    "horizon": "MT"
+  },
+  "lead_horizon": "MT",
+  "title_hook": "油價一夜殺回一個月高點,偏偏今天是 CPI 日——通膨的順風正在轉風向"
+}
