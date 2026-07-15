@@ -1,0 +1,137 @@
+{
+  "segments": [
+    {
+      "headline": "核心 CPI 意外熄火",
+      "tag": "2026-07-15 · 盤前快報",
+      "vo": "三重考放榜,大家最怕的核心通膨,意外熄火了。亞股連夜軋空到觸發熔斷——今天這口氣,鬆得對嗎?",
+      "t_start": 0.0,
+      "duration": 6.0
+    },
+    {
+      "chart_id": "asia_overnight",
+      "title": "隔夜亞股",
+      "vo": "先看隔夜最猛的畫面。南韓 KOSPI 一天狂拉 6.24%,盤中觸發買方熔斷;SK 海力士的美國 ADR 一夜暴衝 27%,日經、台股同步跳漲。被美國冷通膨點火的記憶體軋空——一週前才熔斷崩跌,現在反手軋空,同一批股票、兩個極端。",
+      "t_start": 6.0,
+      "duration": 18.0
+    },
+    {
+      "headline": "核心 CPI = 0",
+      "tag": "六月通膨放榜",
+      "vo": "六月核心 CPI 月增率掛零、年增 2.6%,市場原本預期 2.9%。裁判,給了鴿派的分數。",
+      "t_start": 24.0,
+      "duration": 6.0
+    },
+    {
+      "chart_id": "fed_now",
+      "title": "升息劇本",
+      "vo": "數字一冷,升息劇本立刻翻頁。九月升息機率從前一天的 62% 退到 58%,年底政策利率隱含約 3.96%、仍比現在的 3.63% 高。升息箭頭沒有消失,只是被這份數據往回頂了一格。",
+      "t_start": 30.0,
+      "duration": 16.0
+    },
+    {
+      "chart_id": "tnx_60d",
+      "title": "殖利率回落",
+      "vo": "債市先鬆手。十年期公債殖利率從近六十天高點的 4.61%,回落到 4.58%。這條線是壓著高估值股票的地心引力,它一鬆,成長股就喘口氣。但它昨天才剛創新高,一天回落,還稱不上轉向。",
+      "t_start": 46.0,
+      "duration": 14.0
+    },
+    {
+      "headline": "核心 CPI",
+      "tag": "名詞小教室",
+      "vo": "名詞小教室:核心 CPI,把最愛亂跳的食物跟能源拿掉,看通膨真正的底色。",
+      "t_start": 60.0,
+      "duration": 7.0
+    },
+    {
+      "chart_id": "futures_now",
+      "title": "今晨美股期貨",
+      "vo": "回到美股。昨天標普收漲 0.38%、那斯達克漲 0.9%,今晨四大期貨卻小翻黑,那斯達克期貨跌 0.31% 最弱。利多昨天一次反映完,今天輪到獲利了結、等下一個催化劑。看盤盯的是期貨,不是昨收。",
+      "t_start": 67.0,
+      "duration": 16.0
+    },
+    {
+      "headline": "油價偷偷漲回 85",
+      "tag": "冷通膨的伏筆",
+      "vo": "這份冷通膨有伏筆:它靠六月能源大跌 5.7% 撐出來。可七月油價已漲回,布蘭特連三天站上 85、美軍又封了伊朗港。拉低通膨的功臣,正在反手變兇手。",
+      "t_start": 83.0,
+      "duration": 11.0
+    },
+    {
+      "chart_id": "today_exam",
+      "title": "今天的考程",
+      "vo": "今天考程排得滿。ASML 已交卷、今年二度上調全年財測、盤前漲 3%,AI 資本支出前哨亮綠燈。接著 Warsh 赴參議院、PPI 出爐、摩根士丹利跟貝萊德財報。明天壓軸是台積電。",
+      "t_start": 94.0,
+      "duration": 16.0
+    },
+    {
+      "chart_id": "lev_now",
+      "title": "槓桿與波動耗損",
+      "vo": "軋空最刺激,也最適合上一堂槓桿課。標普已實現波動 12.8%,合理倍數約 1.2 倍;那斯達克波動 22%,只剩 0.67 倍。硬開三倍,光波動耗損一年就吃掉約兩成複利。方向就算賭對,中間的甩動也能把你洗出場。",
+      "t_start": 110.0,
+      "duration": 17.0
+    },
+    {
+      "chart_id": "sb_corr",
+      "title": "股債相關性",
+      "vo": "最後拉遠看結構。股債滾動相關性掉到接近零的 0.04,債券避險功能正在回魂——這是做分散配置最想聽的消息。前提是通膨別失控:今天冷 CPI 幫了忙,油價反手漲回卻在扯後腿。你的避風港還在不在,賭的就是這件事。",
+      "t_start": 127.0,
+      "duration": 16.0
+    },
+    {
+      "headline": "投票機與體重計",
+      "tag": "葛拉漢  不知道有沒有說過",
+      "vo": "每日盤前金句:市場短期是投票機,一天能把恐慌投成狂歡;長期才是體重計,秤的是油價、利率跟現金流。以上非投資建議,我們明天見。",
+      "t_start": 143.0,
+      "duration": 11.0
+    }
+  ],
+  "charts": [
+    {
+      "id": "asia_overnight",
+      "module": "global_equity_overnight",
+      "params": {}
+    },
+    {
+      "id": "fed_now",
+      "module": "fed_path",
+      "params": {}
+    },
+    {
+      "id": "tnx_60d",
+      "module": "rates_trend",
+      "params": {}
+    },
+    {
+      "id": "futures_now",
+      "module": "index_overnight_grid",
+      "params": {}
+    },
+    {
+      "id": "today_exam",
+      "module": "catalyst_timeline",
+      "params": {
+        "events": [
+          {"date": "7/15", "label": "ASML財報 已上修財測", "highlight": true},
+          {"date": "7/15", "label": "Warsh 參院作證", "highlight": true},
+          {"date": "7/15", "label": "PPI 躉售通膨", "highlight": false},
+          {"date": "7/15", "label": "摩根士丹利·貝萊德財報", "highlight": false},
+          {"date": "7/16", "label": "台積電·Netflix 財報", "highlight": true}
+        ]
+      }
+    },
+    {
+      "id": "lev_now",
+      "module": "leverage_decay",
+      "params": {}
+    },
+    {
+      "id": "sb_corr",
+      "module": "stock_bond_corr",
+      "params": {}
+    }
+  ],
+  "coverage_gaps": [
+    "缺『油價走勢』模組(布蘭特/WTI 序列):連三天油價都是盤面主軸(今日主軸之一是冷 CPI vs 已反彈的油價),快照仍無油價序列、也無對應圖,只能用標題卡口述外電數字。建議資料層加抓 BZ=F/CL=F 並新增 oil_trend 模組。",
+    "缺『盤前個股異動』模組(premarket top movers):SK 海力士 ADR +27%、ASML +3%、IBM 崩跌這類單一個股大事,只能用標題卡與催化劑軸口述;想要一張『盤前異動排行』圖(ticker + 漲跌%),財報季每天都用得上。"
+  ]
+}

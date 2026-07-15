@@ -1,0 +1,153 @@
+{
+  "date": "2026-07-15",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7543.59,
+      "overnight_pct": -0.09,
+      "drivers": [
+        "週二收漲 0.38%,六月核心 CPI 意外熄火帶動殖利率回落、股市收復失土",
+        "今晨 ES 期貨 -0.09%,利多昨日消化完、獲利了結與等 ASML/PPI"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 26107.01,
+      "overnight_pct": -0.31,
+      "drivers": [
+        "週二領漲 0.90%,半導體從記憶體風暴回神、冷通膨壓低估值地心引力",
+        "NQ 期貨 -0.31% 今晨最弱,亞股連夜軋空後美股盤前小幅回吐"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 52508.27,
+      "overnight_pct": -0.13,
+      "drivers": [
+        "週二僅微漲 0.02%,IBM 盤後暴跌逾兩成拖累、銀行財報分化",
+        "YM 期貨 -0.13%,等摩根士丹利、貝萊德、J&J 接棒財報"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 2964.76,
+      "overnight_pct": -0.17,
+      "drivers": [
+        "週二漲 0.39%,冷 CPI 讓利率回落、小型股跟著喘息",
+        "RTY 期貨 -0.17%,方向等 PPI 與 Warsh 參院定調"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普最近的已實現波動掉到約 12.8%,VIX 也睡在 16 上下,波動目標框架回推的合理倍數約 1.17 倍。但昨天 KOSPI 一天甩 6%、SK 海力士 ADR 一夜暴衝 27%——平靜的指數底下,成分股的波動根本沒平靜。拿晴天的胎壓去跑這種山路,遇到彎道才發現抓地力不夠。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克波動約 22.3%,同一套波動目標邏輯下合理倍數只剩約 0.67 倍、比一倍還低;硬開 3 倍,光波動耗損一年就侵蝕約 22% 的複利。記憶體這一週從熔斷崩跌到反手軋空,就是高波動市場給槓桿的下馬威——方向就算你賭對,中間的甩動也能先把你洗出場。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "小型股對利率最敏感,今天冷 CPI 讓殖利率回落,理論上是它的順風。但 Russell 已實現波動約 13.6%,波動目標框架回推的合理倍數約 1.11 倍;想靠 3 倍槓桿賭『降息利多小型股』,得先過得了約 8% 的年化波動耗損這一關,方向對、時間拖久照樣被磨掉。"
+    }
+  ],
+  "regime": {
+    "vol": "normal",
+    "rates": "rising",
+    "stock_bond_corr": "neutral",
+    "breadth": "mixed"
+  },
+  "items": [
+    {
+      "headline": "三重考放榜,核心 CPI 意外熄火:月增率掛零、年增 2.6% 遠低於預期",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "昨天全場最怕的那個裁判——核心 CPI,結果考出鴿派分數:月增率是零,年增率降到 2.6%,市場原本預期 2.9%。頭條 CPI 也涼到年增 3.5%。對一般人:這是『利空出盡』式的鬆一口氣,升息劇本被往回頂了一格;但一份數據不等於通膨警報解除,別把單月的好成績當成趨勢定案。",
+      "sources": [
+        {"url": "https://www.cnbc.com/2026/07/14/consumer-price-index-inflation-report-june-2026.html", "ts": null},
+        {"url": "https://www.cbsnews.com/news/june-2026-cpi-report/", "ts": null},
+        {"url": "https://www.bls.gov/news.release/cpi.nr0.htm", "ts": null}
+      ]
+    },
+    {
+      "headline": "亞股連夜軋空:KOSPI 一天 +6.24% 觸發買方熔斷、SK 海力士 ADR 一夜 +27%",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "冷 CPI 點火,加上記憶體超跌反彈,南韓 KOSPI 大漲 6.24%、盤中觸發買方熔斷,SK 海力士美國 ADR 一夜暴衝 27%,巴克萊給『加碼』、目標價 330 美元;日經、台股、恆生同步跳漲。對一般人:一週前才熔斷崩跌、現在反手軋空到熔斷,同一批股票兩個極端——這正是『窄且不穩』的活教材,雙向甩得越兇,越不是穩了。",
+      "sources": [
+        {"url": "https://www.koreajoongangdaily.com/business/kospi-closes-up-624-on-gains-by-tech-heavyweights/12775387", "ts": null},
+        {"url": "https://en.sedaily.com/finance/2026/07/15/sk-hynix-adr-jumps-27-percent-in-us-signaling-kospi-rebound", "ts": null},
+        {"url": "https://invezz.com/news/2026/07/15/kospi-index-rebounds-as-samsung-and-sk-hynix-rally-is-the-tide-finally-turning/", "ts": null}
+      ]
+    },
+    {
+      "headline": "冷 CPI 建立在舊油價上:六月能源大跌 5.7% 撐場,七月布蘭特已反手站上 85",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "頭條 CPI 涼下來,主要靠六月能源大跌 5.7%(2020 年 4 月以來最大月跌幅)。但那是後照鏡:七月美伊在荷莫茲持續互襲、美軍再度封鎖伊朗港口,布蘭特連三個交易日站上 85 美元(外電)。對一般人:拉低通膨的功臣正在反手變兇手,今天的冷通膨順風,有一部分是借來的、下個月可能要還。",
+      "sources": [
+        {"url": "https://www.cnbc.com/2026/07/15/oil-prices-today-brent-wti-hormuz-blockade.html", "ts": null},
+        {"url": "https://www.aljazeera.com/economy/2026/7/14/oil-hits-1-month-high-as-us-iran-fighting-clouds-strait-of-hormuz-outlook", "ts": null}
+      ]
+    },
+    {
+      "headline": "Warsh 不買單:眾院首秀稱通膨改善『非大功告成』,今日轉戰參院;九月升息機率退到 58%",
+      "horizon": "LT",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "即便 CPI 走冷,Fed 主席 Warsh 在眾議院首秀直說『這波通膨改善不是大功告成』,今天轉往參議院作證。市場定價同步微調:九月升息機率從前一天的 62% 退到 58%、年底政策利率隱含約 3.96%(仍高於現行 3.63%)、10 年期殖利率回落到 4.58%。對一般人:央行沒因為一個冷數據就翻鴿,升息的箭頭沒消失、只是力道稍退——利率地心引力還在頭頂。",
+      "sources": [
+        {"url": "https://www.cnn.com/2026/07/14/business/live-news/cpi-inflation-kevin-warsh-capitol-hill-testimony", "ts": null},
+        {"url": "https://www.federalreserve.gov/newsevents/testimony/warsh20260714a.htm", "ts": null},
+        {"url": "https://federalnewsnetwork.com/prediction-markets/2026/07/cpi-falls-june-trade-prediction-markets-fed-decision-in-july-2026/", "ts": null}
+      ]
+    },
+    {
+      "headline": "ASML 已交卷:今年二度上調全年財測、盤前 +3%,AI 資本支出前哨站亮綠燈",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "全球唯一 EUV 微影設備商 ASML 今晨公布 Q2,今年第二度上調全年營收財測,盤前約 +3%、半導體 ETF(SMH)跟著彈約 1.2%。對一般人:記憶體軋空 + 設備龍頭上修,AI 資本支出敘事今天拿到正面驗貨;但要看訂單、中國與 High-NA 的細節,明天台積電是同一題的壓軸。",
+      "sources": [
+        {"url": "https://finance.yahoo.com/markets/live/stock-market-today-dow-sp-500-nasdaq-futures-extend-gains-ahead-of-earnings-wholesale-inflation-data-091813320.html", "ts": null},
+        {"url": "https://www.techtimes.com/articles/320137/20260710/asml-earnings-wednesday-euv-bookings-will-show-whether-ai-chip-boom-sustainable.htm", "ts": null}
+      ]
+    },
+    {
+      "headline": "銀行財報季開局分化:高盛 +9% 領漲、摩根大通 +2%,花旗 -5.77%、富國 -3.31%",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "昨天財報季開局:高盛 beat 大漲約 9% 領著銀行走高、摩根大通與美銀漲逾 2%,但花旗跌 5.77%、富國跌 3.31%,同業分化明顯;IBM 因財測失望盤後崩逾兩成。今天摩根士丹利、貝萊德、J&J 接棒。對一般人:銀行整體 beat 開了個好頭,但差異很大——財報季仍是『兌現成數字才算數』,別用單一龍頭的漂亮數字概括全體。",
+      "sources": [
+        {"url": "https://www.thestreet.com/stock-market-today/stock-market-today-dow-jones-sp-500-nasdaq-updates-july-14-2026", "ts": null},
+        {"url": "https://www.benzinga.com/trading-ideas/long-ideas/26/07/60460503/morgan-stanley-johnson-johnson-and-3-stocks-to-watch-heading-into-wednesday", "ts": null}
+      ]
+    }
+  ],
+  "catalysts": [
+    "盤前:摩根士丹利、貝萊德、J&J、聯合航空 Q2 財報接棒——銀行財報季第二棒,昨日高盛 +9%、摩根大通 +2% 但花旗/富國走弱",
+    "已公布:ASML Q2 財報——今年第二度上調全年營收財測,盤前約 +3%;留意 EUV 訂單、中國銷售與 High-NA 指引",
+    "8:30 ET:六月 PPI 生產者物價(躉售通膨)——CPI 走冷後的通膨二次確認,看成本端有沒有同步降溫",
+    "10:00 ET:Fed 主席 Warsh 參議院銀行委員會作證(接續昨日眾院首秀,語氣偏鷹『非大功告成』)",
+    "全日:油價與美伊荷莫茲進行式——布蘭特連三日站上 85、美軍再封伊朗港(外電),留意能源類股與 10 年期殖利率",
+    "明日 7/16:台積電、Netflix 財報——半導體/AI 需求與串流內容的壓軸驗貨"
+  ],
+  "thesis_delta": {
+    "changed": true,
+    "summary": "三重考(六月 CPI + Warsh 首秀 + 銀行財報)結果偏鴿但基準方向不變,屬確認性微調。『Fed 政策』:六月核心 CPI 意外熄火(月增 0.0%、年增 2.6% vs 預期 2.9%,頭條 3.5%),九月升息機率 62%→58%、年底隱含 4.04%→3.96%、10Y 自 4.61% 回落到 4.58%;但 Warsh 眾院首秀定調『通膨改善非大功告成』、今日續赴參院——政策箭頭仍朝上、力道稍退,升息風險高於降息的判定不變。『通膨與地緣』:頭條 CPI 涼下來靠六月能源 -5.7%(2020/4 以來最大月跌),但七月油價已反手漲回,美軍再封伊朗港、布蘭特連三日站上 85——降通膨順風有一部分是借來的舊油價,結構『沒有順風』不變。『AI/半導體』:open thread『記憶體深 V 是搶短還是築底』結案——是搶短 + 軋空過頭(KOSPI +6.24% 觸發買方熔斷、SK 海力士 ADR 一夜 +27% 就是另一種『不穩』);ASML 二度上調財測(+3%)為 AI capex 前哨轉綠,7/16 台積電接力驗貨,集中度與『窄且不穩』未解。",
+    "horizon": "MT"
+  },
+  "lead_horizon": "ST",
+  "title_hook": "核心 CPI 意外熄火、亞股軋空到觸發熔斷,今天的美股該追嗎"
+}
