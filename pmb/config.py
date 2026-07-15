@@ -41,6 +41,10 @@ class Settings(BaseSettings):
     # 分支退路),逾時才依 local_research_fallback 決定是否本機補跑
     research_source: str = "local"
     local_research_fallback: bool = True
+    # headless 研究用的模型(claude -p --model)。預設 sonnet-5:額度餘裕大、適合每天
+    # 無人值守;要更高品質可設 claude-opus-4-8。空字串 = 用 claude CLI 預設(注意預設
+    # Fable 5 額度較易用罄,滿了 headless 研究會直接失敗)
+    research_claude_model: str = "claude-sonnet-5"
 
     # 路徑
     artifacts_dir: Path = Path("artifacts")

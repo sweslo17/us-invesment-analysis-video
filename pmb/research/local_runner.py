@@ -39,16 +39,16 @@ _ALLOWED_TOOLS = [
 ]
 
 
-def invoke_headless_claude(prompt: str, cwd: Path) -> None:
-    """以 headless Claude Code 執行研究 prompt(用本機登入,不需 ANTHROPIC_API_KEY)。"""
-    cmd = [
-        "claude",
-        "-p",
-        "--permission-mode",
-        "acceptEdits",
-        "--allowedTools",
-        *_ALLOWED_TOOLS,
-    ]
+def invoke_headless_claude(prompt: str, cwd: Path, model: str | None = None) -> None:
+    """以 headless Claude Code 執行研究 prompt(用本機登入,不需 ANTHROPIC_API_KEY)。
+
+    ``model`` 指定 ``--model``(如 claude-sonnet-5);None 用 CLI 預設。預設模型(Fable 5)
+    額度較易用罄,滿了會 rc=1、研究直接失敗,故建議在 settings 指定額度餘裕的模型。
+    """
+    cmd = ["claude", "-p"]
+    if model:
+        cmd += ["--model", model]
+    cmd += ["--permission-mode", "acceptEdits", "--allowedTools", *_ALLOWED_TOOLS]
     logger.info("headless claude 研究開始(上限 {:.0f} 分鐘)…", _HEADLESS_TIMEOUT_MIN)
     proc = subprocess.run(
         cmd,
@@ -97,7 +97,8 @@ def run_local_research(
     """
     if invoke is None:
         cwd = Path(__file__).resolve().parent.parent.parent
-        invoke = lambda p: invoke_headless_claude(p, cwd)  # noqa: E731
+        model = getattr(settings, "research_claude_model", "") or None
+        invoke = lambda p: invoke_headless_claude(p, cwd, model=model)  # noqa: E731
 
     snap_path = settings.artifacts_dir / f"snapshot_{target}.json"
     snapshot = Snapshot.model_validate_json(snap_path.read_text(encoding="utf-8"))

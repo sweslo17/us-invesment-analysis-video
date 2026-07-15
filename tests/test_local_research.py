@@ -46,6 +46,28 @@ def test_validate_reports_missing_and_invalid_artifacts(tmp_path):
     assert any("schema" in e for e in errors)
 
 
+def test_invoke_headless_passes_model_flag():
+    # research_claude_model 應轉成 claude -p 的 --model(避免綁死在會用罄的預設模型)
+    import subprocess
+
+    captured = {}
+
+    def fake_run(cmd, **kwargs):
+        captured["cmd"] = cmd
+        return subprocess.CompletedProcess(cmd, 0, stdout="done", stderr="")
+
+    import pmb.research.local_runner as lr
+
+    orig = lr.subprocess.run
+    lr.subprocess.run = fake_run
+    try:
+        lr.invoke_headless_claude("prompt", Path("/repo"), model="claude-sonnet-5")
+    finally:
+        lr.subprocess.run = orig
+    assert "--model" in captured["cmd"]
+    assert "claude-sonnet-5" in captured["cmd"]
+
+
 def test_run_local_research_succeeds_when_agent_writes_valid_files(tmp_path):
     settings = _settings(tmp_path)
     calls: list[str] = []
