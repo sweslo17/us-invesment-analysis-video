@@ -111,6 +111,26 @@ def test_build_plist_schedules_weekdays_at_given_time():
     assert "--only-after 19:30" in joined
 
 
+def test_cmd_auto_notifies_on_uncaught_exception(monkeypatch):
+    # 最外層防線:內部任何例外都要轉成桌面通知(不得像 7/15 那樣靜默崩掉)
+    import argparse
+
+    from pmb import cli
+
+    def _boom(args):
+        raise RuntimeError("boom")
+
+    monkeypatch.setattr(cli, "_cmd_auto_inner", _boom)
+    notes: list[tuple[str, str]] = []
+    from pmb import autopilot
+
+    monkeypatch.setattr(autopilot, "notify", lambda title, msg: notes.append((title, msg)))
+
+    rc = cli.cmd_auto(argparse.Namespace())
+    assert rc == 1
+    assert notes and "boom" in notes[0][1]
+
+
 def test_is_before_guards_catchup_runs():
     import datetime as _dt
 

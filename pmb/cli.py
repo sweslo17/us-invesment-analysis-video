@@ -490,7 +490,23 @@ def cmd_today(args: argparse.Namespace) -> int:
 
 
 def cmd_auto(args: argparse.Namespace) -> int:
-    """每日全自動:等雲端研究 → 合成 → 上傳(private)→ 通知;人工只剩改公開。
+    """每日全自動的最外層:確保任何未捕捉例外都發桌面通知(無人值守不得靜默失敗)。
+
+    7/15 的教訓:讀快照的 ValidationError 直接讓程式崩掉、繞過內部所有 notify,
+    使用者毫無所覺。這層 try/except 是最後防線——任何漏網例外都通知 + 記錄後才退出。
+    """
+    from pmb import autopilot
+
+    try:
+        return _cmd_auto_inner(args)
+    except Exception as exc:  # noqa: BLE001 — 最外層防線:任何例外都要通知,不得靜默
+        logger.exception("pmb auto 未捕捉例外")
+        autopilot.notify("PMB 自動流程異常中止", f"{type(exc).__name__}: {str(exc)[:120]}")
+        return 1
+
+
+def _cmd_auto_inner(args: argparse.Namespace) -> int:
+    """每日全自動:研究(本機/雲端)→ 合成 → 上傳(private)→ 通知;人工只剩改公開。
 
     給 launchd / cron 排程呼叫(``pmb autopilot install``),手動跑也行。冪等:
     當天已上傳過會直接跳過。非交易日 skip。
