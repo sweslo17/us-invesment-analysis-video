@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 import datetime as dt
+import math
 
 import pandas as pd
 from loguru import logger
@@ -92,6 +93,11 @@ def compute_leverage_math(
         if series is None:
             continue
         realized_vol = realized_volatility(series, window=vol_window)
+        # 歷史不足或全 NaN 時 realized_vol 為 NaN → 各 drag 也 NaN;NaN 進非 optional
+        # float 欄位會讓快照寫得出、讀不回。跳過此市場(槓桿圖少一條線)。
+        if not math.isfinite(realized_vol):
+            logger.debug("市場 {} realized_vol 非有限數,跳過槓桿數學", name)
+            continue
         out.append(
             LeverageMath(
                 market=name,
@@ -115,6 +121,11 @@ def compute_sector_returns(
         if series is None or len(series) < 2:
             continue
         change_pct = float(series.pct_change().iloc[-1] * 100)
+        # 盤前 yfinance 常回 NaN 收盤 → change_pct 為 NaN;NaN 經 model_dump_json 變 null,
+        # 重載 float 欄位即爆。跳過(圖表少一根類股),不讓 NaN 進快照。
+        if not math.isfinite(change_pct):
+            logger.debug("類股 {} change_pct 非有限數,跳過", ticker)
+            continue
         out.append(
             SectorReturn(sector=universe.SECTOR_LABELS.get(ticker, ticker), change_pct=change_pct)
         )
