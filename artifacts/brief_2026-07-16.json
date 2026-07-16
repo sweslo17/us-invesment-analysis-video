@@ -1,0 +1,138 @@
+{
+  "date": "2026-07-16",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7572.4,
+      "overnight_pct": -0.37,
+      "drivers": [
+        "週三收漲0.38%至7572點,CPI/PPI雙冷、Warsh持續作證的氛圍延續,台積電財報前市場信心偏多",
+        "今晨ES期貨轉跌0.37%,晶片股隔夜全面回檔,拖累大盤情緒轉向觀望"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 26269.23,
+      "overnight_pct": -1.02,
+      "drivers": [
+        "週三漲0.62%收26269點,記憶體股延續反彈行情帶動科技股",
+        "今晨NQ期貨重挫1.02%,晶片股全面獲利了結,南韓、日本記憶體股同步崩跌拖累情緒"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 52658.64,
+      "overnight_pct": 0.1,
+      "drivers": [
+        "週三漲0.29%收52659點,金融股財報優於預期挹注",
+        "今晨YM期貨逆勢小漲0.1%,道瓊成分股對半導體曝險較低,較不受晶片股拖累"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 2976.26,
+      "overnight_pct": -0.5,
+      "drivers": [
+        "週三漲0.39%收2976點,利率鬆動替中小型股解套",
+        "今晨RTY期貨跌0.5%,風險偏好轉向保守,中小型股同步跟跌"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普已實現波動降到11.4%,波動目標模型回推的合理槓桿升到約1.3倍——波動變低、允許的槓桿反而變高,這正是危險的地方:平靜期加滿槓桿,一遇到像今天這種消息面反覆的日子,波動一放大,槓桿的耗損跟著跳級。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克波動仍近20%,合理倍數只剩0.76倍;硬開3倍,一年光波動耗損就吃掉超過17%的複利。今天晶片股全球同步回檔,是這套數學最好的示範教材。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊波動最低、合理倍數四大指數最高,今天也是唯一逆勢翻紅的期貨——但這只是平均值,單一成分股(像上週的IBM)照樣能把整條指數打成獨黑,槓桿放大的是整條路徑,不是只有平均的那個數字。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千波動13.2%,合理倍數1.14倍;中小型股對風險情緒更敏感,今天期貨跌幅是四大指數第二重,槓桿部位在這種轉向保守的日子最容易被迫提前出場。"
+    }
+  ],
+  "regime": {
+    "vol": "normal",
+    "rates": "rising",
+    "stock_bond_corr": "neutral",
+    "breadth": "mixed"
+  },
+  "items": [
+    {
+      "headline": "南韓央行三年半來首度升息,晶片股領跌觸發KOSPI賣盤熔斷",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "南韓央行把利率調升一碼至2.75%,是2023年初以來首次升息,理由是通膨受油價與匯率影響仍高於目標;同一天晶片股全球同步回檔,SK海力士重挫11.2%、三星跌8.2%,KOSPI早盤重挫逾6%觸發賣盤熔斷——距離前一天因報復性反彈觸發買盤熔斷,只隔了一個交易日。對一般人:同一批股票、同一週內正反兩次熔斷,是『AI領漲窄且不穩』最直接的示範,追高殺低的代價在這種市場格外痛。",
+      "sources": [
+        {"url": "https://www.bloomberg.com/news/articles/2026-07-16/bok-delivers-first-rate-hike-since-early-2023-amid-chip-led-boom", "ts": null},
+        {"url": "https://en.sedaily.com/finance/2026/07/16/kospi-tumbles-6-percent-loses-7000-level-as-circuit-breaker", "ts": null},
+        {"url": "https://www.cnbc.com/2026/07/15/stock-market-today-live-updates.html", "ts": null}
+      ]
+    },
+    {
+      "headline": "台積電財測與資本支出雙雙上修,美股卻先獲利了結",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "台積電第二季營收402億美元、年增36%,超乎市場預期,並把全年營收成長展望從三成多上修到四成以上,2026年資本支出預算也拉高到600至640億美元,管理層重申對AI多年成長趨勢信心非常高。這是本輪AI資本支出辯論最新、也最直接的正面硬證據。但美股ADR應聲下跌,反映股價今年以來已上漲近四成,市場先把好消息兌現離場。對一般人:好消息出爐股價卻下跌,是『利多已提前反映在股價裡』的教科書案例,基本面沒問題不代表股價不會拉回。",
+      "sources": [
+        {"url": "https://www.techpowerup.com/350807/tsmc-reports-record-q2-2026-earning-results", "ts": null},
+        {"url": "https://www.aol.com/articles/tsmc-raises-capex-revenue-forecast-113101000.html", "ts": null},
+        {"url": "https://www.gurufocus.com/news/8961819/tsm-reports-strong-q2-earnings-with-revenue-of-402b", "ts": null}
+      ]
+    },
+    {
+      "headline": "美軍首度癱瘓一艘伊朗油輪,伊朗警告荷姆茲海峽是不可退讓紅線",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "美軍持續對伊朗採取軍事行動,首度以地獄火飛彈實際癱瘓一艘駛往伊朗關鍵油港Kharg島的油輪,是港口封鎖重啟以來第一起實際攻擊船隻的案例;伊朗隨即警告荷姆茲海峽是不可退讓的紅線。油價短線反而回落,布蘭特原油跌至約84.5美元、結束連三天漲勢,但仍處於一個月高檔附近。對一般人:地緣衝突沒有降溫跡象,油價牽動的通膨路徑仍是Fed升息與否的關鍵變數,這條線比任何單日漲跌都更值得盯著。",
+      "sources": [
+        {"url": "https://www.cnn.com/2026/07/16/world/live-news/iran-war-trump", "ts": null},
+        {"url": "https://www.aljazeera.com/news/2026/7/15/us-attacks-iran-as-irgc-claims-strikes-on-us-military-sites-in-gulf", "ts": null},
+        {"url": "https://www.cbsnews.com/live-updates/us-iran-war-trump-ceasefire-attacks-strait-of-hormuz/", "ts": null}
+      ]
+    },
+    {
+      "headline": "今天還有零售銷售、Netflix財報等一連串數據",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 3,
+      "confidence": "developing",
+      "audience_value": "今天美股開盤前有六月零售銷售、初領失業金人數等數據,稍後還有費城Fed企業展望調查,收盤後則輪到Netflix公布第二季財報。這些數據會進一步影響市場對Fed升息路徑的判斷,尤其在南韓央行已經動手升息、地緣風險未解的背景下,消費數據強弱格外牽動『higher-for-longer』是否延續的判斷。",
+      "sources": []
+    },
+    {
+      "headline": "類股表現分歧,通訊服務逆勢領漲、科技類股拖後腿",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "儘管晶片股全球承壓,今天類股表現並非齊漲齊跌:通訊服務逆勢上漲1.73%、非必需消費漲0.95%,反倒是科技類股跌1.11%、公用事業跌逾1%。對一般人:單一族群(這次是晶片股)重挫不代表整體市場一起趴下,這正是分散配置在這種日子最能看出價值的地方。",
+      "sources": []
+    }
+  ],
+  "catalysts": [
+    "08:30 ET:六月零售銷售、初領/持續申領失業金人數公布",
+    "10:00 ET:NAHB住房市場指數、費城Fed企業展望調查(前值10.3)",
+    "盤後(約16:01 ET):Netflix公布第二季財報,是本週科技財報季最後一場",
+    "全日:美伊衝突持續——美軍首度癱瘓一艘駛往伊朗Kharg島的油輪,伊朗警告荷姆茲海峽是紅線",
+    "台積電財測(全年營收成長上修至逾四成、資本支出上修至600–640億美元)持續發酵,牽動今日晶片股走勢"
+  ],
+  "thesis_delta": {
+    "changed": true,
+    "summary": "今天三線更新但基準方向不變。(1)『AI/半導體』添最新硬證據:台積電財測與資本支出雙雙大幅上修,重申對AI多年趨勢信心非常高,但美股ADR先獲利了結,顯示利多已部分反映在股價;同時KOSPI在觸發買盤熔斷僅一個交易日後,又因晶片股全球回檔與南韓央行升息觸發賣盤熔斷,『窄且不穩』的結構本質再添一次極端示範。(2)『通膨與地緣』:美軍首度以飛彈實際癱瘓一艘駛往伊朗Kharg島的油輪,伊朗警告荷姆茲海峽是不可退讓紅線,衝突未見降溫,但油價短線反而回落,顯示市場尚未完全計價衝突升級的極端情境。(3)全球央行同步偏鷹添一例:南韓央行三年半來首度升息,雖主因是自身通膨與匯率,但呼應『higher-for-longer』不只是美國劇本。",
+    "horizon": "MT"
+  },
+  "lead_horizon": "ST",
+  "title_hook": "台積電神卷開外掛,美股期貨卻不領情"
+}
