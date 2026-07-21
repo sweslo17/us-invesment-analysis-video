@@ -1,0 +1,146 @@
+{
+  "date": "2026-07-21",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7443.28,
+      "overnight_pct": 0.08,
+      "drivers": [
+        "昨天(週一)標普收黑0.19%收7443點,油價上漲、中東緊張升溫壓著大盤",
+        "今早ES期貨小漲0.08%,VIX同步降到17.75,恐慌情緒明顯降溫"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 25508.07,
+      "overnight_pct": 0.40,
+      "drivers": [
+        "那斯達克昨天小跌0.05%收25508點,走勢是四大指數中最抗跌的一個",
+        "今早NQ期貨彈升0.4%,晶片股在輝達入股Nebius消息帶動下盤前偏強"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 51839.26,
+      "overnight_pct": 0.04,
+      "drivers": [
+        "道瓊昨天跌0.59%收51839點,四大指數中跌幅第二深",
+        "今早YM期貨小漲0.04%,通用汽車、3M開盤前財報雙雙報喜帶來支撐"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 2942.43,
+      "overnight_pct": -0.02,
+      "drivers": [
+        "羅素兩千昨天跌0.67%收2942點,是四大指數中跌幅最深的一個",
+        "今早RTY期貨幾乎持平(-0.02%),中小型股對利率、油價的敏感度仍值得留意"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普已實現波動降到10.4%,波動目標模型算出來的合理槓桿升到約1.44倍——但這個模型只看得到過去,看不到荷莫茲海峽會不會真的重開、紅海封鎖會不會擴大,這種一夜變盤的風險它抓不到。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克波動仍卡在18.7%左右,合理倍數只剩0.8倍;硬開三倍,一年的波動耗損就吃掉近15.7%的複利——這週三、四還要迎接Alphabet、特斯拉、英特爾的財報,任何一個意外都可能讓波動瞬間跳級。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊波動最低、合理倍數四大指數最高,但油價、戰事這種宏觀衝擊不會挑成分股放過誰,槓桿放大的是整條路徑,不是只有平均那個數字。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千波動約10.3%,合理倍數約1.46倍;中小型股對利率、油價的敏感度通常比大型股更直接,這種時候開高槓桿等於同時押注好幾個你控制不了的變數。"
+    }
+  ],
+  "regime": {
+    "vol": "normal",
+    "rates": "rising",
+    "stock_bond_corr": "neutral",
+    "breadth": "narrow"
+  },
+  "items": [
+    {
+      "headline": "美伊喊出十天停火,盼重開荷莫茲海峽,但雙方都還沒點頭",
+      "horizon": "MT",
+      "vs_thesis": "new",
+      "materiality": 5,
+      "confidence": "developing",
+      "audience_value": "卡達、埃及、巴基斯坦、阿曼等斡旋方向美伊雙方提出一項十天停火提案:雙向重開荷莫茲海峽——南線(阿曼水域)不再遭伊朗攻擊、北線(伊朗水域)不再被美方封鎖,停火期間雙方另談長期通行安排。截至目前,川普與伊朗都還沒點頭,雙方似乎都想靠更多攻擊先增加談判籌碼。這正是今早油價回落、美股期貨與亞股同步反彈的主要原因。對一般人:這是這輪衝突以來第一個具體、有名有姓的停火框架,但『提案』離『生效』還有距離,油價與股市這幾天可能因單一進展消息就大幅擺盪。",
+      "sources": [
+        {"url": "https://www.axios.com/2026/07/21/iran-war-ceasefire-proposal-trump-troops"},
+        {"url": "https://www.jpost.com/middle-east/iran-news/article-903074"},
+        {"url": "https://www.jpost.com/middle-east/iran-news/article-903154"}
+      ]
+    },
+    {
+      "headline": "紅海添新戰線:胡塞宣布對沙國實施完整海上封鎖",
+      "horizon": "MT",
+      "vs_thesis": "new",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "伊朗支持的葉門青年運動(胡塞)週一宣布,將對沙烏地阿拉伯實施完整海上封鎖,鎖住紅海南端的曼德海峽——全球約一成二的貿易經此通行。此舉被視為對沙國自身封鎖葉門及近日空襲沙那機場的報復,在美伊停火提案還在桌上談的同時,又開出一條新的衝突戰線。對一般人:中東這場衝突不是單一戰場,荷莫茲海峽談停火的同時,紅海這頭反而更緊張,航運改道會推高運費,間接墊高進口商品的成本。",
+      "sources": [
+        {"url": "https://foreignpolicy.com/2026/07/20/houthi-blockade-saudi-iran-war-red-sea-gulf-aden-hormuz/"},
+        {"url": "https://www.washingtontimes.com/news/2026/jul/20/houthi-blockade-opens-new-front-middle-east-war-even-mediators-work/"},
+        {"url": "https://www.freightwaves.com/news/houthi-announce-new-blockade-of-key-mideast-shipping-lane"}
+      ]
+    },
+    {
+      "headline": "亞股報復性反彈:KOSPI、日經、台股齊漲逾3%,AI資本支出故事被買回去",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "南韓KOSPI大彈3.56%、日經彈升3.31%、台股彈升4.03%,三大亞洲科技重鎮同步強彈。外電報導三星飆漲逾6%、SK海力士漲逾4%、日本鎧俠狂飆逾17%,主要導火線是輝達揭露持有Nebius逾9%股權、IREN又拿下28億美元的AI雲端合約,讓市場重新相信AI資本支出的故事。但KOSPI這個月稍早才因為『AI泡沫』疑慮重挫近兩成,今天的反彈更像是逃過一劫的技術性回補,而不是疑慮真的解除。對一般人:同一批權值股漲的時候是全村的希望,跌的時候也是全村的痛——這種暴力反彈本身就是『窄且不穩』的另一種表現形式。",
+      "sources": [
+        {"url": "https://www.bnnbloomberg.ca/markets/2026/07/21/world-shares-mostly-gain-and-south-korea-and-japan-recover-some-losses-from-ai-stock-sell-offs/"},
+        {"url": "https://www.tradingkey.com/analysis/stocks/more/262043532-kospi-nekki-kioxia-samsung-skhynix-ai-softbank-adr-skhy-etf-goog-tsla-tradingkey"},
+        {"url": "https://www.gurufocus.com/news/8967821/nebius-nbis-shares-rise-following-nvidias-93-stake-acquisition"}
+      ]
+    },
+    {
+      "headline": "通用、3M開盤前財報雙雙報喜,為本週AI巨頭財報暖身",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "通用汽車今天開盤前公布第二季淨利13億美元,調整後獲利年增約三成,今年第二度上修全年財測;3M每股獲利2.4美元同樣優於預期,同步調高全年財測。兩份傳統產業財報雙雙報喜,替本週三、四即將登場的Alphabet、特斯拉、英特爾、IBM財報鋪墊了偏樂觀的氣氛。對一般人:傳產能繳出好成績單只是第一關,真正決定這波AI行情能不能撐住的,是這幾家AI巨頭能不能把資本支出真的轉成利潤。",
+      "sources": [
+        {"url": "https://www.wilx.com/2026/07/21/general-motors-reports-higher-profits-announces-shareholder-payout/"},
+        {"url": "https://www.cnbc.com/2026/07/21/general-motors-gm-earnings-q2-2026.html"},
+        {"url": "https://markets.financialcontent.com/stocks/article/stockstory-2026-7-21-3m-nysemmm-exceeds-q2-cy2026-expectations-stock-soars"}
+      ]
+    },
+    {
+      "headline": "伊朗:備忘錄是美方先違反,不玩了——戰事並未真正降溫",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "伊朗外交部發言人表示,與美國簽署的備忘錄已經『中止』,理由是華盛頓從一開始就違反協議精神與文字,伊朗此後也不再片面履行義務。這則聲明提醒大眾:同一時間桌上有停火提案在談,但雙方互信基礎其實相當薄弱,衝突降溫仍是『提案』階段,不是既成事實。對一般人:看到停火消息就假設風險已經解除是危險的,這條線接下來幾天很可能忽冷忽熱。",
+      "sources": [
+        {"url": "https://wanaen.com/iran-u-s-mou-suspended-after-washington-violated-its-commitments/"},
+        {"url": "https://www.jns.org/news/world/tehran-us-iran-memorandum-in-crisis-after-american-violations"}
+      ]
+    }
+  ],
+  "catalysts": [
+    "07/22(週三)盤後:Alphabet、Tesla公布第二季財報",
+    "07/23(週四):Intel、IBM公布財報",
+    "美伊十天停火提案能否被雙方接受,以及荷莫茲海峽通行狀況的後續進展",
+    "葉門青年運動(胡塞)對沙烏地阿拉伯的紅海/曼德海峽封鎖後續發展",
+    "布蘭特原油在90美元關口附近震盪,任何戰事或斡旋消息都可能觸發盤中大幅波動",
+    "07/28–29 FOMC會議倒數,官員仍處噤聲期,本週沒有Fed官員公開談話"
+  ],
+  "thesis_delta": {
+    "changed": true,
+    "summary": "今天三條線都有新進展,但基準方向不變。(1)地緣風險出現具體停火框架但未生效:卡達、埃及、巴基斯坦、阿曼等斡旋方提出十天停火提案,聚焦雙向重開荷莫茲海峽,但川普與伊朗都尚未點頭;與此同時,伊朗支持的胡塞宣布對沙烏地阿拉伯實施紅海完整封鎖,開出新戰線,伊朗外交部也表態備忘錄『中止』——顯示降溫只是提案階段,反覆風險仍在。(2)AI/半導體『窄且不穩』再添一次反向示範:南韓、日本、台灣科技股同步強彈逾3%,主因輝達入股Nebius與IREN新雲端合約重燃AI資本支出信心,但這只是技術性反彈,KOSPI這個月稍早的近兩成跌幅並未消失,本週三、四Alphabet、特斯拉、英特爾財報仍是關鍵驗收。(3)通用、3M財報開盤前雙雙報喜、上修財測,為本週財報週增添一絲樂觀氣氛,但真正的考驗在AI巨頭身上。",
+    "horizon": "MT"
+  },
+  "lead_horizon": "ST",
+  "title_hook": "十天停火提案卡桌上,美伊誰先鬆手"
+}
