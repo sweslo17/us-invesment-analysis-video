@@ -704,6 +704,52 @@ def cmd_next_session(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_playlist_backfill(args: argparse.Namespace) -> int:
+    """把已上傳的影片(讀 publish_*.json)補加進播放清單;已在清單內的自動跳過。
+
+    playlist 由 --playlist 或 .env 的 YOUTUBE_PLAYLIST_ID 決定。需 youtube scope
+    (只有 youtube.upload 的舊 token 會 403 → 重跑 pmb auth-youtube 換新 token)。
+    """
+    import json as _json
+
+    from pmb.publish.youtube import add_videos_to_playlist
+
+    settings = get_settings()
+    playlist_id = args.playlist or settings.youtube_playlist_id
+    if not playlist_id:
+        print("缺播放清單 ID(--playlist 或 .env 的 YOUTUBE_PLAYLIST_ID)。")
+        return 1
+    if not settings.youtube_refresh_token:
+        print("缺 YouTube OAuth 憑證,無法操作播放清單。")
+        return 1
+
+    # 依日期排序讀 publish manifest,收集已成功上傳的 video_id(清單順序 = 時間序)
+    video_ids: list[str] = []
+    for path in sorted(settings.artifacts_dir.glob("publish_*.json")):
+        try:
+            data = _json.loads(path.read_text(encoding="utf-8"))
+        except _json.JSONDecodeError:
+            continue
+        if data.get("published") and data.get("video_id"):
+            video_ids.append(data["video_id"])
+    if not video_ids:
+        print("沒有找到已上傳的影片(publish_*.json 無 video_id)。")
+        return 0
+
+    print(f"準備把 {len(video_ids)} 支影片補加進播放清單 {playlist_id} …")
+    result = add_videos_to_playlist(video_ids, playlist_id, settings)
+    print(f"✅ 新增 {len(result['added'])} 支、已在清單內跳過 {len(result['skipped'])} 支。")
+    if result["failed"]:
+        print(f"⚠️ {len(result['failed'])} 支失敗:")
+        for vid, err in result["failed"][:5]:
+            print(f"   {vid}: {err}")
+        if any("403" in e or "insufficient" in e.lower() for _, e in result["failed"]):
+            print("   權限不足(403):重跑 pmb auth-youtube 取得含 youtube scope 的新 token,")
+            print("   把新的 YOUTUBE_REFRESH_TOKEN 貼進 .env 後再跑一次。")
+        return 1
+    return 0
+
+
 def cmd_auth_youtube(args: argparse.Namespace) -> int:
     """一次性:跑 OAuth 同意流程,印出 refresh token 供貼進 .env(密鑰不入庫)。"""
     secrets = Path(args.client_secrets)
@@ -823,6 +869,12 @@ def build_parser() -> argparse.ArgumentParser:
     ap.add_argument("action", choices=["install", "uninstall", "status"])
     ap.add_argument("--time", default="19:30", help="平日觸發時間 HH:MM(本地,預設 19:30)")
     ap.set_defaults(func=cmd_autopilot)
+
+    plbf = sub.add_parser(
+        "playlist-backfill", help="把已上傳影片補加進播放清單(讀 publish_*.json,去重)"
+    )
+    plbf.add_argument("--playlist", help="播放清單 ID(省略則用 .env 的 YOUTUBE_PLAYLIST_ID)")
+    plbf.set_defaults(func=cmd_playlist_backfill)
 
     authyt = sub.add_parser("auth-youtube", help="一次性:取得 YouTube OAuth refresh token")
     authyt.add_argument("--client-secrets", required=True, help="OAuth 桌面用戶端 JSON 路徑")

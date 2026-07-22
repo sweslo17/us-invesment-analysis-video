@@ -134,6 +134,85 @@ def upload_video(
     return record
 
 
+def _build_youtube(settings):
+    """由 refresh token 建 YouTube API client(上傳與播放清單共用)。
+
+    不指定 scopes:refresh 後拿到「當初授權時同意的全部 scope」。播放清單需要
+    youtube / youtube.force-ssl scope;只有 youtube.upload 的舊 token 會 403,
+    重跑 ``pmb auth-youtube`` 取得含 youtube scope 的新 token 即可。
+    """
+    if settings is None or not settings.youtube_refresh_token:
+        raise RuntimeError("缺少 YouTube OAuth 憑證(youtube_client_id/secret/refresh_token)")
+    from google.oauth2.credentials import Credentials
+    from googleapiclient.discovery import build
+
+    creds = Credentials(
+        token=None,
+        refresh_token=settings.youtube_refresh_token,
+        client_id=settings.youtube_client_id,
+        client_secret=settings.youtube_client_secret,
+        token_uri="https://oauth2.googleapis.com/token",
+        scopes=None,
+    )
+    return build("youtube", "v3", credentials=creds)
+
+
+def list_playlist_video_ids(youtube, playlist_id: str) -> set[str]:
+    """列出播放清單內現有的所有 video_id(分頁),供補加時去重。"""
+    ids: set[str] = set()
+    page_token = None
+    while True:
+        resp = (
+            youtube.playlistItems()
+            .list(part="contentDetails", playlistId=playlist_id, maxResults=50,
+                  pageToken=page_token)
+            .execute()
+        )
+        for item in resp.get("items", []):
+            vid = item.get("contentDetails", {}).get("videoId")
+            if vid:
+                ids.add(vid)
+        page_token = resp.get("nextPageToken")
+        if not page_token:
+            return ids
+
+
+def add_videos_to_playlist(video_ids: list[str], playlist_id: str, settings) -> dict:
+    """把多支影片補加進播放清單,已在清單內的自動跳過(去重,避免重複項)。
+
+    回傳 {added: [...], skipped: [...], failed: [(id, err), ...]}。需 youtube scope。
+    """
+    youtube = _build_youtube(settings)
+    result: dict = {"added": [], "skipped": [], "failed": []}
+    try:
+        existing = list_playlist_video_ids(youtube, playlist_id)
+    except Exception as exc:  # noqa: BLE001 — 常見是 scope 不足(403);全數標記失敗、清楚回報
+        logger.warning("讀取播放清單失敗:{}", str(exc)[:200])
+        result["failed"] = [(vid, str(exc)[:200]) for vid in video_ids]
+        return result
+    for vid in video_ids:
+        if vid in existing:
+            result["skipped"].append(vid)
+            continue
+        try:
+            youtube.playlistItems().insert(
+                part="snippet",
+                body={
+                    "snippet": {
+                        "playlistId": playlist_id,
+                        "resourceId": {"kind": "youtube#video", "videoId": vid},
+                    }
+                },
+            ).execute()
+            result["added"].append(vid)
+            existing.add(vid)
+            logger.info("已加入播放清單:{}", vid)
+        except Exception as exc:  # noqa: BLE001 — 單支失敗不擋其餘
+            result["failed"].append((vid, str(exc)[:200]))
+            logger.warning("加入播放清單失敗 {}:{}", vid, str(exc)[:200])
+    return result
+
+
 def _do_upload(
     video_path: Path,
     title: str,
@@ -150,25 +229,9 @@ def _do_upload(
 
     回傳 {id, channel_id, channel_title, playlist_added} —— 含上傳到哪個頻道,供確認目的地。
     """
-    if settings is None or not settings.youtube_refresh_token:
-        raise RuntimeError("缺少 YouTube OAuth 憑證(youtube_client_id/secret/refresh_token)")
-
-    from google.oauth2.credentials import Credentials
-    from googleapiclient.discovery import build
     from googleapiclient.http import MediaFileUpload
 
-    creds = Credentials(
-        token=None,
-        refresh_token=settings.youtube_refresh_token,
-        client_id=settings.youtube_client_id,
-        client_secret=settings.youtube_client_secret,
-        token_uri="https://oauth2.googleapis.com/token",
-        # 不指定 scopes:refresh 後拿到「當初授權時同意的全部 scope」。
-        # 舊 token 只授權 youtube.upload 也能上傳;播放清單需要重跑 pmb auth-youtube
-        # 取得含 youtube scope 的新 token。
-        scopes=None,
-    )
-    youtube = build("youtube", "v3", credentials=creds)
+    youtube = _build_youtube(settings)
     snippet = {
         "title": title,
         "description": description,
