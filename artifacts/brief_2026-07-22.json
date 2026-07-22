@@ -1,0 +1,141 @@
+{
+  "date": "2026-07-22",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7509.2,
+      "overnight_pct": -0.21,
+      "drivers": [
+        "昨天(週二)標普大漲0.89%收7509點,是這波中東緊張情勢升溫以來最兇的一天反彈,晶片股與羅素兩千同步發威",
+        "今早ES期貨轉跌0.21%,荷莫茲海峽一艘油輪真的被擊中、布蘭特油價彈回90美元以上,把昨天的樂觀往回收了一點"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 25837.21,
+      "overnight_pct": -0.46,
+      "drivers": [
+        "那斯達克昨天飆1.29%收25837點,四大指數中漲最兇,英特爾單日暴衝8.4%領軍晶片股行情",
+        "今早NQ期貨跌0.46%領跌四大期貨,Alphabet、特斯拉今晚盤後就要交財報,盤前買盤明顯轉趨保守"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 52224.64,
+      "overnight_pct": -0.08,
+      "drivers": [
+        "道瓊昨天漲0.74%收52225點,反彈幅度是四大指數中最溫和的一個",
+        "今早YM期貨跌0.08%,幾乎持平,IBM今晚要交出完整版財報,這條線的變數還沒攤開"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 2987.4,
+      "overnight_pct": -0.24,
+      "drivers": [
+        "羅素兩千昨天大衝1.53%收2987點,是四大指數中反彈最猛的一個",
+        "今早RTY期貨跌0.24%,中小型股對油價、利率的敏感度,這幾天會被反覆考驗"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普已實現波動小幅回升到10.8%,波動目標模型算出來的合理槓桿降到約1.39倍——這套模型只看得到過去的抖動,看不到一艘油輪在荷莫茲海峽被打中這種一夜變盤的風險。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克波動仍卡在18.9%附近,合理倍數只剩0.8倍;硬開三倍,一年吃掉的複利耗損逼近16%,而今晚就是Alphabet、特斯拉的財報夜,波動隨時可能跳級。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊波動最低、合理倍數四大指數最高,但油價這種宏觀衝擊不會挑成分股放過誰,槓桿放大的是整條路徑,不是只有平均那個數字。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千波動約11.3%,合理倍數約1.33倍;中小型股一旦同時遇上油價與利率上衝,槓桿部位承受的擺盪通常比大型股更劇烈。"
+    }
+  ],
+  "regime": {
+    "vol": "normal",
+    "rates": "rising",
+    "stock_bond_corr": "neutral",
+    "breadth": "broad"
+  },
+  "items": [
+    {
+      "headline": "荷莫茲海峽真的挨一砲,紅海封鎖也不再只是喊話",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "美軍週一晚間對伊朗發動第十一個晚上的空襲同時,一艘油輪在荷莫茲海峽遭伊朗攻擊,船員被迫棄船;與此同時,葉門青年運動(胡塞)對沙烏地阿拉伯的紅海封鎖已經從宣示變成事實——包括一艘中國籍超大型油輪在內,已有船隻在紅海南端調頭放棄航行。斡旋方提出的十天停火提案截至目前仍卡在原地,川普與伊朗都還沒點頭,美方官員甚至已經把選項簡化成兩條路:接受十天停火,或是與以色列發動大規模聯合軍事行動逼伊朗屈服。布蘭特油價因此一夜彈回90美元以上。對一般人:這輪衝突第一次從「威脅」變成「真的打中船」,油價這幾天很可能因單一戰報就大幅擺盪,別把任何一天的漲跌當成定局。",
+      "sources": [
+        {"url": "https://www.cnbc.com/2026/07/21/us-iran-war-trump-hormuz-houthis.html", "ts": null},
+        {"url": "https://en.wikipedia.org/wiki/2026_Strait_of_Hormuz_crisis", "ts": null},
+        {"url": "https://www.washingtonpost.com/world/2026/07/21/ships-bound-saudi-arabia-turn-around-sign-new-red-sea-blockade/", "ts": null},
+        {"url": "https://www.bloomberg.com/news/articles/2026-07-20/yemen-s-houthis-vow-to-impose-maritime-blockade-on-saudi-arabia", "ts": null}
+      ]
+    },
+    {
+      "headline": "今晚Alphabet、特斯拉、IBM三顆財報同時引爆",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "今晚(週三)盤後,Alphabet與特斯拉公布第二季財報,同一時間IBM也要交出完整版Q2報告——IBM兩週前才因為主機Z系列與交易處理軟體業務出現缺口,單日暴跌超過兩成五、創下近四十年最慘的一天,目前正被多家證券律師事務所調查是否涉及誤導投資人。今晚的完整報告,市場想確認的是傷口有沒有止血,還是缺口比預告的更深。Alphabet與特斯拉股價昨天雙雙小跌,顯示市場在財報前已轉趨謹慎。對一般人:三份財報疊在同一晚公布,任何一份不如預期,都可能讓今晚之後的盤勢明顯轉向。",
+      "sources": [
+        {"url": "https://www.ibm.com/investor/events/earnings-2q26", "ts": null},
+        {"url": "https://www.businesswire.com/news/home/20260714157680/en/IBM-Breaking-Stock-Drop-IBM-Stock-Plummets-over-25-after-Shortfall-Announced-Triggering-Securities-Fraud-Investigation-by-BFA-Law", "ts": null},
+        {"url": "https://finance.yahoo.com/markets/live/stock-market-today-wednesday-july-22-dow-sp-500-nasdaq-alphabet-tesla-083644887.html", "ts": null}
+      ]
+    },
+    {
+      "headline": "英特爾財報前先噴8.4%,三個消息一次到齊",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "英特爾昨天股價大漲8.4%,一次到齊三個利多:Xeon 6700P記憶體頻寬升級、擴大與Google雲端的AI合作、18A晶圓代工製程拿下一家主要雲端業者的量產大單(良率已達85%,僅次於台積電)。HSBC並將目標價上調至200美元,認為英特爾該被當成完整的AI基礎設施平台估值。市場已經提前把分數打得很高,明天(週四)登場的財報等於是驗收這波漲勢。對一般人:股價提前反應好消息,代表財報只要有一點不如預期,回檔的力道也可能放大。",
+      "sources": [
+        {"url": "https://www.interactivecrypto.com/intel-s-8-6-surge-sets-stage-for-critical-q2-earnings-and-ai-collaboration-breakthrough-jul-2026", "ts": null},
+        {"url": "https://www.tradingkey.com/analysis/stocks/us-stocks/262045233-intel-intc-stock-surged-8-percent-july-22-2026-xeon-google-earnings-tradingkey", "ts": null}
+      ]
+    },
+    {
+      "headline": "Fed隱含升息機率續走高,10年期殖利率衝上4.63%",
+      "horizon": "LT",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "10年期公債殖利率指數再度走高至4.628%,聯準會噤聲期(7/18–7/30)持續中,本週沒有官員公開發言可供驗證。市場隱含的升息機率同步上修:9月升息機率約六成二、12月隱含政策利率來到4.015%,較稍早的定價又略微上調。聯準會主席華許稍早在Sintra公開表態「物價還是太高」,達拉斯Fed總裁羅根也曾公開喊出應該溫和升息,兩人的鷹派立場仍是背景音。對一般人:利率這條地心引力沒有反轉,只是暫時被中東與財報這兩個更吵的話題蓋過去而已。",
+      "sources": [
+        {"url": "https://www.chase.com/personal/investments/learning-and-insights/article/kevin-warsh-prices-are-too-high-what-to-expect-july-2026-federal-reserve-meeting", "ts": null},
+        {"url": "https://goldsilver.com/industry-news/goldsilver-news/gold-price-fomc-minutes-july-2026/", "ts": null}
+      ]
+    },
+    {
+      "headline": "昨天反彈廣度明顯回升,不再只靠幾檔權值股扛盤",
+      "horizon": "ST",
+      "vs_thesis": "challenges",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "昨天個股上漲比例回升到約六成四,站上五十日均線的比例同步達六成四,比前一天僅約二成七的窄幅上漲明顯改善;蘋果對指數貢獻最大,晶片股集體發威,但美光逆勢重挫,谷歌雙類股票也雙雙小跌,顯示這次的反彈參與者變多,但重量級個股內部仍有分歧。對一般人:廣度變寬是健康的訊號,但別忘了這只是一天的數據,今晚的財報結果隨時可能讓這批扛盤的股票重新洗牌。",
+      "sources": []
+    }
+  ],
+  "catalysts": [
+    "今晚(週三)盤後:Alphabet、特斯拉、IBM同時公布第二季財報,IBM是兩週前財測重挫後的完整版驗收",
+    "07/23(週四):英特爾公布第二季財報,接續三顆財報後的第四棒",
+    "荷莫茲海峽油輪遇襲後續、美伊十天停火提案是否被接受,以及紅海/曼德海峽封鎖對航運的實際衝擊",
+    "布蘭特原油站上90美元關口,任何戰事或斡旋消息都可能觸發盤中大幅波動",
+    "07/28–29 FOMC會議倒數,官員仍處噤聲期,本週沒有Fed官員公開談話"
+  ],
+  "thesis_delta": {
+    "changed": true,
+    "summary": "今天地緣風險線出現實質升級:美軍對伊朗空襲已連續第十一晚,一艘油輪在荷莫茲海峽遭攻擊,葉門青年運動對沙烏地阿拉伯的紅海封鎖也從宣示變成事實(已有油輪真的調頭),十天停火提案仍未被雙方接受,美方官員甚至把選項簡化成停火或全面軍事行動。與此同時,原訂週四的IBM財報經確認實為今晚(週三)與Alphabet、特斯拉同場公布,IBM兩週前的財測重挫與證券詐欺調查讓這場財報格外有看頭;英特爾則在財報前一天暴衝8.4%,把市場預期推得更高。Fed路徑維持鷹派,隱含升息機率續走高。基準方向不變,但『地緣風險溢價』與『本週AI巨頭財報驗收』這兩條線都比昨天更緊繃。",
+    "horizon": "MT"
+  },
+  "lead_horizon": "ST",
+  "title_hook": "荷莫茲海峽這次真的被打中一艘油輪"
+}
