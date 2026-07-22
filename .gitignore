@@ -13,6 +13,8 @@ venv/
 # Secrets / local config
 .env
 .env.local
+client_secret*.json
+*oauth*client*.json
 
 # Runtime artifacts (每日產出,不入庫)
 artifacts/
