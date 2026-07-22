@@ -46,14 +46,16 @@ def test_validate_reports_missing_and_invalid_artifacts(tmp_path):
     assert any("schema" in e for e in errors)
 
 
-def test_invoke_headless_passes_model_flag():
-    # research_claude_model 應轉成 claude -p 的 --model(避免綁死在會用罄的預設模型)
+def test_invoke_headless_passes_model_flag_and_token_env():
+    # model → --model;oauth_token → 子行程 CLAUDE_CODE_OAUTH_TOKEN
+    # (launchd 淨環境沒互動登入,長效 token 才不會像 7/22 那樣 session 過期斷線)
     import subprocess
 
     captured = {}
 
     def fake_run(cmd, **kwargs):
         captured["cmd"] = cmd
+        captured["env"] = kwargs.get("env") or {}
         return subprocess.CompletedProcess(cmd, 0, stdout="done", stderr="")
 
     import pmb.research.local_runner as lr
@@ -61,11 +63,13 @@ def test_invoke_headless_passes_model_flag():
     orig = lr.subprocess.run
     lr.subprocess.run = fake_run
     try:
-        lr.invoke_headless_claude("prompt", Path("/repo"), model="claude-sonnet-5")
+        lr.invoke_headless_claude(
+            "prompt", Path("/repo"), model="claude-sonnet-5", oauth_token="tok-abc"
+        )
     finally:
         lr.subprocess.run = orig
-    assert "--model" in captured["cmd"]
-    assert "claude-sonnet-5" in captured["cmd"]
+    assert "--model" in captured["cmd"] and "claude-sonnet-5" in captured["cmd"]
+    assert captured["env"].get("CLAUDE_CODE_OAUTH_TOKEN") == "tok-abc"
 
 
 def test_run_local_research_succeeds_when_agent_writes_valid_files(tmp_path):

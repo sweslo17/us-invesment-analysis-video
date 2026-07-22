@@ -45,6 +45,10 @@ class Settings(BaseSettings):
     # 無人值守;要更高品質可設 claude-opus-4-8。空字串 = 用 claude CLI 預設(注意預設
     # Fable 5 額度較易用罄,滿了 headless 研究會直接失敗)
     research_claude_model: str = "claude-sonnet-5"
+    # headless 研究的長效認證 token(claude setup-token 產生)。launchd 那條乾淨 shell
+    # 沒有互動登入,一般 OAuth session 會過期斷線;有這個 token 就穩(注入 claude -p 子行程
+    # 的 CLAUDE_CODE_OAUTH_TOKEN)。密鑰只放 .env、勿入庫。
+    claude_code_oauth_token: str | None = None
 
     # 路徑
     artifacts_dir: Path = Path("artifacts")
