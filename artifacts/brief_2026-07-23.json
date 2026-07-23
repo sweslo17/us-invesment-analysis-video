@@ -1,0 +1,143 @@
+{
+  "date": "2026-07-23",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7498.96,
+      "overnight_pct": -0.47,
+      "drivers": [
+        "昨天(週三)標普小跌0.14%收7498點,那斯達克跌0.57%最重,道瓊幾乎打平,羅素兩千跌0.92%領跌——盤中大型科技股其實逆勢走高,市場在等Alphabet、特斯拉、IBM盤後交卷",
+        "今早ES期貨跌0.47%,三巨頭財報一次出爐:Alphabet資本支出嚇壞市場、特斯拉營收年減12%創十年最慘、IBM二度下修展望,VIX一夜跳升9.4%到18.27"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 25690.90,
+      "overnight_pct": -0.69,
+      "drivers": [
+        "那斯達克昨天跌0.57%收25690點,是四大指數中跌最兇的,反映市場在財報前已轉趨保守",
+        "今早NQ期貨跌0.69%領跌四大期貨,Alphabet盤後跌約4-5%、特斯拉跌3%,今晚英特爾財報選擇權押注15%波動"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 52218.58,
+      "overnight_pct": -0.54,
+      "drivers": [
+        "道瓊昨天幾乎持平,收52218點,是四大指數中最抗跌的一個",
+        "今早YM期貨跌0.54%,IBM二度下修全年營收展望、股價重挫超過5%,拖累工業成分股情緒"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 2959.94,
+      "overnight_pct": -0.49,
+      "drivers": [
+        "羅素兩千昨天跌0.92%收2959點,是四大指數中跌最重的,對利率與油價最敏感",
+        "今早RTY期貨跌0.49%,10年期殖利率升破4.65%、布蘭特油價衝上98美元,雙重壓力持續籠罩中小型股"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普已實現波動降到9.3%,波動目標模型算出的合理槓桿回升到約1.61倍——但這套模型只看得到過去的抖動,看不到魯比歐一句『伊朗還沒準備好』能讓油價一夜噴出4%的風險。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克波動仍卡在17.2%附近,合理倍數只剩0.87倍;硬開三倍,一年吃掉的複利耗損超過13%,而今晚英特爾就是下一個波動觸發點。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊波動最低、合理倍數四大指數最高,但IBM這種個股利空一樣會把整條路徑往下拖,槓桿放大的是路徑不是平均數。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千波動約11.3%,合理倍數約1.33倍;中小型股同時扛著利率與油價兩座山,槓桿部位的擺盪通常比大型股更劇烈。"
+    }
+  ],
+  "regime": {
+    "vol": "normal",
+    "rates": "rising",
+    "stock_bond_corr": "neutral",
+    "breadth": "mixed"
+  },
+  "items": [
+    {
+      "headline": "三巨頭財報兩憂一喜,Alphabet資本支出嚇壞市場",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "Alphabet第二季營收年增24%到1198億美元、雲端營收暴增82%到248億美元,但管理層把2026年資本支出上修到1950-2050億美元、單季砸下創紀錄的449億美元,自由現金流轉負59億美元,股價盤後重挫約4-5%;特斯拉調整後每股獲利只剩0.33美元、遠低於預期的0.51美元,營收年減12%是十年來最慘的一次,股價跌3%;IBM把全年營收成長展望從5%下修到4%-5%,股價重挫超過5%到267.12美元。三檔股票在昨天正式收盤前其實都逆勢走高,顯示市場先前是在賭財報,結果賭錯了方向。對一般人:財報季最經典的『買預期、賣事實』又上演一次,漲多的股票遇到一點不如預期,回檔力道通常比想像中兇。",
+      "sources": [
+        {"url": "https://www.cnbc.com/2026/07/22/google-earnings-q2-goog-live-updates.html", "ts": null},
+        {"url": "https://seekingalpha.com/news/4617114-alphabet-signals-195b-205b-2026-capex-while-expanding-third-party-capacity-as-a-bridge", "ts": null},
+        {"url": "https://www.cnbc.com/2026/07/22/stocks-making-the-biggest-moves-after-hours-googl-tsla-ibm-lvs.html", "ts": null}
+      ]
+    },
+    {
+      "headline": "紅海再添兩艘油輪遇襲,魯比歐:伊朗還沒準備好談",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "葉門青年運動(胡塞)今天宣稱攻擊兩艘沙烏地油輪(Layla、Encelia),沙國官方證實其中一艘遭擊中起火、船員均安;美軍對伊朗的空襲同步進入第十二個晚上。美國國務卿魯比歐直言伊朗『還沒準備好談一個他們願意遵守的協議』,等於間接宣告十天停火提案卡死;川普則放話,荷莫茲海峽的油輪若再遭攻擊,美方將直接打擊伊朗的基礎設施。布蘭特原油因此再彈升4.6%來到98.44美元,創五月底以來新高。對一般人:這場衝突已經從『單點攻擊』擴散到『多點攻擊+基礎設施威脅』,油價這幾天很可能因單一戰報就大幅擺盪,別把任何一天的漲跌當成定局。",
+      "sources": [
+        {"url": "https://www.cnbc.com/2026/07/23/iran-war-us-trump-houthis-red-sea-oil.html", "ts": null},
+        {"url": "https://www.cnbc.com/2026/07/23/oil-prices-today-wti-brent-trump-iran-hormuz.html", "ts": null},
+        {"url": "https://www.forbes.com/sites/siladityaray/2026/07/23/oil-nears-100-per-barrel-again-as-iran-backed-houthis-target-red-sea-shipping/", "ts": null}
+      ]
+    },
+    {
+      "headline": "英特爾今晚壓軸交卷,選擇權押注15%波動",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "英特爾今晚(週四)盤後公布第二季財報,市場預期營收約144億美元、每股獲利約0.21-0.22美元。股價今年以來已大漲超過160%,昨天(7/22)還在為財報前的樂觀氣氛加溫,選擇權市場押注財報後波動幅度高達15%,超過過去平均的12.4%。今晚交卷的還有多家藍籌股。對一般人:股價提前反應好消息,代表財報只要有一點不如預期,回檔的力道也可能放大——這已經是本週第二次上演同樣的劇本。",
+      "sources": [
+        {"url": "https://www.tradingkey.com/analysis/stocks/us-stocks/262041092-intel-intc-q2-2026-earnings-preview-july-23-163-percent-ytd-tradingkey", "ts": null},
+        {"url": "https://seekingalpha.com/news/4616607-intel-q2-2026-earnings-preview", "ts": null}
+      ]
+    },
+    {
+      "headline": "同一份資本支出,亞股讀成利多、美股讀成利空",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "南韓KOSPI今天暴漲4.4%衝上7096點,SK海力士、三星電子同步走高,市場把Alphabet加碼資本支出解讀成AI晶片與HBM需求還在加速;日經漲0.63%、台股漲0.32%、香港漲1.28%同步走高。但同一份資本支出數字,昨晚讓Alphabet自己的股價在美股盤後跌了4-5%,華爾街擔心的是燒錢速度追不上獲利兌現。歐股則因油價走高而普遍走弱,德國DAX跌0.87%、歐洲STOXX50跌1.1%。對一般人:同一則消息,站在供應鏈上游(晶片代工/記憶體)和站在買單的巨頭(雲端資本支出者)角度,解讀可以完全相反,別急著把單一市場的反應當成『市場的答案』。",
+      "sources": [
+        {"url": "https://sundayguardianlive.com/business/korea-stock-market-krx-today-july-23-why-is-the-korean-stock-market-up-today-kospi-soars-372-kosdaq-jumps-nearly-4-as-chip-stocks-lead-rally-top-gainers-losers-244071/", "ts": null},
+        {"url": "https://www.tradingkey.com/analysis/stocks/more/262049146-ai-investment-boom-lifts-japan-south-korea-markets-kospi-tradingkey", "ts": null}
+      ]
+    },
+    {
+      "headline": "初領失業金降至今年新低,強勁勞動數據反替升息添籌碼",
+      "horizon": "LT",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "single-print",
+      "audience_value": "今天稍早公布的初領失業金人數降至187,000,是今年以來最低的一週,顯示勞動市場依然相當有韌性。10年期公債殖利率同步升至4.657%,聯準會噤聲期(7/18-7/30)持續中,但市場隱含的升息機率已從約六成二上修到七成二,12月隱含政策利率來到4.075%。對一般人:通常大家會覺得『就業數據好』是好事,但在鷹派Fed眼中,勞動市場太強反而是『還不用降息、甚至該升息』的理由——好消息在升息環境下不見得都是好消息。",
+      "sources": [
+        {"url": "https://qz.com/us-initial-jobless-claims-187000-lowest-2026-072326", "ts": null}
+      ]
+    }
+  ],
+  "catalysts": [
+    "今晚(週四)盤後:英特爾公布第二季財報,選擇權市場押注財報後波動達15%,是本輪AI巨頭財報週最後一棒",
+    "紅海/荷莫茲海峽情勢持續延燒:胡塞武裝今天宣稱攻擊兩艘沙烏地油輪(Layla、Encelia),美軍對伊朗空襲進入第十二個晚上,川普警告油輪再遇襲就直接打擊伊朗基礎設施",
+    "布蘭特原油衝上98.44美元、創五月底以來新高,任何戰報都可能觸發盤中大幅波動",
+    "今天稍早公布的初領失業金人數降至187,000、創今年新低,強勁勞動數據可能支撐Fed鷹派立場",
+    "07/28-29 FOMC會議倒數,官員仍處噤聲期,本週沒有官員公開談話",
+    "今天另有一批藍籌股陸續公布財報,持續驗證企業獲利韌性"
+  ],
+  "thesis_delta": {
+    "changed": true,
+    "summary": "今天有兩條線同時升溫:一是AI巨頭財報總驗收出爐——Alphabet雲端強但資本支出與自由現金流嚇壞市場、特斯拉營收創十年最大減幅、IBM二度下修展望,只剩英特爾今晚待驗,『窄且不穩』的診斷從『擔心』變成『數字坐實』;二是地緣風險再升級——美軍空襲進入第十二個晚上,胡塞武裝攻擊擴大到兩艘沙烏地油輪,魯比歐直言伊朗『還沒準備好談』,川普放話油輪再出事就打伊朗基礎設施,布蘭特油價噴上98.44美元創五月底以來新高。Fed鷹派路徑同步走高(9月升息機率上修到七成二),初領失業金降至今年新低,勞動市場韌性反而替升息添了理由。基準方向不變,但AI財報與地緣風險這兩條線都比昨天更緊繃、也更具體。",
+    "horizon": "MT"
+  },
+  "lead_horizon": "ST",
+  "title_hook": "英特爾今晚財報,選擇權押注15%波動"
+}
