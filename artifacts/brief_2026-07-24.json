@@ -1,0 +1,160 @@
+{
+  "date": "2026-07-24",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7408.3,
+      "overnight_pct": 0.26,
+      "drivers": [
+        "昨天(週四)標普重摔1.21%收7408點,特斯拉暴跌14%創一年最慘、Alphabet資本支出疑慮延燒到第二天再跌7%,加上布蘭特原油一度衝破100美元,四大指數全面收黑",
+        "今早ES期貨轉漲0.26%,英特爾財報單季營收成長25%創15年最快、每股獲利直接翻倍超標激勵情緒;但川普稱對伊朗『史上最大攻擊』只差一步,加上新一輪對60國關稅今晨生效,漲勢並不篤定"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 25137.69,
+      "overnight_pct": 0.49,
+      "drivers": [
+        "那斯達克昨天是四大指數中跌最兇的,重摔2.15%收25137點——特斯拉重挫14%、Alphabet再跌7%,兩檔科技巨頭聯手把指數往下拖",
+        "今早NQ期貨漲0.49%領漲四大期貨,英特爾財報後盤前跳漲逾4%帶動晶片股情緒;那斯達克波動仍是四大指數中最高的"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 51711.65,
+      "overnight_pct": 0.35,
+      "drivers": [
+        "道瓊昨天跌0.97%收51711點,是四大指數中相對抗跌的一個,但仍難逃全面收黑的賣壓",
+        "今早YM期貨漲0.35%,英特爾利多外溢帶動工業成分股情緒,但新關稅上路增添企業成本疑慮"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 2940.16,
+      "overnight_pct": 0.56,
+      "drivers": [
+        "羅素兩千昨天跌0.67%收2940點,是四大指數中跌最少的,但10年期殖利率續升至4.70%持續壓抑中小型股",
+        "今早RTY期貨漲0.56%領漲四大期貨,但升息押注升溫、關稅新增成本,對利率與貿易都敏感的中小型股仍是雙重考驗"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普已實現波動降到10.4%,波動目標模型算出的合理槓桿回升到約1.44倍——但這套模型只看得到過去的抖動,看不到川普一句『史上最大攻擊』能讓油價瞬間噴出的風險。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克波動仍卡在18.8%附近,是四大指數中最高的,合理倍數只剩0.80倍;硬開三倍,一年吃掉的複利耗損逼近16%,而它正是昨天跌最兇的指數。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊波動最低、合理倍數四大指數最高來到1.70倍,但關稅與地緣消息一樣會把整條路徑往下拖,槓桿放大的是路徑,不是平均數。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千波動約11.4%,合理倍數約1.32倍;中小型股同時扛著升息、關稅、油價三座山,槓桿部位的擺盪通常比大型股更劇烈。"
+    }
+  ],
+  "regime": {
+    "vol": "normal",
+    "rates": "rising",
+    "stock_bond_corr": "neutral",
+    "breadth": "narrow"
+  },
+  "items": [
+    {
+      "headline": "美股週四重摔,特斯拉創一年最慘單日下跌14%",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "標普500昨天重摔1.21%收7408點,那斯達克跌最兇來到2.15%收25137點,道瓊跌0.97%,羅素兩千跌0.67%。特斯拉盤中重挫14%,是它一年來最慘的一天,馬斯克身家蒸發約180億美元——調整後每股獲利只剩0.33美元,遠低於市場預期的0.53美元,營業利益重摔57%、營業利益率只剩1.4%;Alphabet資本支出疑慮延燒到第二天,再跌7%。布蘭特原油同步衝破100美元大關,是這波漲勢以來首次站上這個關卡。對一般人:漲多的股票只要故事出現一絲裂縫,跌起來比想像中快很多,昨天特斯拉跟Alphabet就是活教材。",
+      "sources": [
+        {"url": "https://finance.yahoo.com/markets/stocks/articles/stock-market-today-july-23-211916310.html", "ts": null},
+        {"url": "https://www.forbes.com/sites/tylerroush/2026/07/23/teslas-worst-day-in-a-year-cuts-elon-musks-net-worth-by-18-billion/", "ts": null},
+        {"url": "https://www.thestreet.com/stock-market-today/stock-market-today-dow-jones-sp-500-nasdaq-updates-july-23-2026", "ts": null}
+      ]
+    },
+    {
+      "headline": "英特爾財報單季成長25%創15年最快,盤前跳漲逾4%",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "英特爾昨天盤後公布財報:營收161億美元,遠超市場預期的144.2億美元,年增25%是15年來最快的一季;每股獲利0.42美元,是市場預期0.21美元的兩倍。資料中心與AI相關營收暴增59%到63億美元。股價盤後一度大漲逾12%,今早盤前續漲逾4%。GAAP帳上雖然虧損110億美元,但那是CHIPS Act相關股權一次性、非現金的重估損失125億美元,不是本業變差。對一般人:同一個科技業,前一晚Alphabet、特斯拉才讓市場嚇一跳,英特爾馬上示範另一種可能——半導體實際需求跟巨頭資本支出焦慮,是兩件可以分開看的事。",
+      "sources": [
+        {"url": "https://www.shacknews.com/article/150133/intel-intc-q2-2026-earnings-results", "ts": null},
+        {"url": "https://www.tradingkey.com/analysis/stocks/us-stocks/262050823-intel-earnings-report-q2-2026-intc-ai-data-center-intel-foundry-tradingkey", "ts": null},
+        {"url": "https://finance.yahoo.com/markets/stocks/articles/intel-q2-2026-earnings-revenue-205531105.html", "ts": null}
+      ]
+    },
+    {
+      "headline": "川普稱對伊朗『史上最大攻擊』只差一步",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "developing",
+      "audience_value": "川普接受Axios訪問時說,他已經在考慮對伊朗發動『史上最大攻擊,比以往任何一次都大』,直言『我們已經準備好了』,但兩位美國官員證實目前還沒有下令、也沒有新的軍事指示。與此同時,葉門青年運動(胡塞)昨天再度攻擊兩艘沙烏地油輪,揚言封鎖曼德海峽;美軍對伊朗的空襲已經進入第十二個晚上。布蘭特原油昨天因此衝破100美元大關,今天早盤已略回落約2%到99美元下方。對一般人:這是『說了但還沒做』的階段,油價這幾天很可能因單一發言就大幅擺盪,還不是既成事實,但風險是實打實在往上堆。",
+      "sources": [
+        {"url": "https://www.axios.com/2026/07/23/trump-axios-iran-interview", "ts": null},
+        {"url": "https://www.forbes.com/sites/saradorn/2026/07/23/trump-considering-iran-attack-bigger-than-ever-before/", "ts": null},
+        {"url": "https://www.cnbc.com/2026/07/23/iran-war-us-trump-houthis-red-sea-oil.html", "ts": null}
+      ]
+    },
+    {
+      "headline": "川普對60國開徵新關稅,今晨零時生效",
+      "horizon": "MT",
+      "vs_thesis": "new",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "美國政府對60個貿易夥伴課徵10%到12.5%的新關稅,今天美東時間凌晨12點01分正式生效,理由是這些國家未能落實強迫勞動產品的進口禁令。加拿大、墨西哥、印度、英國等被課10%,澳洲、巴西、中國、日本等被課12.5%,受影響的商品占美國進口總額99.4%。這是為了填補國會沒有續簽、原訂今天到期的10%全面關稅缺口,依據1974年貿易法301條執行。對一般人:關稅是會轉嫁到物價上的成本,7月28到29日FOMC會議前,這則消息等於在通膨的天平上又加了一塊砝碼。",
+      "sources": [
+        {"url": "https://www.nbcnews.com/business/economy/trump-tariffs-60-countries-forced-labor-rcna588972", "ts": null},
+        {"url": "https://www.washingtontimes.com/news/2026/jul/23/trump-slaps-new-tariffs-60-trading-partners-backfilling-blanket/", "ts": null}
+      ]
+    },
+    {
+      "headline": "南韓KOSPI一夜崩5.7%,熔斷本月已觸發23次",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "南韓KOSPI今天重挫5.72%收6690點,較6月高點已回落近30%;三星電子跌7.59%、SK海力士跌8.34%,現代汽車、起亞更因財報不如預期各跌7.18%、12.88%。交易所在盤中觸發賣出方熔斷機制(sidecar)——這是自5月27日以來的第23次,外資單日賣超約3.3兆韓元。日經跌2.56%、台股跌2.28%、香港恆生跌0.98%、上海跌1.63%,亞股全面收黑;反觀歐股卻普遍走高,STOXX50漲0.77%、德國DAX漲0.89%、英國富時漲0.22%。對一般人:同一個油價、關稅、AI疑慮的背景下,亞股跟歐股給出完全不同的答案,別把單一區域的反應當成『市場的共識』。",
+      "sources": [
+        {"url": "https://finance.yahoo.com/markets/world-indices/articles/kospi-drops-below-8-000-010100412.html", "ts": null},
+        {"url": "https://www.koreajoongangdaily.com/business/kospi-plummets-nearly-6-amid-escalating-middle-east-tensions/12790620", "ts": null},
+        {"url": "https://en.sedaily.com/finance/2026/07/24/kospi-plunges-triggering-sell-sidecar-as-samsung-sk-hynix", "ts": null},
+        {"url": "https://tribtown.com/2026/07/24/shares-skid-in-asia-in-sell-off-of-ai-related-shares-as-brent-oil-tops-100-per-barrel/", "ts": null}
+      ]
+    },
+    {
+      "headline": "新關稅添變數,升息路徑鷹派不變",
+      "horizon": "LT",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "developing",
+      "audience_value": "聯準會噤聲期(7/18–7/30)持續中,7月28到29日FOMC會議前本週沒有官員公開發言,但市場定價已經把7月會議的升息機率打到約三成二,9月更高達七成四。10年期公債殖利率指數續升到4.703%,是連續走高。今天生效的新一輪關稅,可能在未來幾個月讓進口成本再往上推一點,等於是在鷹派立場上再添一個理由。對一般人:如果你原本期待今年會降息,這幾天發生的每一件事——強勁的就業數據、油價飆升、現在再加上關稅——都在把降息的時間表往後推,而不是往前拉。",
+      "sources": [
+        {"url": "https://cryptobriefing.com/fed-blackout-period-fomc-meeting-july-2026/", "ts": null},
+        {"url": "https://www.forbes.com/sites/simonmoore/2026/07/23/markets-see-chance-fed-hikes-next-week-at-july-meeting/", "ts": null}
+      ]
+    }
+  ],
+  "catalysts": [
+    "美股盤中(9:45 ET):S&P Global 7月製造業、服務業、綜合PMI初值公布,市場預期綜合指數放緩到51.9",
+    "今天稍晚:6月新屋銷售數據公布,市場關注房市在高利率下是否持續降溫",
+    "今天盤後陸續公布財報:美國運通(市場預期每股獲利4.40美元)、威訊通訊(市場預期每股獲利1.27美元)、NextEra Energy等",
+    "川普稱對伊朗『史上最大攻擊』只差一步,任何實際軍事行動都可能讓油價瞬間跳升",
+    "紅海/荷莫茲海峽情勢持續延燒,胡塞武裝揚言封鎖曼德海峽,任何新一輪攻擊都可能推升油價",
+    "60國新關稅今晨生效,後續是否有貿易夥伴報復或協商是觀察重點",
+    "07/28–29 FOMC會議倒數,官員仍處噤聲期,本週沒有公開談話"
+  ],
+  "thesis_delta": {
+    "changed": true,
+    "summary": "今天有三條線同時推進:一是AI/半導體的『窄且不穩』出現分歧驗證——英特爾財報單季成長25%創15年最快、資料中心與AI營收暴增59%,盤前跳漲逾4%,跟前一晚Alphabet資本支出疑慮延燒、特斯拉創一年最慘單日(-14%)形成強烈對比,顯示半導體實際需求與巨頭資本支出焦慮正在分道揚鑣;二是地緣風險再升級——川普向Axios表示已『準備好』對伊朗發動『史上最大攻擊』,雖官員證實尚未下令,但布蘭特原油已一度衝破100美元大關;三是川普對60國開徵10%-12.5%新關稅今晨生效,覆蓋99.4%美國進口,為原本已經偏鷹的升息路徑再添一個通膨理由(9月升息機率達七成四)。基準方向不變,但AI敘事出現內部分化、地緣風險與貿易政策同時疊加,不確定性比昨天更高更具體。",
+    "horizon": "MT"
+  },
+  "lead_horizon": "ST",
+  "title_hook": "川普:對伊朗『史上最大攻擊』只差一步"
+}
