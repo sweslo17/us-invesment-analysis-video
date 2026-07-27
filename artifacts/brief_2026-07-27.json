@@ -1,0 +1,145 @@
+{
+  "date": "2026-07-27",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7411.98,
+      "overnight_pct": 0.18,
+      "drivers": [
+        "上週五標普小漲0.05%收7411點,幾乎打平——Alphabet的資本支出疑慮繼續壓著那斯達克,道瓊靠價值型與工業股撐盤,四大指數收得不齊心。",
+        "美伊週末喊停開打、油價一夜崩逾8%,ES期貨今早漲0.18%,地緣風險溢價暫時被油價的消息蓋掉。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 24975.82,
+      "overnight_pct": 0.21,
+      "drivers": [
+        "上週五那斯達克是四大指數中唯一收黑的,跌0.64%收24975點,晶片股跟Alphabet的資本支出焦慮繼續壓著大盤。",
+        "今早NQ期貨漲0.21%,油價崩跌加上美光等記憶體股回神撐住情緒,但本週三微軟、Meta財報才是真正的考驗。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 51947.25,
+      "overnight_pct": 0.51,
+      "drivers": [
+        "上週五道瓊漲0.46%收51947點,是四大指數中表現最好的,價值型與工業股撐住了盤面。",
+        "今早YM期貨漲0.51%領漲四大期貨,油價崩跌對道瓊成分股的成本壓力減輕最明顯。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 2930.00,
+      "overnight_pct": 0.28,
+      "drivers": [
+        "上週五羅素兩千跌0.35%收2930點,是四大指數中表現最差的一個,升息押注跟利率敏感度持續壓著中小型股。",
+        "今早RTY期貨漲0.28%,油價回落多少緩解了中小型股的成本壓力,但本週Fed決議才是真正的變數。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普已實現波動降到10.4%,波動目標模型算出的合理槓桿回到約1.44倍——但這是回頭看的數字,量不到週三Fed決議或財報週可能帶來的新波動。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克波動仍是四大最高、來到18.9%,合理倍數只剩0.80倍;硬開三倍,一年要吃掉超過16%的複利,而它正是上週五唯一收黑的指數。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊波動最低、合理倍數四大最高來到1.67倍,但油價、關稅、Fed任何一個消息一樣會把整條路徑往下拖,槓桿放大的是路徑不是平均數。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千波動約11%,合理倍數約1.36倍;中小型股同時扛著升息押注跟利率敏感度,槓桿部位的擺盪通常比大型股更劇烈。"
+    }
+  ],
+  "regime": {
+    "vol": "normal",
+    "rates": "rising",
+    "stock_bond_corr": "neutral",
+    "breadth": "broad"
+  },
+  "items": [
+    {
+      "headline": "美伊週末喊停開打,油價一夜崩逾8%",
+      "horizon": "ST",
+      "vs_thesis": "challenges",
+      "materiality": 5,
+      "confidence": "developing",
+      "audience_value": "地緣風險溢價幾乎一夜之間從油價裡被抽掉——川普週五起下令暫停對伊朗的攻擊,打破連續13個晚上的空襲,雙方在阿曼調解下談荷莫茲海峽通行限制,布蘭特原油應聲從破百重摔到90美元附近。如果你這幾天看的是「戰爭升級」的敘事,今天要更新;但過去五個月這場戰爭已經破過至少一次停火,現在喊停還不等於結束。",
+      "sources": [
+        {"url": "https://www.axios.com/2026/07/25/trump-iran-war-military-directive-strikes", "ts": null},
+        {"url": "https://www.cnn.com/2026/07/26/world/live-news/iran-war-trump", "ts": null},
+        {"url": "https://fortune.com/2026/07/26/us-iran-deal-talks-vessel-transit-strait-of-hormuz-restrictions-ships/", "ts": null},
+        {"url": "https://www.rigzone.com/news/brent_wti_oil_prices_both_down_over_5_percent-27-jul-2026-184218-article/", "ts": null}
+      ]
+    },
+    {
+      "headline": "本週撞上Fed利率決議與四大科技巨頭財報",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "聯準會週三(7/29)下午公布利率決議,微軟、Meta週三盤後、蘋果與亞馬遜週四盤後接力交卷,週四早盤還有第二季GDP初值——四件大事全擠在同一週。任何一件超預期或不如預期,都可能讓這幾天靠油價撐起來的漲勢反轉。",
+      "sources": [
+        {"url": "https://www.tradingkey.com/analysis/stocks/us-stocks/262054300-weekly-preview-fed-apple-microsoft-meta-amazon-earnings-reports-tradingkey", "ts": null},
+        {"url": "https://www.cmelitegroup.com/knowledge-hub/fomc-meeting-fed-decision-day/", "ts": null},
+        {"url": "https://www.financecalendar.com/us-gdp-report/", "ts": null}
+      ]
+    },
+    {
+      "headline": "Alphabet資本支出上修到2050億美元,自由現金流上市以來首次轉負",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "AI基礎建設的燒錢速度,已經燒到讓Alphabet的自由現金流由正轉負,這正是這週微軟、Meta、亞馬遜要接受的同一張考卷。半導體實際需求(美光、輝達)跟巨頭資本支出焦慮的分歧沒有消失,只是被這兩天的油價消息暫時蓋過去。",
+      "sources": [
+        {"url": "https://fortune.com/2026/07/26/big-tech-earnings-meta-microsoft-apple-amazon-market-revolt-ai-spending/", "ts": null},
+        {"url": "https://www.fool.com/coverage/stock-market-today/2026/07/24/stock-market-today-july-24-intel-reverses-gains-on-foundry-and-ai-spending-concerns/", "ts": null}
+      ]
+    },
+    {
+      "headline": "南韓KOSPI收復週四重挫,亞股歐股同步反彈",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "上週四那根熔斷23次、重挫5.72%的黑K,今天KOSPI漲0.97%修正回來,南韓對美AI合作的消息也帶動情緒;亞股歐股跟著油價消息全面收紅。短期恐慌不代表結構性轉向,但單日反彈也不代表問題已經解決。",
+      "sources": [
+        {"url": "https://www.tradingkey.com/analysis/stocks/more/262054581-japan-south-korea-kospi-jumps-naver-tradingkey", "ts": null},
+        {"url": "https://www.wsls.com/business/2026/07/27/oil-prices-sink-4-while-asian-shares-gain-as-chinese-chipmaker-cxmt-soars-in-shanghai-trading-debut/", "ts": null}
+      ]
+    },
+    {
+      "headline": "60國新關稅遭盟友公開反彈,尚未有具體報復",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "developing",
+      "audience_value": "加拿大、歐盟、中國、日本、澳洲都公開批評川普的「強迫勞動」關稅理由「完全不合理」,但目前都停在言語層級。真正會影響通膨與企業成本的,是後續是否真的升級成報復性關稅。",
+      "sources": [
+        {"url": "https://www.npr.org/2026/07/24/nx-s1-5906301/us-global-trump-tariffs-reaction", "ts": null},
+        {"url": "https://www.cnbc.com/2026/07/27/donald-trump-tariffs-trade-war-iran.html", "ts": null}
+      ]
+    }
+  ],
+  "catalysts": [
+    "週三(7/29)下午2點(ET):FOMC利率決議公布,2點半有記者會;市場目前隱含這次升息機率約三成四",
+    "週三(7/29)盤後:微軟、Meta公布財報,市場關注雲端成長與資本支出指引",
+    "週四(7/30)盤後:蘋果、亞馬遜公布財報",
+    "週四(7/30)上午8:30(ET):第二季GDP初值公布",
+    "美伊在阿曼調解下談荷莫茲海峽通行限制,自週五起已連續兩天沒有新的攻擊報告,但過去五個月已至少一次停火破局,能否延續是本週觀察重點",
+    "川普對60國新關稅遭加拿大、歐盟、中國、日本、澳洲等公開反彈,目前多屬言語譴責,尚未有具體報復措施"
+  ],
+  "thesis_delta": {
+    "changed": true,
+    "summary": "地緣風險線出現重要轉折:川普週五起下令暫停對伊朗攻擊,打破連續13個晚上的空襲,美伊在阿曼調解下談荷莫茲海峽通行限制,布蘭特原油一夜崩逾8%從破百回落到90美元附近,VIX跟10年期殖利率同步降溫——這跟上次brief『準備好史上最大攻擊』的方向完全相反。但這場戰爭自2月底開打以來已經破過至少一次停火(4月8日兩週停火數小時內就被違反),這次喊停的耐久度仍待驗證,標記developing而非結案。同時,本週正式撞上決定性的一週:週三FOMC利率決議、週三微軟與Meta財報、週四蘋果與亞馬遜財報、週四GDP初值全部擠在一起,是檢驗『Fed是否真的偏鷹』與『AI敘事窄且不穩』兩條基準支柱的關鍵時刻。基準方向(higher-for-longer、AI窄幅領漲、地緣溢價)暫不改變,但地緣風險線從『升級』轉為『暫歇待驗』,且本週是最重要的驗證窗口。",
+    "horizon": "MT"
+  },
+  "lead_horizon": "ST",
+  "title_hook": "美伊喊停、油價一夜崩8%,這週輪到Fed跟四大科技巨頭交卷"
+}
