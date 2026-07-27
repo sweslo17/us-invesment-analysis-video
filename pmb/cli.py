@@ -25,6 +25,7 @@ from pmb.orchestrator import build_review_manifest, review_summary
 from pmb.publish.report import render_report
 from pmb.publish.youtube import build_youtube_metadata, upload_video
 from pmb.research.dedup import load_previous_brief
+from pmb.research.local_runner import SHORTS_CAP_SEC
 from pmb.research.runner import build_research_prompt, make_anthropic_caller, research_once
 from pmb.research.sample import sample_brief_json
 from pmb.research.script_builder import build_script_from_brief
@@ -587,11 +588,23 @@ def _cmd_auto_inner(args: argparse.Namespace) -> int:
         autopilot.notify("PMB 自動流程失敗", f"{target} 上傳失敗,見 autopilot.log。")
         return rc
 
+    # 成片長度:超過 Shorts 上限要在通知裡講明(否則只有 log 有,無人值守等於沒說)
+    over_note = ""
+    video_path = settings.artifacts_dir / f"video_{target}.mp4"
+    if video_path.exists():
+        try:
+            length = probe_duration(video_path)
+            if length > SHORTS_CAP_SEC:
+                over_note = f" ⚠️ 片長 {length:.0f}s 超過 {SHORTS_CAP_SEC:.0f}s,非 Shorts"
+                print(f"⚠️ 成片 {length:.0f}s 超過 Shorts 上限,發布前請斟酌(講稿字數過多)。")
+        except Exception as exc:  # noqa: BLE001 — 量長度失敗不該影響已完成的流程
+            logger.warning("量成片長度失敗:{}", exc)
+
     vid = autopilot.already_published(settings.artifacts_dir, target)
     if vid:
         autopilot.notify(
             "PMB 影片已上傳(private)",
-            f"{target} 完成,到 Studio 看片改公開:{autopilot.studio_url(vid)}",
+            f"{target} 完成,到 Studio 看片改公開:{autopilot.studio_url(vid)}{over_note}",
         )
         print(f"🎬 最後一步:{autopilot.studio_url(vid)} → 改『公開』")
     else:

@@ -27,6 +27,11 @@ from pmb.schemas.snapshot import Snapshot
 InvokeFn = Callable[[str], None]
 
 _HEADLESS_TIMEOUT_MIN = 35.0
+# 成片長度 ≈ 總字數 × SEC_PER_CHAR(實測:0.168–0.171,取 0.17)。Shorts 上限 180s,
+# 留餘裕取 1000 字(≈170s)為硬上限;prompt 給的目標是 850–930 字。
+SEC_PER_CHAR = 0.17
+SHORTS_CAP_SEC = 180.0
+MAX_VO_CHARS = 1000
 # 研究只需要:搜尋 + 讀寫 repo 檔案 + 跑 schema 驗證;不給其他 Bash
 _ALLOWED_TOOLS = [
     "WebSearch",
@@ -73,23 +78,55 @@ def invoke_headless_claude(
     logger.info("headless claude 完成:…{}", tail)
 
 
-def validate_research_artifacts(artifacts_dir: Path, target: dt.date) -> list[str]:
-    """驗證研究產物,回傳錯誤清單(空 = 通過):brief/script 過 schema、report 非空。"""
+def validate_research_artifacts(
+    artifacts_dir: Path, target: dt.date, *, include_budget: bool = True
+) -> list[str]:
+    """驗證研究產物,回傳錯誤清單(空 = 通過)。
+
+    檢查:brief/script 過 schema、report 非空、**講稿字數在預算內**(超標會讓成片
+    超過 Shorts 上限,必須在配音前擋下並讓 agent 重寫)。
+
+    ``include_budget=False`` 只回「硬錯」(缺檔/schema 壞),用來區分「不能出片」與
+    「字數超標但仍可出片(只是失去 Shorts 資格)」。
+    """
     errors: list[str] = []
     brief_path = artifacts_dir / f"brief_{target}.json"
     script_path = artifacts_dir / f"script_{target}.json"
     report_path = artifacts_dir / f"report_{target}.md"
+    script: Script | None = None
     for path, model in ((brief_path, Brief), (script_path, Script)):
         if not path.exists():
             errors.append(f"缺 {path.name}")
             continue
         try:
-            model.model_validate_json(path.read_text(encoding="utf-8"))
+            parsed = model.model_validate_json(path.read_text(encoding="utf-8"))
+            if model is Script:
+                script = parsed
         except (ValidationError, ValueError) as exc:
             errors.append(f"{path.name} 未過 schema:{str(exc)[:600]}")
+    if script is not None and include_budget:
+        errors.extend(check_vo_budget(script))
     if not report_path.exists() or len(report_path.read_text(encoding="utf-8")) < 200:
         errors.append(f"缺 {report_path.name} 或內容過短")
     return errors
+
+
+def check_vo_budget(script: Script) -> list[str]:
+    """檢查講稿總字數是否會讓成片超過 Shorts 上限;超標回傳可據以重寫的錯誤訊息。
+
+    成片長度 ≈ 總字數 × ``SEC_PER_CHAR``(實測校準:866字→145s、916→156、908→155、
+    1203→197,穩定在 0.17 秒/字)。字數是配音前唯一可控的槓桿,故在此強制。
+    """
+    total = sum(len(seg.vo) for seg in script.segments)
+    if total <= MAX_VO_CHARS:
+        return []
+    est = total * SEC_PER_CHAR
+    return [
+        f"講稿字數超標:{total} 字(上限 {MAX_VO_CHARS} 字),預估成片 {est:.0f} 秒 "
+        f"會超過 YouTube Shorts 的 {SHORTS_CAP_SEC:.0f} 秒上限、失去 Shorts 資格。"
+        f"請砍到 {MAX_VO_CHARS} 字以內(目標 850–930):刪掉次要段落或把每段講得更精簡,"
+        f"不要只是刪句尾;保留貫穿主軸與數字精準度。"
+    ]
 
 
 def run_local_research(
@@ -142,4 +179,18 @@ def run_local_research(
         logger.warning(
             "本機研究第 {}/{} 次驗證失敗:{}", attempt, max_attempts, "; ".join(last_errors)
         )
+
+    # 重試用盡:若只剩「字數超標」這類軟錯(產物本身合法),寧可出非 Shorts 的長片,
+    # 也不要整天沒影片;硬錯(缺檔/schema 壞)才真的放棄。
+    hard_errors = validate_research_artifacts(
+        settings.artifacts_dir, target, include_budget=False
+    )
+    if not hard_errors:
+        logger.warning(
+            "字數仍超標但產物合法,以「超長片」繼續({})——成片會超過 {:.0f}s、"
+            "失去 Shorts 資格,發布前請自行斟酌",
+            target,
+            SHORTS_CAP_SEC,
+        )
+        return True
     return False

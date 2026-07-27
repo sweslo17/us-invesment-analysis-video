@@ -38,6 +38,31 @@ def _write_valid_artifacts(arts: Path) -> None:
     (arts / f"report_{_D}.md").write_text("# 報告\n" + "內容 " * 200, encoding="utf-8")
 
 
+def test_validate_rejects_over_budget_vo_before_tts(tmp_path):
+    """字數超標必須在配音前被擋下(否則成片超 180s、失去 Shorts 資格)。
+
+    2026-07-27 實例:研究寫了 1203 字 → 成片 197s。字數預算只寫在 prompt 裡、
+    LLM 偶爾會超,必須由驗證強制執行(失敗訊息帶實際字數,重試才修得動)。
+    """
+    _write_valid_artifacts(tmp_path)
+    script = json.loads((tmp_path / f"script_{_D}.json").read_text())
+    # 塞一段超長 vo(約 1200 字),模擬 7/27 的情況
+    script["segments"][0]["vo"] = "這是一句很長的旁白內容需要控制字數。" * 67
+    (tmp_path / f"script_{_D}.json").write_text(json.dumps(script), encoding="utf-8")
+
+    errors = validate_research_artifacts(tmp_path, _D)
+    assert any("字數" in e for e in errors), f"應擋下超標字數,實際錯誤:{errors}"
+    # 錯誤訊息要含實際字數與上限,agent 重試時才知道要砍多少
+    msg = next(e for e in errors if "字數" in e)
+    assert "1206" in msg or "120" in msg
+    assert "上限" in msg
+
+
+def test_validate_passes_within_budget(tmp_path):
+    _write_valid_artifacts(tmp_path)  # 正常長度的講稿
+    assert validate_research_artifacts(tmp_path, _D) == []
+
+
 def test_validate_reports_missing_and_invalid_artifacts(tmp_path):
     errors = validate_research_artifacts(tmp_path, _D)
     assert len(errors) == 3  # brief/script/report 全缺
@@ -83,6 +108,38 @@ def test_run_local_research_succeeds_when_agent_writes_valid_files(tmp_path):
     assert run_local_research(_D, settings, invoke=fake_invoke) is True
     assert len(calls) == 1
     assert "快照" in calls[0] and "artifacts/brief_" in calls[0]  # files 模式 prompt
+
+
+def test_over_budget_retries_then_ships_anyway_rather_than_losing_the_day(tmp_path):
+    """字數超標要重試砍字;但重試用盡仍超標時,寧可出「非 Shorts 的長片」也不要整天沒影片。
+
+    schema 壞掉是硬錯(不能出片);字數超標是軟錯(片還是可用,只是失去 Shorts 紅利)。
+    """
+    settings = _settings(tmp_path)
+    calls: list[str] = []
+
+    def always_too_long(prompt: str) -> None:
+        calls.append(prompt)
+        _write_valid_artifacts(settings.artifacts_dir)
+        script = json.loads((settings.artifacts_dir / f"script_{_D}.json").read_text())
+        script["segments"][0]["vo"] = "很長的旁白內容需要控制字數哦。" * 90  # ~1350 字
+        (settings.artifacts_dir / f"script_{_D}.json").write_text(
+            json.dumps(script), encoding="utf-8"
+        )
+
+    ok = run_local_research(_D, settings, invoke=always_too_long, max_attempts=2)
+    assert ok is True  # 仍出片(降級),不是整天失敗
+    assert len(calls) == 2  # 但確實重試過、試圖砍字
+    assert "字數超標" in calls[1]  # 重試 prompt 帶了砍字指示
+
+
+def test_hard_errors_still_fail_after_retries(tmp_path):
+    settings = _settings(tmp_path)
+
+    def broken_schema(prompt: str) -> None:
+        (settings.artifacts_dir / f"brief_{_D}.json").write_text("{broken")
+
+    assert run_local_research(_D, settings, invoke=broken_schema, max_attempts=2) is False
 
 
 def test_run_local_research_retries_with_error_feedback_then_succeeds(tmp_path):
