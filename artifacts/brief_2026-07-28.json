@@ -1,0 +1,148 @@
+{
+  "date": "2026-07-28",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7413.18,
+      "overnight_pct": 0.03,
+      "drivers": [
+        "上週一(7/27)標普幾乎打平,只漲0.02%收7413點,那斯達克反而是四大指數中唯一收黑的,道瓊跟羅素兩千比較扛得住。",
+        "今天盤前ES期貨只漲0.03%,幾乎按兵不動——真正的變數在半導體那邊,不在標普本身。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 24932.08,
+      "overnight_pct": -0.52,
+      "drivers": [
+        "上週一那斯達克跌0.18%收24932點,是四大指數中唯一收黑的,科技股本來就偏弱。",
+        "今天NQ期貨跟著亞股熔斷式重挫翻黑,一度跌破1%、收跌0.52%,中國微影機量產的消息直接把半導體股砸出這波跌勢。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 52210.08,
+      "overnight_pct": 0.57,
+      "drivers": [
+        "上週一道瓊漲0.51%收52210點,是四大指數中表現最好的一個,價值型與工業股撐住盤面。",
+        "今天YM期貨續漲0.57%領漲四大期貨,半導體占比低,讓道瓊暫時躲過這波由亞股引來的賣壓。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 2948.04,
+      "overnight_pct": 0.02,
+      "drivers": [
+        "上週一羅素兩千漲0.62%收2948點,是四大指數中表現最好的之一,中小型股罕見地扛住了。",
+        "今天RTY期貨幾乎打平只漲0.02%,亞股的半導體賣壓還沒真正燒到中小型股這邊。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普已實現波動10.4%,波動目標模型算出的合理槓桿還是約1.44倍——這個數字是回頭看的,量不到今天亞股半導體熔斷帶來的新波動。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克波動仍是四大最高、來到18.9%,合理倍數只剩0.80倍;硬開三倍一年要吃掉超過16%的複利,而它正是今天被半導體賣壓砸最重的指數。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊波動最低、合理倍數四大最高來到1.64倍,但這只代表過去的路徑平穩,晶片股這種集中風險一樣可能哪天輪到它。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千波動約11.3%,合理倍數約1.32倍;中小型股對半導體的直接曝險不高,但升息與利率敏感度仍是它自己的隱憂。"
+    }
+  ],
+  "regime": {
+    "vol": "normal",
+    "rates": "rising",
+    "stock_bond_corr": "neutral",
+    "breadth": "broad"
+  },
+  "items": [
+    {
+      "headline": "中國自產微影機量產,全球半導體應聲重摔",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "中國國產深紫外光(DUV)微影機開始量產出貨,首批交給中芯、華虹、記憶體廠CXMT,ASML股價應聲跌逾6%,拖累應用材料、科林研發、KLA跟著下滑。消息半夜燒到亞洲,南韓KOSPI早盤重挫觸發熔斷、暫停交易20分鐘,三星、SK海力士雙雙重挫,日經、台灣加權也跟著跌逾4%。對一般投資人:美國的晶片出口管制本來是想拖慢中國,但這次的消息讓市場開始問——管制會不會反而逼出一個更快自立的競爭對手,AI供應鏈的護城河沒有想像中深。",
+      "sources": [
+        {"url": "https://www.bloomberg.com/news/articles/2026-07-27/asml-slides-after-report-of-china-beginning-duv-tool-production"},
+        {"url": "https://www.tradingkey.com/analysis/stocks/more/262057311-kospi-drops-trigger-circuit-samsung-sk-hynix-tumble-tradingkey"},
+        {"url": "https://www.koreajoongangdaily.com/business/chipled-selloff-sends-kospi-below-6300-triggers-circuit-breaker/12795090"},
+        {"url": "https://www.cnbc.com/2026/07/28/sk-hynix-plunges-semiconductor-selloff-deepens-samsung-softbank.html"},
+        {"url": "https://www.benzinga.com/markets/tech/26/07/60715404/china-chip-fears-nvidia-sk-hynix-micron-memory-stocks-etfs"}
+      ]
+    },
+    {
+      "headline": "輝達再談七千五百億美元AI大單,循環融資疑慮重燃",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "developing",
+      "audience_value": "輝達傳出還要跟SK集團等客戶談超過七千五百億美元的新一輪AI基礎建設合作,其中包含可能出資最高2500億美元幫OpenAI租用運算能力。投資人擔心的是同一套錢在輝達、客戶、雲端商之間繞來繞去——輝達出資讓客戶買輝達的晶片,營收看起來變大,但錢的來源其實還是輝達自己。對一般投資人:這不代表AI需求是假的,但代表財報上「營收成長」跟「真實現金流」中間,可能存在一段值得多問一句的距離。",
+      "sources": [
+        {"url": "https://www.bloomberg.com/news/articles/2026-07-27/nvidia-s-750-billion-deals-revive-fear-of-ai-circular-financing"},
+        {"url": "https://finance.yahoo.com/technology/ai/articles/nvidia-750-billion-deals-revive-102003935.html"}
+      ]
+    },
+    {
+      "headline": "道瓊期貨續漲、那斯達克期貨翻黑,半導體是分水嶺",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "上週一(7/27)美股本來就收得不齊心,今天盤前這個分裂更明顯:道瓊期貨續漲0.57%,那斯達克期貨卻跟著亞股翻黑、一度跌破1%。對一般投資人:同一個「大盤」底下,道瓊跟那斯達克現在是兩個完全不同的故事——半導體曝險的高低,直接決定了誰扛得住這波賣壓。",
+      "sources": [
+        {"url": "https://finance.yahoo.com/markets/live/stock-market-today-tuesday-july-28-dow-sp-500-nasdaq-082832371.html"},
+        {"url": "https://www.investing.com/news/economy-news/nasdaq-futures-drop-on-ai-chip-worries-ahead-of-pivotal-earnings-4815749"}
+      ]
+    },
+    {
+      "headline": "FOMC今天開會,市場押注多數不動、九月機率仍七成",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "聯準會兩天利率會議今天正式召開,明天下午兩點公布決議、兩點半記者會。經濟學家多數預期這次維持3.50–3.75%不動,市場目前隱含這次升息機率約三成四,九月維持在七成高檔。主席華許一貫不給前瞻指引,對一般投資人:真正該聽的不是升不升息本身,而是華許怎麼權衡油價驟降跟晶片股崩跌這兩個相反方向的訊號。",
+      "sources": [
+        {"url": "https://www.cnbc.com/2026/07/28/warsh-fed-rate-decision-trump-powell-analysis.html"},
+        {"url": "https://www.kiplinger.com/investing/live/fed-meeting-updates-and-commentary-july-2026"}
+      ]
+    },
+    {
+      "headline": "美伊停火撐到第三天,但伊朗喊不談、荷莫茲仍卡關",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "developing",
+      "audience_value": "美伊停火進入第三天,油價延續上週五的重摔,布蘭特原油週一再跌到85.87美元(單日跌幅11.3%,創4月來最大);但伊朗表態目前不打算跟美國談判,荷莫茲海峽的商船通行量仍遠低於平常的十分之一。對一般投資人:地緣風險沒有解除,只是暫時換了個地方喘息,這條線還是要繼續盯。",
+      "sources": [
+        {"url": "https://www.cnn.com/2026/07/27/world/live-news/iran-war-trump"},
+        {"url": "https://en.wikipedia.org/wiki/2026_Strait_of_Hormuz_crisis"}
+      ]
+    }
+  ],
+  "catalysts": [
+    "今天(週二)9:00(ET):S&P/Case-Shiller 5月房價指數,預期年增3.2%(前值3.4%)",
+    "今天(週二)10:00(ET):7月消費者信心指數,預期100.5(前值100.4);同時間里奇蒙聯邦準備銀行製造業指數公布",
+    "今天:FOMC兩天利率會議第一天召開,無決議公布",
+    "明天(7/29週三)下午2點(ET):FOMC利率決議公布,2:30記者會由主席華許主持;市場目前隱含這次升息機率約三成四",
+    "週三(7/29)盤後:微軟、Meta公布財報",
+    "週四(7/30)盤後:蘋果、亞馬遜公布財報",
+    "週四(7/30)上午8:30(ET):第二季GDP初值公布",
+    "中國國產DUV微影機開始量產出貨,首批交給中芯、華虹、CXMT,是半導體自主進度的後續觀察點",
+    "美伊停火進入第三天,伊朗表態暫不尋求談判,荷莫茲海峽船運量仍遠低於正常水準,能否延續是本週觀察重點"
+  ],
+  "thesis_delta": {
+    "changed": true,
+    "summary": "『AI敘事窄且不穩』這條基準支柱今天出現本季最直接的一次驗證:中國國產DUV微影機正式量產出貨,首批交付中芯、華虹、CXMT,ASML股價應聲跌逾6%,消息半夜燒到亞洲,南韓KOSPI早盤重挫觸發熔斷、暫停交易20分鐘,三星、SK海力士雙雙重挫,日經、台灣加權跟著跌逾4%,那斯達克期貨隨之翻黑,道瓊期貨則因半導體占比低續漲——同一個大盤底下,兩個指數現在是兩個故事。同時輝達傳出還要談超過7500億美元的新一輪AI基建合作,循環融資疑慮重新被點名。地緣風險線持穩但未解除:美伊停火撐到第三天,但伊朗表態暫不尋求談判,荷莫茲海峽船運量仍遠低於正常水準,油價延續重摔。基準方向(higher-for-longer、AI窄幅領漲、地緣溢價)不變,但AI/半導體這條支柱的脆弱度被更直接地驗證了一次。",
+    "horizon": "MT"
+  },
+  "lead_horizon": "ST",
+  "title_hook": "中國一台機器,砸崩全球半導體"
+}

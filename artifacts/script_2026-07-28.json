@@ -1,0 +1,96 @@
+{
+  "segments": [
+    {
+      "headline": "一台機器,砸崩半導體",
+      "tag": "2026-07-28 · 盤前快報",
+      "vo": "中國自己造的曝光機開始量產,全球半導體股應聲重摔。這輪跌勢,才剛開始。",
+      "t_start": 0.0,
+      "duration": 6.0
+    },
+    {
+      "chart_id": "global_now",
+      "title": "亞股熔斷式重挫",
+      "vo": "南韓KOSPI早盤重挫超過一成,觸發熔斷、暫停交易20分鐘,三星跌近一成、SK海力士跌破一成;日經跌近4%,東京電子、愛德萬跟著重挫;台灣加權跌近5%,台積電同步回檔。導火線是中國國產微影機開始量產出貨,中芯、華虹、CXMT率先拿貨,消息也讓ASML股價跌逾6%——這是中國晶片自主化的一步,也讓市場開始問,美國的出口管制是不是反而催出了對手。",
+      "t_start": 6.0,
+      "duration": 29.2
+    },
+    {
+      "headline": "熔斷",
+      "tag": "名詞小教室",
+      "vo": "股市跌到某個幅度,交易所會強制暫停交易幾分鐘讓大家冷靜,這就是熔斷。",
+      "t_start": 35.2,
+      "duration": 5.8
+    },
+    {
+      "chart_id": "close_now",
+      "title": "道瓊扛得住,那指扛不住",
+      "vo": "上週一美股收得不齊心:道瓊漲0.51%最抗跌,羅素兩千漲0.62%,標普幾乎打平,那斯達克跌0.18%。今天盤前這個分裂更明顯,道瓊期貨續漲0.57%,那斯達克期貨卻跟著亞股翻黑,一度跌破1%,收在跌0.52%——半導體才是這次真正的震央。",
+      "t_start": 41.0,
+      "duration": 20.4
+    },
+    {
+      "headline": "輝達左手借右手收",
+      "vo": "輝達這次還要砸七千五百億美元投資客戶,讓客戶回頭買輝達的晶片——這種生意,像不像自己借錢給自己收帳?",
+      "t_start": 61.4,
+      "duration": 8.5
+    },
+    {
+      "chart_id": "fed_now",
+      "title": "FOMC今天開會,答案明天見",
+      "vo": "聯準會兩天會議今天正式開始,政策利率目前落在3.50%到3.75%之間,主席華許不愛給前瞻指引。市場隱含這次升息機率約三成四,九月仍在七成高檔。明天下午兩點公布決議,兩點半記者會,他怎麼談油價驟降跟晶片股崩跌,才是真正的重點。",
+      "t_start": 69.9,
+      "duration": 19.2
+    },
+    {
+      "chart_id": "cat_now",
+      "title": "這週還有什麼要看",
+      "vo": "今天還有房價指數跟七月消費者信心;明天Fed利率決議;週三微軟、Meta盤後交卷;週四輪到蘋果、亞馬遜,還有第二季GDP初值。任何一場都可能決定這週股市的最終劇本。",
+      "t_start": 89.1,
+      "duration": 13.9
+    },
+    {
+      "chart_id": "vix_now",
+      "title": "VIX沒跟著慌",
+      "vo": "VIX今天只小漲到19,還在正常區間,跟亞股熔斷的規模完全不成比例。VIX量的是美股選擇權的緊張程度,看不到韓股跌一成是什麼感覺——這種落差,才是真正該提防的地方。",
+      "t_start": 103.0,
+      "duration": 13.9
+    },
+    {
+      "headline": "拉遠一點看",
+      "vo": "美伊停火撐到第三天,但伊朗說暫時不談,荷莫茲海峽的船隻還是少得可憐,地緣風險沒解除,只是換了個地方喘息。真正被驗證得最狠的,是AI敘事窄且不穩這條線——半導體是這波多頭的地基,今天地基自己晃了一下。",
+      "t_start": 116.9,
+      "duration": 16.8
+    },
+    {
+      "headline": "故事再動聽\n晶片要賣得出去",
+      "tag": "彼得·林區  不知道有沒有說過",
+      "vo": "故事講得再動聽,晶片還是要真的賣得出去才算數。這禮拜不管開多大槓桿,先想清楚自己扛得住哪種意外——以上非投資建議,我們明天見。",
+      "t_start": 133.7,
+      "duration": 10.7
+    }
+  ],
+  "charts": [
+    { "id": "global_now", "module": "global_equity_overnight", "params": {} },
+    { "id": "close_now", "module": "overnight_vs_close", "params": {} },
+    { "id": "fed_now", "module": "fed_path", "params": {} },
+    {
+      "id": "cat_now",
+      "module": "catalyst_timeline",
+      "params": {
+        "events": [
+          {"date": "今天9:00(ET)", "label": "5月房價指數", "highlight": false},
+          {"date": "今天10:00(ET)", "label": "7月消費者信心", "highlight": false},
+          {"date": "明天下午2點(ET)", "label": "FOMC利率決議", "highlight": true},
+          {"date": "明天2:30(ET)", "label": "Fed記者會·華許", "highlight": true},
+          {"date": "週三盤後", "label": "微軟、Meta財報", "highlight": true},
+          {"date": "週四盤後", "label": "蘋果、亞馬遜財報", "highlight": true},
+          {"date": "週四8:30(ET)", "label": "第二季GDP初值", "highlight": false}
+        ]
+      }
+    },
+    { "id": "vix_now", "module": "vix_regime", "params": {} }
+  ],
+  "coverage_gaps": [
+    "缺一張『海外個股領跌榜』圖(如三星、SK海力士、Kioxia、ASML 當日跌幅排行)——目前用 global_equity_overnight 只能顯示指數層級,顯示不出這波賣壓集中在哪些個股,用 concentration 模組硬湊也不對(它綁的是美股指數成分股權重,不是海外個股),暫時用 global_equity_overnight 頂著。"
+  ]
+}
