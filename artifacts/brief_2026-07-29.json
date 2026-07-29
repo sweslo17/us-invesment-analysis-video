@@ -1,0 +1,148 @@
+{
+  "date": "2026-07-29",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7428.78,
+      "overnight_pct": 0.42,
+      "drivers": [
+        "上一交易日(7/28)標普守住多頭,漲0.21%收7428點,價值型與防禦類股撐盤,抵銷了半導體賣壓對科技股的拖累。",
+        "今天期貨續漲0.42%,美股暫時把南韓史上第一次連兩天熔斷跟伊朗飛彈這兩件事都當背景噪音,焦點全在Fed跟今晚財報上。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 24876.91,
+      "overnight_pct": 0.92,
+      "drivers": [
+        "上一交易日那斯達克收跌0.22%,是四大指數中唯一收黑的,半導體股持續承壓。",
+        "今天NQ期貨罕見不跟跌、反漲0.92%,跟南韓史上第一次連兩天熔斷的規模完全不成比例,顯示美股投資人暫時選擇忽略亞股警報。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 52747.32,
+      "overnight_pct": -0.10,
+      "drivers": [
+        "上一交易日道瓊大漲1.03%收52747點,是四大指數中表現最亮眼的一個,半導體占比低讓它躲過賣壓。",
+        "今天YM期貨小跌0.10%,主要是寶僑財報營收不如預期、明年展望保守拖累。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 2953.80,
+      "overnight_pct": 0.57,
+      "drivers": [
+        "上一交易日羅素兩千漲0.20%,中小型股表現持穩。",
+        "今天RTY期貨續漲0.57%,中小型股對半導體的直接曝險低,暫時沒被亞股賣壓燒到。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普已實現波動降到9.5%,波動目標模型算出的合理槓桿回升到約1.57倍——但這是回頭看的數字,量不到飛彈、熔斷、Fed同一天發生會怎麼影響明天的波動。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克波動仍是四大最高、來到17.1%,合理倍數只剩0.88倍;開三倍一年要吃掉超過13%的複利,而它正是這波AI/半導體敘事最脆弱的地方。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊波動最低,合理倍數四大最高來到1.56倍,但這只代表過去一年走得平穩,不代表它對地緣風險或Fed意外沒有曝險。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千波動約11.4%,合理倍數約1.32倍;中小型股對半導體直接曝險不高,但升息路徑若真的往上走,對它的融資成本影響反而更直接。"
+    }
+  ],
+  "regime": {
+    "vol": "normal",
+    "rates": "rising",
+    "stock_bond_corr": "neutral",
+    "breadth": "broad"
+  },
+  "items": [
+    {
+      "headline": "美伊停火一夕生變,伊朗飛彈遭攔截、原油應聲大漲",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "美伊停火只撐了三天,伊朗革命衛隊今天凌晨對美軍基地發射多枚彈道飛彈,全數遭攔截,美國隨即與沙烏地阿拉伯聯手打擊伊拉克境內的親伊朗民兵據點。原本連跌三天、重摔近一成六的布蘭特原油應聲反彈站回87美元附近。對一般投資人:地緣風險溢價沒有真的消失,它只是在等一個藉口捲土重來,油價這種劇烈來回本身就是最誠實的溫度計。",
+      "sources": [
+        { "url": "https://www.cnn.com/2026/07/28/world/live-news/iran-trump-news", "ts": null },
+        { "url": "https://www.washingtonpost.com/business/2026/07/28/iran-war-us-trump-saudi-houthis-iraq/cfe51480-8ace-11f1-8912-d71e69d679d7_story.html", "ts": null },
+        { "url": "https://www.bloomberg.com/news/articles/2026-07-28/latest-oil-market-news-and-analysis-for-july-29", "ts": null },
+        { "url": "https://www.cnbc.com/2026/07/29/oil-prices-today-brent-wti-iran-us-hormuz.html", "ts": null }
+      ]
+    },
+    {
+      "headline": "南韓股市史上首次連兩天熔斷,SK海力士獲利創高卻不夠看",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "KOSPI今天再度重挫近6%,寫下史上第一次連續兩個交易日觸發熔斷的紀錄,交易一度暫停20分鐘。導火線是SK海力士:單季獲利年增超過五倍、創歷史新高,股價卻不漲反跌,市場擔心的是AI記憶體超級週期是不是已經漲過頭。對一般投資人:一家公司交出史上最好的成績單、股價還是被賣,代表市場真正在意的是這個位置還有沒有更好的空間——這種被墊得極高的預期,本身就是風險。",
+      "sources": [
+        { "url": "https://www.techtimes.com/articles/321968/20260729/kospi-triggers-historic-back-back-circuit-breakers-ai-memory-rally-faces-structural-reckoning.htm", "ts": null },
+        { "url": "https://www.koreajoongangdaily.com/business/circuit-breakers-halt-kospi-kosdaq-for-2nd-straight-day-as-benchmark-drops-below-6000/12797430", "ts": null },
+        { "url": "https://www.cnbc.com/2026/07/29/chip-selloff-sk-hynix-samsung-softbank.html", "ts": null },
+        { "url": "https://www.investing.com/news/company-news/sk-hynix-q2-2026-slides-record-revenue-76-operating-margin-93CH-4818489", "ts": null }
+      ]
+    },
+    {
+      "headline": "微軟、Meta今晚交卷,選擇權市場押注微軟市值震盪逾1900億美元",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "developing",
+      "audience_value": "微軟、Meta今天盤後公布財報,兩家財報預期都被市場押注逾九成機率會超標,真正的勝負手是明年資本支出的指引:微軟資本支出逼近2300億美元的年化速度,Meta今年資本支出上看1250億到1450億美元。對一般投資人:這些天文數字的AI投資,什麼時候能真的變成賺錢的生意,才是市場真正要看的。",
+      "sources": [
+        { "url": "https://www.tipranks.com/news/big-tech-earnings-showdown-meta-and-microsoft-in-focus-ahead-of-july-29-earnings-report", "ts": null },
+        { "url": "https://247wallst.com/investing/2026/07/28/earnings-showdown-is-microsoft-or-meta-more-at-risk-when-july-29-earnings-drop/", "ts": null }
+      ]
+    },
+    {
+      "headline": "FOMC今天下午2點公布決議,期貨市場定價的是「還會再升」",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "developing",
+      "audience_value": "聯準會兩天會議今天下午兩點公布結果、兩點半記者會登場。多數經濟學家預期主席華許會維持3.50%到3.75%不動,但期貨市場定價的方向很不尋常——資金已經在為9月、10月、12月每一次會議往上加碼,隱含利率一路墊高到逼近4.1%。對一般投資人:市場現在押注的方向是接下來還會再升息,這跟大半年來「該降息」的直覺完全相反。",
+      "sources": [
+        { "url": "https://www.cbsnews.com/news/fed-interest-rate-decision-july-meeting/", "ts": null },
+        { "url": "https://www.cnn.com/2026/07/29/economy/fed-rate-decision-july", "ts": null }
+      ]
+    },
+    {
+      "headline": "亞股史上級崩盤下,美股期貨反而不跟跌",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "南韓股市寫下歷史紀錄式重挫,但美股那斯達克期貨今天早上不跌反漲,標普期貨也小漲,只有道瓊期貨因寶僑財報營收不如預期而小幅走弱。對一般投資人:這種「別人地震,這裡沒感覺」的分裂,可能代表美股投資人把目光留給今天下午的Fed決議跟晚上的科技巨頭財報、先按兵不動,但也可能只是風暴還沒吹到,不代表真的沒事。",
+      "sources": [
+        { "url": "https://www.benzinga.com/markets/equities/26/07/60750897/stock-market-today-dow-jones-sp-500-futures-rise-as-investors-await-federal-reserves-decision-on-interest-rates-ford-motor-bloom-energy-microsoft-in-focus", "ts": null },
+        { "url": "https://www.investing.com/news/economy-news/sp-500-nasdaq-futures-inch-up-before-fed-decision-chip-stocks-wobble-4819267", "ts": null },
+        { "url": "https://markets.financialcontent.com/stocks/article/stockstory-2026-7-29-procter-and-gamble-nysepg-misses-q2-cy2026-revenue-estimates", "ts": null }
+      ]
+    }
+  ],
+  "catalysts": [
+    "今天(週三)下午2點(ET):FOMC利率決議公布,2:30記者會由主席華許主持;多數經濟學家預期維持3.50–3.75%不動",
+    "今天盤後:微軟、Meta公布財報,市場聚焦2027財年資本支出指引",
+    "今天稍早:寶僑公布財報,調整後EPS超標但營收與明年展望不如市場預期",
+    "今天:南韓SK海力士公布Q2財報,單季獲利創新高但不如市場預期,是本輪半導體賣壓導火線之一",
+    "今天凌晨:美伊停火被打破——伊朗飛彈遭攔截,美國與沙烏地阿拉伯反擊伊拉克境內民兵據點,後續是否再升級是本週觀察重點",
+    "明天(7/30週四)盤後:蘋果、亞馬遜公布財報",
+    "明天(7/30週四)上午8:30(ET):第二季GDP初值公布"
+  ],
+  "thesis_delta": {
+    "changed": true,
+    "summary": "兩條 open thread 今天出現具體且confirmed的新驗證。地緣風險:美伊停火只撐三天,伊朗革命衛隊對美軍基地發射彈道飛彈(全數遭攔截),美國與沙烏地阿拉伯隨即反擊伊拉克境內親伊朗民兵據點,布蘭特原油應聲反彈站回87美元附近,結束連三天重摔近16%的走勢——「地緣風險暫歇待驗」這條線今天被證實只是暫歇,沒有真正解除。AI/半導體:南韓KOSPI史上第一次連續兩個交易日觸發熔斷,導火線是SK海力士單季獲利年增逾五倍、創歷史新高卻仍不如市場預期,顯示即使是最好的成績單也擋不住「AI熱潮是否見頂」的疑慮,「窄且不穩」這條支柱被更直接驗證。同時FOMC今天下午決議、期貨市場定價顯示9到12月隱含利率持續墊高逼近4.1%,呼應「higher-for-longer」的基準方向。三條支柱(Fed鷹派、AI窄幅領漲、地緣溢價)的方向都未變,但今天讓每一條都多了一次具體、confirmed的檢驗證據。",
+    "horizon": "MT"
+  },
+  "lead_horizon": "ST",
+  "title_hook": "飛彈剛落地,Fed下午開牌"
+}
