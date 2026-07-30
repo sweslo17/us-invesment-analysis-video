@@ -83,13 +83,31 @@ _ASS_TEMPLATE = "\n".join(
 _SENT_RE = re.compile(r"[^。!?！?;;；\n]+[。!?！?;;；]?")
 
 
+def has_speakable(text: str) -> bool:
+    """這段文字是否有「唸得出來」的內容(中日韓字、字母或數字)。
+
+    純標點/符號的碎片(如收尾的 ``』``)送進 edge-tts 會回 NoAudioReceived,
+    2026-07-30 就因此讓整支影片合成失敗,故一律先過濾。
+    """
+    return any(ch.isalnum() for ch in text)
+
+
 def split_sentences(text: str) -> list[str]:
     """把旁白切成句子(保留句尾標點),供逐句配音與逐頁字幕。沒有標點則整段為一句。
 
-    刻意不把 ASCII 句點當句尾,避免 3.8%、0.53 這類小數被切斷。
+    刻意不把 ASCII 句點當句尾,避免 3.8%、0.53 這類小數被切斷。沒有可發音內容的
+    碎片(句尾標點後的右引號、破折號…)併回前一句,避免送空文字給 TTS。
     """
     parts = [m.group().strip() for m in _SENT_RE.finditer(text)]
-    return [p for p in parts if p]
+    merged: list[str] = []
+    for part in parts:
+        if not part:
+            continue
+        if not has_speakable(part) and merged:
+            merged[-1] += part  # 純符號碎片黏回前句(保留原文,不丟字)
+            continue
+        merged.append(part)
+    return [p for p in merged if has_speakable(p)]
 
 
 def _timestamp(seconds: float) -> str:
@@ -550,8 +568,16 @@ def assemble_video(
     # Pass A:逐句配音 + 實測長度 → 段長與全片時間軸(進度條/收尾要用)
     seg_takes: list[list[_Take]] = []
     seg_durations: list[float] = []
+    usable: list[int] = []  # 有可配音內容的段索引(其餘跳過,不讓一段壞掉整支片)
     for i, seg in enumerate(script.segments):
-        sentences = split_sentences(seg.vo) or [seg.vo]
+        sentences = split_sentences(seg.vo)
+        if not sentences:
+            # 整段沒有可發音內容(講稿異常):跳過該段而不是讓 TTS 回空音檔炸掉全片
+            logger.warning("segment {} 無可發音內容,跳過:{!r}", i, seg.vo[:40])
+            seg_takes.append([])
+            seg_durations.append(0.0)
+            continue
+        usable.append(i)
         planned_each = seg.duration / max(len(sentences), 1)
         takes: list[_Take] = []
         for j, sentence in enumerate(sentences):
@@ -576,7 +602,9 @@ def assemble_video(
     clip_names: list[str] = []
     for i, seg in enumerate(script.segments):
         takes = seg_takes[i]
-        is_last = i == len(script.segments) - 1
+        if not takes:
+            continue  # Pass A 判定無可配音內容,已跳過
+        is_last = i == (usable[-1] if usable else len(script.segments) - 1)
         if seg.headline is not None:
             card_name = f"card{i}.png"
             render_headline_card(
