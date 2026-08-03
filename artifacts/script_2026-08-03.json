@@ -1,0 +1,102 @@
+{
+  "segments": [
+    {
+      "headline": "川普喊停打伊朗",
+      "tag": "2026-08-03 · 盤前快報",
+      "vo": "美伊本來要開打,川普臨時喊停,雙方談判今天登場。原油應聲重挫超過5%,這條撐了快一個月的地緣風險,一天鬆動。",
+      "t_start": 0.0,
+      "duration": 8.0
+    },
+    {
+      "chart_id": "ov_close",
+      "title": "昨收 vs 今天盤前",
+      "vo": "先看指數。上一交易日標普漲0.7%收7489點,那斯達克漲1%收25373點,道瓊漲0.53%,只有羅素兩千跌0.5%。今天盤前期貨卻分裂:道瓊期貨受惠油價大跌漲0.5%,標普期貨打平,那斯達克期貨反而跌0.74%,是四大裡唯一走跌的。",
+      "t_start": 8.0,
+      "duration": 20.0
+    },
+    {
+      "chart_id": "global_now",
+      "title": "亞股歐股怎麼走",
+      "vo": "南韓KOSPI上週五噴18%創史上最大單日漲幅,今天卻倒賠逾5%,外資獲利了結、資金轉進中小型股;台灣加權指數守住小漲0.48%,相對抗跌。歐股受惠伊朗消息與一樁併購傳聞齊漲,德國DAX大漲1.54%、歐洲STOXX50漲1.11%。",
+      "t_start": 28.0,
+      "duration": 19.0
+    },
+    {
+      "headline": "藥廠界大併購",
+      "vo": "AstraZeneca傳出與必治妥施貴寶洽談400億美元併購,若成真是全球第四大藥廠,兩家公司目前都還沒證實。",
+      "t_start": 47.0,
+      "duration": 9.0
+    },
+    {
+      "headline": "地緣風險溢價",
+      "tag": "名詞小教室",
+      "vo": "地緣風險溢價,是因為戰爭或衝突,油價和市場比平常多算進去的那一截恐慌成本。",
+      "t_start": 56.0,
+      "duration": 7.0
+    },
+    {
+      "chart_id": "fed_now",
+      "title": "Fed升息這條路沒變",
+      "vo": "把鏡頭轉回Fed。上次會議三位分行總裁全部主張升息,是2016年以來最鷹派的一次分裂。期貨市場現在算出來,9月升息機率還有將近7成,12月的政策利率隱含站上3.97%。地緣風險降溫,並沒有讓這條升息路徑鬆動。",
+      "t_start": 63.0,
+      "duration": 19.0
+    },
+    {
+      "chart_id": "vix_now",
+      "title": "VIX還在裝睡",
+      "vo": "VIX現在只有15.9,接近近幾週低點,看起來風平浪靜。但記憶體晶片正經歷十五年來最嚴重的短缺,DRAM合約價這一季狂飆超過六成,正是蘋果上週財報guidance轉保守的原因。恐慌指數沒醒,底下的成本壓力可沒停過。",
+      "t_start": 82.0,
+      "duration": 19.0
+    },
+    {
+      "chart_id": "lev_now",
+      "title": "越晃,越不該加槓桿",
+      "vo": "波動目標模型算給你看:那斯達克已實現波動衝到20%,合理槓桿只剩0.74倍,開三倍一年要吃掉超過18%的複利;標普波動相對溫和,合理倍數還有1.2倍。今天這種指數期貨分裂走勢,正是波動還沒平息的訊號。",
+      "t_start": 101.0,
+      "duration": 18.0
+    },
+    {
+      "chart_id": "cat_now",
+      "title": "本週還有幾關",
+      "vo": "今天上午十點,七月ISM製造業PMI公布,能不能延續連續二十個月擴張是關鍵;週二Palantir、AMD還有SpaceX掛牌後首份財報登場;這週五的七月非農就業報告,是本週真正的壓軸。",
+      "t_start": 119.0,
+      "duration": 17.0
+    },
+    {
+      "headline": "AI自己的劇本",
+      "vo": "地緣風險降溫,像幫市場退了一次燒;但那斯達克期貨還是逆勢下跌,因為AI半導體板塊自己在發另一種燒——資本支出跟晶片成本的燒,退燒藥治不了。",
+      "t_start": 136.0,
+      "duration": 13.0
+    },
+    {
+      "headline": "槓桿撐不撐得住\n不該由新聞決定",
+      "tag": "蒙格  不知道有沒有說過",
+      "vo": "別把川普的一句話當成投資訊號,真正的風險管理,是不管地緣政治今天演哪一齣,你的槓桿都撐得住——以上非投資建議,我們明天見。",
+      "t_start": 149.0,
+      "duration": 10.0
+    }
+  ],
+  "charts": [
+    { "id": "ov_close", "module": "overnight_vs_close", "params": {} },
+    { "id": "global_now", "module": "global_equity_overnight", "params": {} },
+    { "id": "fed_now", "module": "fed_path", "params": {} },
+    { "id": "vix_now", "module": "vix_regime", "params": {} },
+    { "id": "lev_now", "module": "leverage_decay", "params": {} },
+    {
+      "id": "cat_now",
+      "module": "catalyst_timeline",
+      "params": {
+        "events": [
+          { "date": "今天10:00(ET)", "label": "7月ISM製造業PMI", "highlight": true },
+          { "date": "今天10:00(ET)", "label": "6月營建支出", "highlight": false },
+          { "date": "本週二", "label": "Palantir/AMD財報", "highlight": true },
+          { "date": "本週二", "label": "SpaceX首份財報", "highlight": true },
+          { "date": "本週五", "label": "7月非農就業報告", "highlight": true },
+          { "date": "持續談判", "label": "美伊本週會談", "highlight": false },
+          { "date": "持續觀察", "label": "KOSPI能否止穩", "highlight": false }
+        ]
+      }
+    }
+  ],
+  "coverage_gaps": []
+}

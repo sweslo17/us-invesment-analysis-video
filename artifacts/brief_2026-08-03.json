@@ -1,0 +1,140 @@
+{
+  "date": "2026-08-03",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7489.72,
+      "overnight_pct": -0.01,
+      "drivers": [
+        "上一交易日(7/31)標普續漲0.70%收7489點,科技巨頭財報效應延續,本週第二個上漲的交易日。",
+        "今天ES期貨幾乎打平(-0.01%),川普喊停攻打伊朗、油價應聲重挫理應偏多,但半導體疑慮仍壓著指數。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 25373.85,
+      "overnight_pct": -0.74,
+      "drivers": [
+        "上一交易日那斯達克再漲1.00%收25373點,是四大指數中漲幅最大的一個,收復部分蘋果財報疑慮的失土。",
+        "今天NQ期貨卻逆勢跌0.74%,是四大指數中唯一走跌的,顯示地緣風險降溫沒能安撫AI/半導體的緊張情緒。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 52485.03,
+      "overnight_pct": 0.50,
+      "drivers": [
+        "上一交易日道瓊漲0.53%收52485點,傳產股穩健跟上大盤。",
+        "今天YM期貨上漲0.50%,川普喊停攻打伊朗、油價大跌,對傳產與消費類股是實質利多。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 2931.34,
+      "overnight_pct": 0.19,
+      "drivers": [
+        "上一交易日羅素兩千逆勢跌0.50%收2931點,是四大指數中唯一收黑的。",
+        "今天RTY期貨小漲0.19%,中小型股對地緣風險降溫的反應相對溫和。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普已實現波動約12.5%,波動目標模型算出的合理槓桿約1.2倍;開三倍一年要吃掉約7%的複利,是四大指數中相對溫和的一個。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克已實現波動仍高達20.2%,合理倍數只剩0.74倍;開三倍一年要吃掉超過18%的複利,記憶體晶片成本壓力正是這波波動的推手之一。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊已實現波動約12.7%,合理倍數約1.18倍;傳產股對這波地緣政治與財報消息的反應相對溫和。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千已實現波動約13.5%,合理倍數約1.11倍;中小型股波動來源更多是跟著大盤氣氛走,不直接暴露在AI資本支出的爭議裡。"
+    }
+  ],
+  "regime": {
+    "vol": "normal",
+    "rates": "rising",
+    "stock_bond_corr": "positive",
+    "breadth": "narrow"
+  },
+  "items": [
+    {
+      "headline": "川普喊停攻打伊朗,原油一天崩逾5%,談判今天登場",
+      "horizon": "MT",
+      "vs_thesis": "challenges",
+      "materiality": 5,
+      "confidence": "developing",
+      "audience_value": "川普原本準備對伊朗發動「大規模攻擊」,但在沙烏地、阿聯、卡達出面斡旋後喊卡,宣布與伊朗的談判今天登場,協議內容據稱包含荷姆茲海峽全面重新開放、伊朗放棄核武威脅。消息一出,原油應聲重挫逾5%,布蘭特跌破84美元、西德州跌破80美元,道瓊期貨同步走高逾百點。對一般投資人:這條撐了快一個月、直接墊高通膨與Fed升息辯論的地緣風險溢價,現在鬆動了,但「喊停攻擊」不是「簽了協議」,伊朗核武與海峽政策的實際結果還沒塵埃落定,樂觀之前記得這件事隨時可能反覆。",
+      "sources": [
+        { "url": "https://www.benzinga.com/news/politics/26/08/60862777/trump-calls-off-massive-attack-on-iran-as-talks-resume" },
+        { "url": "https://www.bloomberg.com/news/articles/2026-08-02/trump-says-us-to-cancel-iran-attack-subject-to-a-rapid-deal" },
+        { "url": "https://www.cnbc.com/2026/08/03/trump-ceasefire-nuclear-deal-strait-of-hormuz-opec-oil-output-.html" }
+      ]
+    },
+    {
+      "headline": "地緣風險降溫理應是多頭訊號,那斯達克期貨卻逆勢下跌",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "今天早盤四大指數期貨方向不一致:道瓊期貨受惠油價大跌上漲0.5%,標普期貨幾乎打平,那斯達克期貨卻逆勢下跌0.74%,是四大中唯一走跌的。地緣風險降溫、油價大跌對大盤整體是實質利多,但AI/半導體族群自己的疑慮——資本支出、估值、記憶體晶片荒——沒有因為中東消息而消失。對一般投資人:當「好消息」對大盤有用、卻救不了某個板塊,代表市場正在把總經風險和AI/半導體的結構性風險分開計價,兩者不是同一件事。",
+      "sources": []
+    },
+    {
+      "headline": "南韓一週雙紀錄:上週五噴18%創新高,今天倒吐逾5%",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "南韓KOSPI上週五狂飆18%創下史上最大單日漲幅之後,今天開盤反手跌逾5%,外資與機構同步賣超,資金轉進中小型股為主的Kosdaq。分析師認為這是正常的獲利了結與資金輪動,而非行情反轉。對一般投資人:同一個指數一週之內經歷史上最大跌、史上最大漲、單日大幅回吐三種極端劇本,這正是這陣子AI/半導體「窄且不穩」的最新示範——漲跌都在破紀錄,波動本身已經是主角。",
+      "sources": [
+        { "url": "https://www.koreatimes.co.kr/economy/20260803/kospi-slides-5-after-record-surge-while-funds-rotate-to-kosdaq" },
+        { "url": "https://fortune.com/2026/08/02/kospi-index-dow-futures-us-stocks-trump-iran-war-reversal-oil-prices/" }
+      ]
+    },
+    {
+      "headline": "AstraZeneca傳與必治妥施貴寶洽談400億美元併購",
+      "horizon": "LT",
+      "vs_thesis": "new",
+      "materiality": 2,
+      "confidence": "developing",
+      "audience_value": "英國藥廠AstraZeneca據傳與美國必治妥施貴寶(Bristol Myers Squibb)洽談合併,規模上看4000億美元,若成真將打造全球市值第四大藥廠。雙方腫瘤學業務高度重疊,可能引來反壟斷審查,兩家公司目前都未證實。對一般投資人:這樁傳聞級併購和今天的總經主軸關係不大,但提醒你——個股層級的巨型交易一天內就能牽動整個板塊,選股本身的不可預測性並不比大盤總經風險低。",
+      "sources": [
+        { "url": "https://www.cnbc.com/2026/08/02/astrazeneca-and-bristol-myers-squibb-mull-400-billion-deal-report-.html" },
+        { "url": "https://www.bloomberg.com/news/articles/2026-08-02/astrazeneca-is-said-to-have-explored-bristol-myers-mega-merger" }
+      ]
+    },
+    {
+      "headline": "記憶體晶片荒未解,DRAM/NAND合約價本季再飆58%–75%",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "記憶體晶片產業正經歷近15年來最嚴重的供給短缺,第二季DRAM合約價季增58%至63%,NAND快閃記憶體更暴增70%至75%,雙雙創十年最大漲幅。這正是蘋果上週財報guidance轉保守、直接點名供應鏈與記憶體成本壓力的源頭。對一般投資人:晶片價格上漲對記憶體廠商是獲利大補丸,但對下游所有用到晶片的電子產品廠商都是成本壓力,同一波供給短缺,贏家輸家已經寫在財報guidance裡。",
+      "sources": [
+        { "url": "https://www.tomshardware.com/pc-components/ram/memory-price-surge-begins-to-cool-as-consumers-hit-affordability-limit-ai-demand-still-keeps-dram-and-nand-prices-climbing-through-q3-2026" },
+        { "url": "https://finance.biggo.com/news/Vta3FZ4B6tLPsnrZ5pOO" }
+      ]
+    }
+  ],
+  "catalysts": [
+    "今天上午10:00(ET):7月ISM製造業PMI公布",
+    "今天上午10:00(ET):6月營建支出公布",
+    "今天:美伊談判登場,關注是否能敲定協議",
+    "本週二:Palantir、AMD、SpaceX(掛牌後首份財報)等公布財報",
+    "本週五(ET):7月非農就業報告,本週經濟數據壓軸",
+    "持續觀察:南韓KOSPI能否止穩,還是繼續回吐上週漲幅"
+  ],
+  "thesis_delta": {
+    "changed": true,
+    "summary": "美伊衝突從「持續升溫、油價站穩90美元」的既定劇本,今天出現重大變數:川普喊停對伊朗的大規模攻擊,雙方談判今天登場,原油應聲重挫逾5%。這條地緣風險溢價暫時鬆動,但「喊停攻擊」不等於「簽署協議」,伊朗核武與荷姆茲海峽的實際結果仍待確認,thesis保守調整為「地緣風險溢價出現鬆動跡象,但方向尚未確認」,信心由confirmed降回developing。與此同時,AI/半導體「窄且不穩」持續加碼證據:南韓KOSPI今天倒吐上週五18%漲幅中的逾5%,那斯達克期貨在總體利多環境下逆勢走跌,顯示這波不穩定不受總經消息影響、有其自身邏輯。三條支柱方向大致不變,但地緣這條從「confirmed 走高」轉為「developing 鬆動中」,是本週最值得持續盯的變化。",
+    "horizon": "MT"
+  },
+  "lead_horizon": "MT",
+  "title_hook": "川普喊停攻打伊朗,原油一天崩逾5%"
+}
