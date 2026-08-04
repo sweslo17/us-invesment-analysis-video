@@ -1,0 +1,152 @@
+{
+  "segments": [
+    {
+      "headline": "停火才一天,就翻臉",
+      "tag": "2026-08-04 · 盤前快報",
+      "vo": "川普昨天喊停打伊朗,原油應聲重挫。今天他反手罵伊朗『不老實』,油價,一夜反彈。",
+      "t_start": 0.0,
+      "duration": 6.7
+    },
+    {
+      "chart_id": "ov_close",
+      "title": "昨收噴,今天盤前續攻",
+      "vo": "先看大盤。上一交易日四大指數全面走高,道瓊創收盤新高,那斯達克漲最多、衝上2.13%。今天期貨溫和續攻,那指期貨漲0.66%、道瓊期貨漲0.77%,主因是Palantir財報大爆發、股價盤前噴近17%。",
+      "t_start": 6.7,
+      "duration": 17.3
+    },
+    {
+      "chart_id": "global_now",
+      "title": "亞股歐股接力上攻",
+      "vo": "亞股歐股跟著接力。南韓KOSPI今天反彈1.6%,從昨天倒吐的缺口裡收回一些,這週來第三次劇烈甩尾。歐股同步走高,德國DAX、英股都漲0.5%,風險偏好正在回升。",
+      "t_start": 24.0,
+      "duration": 13.9
+    },
+    {
+      "headline": "空襲又搬上桌",
+      "vo": "細節是這樣:伊朗官方否認直接談判,只承認跟阿曼談荷姆茲海峽;川普罵對方『不老實』,福斯新聞說空襲重新排上桌。美伊像鬧分手的情侶,昨天說復合,今天翻臉,油價跟著心情坐雲霄飛車。",
+      "t_start": 37.9,
+      "duration": 14.9
+    },
+    {
+      "chart_id": "vix_now",
+      "title": "VIX還在裝睡",
+      "vo": "VIX只有15.65,比昨天還低,像完全沒事發生。但槓桿半導體ETF今夜逆勢跌超過2.7%,是所有指數期貨裡最弱的一個。恐慌指數沒醒,底下AI晶片這條線自己在抖。",
+      "t_start": 52.8,
+      "duration": 13.9
+    },
+    {
+      "chart_id": "fed_now",
+      "title": "PMI噴出,升息路徑更硬",
+      "vo": "把鏡頭轉向Fed。7月ISM製造業PMI衝上55.6,是2022年以來新高,連續七個月擴張,就業指標近三年首次翻正。期貨市場算出9月升息機率來到64%,12月政策利率隱含站上3.97%。經濟比想像中更熱,升息這條路沒有變軟。",
+      "t_start": 66.7,
+      "duration": 19.2
+    },
+    {
+      "chart_id": "cat_now",
+      "title": "今晚兩場大考",
+      "vo": "今天收盤後還有兩場重頭戲:超微公布財報,市場在等AI晶片訂單能不能撐住;SpaceX繳出上市後第一份成績單,星鏈訂閱數是第一個看點。再往後看,週五非農就業報告,是這週真正的壓軸。",
+      "t_start": 85.9,
+      "duration": 15.2
+    },
+    {
+      "headline": "閉鎖期",
+      "tag": "名詞小教室",
+      "vo": "閉鎖期,是公司上市後內部人暫時不能賣股的期間;SpaceX閉鎖期這週四到期,近千億美元股份等著解禁。",
+      "t_start": 101.1,
+      "duration": 8.6
+    },
+    {
+      "headline": "藥廠界大併購",
+      "vo": "另一頭,AstraZeneca傳出跟必治妥施貴寶談併購已經好幾個月,規模上看4000億美元,隨時可能拍板,也可能談崩,兩家都還沒證實。",
+      "t_start": 109.7,
+      "duration": 11.5
+    },
+    {
+      "chart_id": "lev_now",
+      "title": "半導體最不該重倉開槓桿",
+      "vo": "拉回槓桿這門課。波動目標模型算給你看:那斯達克波動衝到20%,合理槓桿只剩0.74倍,開三倍一年吃掉超過18%複利;標普波動溫和,合理倍數還有1.2倍。今晚半導體ETF重挫,正好示範這張表在講什麼。",
+      "t_start": 121.2,
+      "duration": 16.9
+    },
+    {
+      "headline": "停火能喊停\n升息帳單喊不停",
+      "tag": "坦普頓  不知道有沒有說過",
+      "vo": "拉遠一點看:地緣風險今天證明它隨時能翻臉,但Fed升息這條路,不管中東演哪一齣,都沒被撫平過。今天的盤前金句:消息說停火,追多的人先進場;消息一反悔,最先繳學費也是他們。以上非投資建議,我們明天見。",
+      "t_start": 138.1,
+      "duration": 16.9
+    }
+  ],
+  "charts": [
+    {
+      "id": "ov_close",
+      "module": "overnight_vs_close",
+      "params": {}
+    },
+    {
+      "id": "global_now",
+      "module": "global_equity_overnight",
+      "params": {}
+    },
+    {
+      "id": "vix_now",
+      "module": "vix_regime",
+      "params": {}
+    },
+    {
+      "id": "fed_now",
+      "module": "fed_path",
+      "params": {}
+    },
+    {
+      "id": "cat_now",
+      "module": "catalyst_timeline",
+      "params": {
+        "events": [
+          {
+            "date": "今天收盤後",
+            "label": "AMD財報,看AI晶片訂單",
+            "highlight": true
+          },
+          {
+            "date": "今天收盤後",
+            "label": "SpaceX首份財報",
+            "highlight": true
+          },
+          {
+            "date": "本週三",
+            "label": "ADP/ISM服務業PMI",
+            "highlight": false
+          },
+          {
+            "date": "本週四",
+            "label": "初領失業金人數",
+            "highlight": false
+          },
+          {
+            "date": "本週五",
+            "label": "7月非農就業報告",
+            "highlight": true
+          },
+          {
+            "date": "本週四",
+            "label": "SpaceX閉鎖期到期",
+            "highlight": false
+          },
+          {
+            "date": "持續談判",
+            "label": "美伊荷姆茲海峽談判",
+            "highlight": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "lev_now",
+      "module": "leverage_decay",
+      "params": {}
+    }
+  ],
+  "coverage_gaps": [
+    "沒有原油/商品價格的圖表模組——今天美伊談判生變、油價從暴跌轉彈升是核心敘事,只能靠headline卡文字描述,建議之後新增oil/commodity價格走勢模組。"
+  ]
+}
