@@ -1,0 +1,153 @@
+{
+  "segments": [
+    {
+      "headline": "荷姆茲協議,今天拍板?",
+      "tag": "2026-08-05 · 盤前快報",
+      "vo": "美伊荷姆茲協議,傳出最快今天簽。全球股市,已經先漲為敬。",
+      "t_start": 0.0,
+      "duration": 4.8
+    },
+    {
+      "chart_id": "ov_close",
+      "title": "昨收噴,今天盤前打平",
+      "vo": "先看大盤,上一交易日四大指數全面噴出:標普漲1.79%收7736點,史上第一次站上7700;那斯達克飆漲2.59%最兇;道瓊連兩天改寫歷史新高。今天期貨卻幾乎打平,標普期貨只漲0.02%,市場在消化財報,也在等一個協議。",
+      "t_start": 4.8,
+      "duration": 18.7
+    },
+    {
+      "chart_id": "global_now",
+      "title": "亞股全面噴出",
+      "vo": "亞股跟著噴,南韓KOSPI大漲3.76%,日經漲3.67%,台股加權漲3.2%。真正的引擎是記憶體:SK海力士、鎧俠、三星電子隔夜狂飆,AI用的高頻寬記憶體訂單接到手軟,拉抬整個半導體板塊。",
+      "t_start": 23.5,
+      "duration": 16.2
+    },
+    {
+      "headline": "財報贏了,股價卻跌",
+      "vo": "超微跟SpaceX昨晚公布財報,營收獲利雙雙超標,股票卻雙雙盤後倒地。這就像面試履歷漂亮,主管一看你要的薪水,還是搖了頭——問題出在超微毛利率不如預期、SpaceX資本支出燒太兇。",
+      "t_start": 39.7,
+      "duration": 15.3
+    },
+    {
+      "chart_id": "conc_now",
+      "title": "輝達拖後腿,那指照樣噴",
+      "vo": "拉近看誰在動。標普權重最大的輝達昨天逆勢跌2.1%,蘋果、Meta、Google也都收黑;真正扛起漲勢的,是超微、Palantir這類權值外的財報行情股。指數噴出,不代表你手上的權值股也在噴。",
+      "t_start": 55.0,
+      "duration": 16.3
+    },
+    {
+      "headline": "集中度",
+      "tag": "名詞小教室",
+      "vo": "集中度,是看指數漲跌被幾檔龍頭股掌握了多少,不是全部股票一起在動。",
+      "t_start": 71.3,
+      "duration": 5.6
+    },
+    {
+      "chart_id": "corr_now",
+      "title": "股債,一起漲",
+      "vo": "轉去看股債關係。20天滾動相關性衝上0.51,一週前還接近零。過去股票跌、公債通常漲;現在兩者更常一起漲、一起跌。債券不再是穩定的避風港,分散風險的效果正在變薄。",
+      "t_start": 76.9,
+      "duration": 13.8
+    },
+    {
+      "chart_id": "fed_now",
+      "title": "升息路徑,還沒鬆手",
+      "vo": "把鏡頭轉向Fed,期貨市場算出9月升息機率60%,12月政策利率隱含3.96%。今天ADP就業報告、ISM服務業PMI公布,市場想知道能不能延續7月製造業PMI衝上四年新高的熱度。",
+      "t_start": 90.7,
+      "duration": 15.3
+    },
+    {
+      "chart_id": "cat_now",
+      "title": "今天跟這週的大事",
+      "vo": "今天還有兩個看點:荷姆茲海峽協議傳最快今天簽署;迪士尼、Shopify等公司財報陸續公布。明天SpaceX閉鎖期到期,近1160億美元股份解禁,解禁賣壓是接下來的變數。週五非農就業報告,是這週壓軸。",
+      "t_start": 106.0,
+      "duration": 16.8
+    },
+    {
+      "chart_id": "lev_now",
+      "title": "半導體還是最燒波動",
+      "vo": "回到槓桿這門課。那斯達克已實現波動還有22.7%,合理槓桿只剩0.66倍,開三倍一年吃掉超過23%複利;標普波動降溫,合理倍數回升到1.03倍。記憶體今天噴,不代表這個板塊的波動風險跟著變小。",
+      "t_start": 122.8,
+      "duration": 16.3
+    },
+    {
+      "headline": "短期投票,長期體重",
+      "tag": "葛拉漢  不知道有沒有說過",
+      "vo": "拉遠一點看,短期它是投票機,人氣說了算,今天輝達跌、超微漲,明天可能反過來;長期它是體重機,現金流跟毛利率才是真相。荷姆茲海峽跟Fed升息這兩條線,才是真正決定重量的東西。以上非投資建議,我們明天見。",
+      "t_start": 139.1,
+      "duration": 17.0
+    }
+  ],
+  "charts": [
+    {
+      "id": "ov_close",
+      "module": "overnight_vs_close",
+      "params": {}
+    },
+    {
+      "id": "global_now",
+      "module": "global_equity_overnight",
+      "params": {}
+    },
+    {
+      "id": "conc_now",
+      "module": "concentration",
+      "params": {}
+    },
+    {
+      "id": "corr_now",
+      "module": "stock_bond_corr",
+      "params": {}
+    },
+    {
+      "id": "fed_now",
+      "module": "fed_path",
+      "params": {}
+    },
+    {
+      "id": "cat_now",
+      "module": "catalyst_timeline",
+      "params": {
+        "events": [
+          {
+            "date": "今天",
+            "label": "美伊荷姆茲海峽協議傳最快簽署",
+            "highlight": true
+          },
+          {
+            "date": "今天08:15",
+            "label": "7月ADP就業報告",
+            "highlight": false
+          },
+          {
+            "date": "今天10:00",
+            "label": "7月ISM服務業PMI",
+            "highlight": false
+          },
+          {
+            "date": "今天",
+            "label": "迪士尼、Shopify等財報",
+            "highlight": false
+          },
+          {
+            "date": "明天8/6",
+            "label": "SpaceX閉鎖期解禁1160億美元",
+            "highlight": true
+          },
+          {
+            "date": "本週五",
+            "label": "7月非農就業報告",
+            "highlight": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "lev_now",
+      "module": "leverage_decay",
+      "params": {}
+    }
+  ],
+  "coverage_gaps": [
+    "沒有原油/商品價格的圖表模組——今天美伊荷姆茲海峽協議進展與油價反彈是核心敘事,只能靠headline卡文字描述,建議之後新增oil/commodity價格走勢模組。"
+  ]
+}
