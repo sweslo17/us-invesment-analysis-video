@@ -1,0 +1,139 @@
+{
+  "date": "2026-08-06",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7723.55,
+      "overnight_pct": 0.03,
+      "drivers": [
+        "上一交易日(8/5,週三)標普小跌0.17%,收7723.55點,結束連漲,那斯達克跌得更兇拖累整體情緒。",
+        "今天ES期貨幾乎打平(+0.03%),市場在消化隔夜科技股獲利了結的餘震,也在等ADP疲弱數據後Fed的下一步訊號。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 26363.44,
+      "overnight_pct": -0.24,
+      "drivers": [
+        "上一交易日那斯達克重挫0.83%,收26363.44點,是四大指數中跌最兇的,輝達、蘋果、Alphabet、Meta、博通全數收黑,只有微軟撐盤。",
+        "今天NQ期貨跌0.24%,是四大期貨中唯一走弱的,隔夜這股科技股獲利了結情緒外溢到亞股,連夜拖累南韓、日本半導體股重摔。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 54349.12,
+      "overnight_pct": 0.05,
+      "drivers": [
+        "上一交易日道瓊逆勢漲0.49%,收54349.12點,傳產與消費股沒有跟上科技股的賣壓。",
+        "今天YM期貨小漲0.05%,是四大期貨中相對穩健的一個。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 3019.19,
+      "overnight_pct": 0.05,
+      "drivers": [
+        "上一交易日羅素兩千跌0.59%,收3019.19點,中小型股跟著科技股情緒走弱。",
+        "今天RTY期貨小漲0.05%,盤前情緒比昨天溫和一些。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普已實現波動降到約14.5%,波動目標模型算出的合理槓桿約1.04倍;開三倍一年要吃掉約9.4%的複利,是四大指數中最溫和的一個。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克已實現波動仍高達23%,合理倍數只剩0.65倍;開三倍一年要吃掉超過23.8%的複利,今天記憶體概念股一天崩逾4%,正說明這個板塊的波動風險一直都在,情緒好轉時容易被忽略。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊已實現波動約14.1%,合理倍數約1.06倍,是四大指數中波動最溫和的一個。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千已實現波動約15.7%,合理倍數約0.95倍,中小型股槓桿耗損比大型股略高一些。"
+    }
+  ],
+  "regime": {
+    "vol": "normal",
+    "rates": "falling",
+    "stock_bond_corr": "positive",
+    "breadth": "mixed"
+  },
+  "items": [
+    {
+      "headline": "荷姆茲協議「原則談妥」,卡在何梅內意拍板",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "developing",
+      "audience_value": "伊朗表示與阿曼就重新開放荷姆茲海峽的過境安排已經「原則談妥」,雙方談判代表完成協議草案,但還要等伊朗最高領袖何梅內意最終批准;協議也可能牽動美國是否解除對伊朗港口的封鎖,川普政府先前一直不願接受任何讓伊朗掌控海峽的安排。與此同時,紅海周邊葉門青年運動的封鎖行動仍在持續,疊加荷姆茲海峽的僵局,中東能源運輸的兩大瓶頸同時卡著,油價才會在協議傳出進展的同時還維持相對高位。對一般投資人:「原則談妥」比前幾天「有進展但未拍板」又往前一步,但離真正簽署還差最高領袖跟美國兩個關卡,油價跟相關風險溢價還沒到可以安心的地步。",
+      "sources": [
+        {"url": "https://www.bloomberg.com/news/articles/2026-08-06/iran-says-agreement-on-hormuz-shipping-route-reached-with-oman", "ts": null},
+        {"url": "https://www.cnn.com/2026/08/06/world/live-news/iran-war-trump", "ts": null},
+        {"url": "https://www.aljazeera.com/news/2026/8/5/iran-oman-us-close-to-hormuz-deal-what-do-they-all-want", "ts": null}
+      ]
+    },
+    {
+      "headline": "亞股記憶體股一夜翻臉,南韓崩4.6%",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "隔夜南韓KOSPI重摔4.58%,SK海力士崩逾10.67%、三星電子跌6.5%,導火線是美股那斯達克上一交易日科技權值股獲利了結——輝達、蘋果、Alphabet、Meta、博通全部收黑,只有微軟逆勢上漲,那斯達克當天收跌0.83%。這跟前一天記憶體概念股狂飆3-4%完全是反方向的劇本。對一般投資人:記憶體供不應求的故事沒變,但股價對這個故事的反應可以一天暴漲3%、隔天就崩回去,追高殺低的風險跟邏輯晶片股沒有本質差異。",
+      "sources": [
+        {"url": "https://www.tradingkey.com/analysis/stocks/more/262081743-japan-south-korea-stocks-kospi-nikkei-softbank-sk-hynix-kioxia-tradingkey", "ts": null}
+      ]
+    },
+    {
+      "headline": "ADP就業腰斬,升息機率卻不降反升",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "developing",
+      "audience_value": "7月ADP民間就業報告只增加4.4萬人,遠低於市場預期的7-9萬人,是近幾個月最冷的一次;同一天ISM非製造業(服務業)PMI報54.1%,比6月微升,持續擴張。10年期公債殖利率這幾天從高點4.745%一路滑落到4.617%,但期貨市場隱含的9月升息機率卻不降反升,來到62%,因為Fed官員(包括舊金山分行總裁戴利在東京的最新發言)仍強調要對通膨保持警戒、不會輕易放鬆。對一般投資人:就業數字冷不代表升息風險就解除,只要通膨那盞燈沒熄,Fed不會因為一份就業報告就轉向,真正的裁判是明天的非農就業報告。",
+      "sources": [
+        {"url": "https://www.bloomberg.com/news/articles/2026-08-06/fed-s-daly-supported-rate-decision-warns-of-inflation-risks", "ts": null},
+        {"url": "https://econcurrents.substack.com/p/05-august-2026-market-close-and-major", "ts": null}
+      ]
+    },
+    {
+      "headline": "SpaceX解禁1160億美元,股價卻不跌反漲",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 3,
+      "confidence": "developing",
+      "audience_value": "SpaceX今天迎來上市後首次閉鎖期到期,近9.115億股、約1,160億美元的內部人股票中,前20%可以開始出售;但股價昨天收盤大漲近14%,今天盤前續紅,完全不是市場擔心的賣壓劇本。大摩最新報告認為公司基本面「largely不變」,現在價位反而是好買點。對一般投資人:解禁日不等於一定崩跌,真正的賣壓要看接下來幾天有沒有大股東實際出貨,今天的反應只是第一步,還不能下結論。",
+      "sources": [
+        {"url": "https://www.fool.com/investing/2026/08/05/spacexs-lockup-expires-on-aug-6-heres-why-9115-mil/", "ts": null},
+        {"url": "https://finance.yahoo.com/markets/stocks/articles/spacex-lockup-expiry-morgan-stanley-173155091.html", "ts": null},
+        {"url": "https://www.benzinga.com/markets/equities/26/08/60983262/stock-market-today-dow-futures-gain-nasdaq-100-slips-as-hormuz-deal-talks-progress-spacex-sandisk-applovin-in-focus", "ts": null}
+      ]
+    },
+    {
+      "headline": "七大科技股,只有微軟逆勢收紅",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "上一交易日,標普成分股貢獻度顯示,輝達跌0.69%、蘋果跌0.48%、Alphabet兩類股跌0.62%跟0.73%、博通跌0.65%、Meta跌0.45%,只有微軟逆勢漲0.35%。這七檔股票合計貢獻了標普當天大部分的負值。對一般投資人:美股當天表現看指數不夠,真正決定你資產波動的是這幾檔權值股誰漲誰跌,微軟一個人扛不住其他六個走弱的力道,不能只看頭條數字。",
+      "sources": []
+    }
+  ],
+  "catalysts": [
+    "今天美東上午:上週初領失業金人數公布(前值19.7萬人);第二季非農生產力初值公布(預期優於前值)。",
+    "今天:美伊荷姆茲海峽協議傳「原則談妥」,仍待伊朗最高領袖何梅內意最終拍板,並牽動美國是否解除對伊朗港口的封鎖。",
+    "今天:SpaceX閉鎖期到期,近9.115億股(約1,160億美元)內部人股票中前20%可開始出售。",
+    "今天:華納兄弟探索盤前公布財報;Airbnb、Lyft、Cloudflare盤後公布財報。",
+    "明天(8/7):7月非農就業報告,本週經濟數據壓軸,將檢驗ADP疲弱數字是否延續。"
+  ],
+  "thesis_delta": {
+    "changed": true,
+    "summary": "三條支柱方向都維持不變,但今天各自新增了新的證據。地緣風險溢價這條線又往前一步:伊朗表示與阿曼就荷姆茲海峽過境安排已「原則談妥」,協議草案完成,但仍待伊朗最高領袖何梅內意最終批准,也可能牽動美國是否解除對伊朗港口的封鎖;同時紅海周邊葉門青年運動的封鎖行動仍在持續,顯示中東能源運輸的風險不只荷姆茲一個瓶頸,信心維持developing、方向不變。AI/半導體「窄且不穩」出現新的翻轉證據:前一天狂飆3-4%的記憶體概念股(SK海力士、三星電子),隔夜跟著美股那斯達克科技權值股獲利了結一起重挫,南韓KOSPI崩4.58%,證明記憶體股的波動風險跟邏輯晶片股沒有本質差異,昨天的漲勢不能當成趨勢反轉。Fed政策路徑出現一個值得注意的張力:7月ADP就業報告只增加4.4萬人、遠低於預期,是近幾個月最冷的一次,10年期公債殖利率這幾天從高點4.745%滑落到4.617%,但期貨隱含的9月升息機率卻不降反升到62%,顯示市場沒有把疲弱的就業數字當成升息風險解除的訊號,Fed官員(戴利在東京的發言)仍強調對通膨保持警戒。另外,SpaceX今天解禁近1,160億美元內部人股票,股價卻不跌反漲,大摩喊出基本面沒變、現在是好買點,顯示市場對這個開場前擔心的賣壓劇本相對淡定,但解禁的完整衝擊還要看接下來幾天。",
+    "horizon": "MT"
+  },
+  "lead_horizon": "MT",
+  "title_hook": "SpaceX今天解禁1160億美元,股價不跌反漲"
+}
