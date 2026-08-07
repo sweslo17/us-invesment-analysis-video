@@ -1,0 +1,151 @@
+{
+  "date": "2026-08-07",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7709.96,
+      "overnight_pct": 0.34,
+      "drivers": [
+        "上一交易日(8/6,週四)標普再跌0.18%,收7709.96點,連兩天收黑,那斯達克跌得最溫和(-0.06%),道瓊反而從前一天四大指數裡表現最好翻成當天最慘(-0.85%)。",
+        "今天ES期貨轉紅、漲0.34%,四大期貨全面翻紅,市場在等美東上午8:30公布的7月非農就業報告揭曉答案。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 26348.35,
+      "overnight_pct": 0.61,
+      "drivers": [
+        "上一交易日那斯達克僅小跌0.06%,收26348.35點,是四大指數中跌最少的一個,前一天科技權值股獲利了結的賣壓明顯緩和。",
+        "今天NQ期貨漲0.61%,是四大期貨中漲最兇的,但同一時間南韓、台灣的半導體股隔夜仍持續走弱,美股期貨的樂觀還沒完全反映到亞股晶片股上。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 53885.10,
+      "overnight_pct": 0.35,
+      "drivers": [
+        "上一交易日道瓊重挫0.85%,收53885.10點,是四大指數中跌最兇的,前一天才是唯一收紅的指數,一天之內角色整個對調。",
+        "今天YM期貨漲0.35%,盤前情緒回穩。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 3001.55,
+      "overnight_pct": 0.61,
+      "drivers": [
+        "上一交易日羅素兩千跌0.58%,收3001.55點,中小型股跟著大盤走弱。",
+        "今天RTY期貨漲0.61%,跟那斯達克期貨並列今天盤前表現最強的兩組期貨。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普已實現波動略降到約14.3%,波動目標模型算出的合理槓桿約1.05倍;開三倍一年要吃掉約9.2%的複利,四大指數裡最溫和。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克已實現波動仍高達22.6%,合理倍數只剩0.66倍;開三倍一年要吃掉近23%的複利——這正是亞股記憶體概念股這幾天大起大落的數學根源。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊已實現波動約14.6%,合理倍數約1.03倍,今天雖然是四大指數中跌最兇的一個,波動本身並沒有明顯放大。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千已實現波動約15.3%,合理倍數約0.98倍,中小型股槓桿耗損比大型股略高一些。"
+    }
+  ],
+  "regime": {
+    "vol": "normal",
+    "rates": "rising",
+    "stock_bond_corr": "positive",
+    "breadth": "narrow"
+  },
+  "items": [
+    {
+      "headline": "非農揭曉在即,鷹派Fed先開腔",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "developing",
+      "audience_value": "美東上午8:30(美股開盤前)將公布7月非農就業報告,市場預期新增約8.5–9.8萬人、失業率持平4.2%。這是本週的裁判時刻:7月ADP report只增加4.4萬人、遠低於預期,如果非農延續這個疲弱走勢,會是近幾個月最冷的訊號;但期貨隱含的9月升息機率現報58%,仍是多數情境,顯示市場並不覺得就業轉弱等於升息風險解除。對一般投資人:今天這個數字比過去幾週任何一個都重要,它會決定接下來幾週市場怎麼解讀『疲弱就業』跟『居高不下通膨』這兩股互相矛盾的力量,数字出爐前先別預設答案。",
+      "sources": [
+        {"url": "https://www.cnbc.com/2026/08/06/the-july-jobs-numbers-are-due-out-friday-heres-what-to-expect.html", "ts": null},
+        {"url": "https://www.benzinga.com/markets/equities/26/08/61031224/stock-market-today-dow-jones-futures-slip-sp-500-gains-ahead-of-july-jobs-report-atlassian-trade-desk-cloudflare-in-focus", "ts": null}
+      ]
+    },
+    {
+      "headline": "殖利率一夕轉彎,聖路易Fed重申鷹派",
+      "horizon": "LT",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "10年期公債殖利率今天彈回4.67%,較昨天的4.617%上升1.15%,打斷連續數個交易日從高點4.745%一路下滑的走勢。同一天,聖路易Fed總裁穆薩勒姆公開發言,重申通膨仍遠高於目標、風險偏向上行,貨幣政策必須維持有意義的限制性,不能因為生產力提升就轉向寬鬆。對一般投資人:殖利率會在非農公布前就先動,通常代表市場在搶先卡位;Fed官員一個接一個站出來講鷹派立場,說明就業數字轉弱這件事,目前還撼動不了Fed對通膨的戒心。",
+      "sources": [
+        {"url": "https://investinglive.com/news/economic-and-event-calendar-in-asia-friday-august-7-2026-fed-speaker-chinese-trade-data/", "ts": null}
+      ]
+    },
+    {
+      "headline": "亞股晶片持續退燒,SanDisk財測下修外溢",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "隔夜南韓KOSPI再跌0.60%、台灣加權指數跌0.57%,半導體、記憶體概念股是主要拖累,導火線之一是SanDisk財報雖優於預期,但財測展望遭下修,引發晶片股評價重新檢視;日經225幾乎打平(-0.03%)。跟這波晶片股走弱形成對比的是那斯達克100期貨反而大漲0.61%,美股期貨的樂觀還沒有完全傳導到亞股半導體族群。對一般投資人:記憶體概念股這一週的劇本一直在重演——狂飆幾天、隔夜就能腰斬式回吐,追高殺低的風險比大盤本身高出不少。",
+      "sources": [
+        {"url": "https://newsonjapan.com/article/150290.php", "ts": null}
+      ]
+    },
+    {
+      "headline": "中國出口優於預期,資金卻繞過晶片股",
+      "horizon": "MT",
+      "vs_thesis": "new",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "中國7月出口年增23.9%、進口年增27.5%,雙雙優於市場預期,AI相關的全球投資熱潮是重要貢獻來源之一;消息激勵上海綜合指數大漲1.00%、香港恆生漲0.54%,歐股同步刷新歷史高點(德國DAX漲0.77%、英國FTSE漲0.69%),德國電信優於預期的財報跟ASML、西門子能源等AI基礎建設概念股的反彈是主要動能。但同一天南韓、台灣的晶片股卻是全天最弱的族群。對一般投資人:『AI熱潮』這個故事現在同時撐著中國貿易數據跟歐洲股市新高,卻撐不住亞洲晶片股的股價,說明市場對AI敘事的解讀,正在按產業鏈位置分開計價。",
+      "sources": [
+        {"url": "https://www.bloomberg.com/news/articles/2026-08-07/china-exports-imports-post-double-digit-gains-but-growth-slows", "ts": null},
+        {"url": "https://www.euronews.com/business/2026/08/06/european-stocks-hit-record-highs-the-10-best-performers-of-2026", "ts": null}
+      ]
+    },
+    {
+      "headline": "何梅內意仍未露面,協議卡在最後一關",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "developing",
+      "audience_value": "荷姆茲海峽協議草案雖已完成,但仍卡在伊朗最高領袖何梅內意手上待最終批准;他自今年稍早在美以空襲中受傷後,已經數月未公開露面,外界對他何時、能否批准協議仍充滿疑慮。油價因此維持在相對高位,沒有隨協議進展的消息大幅回落。對一般投資人:『談妥框架』跟『正式簽署』中間還隔著一個生死未卜的最高領袖,這條地緣風險溢價還沒到可以真正放心的地步。",
+      "sources": [
+        {"url": "https://www.hngn.com/articles/272531/20260806/trump-says-hell-halt-planned-iran-strikes-citing-deal-hormuz-reopening-nuclear-threat.htm", "ts": null},
+        {"url": "https://www.newsnationnow.com/world/us-iran-war-strait-of-hormuz-peace-trump/", "ts": null}
+      ]
+    },
+    {
+      "headline": "SpaceX解禁首日撐住,續集才是重頭戲",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 2,
+      "confidence": "developing",
+      "audience_value": "SpaceX上市後首波閉鎖期解禁(8/6)並未出現市場擔心的拋售潮,股價當天逆勢收漲6.1%至114.92美元。但這只是9.115億股中前20%可售的第一天,真正的考驗是接下來幾天有沒有大股東實際出貨。對一般投資人:解禁日不跌不代表危機解除,賣壓可能是分批出現,還要再觀察幾天才能下結論。",
+      "sources": [
+        {"url": "https://www.bloomberg.com/news/articles/2026-08-06/spacex-shares-steady-after-100-billion-insider-lockup-expires", "ts": null},
+        {"url": "https://www.usnews.com/news/business/articles/2026-08-06/spacex-shares-rise-even-as-company-insiders-get-a-chance-to-sell-for-the-first-time", "ts": null}
+      ]
+    }
+  ],
+  "catalysts": [
+    "今天美東上午8:30:7月非農就業報告公布,市場預期新增約8.5–9.8萬人、失業率持平4.2%,將驗證7月ADP疲弱數字(4.4萬人)是否延續。",
+    "今天:聖路易Fed總裁穆薩勒姆發言,重申通膨仍遠高於目標、風險偏向上行,貨幣政策需維持有意義的限制性。",
+    "今天:荷姆茲海峽協議仍卡在伊朗最高領袖何梅內意手上待批准,他自今年稍早遇襲後已數月未公開露面。",
+    "今天(亞洲盤中已公布):中國7月出口年增23.9%、進口年增27.5%,優於市場預期,AI相關投資是主要貢獻來源之一。",
+    "本週稍早:SpaceX閉鎖期首波解禁(8/6)未見大規模拋售,股價收漲6.1%,後續幾天觀察是否有實際大股東出貨。"
+  ],
+  "thesis_delta": {
+    "changed": true,
+    "summary": "三條支柱方向都維持不變,今天各自新增了小幅但一致的證據。Fed政策這條線的核心裁判是今天美東上午8:30公布的7月非農就業報告——市場預期新增8.5–9.8萬人、失業率持平4.2%,將驗證ADP的4.4萬疲弱數字是否延續;同一天10年期公債殖利率反彈到4.67%,打斷連日下滑,聖路易Fed總裁穆薩勒姆重申通膨遠高於目標、風險偏向上行,貨幣政策需維持有意義的限制性,期貨隱含9月升息機率現報58%,仍是多數情境。地緣風險溢價這條線持平:荷姆茲海峽協議仍卡在伊朗最高領袖何梅內意手上待批准,他自今年稍早遇襲後已數月未公開露面,信心維持developing。AI/半導體『窄且不穩』出現新的分裂證據:南韓、台灣半導體股隔夜受SanDisk財測下修拖累持續走弱,但中國7月出口(+23.9%)、進口(+27.5%)受惠AI投資優於預期,帶動上海、香港股市走高,歐股同步創新高,顯示AI敘事在『晶片股價』與『整體貿易/資本支出』兩個層面出現不同表現;SpaceX解禁首日(8/6)未見大規模拋售,股價逆勢收漲6.1%,後續仍待觀察。",
+    "horizon": "MT"
+  },
+  "lead_horizon": "MT",
+  "title_hook": "非農報告還沒公布,殖利率先轉彎"
+}
