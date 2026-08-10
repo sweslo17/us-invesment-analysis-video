@@ -1,0 +1,138 @@
+{
+  "date": "2026-08-10",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7757.64,
+      "overnight_pct": 0.01,
+      "drivers": [
+        "上一交易日(8/7,週五)標普大漲0.62%,收7757.64點,創歷史新高。7月非農就業意外減少2.3萬人,遠低於市場預期的增加8萬人,市場解讀成Fed不用急著升息,反而是利多。",
+        "今天ES期貨幾乎打平(+0.01%),周五噴出的樂觀今天沒有延續,盤前氣氛明顯冷靜下來。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 26690.62,
+      "overnight_pct": -0.01,
+      "drivers": [
+        "上一交易日那斯達克大漲1.30%,收26690.62點,同創新高,科技權值股領漲,是四大指數中漲最兇的一個。",
+        "今天NQ期貨小跌0.01%,幾乎不動,那斯達克的慶祝氣氛暫時按下暫停鍵。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 54036.93,
+      "overnight_pct": -0.0,
+      "drivers": [
+        "上一交易日道瓊漲0.28%,收54036.93點,同步創高,但漲勢是四大指數中最溫和的一個。",
+        "今天YM期貨小跌0.004%,基本持平。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 3034.49,
+      "overnight_pct": -0.05,
+      "drivers": [
+        "上一交易日羅素兩千漲1.10%,收3034.49點,中小型股同樣受惠於非農爆冷帶來的不升息預期。",
+        "今天RTY期貨小跌0.05%,同樣按兵不動。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普已實現波動約14.4%,波動目標模型算出的合理槓桿約1.04倍;開三倍一年要吃掉約9.3%的複利,四大指數裡最溫和。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克已實現波動仍高達23.0%,合理倍數僅剩0.65倍;開三倍一年要吃掉近23.8%的複利,是四大指數裡槓桿代價最高的一個,也是記憶體概念股暴漲暴跌的數學根源。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊已實現波動約14.6%,合理倍數約1.03倍,開三倍一年要吃掉約9.6%的複利。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千已實現波動約15.6%,合理倍數約0.96倍,開三倍一年要吃掉約11.0%的複利。"
+    }
+  ],
+  "regime": {
+    "vol": "normal",
+    "rates": "stable",
+    "stock_bond_corr": "positive",
+    "breadth": "broad"
+  },
+  "items": [
+    {
+      "headline": "非農爆冷,股市卻噴出新高",
+      "horizon": "LT",
+      "vs_thesis": "challenges",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "美東時間8/7公布的7月非農就業報告意外減少2.3萬人,遠低於市場預期的增加8萬人,主因是政府部門裁減5.3萬人;工資年增率降到3.2%,是2021年5月以來最慢。市場把這份爛數字解讀成Fed不用急著升息,標普500大漲0.62%創歷史新高收7757.64點,那斯達克飆1.30%來到26690.62點,道瓊、羅素兩千同步收紅,收出這幾週最強的一週。對一般投資人:這是典型的『壞消息就是好消息』——就業真的在降溫,股市卻替降息(不升息)的希望乾杯,但降溫的勞動市場本身也是一種風險,別把股市噴出新高等同於經濟沒事。",
+      "sources": [
+        {"url": "https://www.cnbc.com/2026/08/07/jobs-report-july-2026.html", "ts": null},
+        {"url": "https://www.washingtonpost.com/business/2026/08/07/stocks-dow-jones-iran-oil-fed-interest-rates/1f4daa84-929d-11f1-9fdc-0a725c989a7b_story.html", "ts": null}
+      ]
+    },
+    {
+      "headline": "沙國油廠遇襲,荷姆茲卡關",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "週末葉門青年運動(胡塞)以無人機及飛彈夜襲沙烏地阿美的賈贊煉油廠,火勢已撲滅、無人員傷亡,同時對葉門摩卡發動地面攻勢。同一時間,伊朗開出新條件——要求美方先結束戰爭、撤軍並賠償戰爭損失,荷姆茲海峽才會真正恢復正常通行,原先『談妥框架』的樂觀降溫。布蘭特原油因此連續第三個交易日上漲,站上84美元。對一般投資人:上週的『協議快談成』標題,跟這個週末的實際攻擊事件是兩回事,地緣風險溢價沒有解除,反而正在加碼。",
+      "sources": [
+        {"url": "https://www.aljazeera.com/news/2026/8/9/saudi-arabia-says-fire-extinguished-at-aramco-facility-in-jizan", "ts": null},
+        {"url": "https://www.aljazeera.com/economy/2026/8/10/oil-prices-climb-as-iranian-demands-cloud-outlook-for-strait-of-hormuz", "ts": null}
+      ]
+    },
+    {
+      "headline": "何梅內意首度露臉,仍是個謎",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 2,
+      "confidence": "developing",
+      "audience_value": "伊朗官方媒體這幾天罕見放出一段未標註拍攝日期的影片,是新任最高領袖何梅內意今年3月就任以來首度露面,他先前傳出在襲擊中受傷。但外界無法確認影片何時拍攝、他目前身體狀況與掌權程度,他何時、是否會批准荷姆茲海峽協議仍是懸而未決的單一變數。對一般投資人:一段來源不明、沒有日期的影片,還稱不上『危機解除』,這條地緣風險線的信心程度只能維持developing。",
+      "sources": [
+        {"url": "https://www.jpost.com/middle-east/iran-news/article-905032", "ts": null},
+        {"url": "https://www.turkiyetoday.com/region/iran-releases-rare-video-of-mojtaba-khamenei-amid-health-concerns-3225723", "ts": null}
+      ]
+    },
+    {
+      "headline": "亞股全面反彈,晶片股喘口氣",
+      "horizon": "MT",
+      "vs_thesis": "new",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "今天日經225站上新高、南韓KOSPI漲0.65%,SK海力士、三星電子雙雙反彈,上週才重挫過一輪的記憶體概念股暫時喘口氣;台股漲1.48%、香港恆生漲1.05%、上海漲0.65%,歐股同步走高。這波全面翻紅主要是接棒上週五美股那份『壞消息就是好消息』的樂觀,加上AI交易出現較為挑選性的回溫。對一般投資人:亞股跟著美股一起鬆一口氣,不代表半導體『窄且不穩』的劇本已經結束,今天的反彈更像是喘息,不是趨勢反轉。",
+      "sources": [
+        {"url": "https://newsonjapan.com/article/150315.php", "ts": null},
+        {"url": "https://www.tradingkey.com/analysis/stocks/more/262090886-japan-south-korea-stocks-kospi-nikkei-softbank-sk-hynix-samsung-kioxia-tradingkey", "ts": null}
+      ]
+    },
+    {
+      "headline": "指數創新高,VIX卻不跟著降溫",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 2,
+      "confidence": "confirmed",
+      "audience_value": "VIX現報15.44,較上一交易日的14.89上升3.69%,跟標普、那斯達克同時創歷史新高的樂觀方向相反。對一般投資人:恐慌指數在新高日反而小幅走高,通常代表市場底層對某個風險(這次很可能是油價與荷姆茲海峽)還沒有真正放心,新高的表面平靜底下藏著一點不對稱的緊張。",
+      "sources": []
+    }
+  ],
+  "catalysts": [
+    "明天(8/11)美東下午5點收盤後:AI雲端公司CoreWeave公布第二季財報。",
+    "本週三(8/12):7月CPI公布,是非農轉弱後檢驗通膨降溫速度的下一個關鍵數字。",
+    "本週三(8/12):SpaceX第二批閉鎖股票解禁,規模約3.19億股。",
+    "本週四(8/13):7月PPI公布。",
+    "持續進行:荷姆茲海峽協議仍卡在伊朗最高領袖何梅內意手上待批准,週末胡塞武裝夜襲沙烏地阿美賈贊煉油廠,油價連漲三天。"
+  ],
+  "thesis_delta": {
+    "changed": true,
+    "summary": "Fed政策這條支柱出現本週以來最具體的確認證據:8/7公布的7月非農就業報告意外減少2.3萬人(遠低於預期增加8萬人),工資成長創2021年來最慢,期貨市場隱含的9月升息機率從上週的58%降到48%,10年期公債殖利率小降到4.66%。這是一份已公布、確認的硬數據,讓『higher-for-longer且升息風險浮現』的敘事出現實質降溫,但48%仍接近五五波,鷹派Fed官員尚未鬆口,因此判定為方向鬆動、尚未反轉,標記challenges而非直接改變基準。地緣風險溢價這條線不僅沒有緩解,反而透過實際事件加碼:週末葉門胡塞武裝夜襲沙烏地阿美賈贊煉油廠,伊朗同時開出要求美方結束戰爭、撤軍、賠償等新條件作為重開荷姆茲海峽的前提,原油連漲三天站上84美元;新任最高領袖何梅內意放出首度露面的未標註日期影片,身體狀況與掌權程度仍不明。AI/半導體『窄且不穩』方面,今天亞股全面反彈、記憶體概念股(SK海力士、三星電子)喘息回穩,是接棒美股樂觀的短期現象,尚不足以視為趨勢反轉。",
+    "horizon": "LT"
+  },
+  "lead_horizon": "LT",
+  "title_hook": "沙國煉油廠遇襲,原油連漲第三天"
+}
