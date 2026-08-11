@@ -1,0 +1,133 @@
+{
+  "date": "2026-08-11",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7753.11,
+      "overnight_pct": 0.0032,
+      "drivers": [
+        "上一交易日(8/10,週一)標普小跌0.06%,收7753.11點,從上週五的歷史新高小幅回吐;能源股受油價大漲帶動狂飆4.66%,但地產、公用事業等利率敏感類股走跌,10年期公債殖利率彈回4.70%附近。",
+        "今天ES期貨幾乎打平(+0.003%),Trump對伊朗提出新的賠償要求、聲稱『百分之百控制』荷姆茲海峽,地緣風險與降息樂觀互相拉扯,盤前氣氛陷入僵局。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 26605.36,
+      "overnight_pct": -0.0006,
+      "drivers": [
+        "上一交易日那斯達克跌0.32%,收26605.36點,是四大指數中跌最兇的一個;輝達逆勢下跌0.20%拖累大盤,蘋果、微軟、Alphabet則撐住指數。",
+        "今天NQ期貨小跌0.06%,今晚CoreWeave公布財報前,市場對AI資本支出的信心偏保守觀望。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 53975.98,
+      "overnight_pct": 0.0005,
+      "drivers": [
+        "上一交易日道瓊跌0.11%,收53975.98點,跌幅是四大指數中最溫和的一個,金融股逆勢漲0.36%小幅撐住指數。",
+        "今天YM期貨小漲0.05%,盤前氣氛偏中性。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 3017.40,
+      "overnight_pct": 0.0003,
+      "drivers": [
+        "上一交易日羅素兩千跌0.56%,收3017.40點,是四大指數中跌最兇的一個,小型股對利率上升最敏感。",
+        "今天RTY期貨小漲0.03%,盤前變化不大。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普已實現波動約14.0%,波動目標模型算出的合理槓桿約1.07倍;開三倍一年要吃掉約8.8%的複利,四大指數裡最溫和。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克已實現波動仍高達22.2%,合理倍數僅剩0.67倍;開三倍一年要吃掉近22.2%的複利,是四大指數裡槓桿代價最高的一個,今天輝達逆勢收黑就是這種波動的縮影。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊已實現波動約14.5%,合理倍數約1.03倍,開三倍一年要吃掉約9.5%的複利。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千已實現波動約15.5%,合理倍數約0.97倍,開三倍一年要吃掉約10.8%的複利,也是今天利率上升時跌最兇的原因。"
+    }
+  ],
+  "regime": {
+    "vol": "normal",
+    "rates": "rising",
+    "stock_bond_corr": "positive",
+    "breadth": "broad"
+  },
+  "items": [
+    {
+      "headline": "Trump再加碼,要伊朗賠償還嗆百分百控制荷姆茲",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "Trump週末追加新條件,要求伊朗為過去衝突中喪生的人賠償美國,並宣稱美國『百分之百控制』荷姆茲海峽,直接回應伊朗先前要求美方撤軍賠款才重開海峽的立場。雙方各說各話讓『協議快談成』的樂觀進一步降溫,布蘭特原油守住連續第四天上漲,站上88美元附近,比上週五的84美元又墊高一截。對一般投資人:油價這條風險線不但沒退,反而在加碼,持有能源類股或油品曝險的部位這幾天波動會更大,不代表要現在進出,但該留意。",
+      "sources": [
+        {"url": "https://www.bloomberg.com/news/articles/2026-08-10/trump-lashes-out-after-iranian-demands-with-deal-hopes-dimming", "ts": null},
+        {"url": "https://www.cnbc.com/2026/08/11/us-iran-war-trump-hormuz-control-reparation-talks-.html", "ts": null},
+        {"url": "https://www.bloomberg.com/news/articles/2026-08-10/latest-oil-market-news-and-analysis-for-aug-11", "ts": null}
+      ]
+    },
+    {
+      "headline": "史上新高後,美股週一集體小幅回吐",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 2,
+      "confidence": "confirmed",
+      "audience_value": "上一交易日(8/10)四大指數全數收黑,羅素兩千跌0.56%、那斯達克跌0.32%領跌,道瓊、標普跌幅較溫和;能源股受油價大漲帶動狂飆4.66%,地產、公用事業等利率敏感類股則收黑,10年期公債殖利率同步彈回4.70%附近。對一般投資人:上週五那波非農爆冷帶來的樂觀,週一稍稍降溫,這不是反轉,更像是漲多後正常的消化,只是背後同時混著油價跟利率兩條線一起發酵。",
+      "sources": []
+    },
+    {
+      "headline": "升息機率悄悄回彈到52%",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "single-print",
+      "audience_value": "期貨隱含的9月升息機率從上週五的48%回升到52%,10年期公債殖利率同步從4.66%彈到4.70%附近。對一般投資人:上週非農爆冷帶來的『不用升息』樂觀還沒有定案,市場自己又把機率往回調了一點,這條線本來就接近五五波,明天(8/12)的CPI才是真正把話說死的裁判,現在下結論都太早。",
+      "sources": []
+    },
+    {
+      "headline": "三星奪回記憶體王座,SK海力士獨自承壓",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "研調機構Counterpoint估計三星第二季DRAM市佔重回39%的龍頭位置,SK海力士則從去年的領先地位滑落到26%,主因SK海力士對高頻寬記憶體(HBM)的營收依賴度更高,價格一回落衝擊也更大。今天股價也反映這個分裂:三星大漲4.13%,SK海力士僅微漲0.35%,南韓KOSPI上漲0.73%、日經站上新高,但香港恆生跌1.10%、上海跌0.84%(外資撤出中國股市的訊號)。對一般投資人:『AI窄且不穩』這個劇本現在連記憶體股內部都在分裂,同一個題材裡贏家跟輸家可以差很多,別把『記憶體概念股』當成一個整體來賭。",
+      "sources": [
+        {"url": "https://invezz.com/za/news/2026/08/11/samsung-stock-rebounds-sk-hynix-sinks-heres-why-koreas-ai-trade-is-diverging/", "ts": null}
+      ]
+    },
+    {
+      "headline": "CoreWeave今晚交卷,考驗AI資本支出信心",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 3,
+      "confidence": "developing",
+      "audience_value": "AI雲端公司CoreWeave今天美東下午5點收盤後公布第二季財報,市場預期營收約25.5億美元、每股虧損約1.23美元,焦點在近994億美元的訂單backlog能不能真的轉成營收,以及310億到350億美元的資本支出guidance。對一般投資人:這是繼記憶體股分裂之後,AI資本支出故事的下一個檢查點,財報好壞會直接影響大家對『AI窄且不穩』這條線要不要繼續擔心。",
+      "sources": [
+        {"url": "https://www.tipranks.com/news/crwv-stock-3-things-to-watch-in-coreweave-earnings-tomorrow", "ts": null}
+      ]
+    }
+  ],
+  "catalysts": [
+    "今天(8/11)美東下午5點收盤後:AI雲端公司CoreWeave公布第二季財報,市場關注994億美元訂單backlog與310–350億美元資本支出guidance。",
+    "明天(8/12):7月CPI公布,是升息機率回彈到52%後的關鍵測試。",
+    "明天(8/12):SpaceX第二批閉鎖股票解禁,規模約3.19億股。",
+    "持續進行:Trump要求伊朗賠償、宣稱『百分之百控制』荷姆茲海峽,協議樂觀進一步降溫,布蘭特原油站上88美元附近。"
+  ],
+  "thesis_delta": {
+    "changed": true,
+    "summary": "地緣風險溢價這條線持續加碼:Trump週末追加要求伊朗為衝突死傷者賠償美國,並宣稱『百分之百控制』荷姆茲海峽,讓原先『談妥框架卡在最後拍板』的樂觀進一步降溫,布蘭特原油連四天上漲、站上88美元附近,比上週五的84美元又墊高。Fed政策這條線出現小幅反覆:期貨隱含9月升息機率從上週五的48%回彈到52%,10年期公債殖利率同步從4.66%彈到4.70%,顯示非農爆冷帶來的『不用升息』樂觀還沒有定案,明天CPI才是真正的裁判,方向維持不變、仍屬五五波格局。AI/半導體『窄且不穩』方面,新增的具體證據是記憶體股內部的分裂被研調數據坐實:三星第二季DRAM市佔重回39%龍頭、SK海力士滑落到26%,因HBM價格回落對SK海力士衝擊更大,今天股價也照著這個劇本走(三星+4.13%、SK海力士+0.35%),同時香港恆生、上海走弱反映外資撤出中國股市的訊號。三條支柱方向皆維持不變,僅屬既有敘事的延續與加深。",
+    "horizon": "MT"
+  },
+  "lead_horizon": "MT",
+  "title_hook": "Trump嗆聲百分百控制荷姆茲,原油衝上88美元"
+}
