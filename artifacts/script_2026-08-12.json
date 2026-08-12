@@ -1,0 +1,143 @@
+{
+  "segments": [
+    {
+      "headline": "CPI等一下就揭盅",
+      "tag": "2026-08-12 · 盤前快報",
+      "vo": "美股期貨小漲,但大家在等的是等一下的CPI,九月升不升息今天揭曉。",
+      "t_start": 0.0,
+      "duration": 5.61
+    },
+    {
+      "headline": "集中度",
+      "tag": "名詞小教室",
+      "vo": "集中度看的是漲跌由誰扛,還是全市場一起動。",
+      "t_start": 5.61,
+      "duration": 3.57
+    },
+    {
+      "chart_id": "ov_close",
+      "title": "昨收小跌,輪動更搶眼",
+      "vo": "先看大盤。上一交易日標普跌0.32%、那斯達克跌0.6%,但羅素兩千逆勢漲0.32%。能源漲1.25%、公用事業漲1.16%,地產跌0.72%,資金往順週期跟防禦股移動。今天期貨全面翻紅,那斯達克期貨漲0.45%領漲。",
+      "t_start": 9.18,
+      "duration": 18.53
+    },
+    {
+      "chart_id": "conc_now",
+      "title": "少數幾支股撐著指數",
+      "vo": "指數常常是幾支權值股撐出來的。輝達跌0.25%、Alphabet兩檔都跌超0.35%,拖累最大;微軟逆勢漲0.29%撐住半個舞台。這就像合唱團只剩兩三人開口,其他人在對嘴型。",
+      "t_start": 27.71,
+      "duration": 14.62
+    },
+    {
+      "headline": "CoreWeave財報炸開",
+      "vo": "AI雲端商CoreWeave昨天交卷,營收年增112%,訂單餘額暴增到1292億美元,股價盤後飆漲近兩成。",
+      "t_start": 42.33,
+      "duration": 9.01
+    },
+    {
+      "chart_id": "global_now",
+      "title": "南韓記憶體股全面噴出",
+      "vo": "轉去看亞股。南韓KOSPI暴漲3.68%,三星飆6%、SK海力士飆5%,不是分裂是一起噴——傳出淡馬錫要直接投資這兩家記憶體廠,加上HBM4定價優於預期。日經新高,但香港恆生跌0.83%。",
+      "t_start": 51.34,
+      "duration": 15.98
+    },
+    {
+      "chart_id": "fed_now",
+      "title": "CPI是今天的裁判",
+      "vo": "回到利率這條線。期貨隱含九月升息機率現報48%,比前一天52%降溫,12月隱含站上3.92%左右。美東上午8點半的CPI才是真正的裁判——數字冷,五五波往不升息傾;數字熱,機率重新往上衝。",
+      "t_start": 67.32,
+      "duration": 16.15
+    },
+    {
+      "headline": "荷姆茲鬆口風向",
+      "vo": "巴基斯坦喊話,美伊在荷姆茲海峽『接近某種安排』,是少見的緩和訊號。但布蘭特原油沒鬆手,五個交易日累積漲約12%、逼近90美元。",
+      "t_start": 83.47,
+      "duration": 10.71
+    },
+    {
+      "chart_id": "lev_now",
+      "title": "小型股翻紅,槓桿課還沒下課",
+      "vo": "回到槓桿課。那斯達克波動22.2%,合理槓桿只剩0.68倍,三倍一年吃掉22%複利。羅素兩千波動15.5%,昨天逆勢翻紅不代表波動變小了。",
+      "t_start": 94.18,
+      "duration": 11.73
+    },
+    {
+      "chart_id": "cat_now",
+      "title": "今天到接下來要看什麼",
+      "vo": "美東8點半CPI公布,是今天最大裁判。同一天SpaceX第二批解禁,約3.19億股,首批8/6沒有拋售潮。今天還有思科、Nebius等公司財報,荷姆茲僵局持續發酵。",
+      "t_start": 105.91,
+      "duration": 13.94
+    },
+    {
+      "headline": "五五波,還沒被打破",
+      "vo": "拉遠一點看。CoreWeave一份好財報不能證明整個AI供應鏈都健康,記憶體股今天同步噴出、昨天卻是分裂的。CPI今天揭盅,機率從52%滑到48%,五五波沒被打破,higher-for-longer還在,只是每天重新洗牌。",
+      "t_start": 119.85,
+      "duration": 18.87
+    },
+    {
+      "headline": "市場先生\n今天丟硬幣",
+      "tag": "葛拉漢  不知道有沒有說過",
+      "vo": "市場先生今天丟硬幣,你猜對他不會謝你,猜錯他照樣跟你收錢。葛拉漢,不知道有沒有說過。以上非投資建議,我們明天盤前見。",
+      "t_start": 138.72,
+      "duration": 9.86
+    }
+  ],
+  "charts": [
+    {
+      "id": "ov_close",
+      "module": "overnight_vs_close",
+      "params": {}
+    },
+    {
+      "id": "conc_now",
+      "module": "concentration",
+      "params": {}
+    },
+    {
+      "id": "global_now",
+      "module": "global_equity_overnight",
+      "params": {}
+    },
+    {
+      "id": "fed_now",
+      "module": "fed_path",
+      "params": {}
+    },
+    {
+      "id": "lev_now",
+      "module": "leverage_decay",
+      "params": {}
+    },
+    {
+      "id": "cat_now",
+      "module": "catalyst_timeline",
+      "params": {
+        "events": [
+          {
+            "date": "今天8:30",
+            "label": "CPI公布,九月裁判",
+            "highlight": true
+          },
+          {
+            "date": "今天",
+            "label": "SpaceX第二批解禁",
+            "highlight": false
+          },
+          {
+            "date": "今天",
+            "label": "思科等公司財報",
+            "highlight": false
+          },
+          {
+            "date": "持續進行",
+            "label": "荷姆茲僵局未解",
+            "highlight": false
+          }
+        ]
+      }
+    }
+  ],
+  "coverage_gaps": [
+    "沒有原油/商品價格的圖表模組——布蘭特原油逼近90美元、荷姆茲海峽談判是今天重要的背景敘事,只能用文字描述。"
+  ]
+}

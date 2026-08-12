@@ -1,0 +1,137 @@
+{
+  "date": "2026-08-12",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7728.20,
+      "overnight_pct": 0.0016,
+      "drivers": [
+        "上一交易日(8/11,週二)標普跌0.32%,收7728.20點,從8/10的7753.11點再度回落;科技股續跌0.12%、地產跌0.72%、通訊服務跌0.50%領跌,但能源股受油價上漲帶動漲1.25%、公用事業漲1.16%,類股呈現往順週期、防禦股輪動的味道。",
+        "今天ES期貨小漲0.16%,CoreWeave財報大幅優於預期、南韓記憶體股同步噴出,替盤前氣氛注入一點暖意,但市場真正在等的是美東上午8:30的CPI。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 26445.45,
+      "overnight_pct": 0.0045,
+      "drivers": [
+        "上一交易日那斯達克跌0.60%,收26445.45點,是四大指數中跌最兇的一個;輝達逆勢跌0.25%、Alphabet兩個股份都跌超0.35%,只有微軟逆勢漲0.29%撐住指數。",
+        "今天NQ期貨漲0.45%,四大期貨中領漲——CoreWeave財報後股價飆漲、南韓半導體股全面噴出,把AI/半導體的樂觀重新灌回那斯達克期貨。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 53791.85,
+      "overnight_pct": 0.0014,
+      "drivers": [
+        "上一交易日道瓊跌0.34%,收53791.85點,工業股逆勢漲0.60%小幅撐住指數,但整體仍跟著大盤回落。",
+        "今天YM期貨小漲0.14%,盤前氣氛偏温和正向。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 3027.12,
+      "overnight_pct": 0.0013,
+      "drivers": [
+        "上一交易日羅素兩千逆勢漲0.32%,收3027.12點,是四大指數中唯一收紅的,跟那斯達克、標普、道瓊的下跌方向相反。",
+        "今天RTY期貨小漲0.13%,盤前變化不大,小型股對稍後CPI結果仍最敏感。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普已實現波動約14.1%,波動目標模型算出的合理槓桿約1.07倍;開三倍一年要吃掉約8.9%的複利,四大指數裡最溫和。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克已實現波動仍高達22.2%,合理倍數僅剩0.68倍;開三倍一年要吃掉約22.1%的複利,是四大指數裡槓桿代價最高的一個。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊已實現波動約14.6%,合理倍數約1.03倍,開三倍一年要吃掉約9.6%的複利。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千已實現波動約15.5%,合理倍數約0.97倍,開三倍一年要吃掉約10.7%的複利;昨天逆勢翻紅不代表波動變小,只是資金那天剛好流過去。"
+    }
+  ],
+  "regime": {
+    "vol": "normal",
+    "rates": "stable",
+    "stock_bond_corr": "positive",
+    "breadth": "mixed"
+  },
+  "items": [
+    {
+      "headline": "CoreWeave財報炸裂,訂單餘額六週暴增到1292億美元",
+      "horizon": "ST",
+      "vs_thesis": "challenges",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "AI雲端公司CoreWeave公布第二季財報,營收25.8億美元優於預期,年增112%;訂單backlog從上季的1042億美元暴增到1292億美元,六週內新增約250億美元;調整後EBITDA利潤率59%,營運利益率轉正來到5%。股價盤後一度飆漲近兩成,把那斯達克期貨帶上今天四大期貨領漲。對一般投資人:這是AI資本支出故事一次很扎實的正面驗證,但只是一家公司,不能就此推論記憶體、邏輯晶片這些『窄且不穩』的其他角落也一起變健康了。",
+      "sources": [
+        {"url": "https://au.investing.com/news/company-news/coreweave-q2-2026-slides-revenue-doubles-backlog-surges-246-93CH-4592449", "ts": null},
+        {"url": "https://www.cnbc.com/2026/08/11/coreweave-crwv-q2-earnings-report-2026.html", "ts": null}
+      ]
+    },
+    {
+      "headline": "CPI今天揭盅,九月升息機率剩48%",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "developing",
+      "audience_value": "美東上午8:30將公布7月CPI,市場預期年增3.4%(前值3.5%)、核心年增2.5%。期貨隱含的9月升息機率現報48%,比8/11的52%又稍微降溫,12月政策利率隱含站上約3.92%,市場自己都還沒有答案。對一般投資人:這是本週真正把話說死的裁判——數字如果比預期冷,五五波可能往『不用升息』倾斜;數字如果偏熱,升息機率可能重新往上衝,兩種結果對股債匯市的反應都不會小。",
+      "sources": [
+        {"url": "https://www.thestreet.com/stock-market-today/stock-market-today-dow-jones-sp-500-nasdaq-updates-aug-12-2026", "ts": null},
+        {"url": "https://www.kucoin.com/news/flash/u-s-july-cpi-to-be-released-on-august-12-2026", "ts": null}
+      ]
+    },
+    {
+      "headline": "南韓記憶體股不分裂了,三星、SK海力士一起噴",
+      "horizon": "MT",
+      "vs_thesis": "challenges",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "昨天還是三星漲、SK海力士只微漲的『分裂』劇本,今天反過來同步噴出:南韓KOSPI大漲3.68%,三星電子飆6%、SK海力士飆5%。傳出新加坡主權基金淡馬錫打算直接投資這兩家記憶體廠,加上HBM4/HBM4E定價優於預期、韓國半導體出口暴增,資金又一次全部擠回同一個題材。對一般投資人:記憶體概念股的漲跌劇本可以一天一個樣,分裂或同漲都可能只反映短期資金消息,不是穩定的基本面訊號,追這種題材風險本來就比看起來高。",
+      "sources": [
+        {"url": "https://www.bloomberg.com/news/articles/2026-08-12/sk-hynix-samsung-extend-gains-after-report-temasek-to-invest", "ts": null},
+        {"url": "https://www.kedglobal.com/korean-stock-market/newsView/ked202608120010", "ts": null}
+      ]
+    },
+    {
+      "headline": "荷姆茲罕見鬆口,油價卻還在往90美元衝",
+      "horizon": "MT",
+      "vs_thesis": "new",
+      "materiality": 4,
+      "confidence": "developing",
+      "audience_value": "居間調停的巴基斯坦國防部長表示,美伊在荷姆茲海峽議題上『接近某種安排』,是這幾天少見的緩和訊號,跟Trump前一天還在加碼要求伊朗賠償的強硬姿態不太一樣。但布蘭特原油沒有跟著鬆手,過去五個交易日累積上漲約12%、逼近90美元,部分分析甚至提到有機會挑戰100美元。對一般投資人:嘴上說『接近談成』跟油價實際的反應是兩件事,市場現在還是把風險溢價留在油價裡,沒有真的定價『問題解決了』。",
+      "sources": [
+        {"url": "https://www.washingtontimes.com/news/2026/aug/11/pakistani-official-sees-signs-sort-peace-deal-forming-middle-east/", "ts": null},
+        {"url": "https://oilprice.com/Energy/Energy-General/Brent-Could-Hit-100-as-Hormuz-Crisis-Flares-Again.html", "ts": null}
+      ]
+    },
+    {
+      "headline": "羅素兩千逆勢翻紅,能源贏、地產跌",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 2,
+      "confidence": "confirmed",
+      "audience_value": "上一交易日四大指數裡只有羅素兩千收紅(+0.32%),標普、那斯達克、道瓊都續跌;類股上能源(+1.25%)、公用事業(+1.16%)、工業(+0.60%)領漲,地產(-0.72%)、通訊服務(-0.50%)、非必需消費(-0.36%)領跌。對一般投資人:這種輪動比較像是CPI前的觀望佈局,不是趨勢反轉,油價跟利率這兩條線同時在牽動資金往哪走。",
+      "sources": []
+    }
+  ],
+  "catalysts": [
+    "今天(8/12)美東上午8:30:7月CPI公布,市場預期年增3.4%(前值3.5%),是升息機率(現報48%)的關鍵測試。",
+    "今天(8/12):SpaceX第二批閉鎖股票解禁,規模約3.19億股(首批8/6未見大規模拋售)。",
+    "今天:思科(Cisco)、Coherent、Nebius、Cerebras等公司公布財報。",
+    "持續進行:荷姆茲海峽談判,巴基斯坦稱『接近某種安排』,但布蘭特原油逼近90美元。"
+  ],
+  "thesis_delta": {
+    "changed": true,
+    "summary": "Fed政策這條線今天還沒有裁判結果:期貨隱含9月升息機率現報48%,比8/11的52%小降,12月政策利率隱含約3.92%,市場等美東上午8:30的CPI才會有答案,方向維持五五波、暫不視為反轉。AI/半導體『窄且不穩』出現新的擾動:CoreWeave財報大幅優於預期(訂單backlog六週暴增到1292億美元,股價飆近兩成),南韓記憶體股也從昨天的『三星漲、SK海力士小漲』分裂劇本,反過來同步噴出(KOSPI+3.68%,兩家韓廠一起飆5-6%,受淡馬錫傳出直接投資的消息帶動)——這些是對『窄且不穩』敘事的正面擾動,但單日、單一消息驅動的同漲不足以視為題材轉為穩定,暫標記為擾動而非反轉。地緣風險溢價這條線出現少見的緩和訊號:居間調停的巴基斯坦稱美伊『接近某種安排』,但布蘭特原油沒有跟著鬆手,五個交易日累積漲約12%、逼近90美元,顯示市場還沒有真的把風險溢價定價掉。三條支柱方向暫維持不變,今天的變化屬於『新擾動,待確認』而非基準情境反轉。",
+    "horizon": "MT"
+  },
+  "lead_horizon": "MT",
+  "title_hook": "CPI等一下揭盅,九月升息只剩五五波"
+}
