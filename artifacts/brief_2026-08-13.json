@@ -1,0 +1,143 @@
+{
+  "date": "2026-08-13",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7748.5,
+      "overnight_pct": 0.0015,
+      "drivers": [
+        "上一交易日(8/12,週三)標普漲0.26%,收7748.50點,7月CPI年增3.4%符合預期、核心年增2.5%,通膨降溫讓大盤逼近歷史新高,科技股領漲(+1.49%),原物料(-1.24%)、非必需消費(-1.13%)重挫領跌。",
+        "今天ES期貨僅小漲0.15%,市場等美東上午8:30的7月PPI跟初領失業金,消化CPI後買盤暫時喘息。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 26588.490234375,
+      "overnight_pct": -0.0001,
+      "drivers": [
+        "上一交易日那斯達克漲0.54%,收26588.49點,微軟、輝達等權值股撐盤,AI雲端商Nebius財報後暴漲34%是主要貢獻。",
+        "今天NQ期貨小跌0.01%,思科財報超預期卻股價重挫、晶片新創Cerebras業績重摔近二成,拖住科技期貨的上檔動能。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 53770.26953125,
+      "overnight_pct": 0.0034,
+      "drivers": [
+        "上一交易日道瓊小跌0.04%,收53770.27點,是四大指數中唯一收黑,工業、金融股表現分歧。",
+        "今天YM期貨漲0.34%,四大期貨中領漲,盤前氣氛偏正向。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 3045.47998046875,
+      "overnight_pct": 0.0018,
+      "drivers": [
+        "上一交易日羅素兩千漲0.61%,收3045.48點,是四大指數表現最強的一個,延續對利率敏感的小型股偏好。",
+        "今天RTY期貨漲0.18%,小型股對稍後的PPI與初領失業金數據仍最敏感。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普已實現波動降到約14%,波動目標模型算出的合理槓桿回升到約1.07倍;開三倍一年要吃掉約8.9%的複利,四大指數裡最溫和。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克已實現波動仍高達22.2%,合理倍數只剩0.68倍;開三倍一年要吃掉約22.1%的複利,是四大指數裡槓桿代價最高的一個。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊已實現波動約14.6%,合理倍數約1.03倍,開三倍一年要吃掉約9.6%的複利。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千已實現波動約15.5%,合理倍數約0.97倍,開三倍一年要吃掉約10.8%的複利。"
+    }
+  ],
+  "regime": {
+    "vol": "low",
+    "rates": "stable",
+    "stock_bond_corr": "positive",
+    "breadth": "broad"
+  },
+  "items": [
+    {
+      "headline": "CPI符合預期,標普逼近歷史新高,九月升息機率降到42%",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "7月CPI符合市場預期、年增3.4%(核心2.5%),消除了短期內看到更熱通膨的顧慮;期貨隱含的9月升息機率也跟著從48%降到42%,標普500順勢逼近歷史新高。對一般投資人:通膨降溫的路徑暫時守住,但Fed內部鷹派立場沒有正式鬆動,42%仍不算低,別把「不會升息」當成定局。",
+      "sources": [
+        {"url": "https://www.cnbc.com/2026/08/12/cpi-inflation-report-july-2026.html"},
+        {"url": "https://www.thestreet.com/stock-market-today/stock-market-today-dow-jones-sp-500-nasdaq-updates-aug-12-2026"},
+        {"url": "https://www.bloomberg.com/news/articles/2026-08-12/bond-traders-keep-cointoss-wager-on-september-fed-hike-post-cpi"}
+      ]
+    },
+    {
+      "headline": "南韓股市連四天噴,KOSPI晉身技術性牛市",
+      "horizon": "MT",
+      "vs_thesis": "challenges",
+      "materiality": 4,
+      "confidence": "developing",
+      "audience_value": "南韓KOSPI今天再漲3.56%,是連續第四個交易日上漲,從7月低點算起已經反彈22%,正式跨過技術性牛市的門檻;三星電子、SK海力士雙雙跟著噴出,除了美股晶片股走強帶動信心,也傳出新加坡主權基金淡馬錫打算直接入股這兩家記憶體廠。對一般投資人:上次三星、SK海力士只是分裂式上漲、隔天就翻臉;這次連續四天一起噴,是這條敘事第一次撐過不只一天,值得繼續盯,但淡馬錫的投資傳聞還沒有官方證實,一次連漲還不等於題材真的從「窄且不穩」變成「穩健」。",
+      "sources": [
+        {"url": "https://www.bloomberg.com/news/articles/2026-08-13/korean-stocks-rise-22-in-ten-days-as-chip-rally-regains-steam"},
+        {"url": "https://www.cnbc.com/2026/08/13/south-korea-kospi-bull-market-sk-hynix-samsung-surge.html"},
+        {"url": "https://www.koreajoongangdaily.com/business/kospi-surges-for-fourth-straight-day-on-chip-rally-as-won-weakens/12824098"}
+      ]
+    },
+    {
+      "headline": "AI財報冰火兩重天:Nebius噴、思科跌、Cerebras崩",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "同一天公布的三份AI相關財報走向完全不同:AI雲端商Nebius營收年增454%,股價暴漲34%;網通龍頭思科營收創紀錄、每股盈餘超預期,股價卻因毛利率展望疑慮重挫4.6%;晶片新創Cerebras營收下滑7%、虧損遠超預期,股價一度崩跌近兩成。對一般投資人:同一個AI資本支出故事裡,贏家和輸家的差距越拉越大,不是每家公司都能沾到AI的光,追單一個股的風險本來就比追指數高出一截。",
+      "sources": [
+        {"url": "https://qz.com/nebius-stock-earnings-revenue-beat-ai-cloud-081226"},
+        {"url": "https://www.investing.com/news/company-news/cisco-q4-fy26-slides-ai-orders-surge-45x-shares-dip-on-margins-93CH-4856377"},
+        {"url": "https://www.cnbc.com/2026/08/12/cerebras-cbrs-q2-earnings-report-2026.html"}
+      ]
+    },
+    {
+      "headline": "今天PPI跟初領失業金雙數據見真章",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 3,
+      "confidence": "developing",
+      "audience_value": "美東上午8:30將公布7月PPI與當週初領失業金人數。PPI市場預期年增從6月的5.5%降溫到約5.1%,初領失業金預期約20.2萬(前值19.9萬)。對一般投資人:CPI已經交出溫和的答案,PPI是檢驗「通膨降溫」是不是從生產端到消費端都一致的下一塊拼圖,數字冷,市場可能延續樂觀;數字熱,好不容易回落的九月升息機率可能重新往上彈。",
+      "sources": [
+        {"url": "https://continuumeconomics.com/a/b6e8faf2/preview-due-august-13-us-july-ppi-prices-seen-subdued-when-data-was-surveyed"},
+        {"url": "https://www.investing.com/news/stock-market-news/ppi-and-jobless-claims-highlight-economic-data-due-thursday-93CH-4855846"}
+      ]
+    },
+    {
+      "headline": "荷姆茲僵局未解,油價卡在88美元附近",
+      "horizon": "MT",
+      "vs_thesis": "new",
+      "materiality": 3,
+      "confidence": "developing",
+      "audience_value": "荷姆茲海峽的談判還卡在伊朗的條件上——伊朗堅持美方要先結束戰爭、撤軍並賠償,海峽才會真正恢復正常通行;布蘭特原油從逼近90美元的高點小幅回落到88美元附近,但仍處在過去幾週的相對高檔。對一般投資人:嘴上說「快談成」跟油價的實際反應始終是兩件事,風險溢價還留在油價裡,沒有人真的把地緣問題當成已經解決。",
+      "sources": [
+        {"url": "https://www.cnn.com/2026/08/08/world/live-news/iran-war-trump"},
+        {"url": "https://tradingeconomics.com/commodity/brent-crude-oil"}
+      ]
+    }
+  ],
+  "catalysts": [
+    "今天(8/13)美東上午8:30:7月PPI公布,市場預期年增自5.5%降溫到約5.1%,是CPI後下一個通膨測試。",
+    "今天(8/13)美東上午8:30:當週初領失業金人數,市場預期約20.2萬(前值19.9萬)。",
+    "持續進行:荷姆茲海峽談判,伊朗要求美方撤軍賠款才願重開,布蘭特原油守在88美元附近。",
+    "持續發酵:南韓記憶體股(三星、SK海力士)連四天上漲的牛市能否延續,淡馬錫投資傳聞尚待官方證實。"
+  ],
+  "thesis_delta": {
+    "changed": true,
+    "summary": "CPI過關(年增3.4%符合預期),期貨隱含的九月升息機率從48%降到42%,Fed政策這條線的短期壓力進一步緩解,但債券圈交易員仍把它當銅板猜,鷹派分行總裁的立場沒有正式鬆動,方向暫不視為反轉。AI/半導體「窄且不穩」出現新進展:南韓記憶體股連四天上漲、正式跨過技術性牛市門檻,是這條敘事第一次撐過不只一天,但同一天AI基建財報卻冰火兩重天——Nebius暴漲、思科超預期卻下跌、Cerebras崩跌——證明AI故事內部仍高度分裂,暫不足以視為「窄且不穩」已經解除。地緣風險溢價方向不變,油價從高點小幅回落但仍處高檔,荷姆茲談判仍卡在伊朗的條件上。三條支柱方向維持不變,今天的變化屬於確認與新擾動,而非基準情境反轉。",
+    "horizon": "MT"
+  },
+  "lead_horizon": "MT",
+  "title_hook": "南韓股市四天噴22%,晉身牛市是真的?"
+}
