@@ -1,0 +1,153 @@
+{
+  "date": "2026-08-14",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7798.990234375,
+      "overnight_pct": 0.000607,
+      "drivers": [
+        "上一交易日(8/13,週四)標普漲0.65%,收7798.99點,寫下歷史新高,靠7月PPI比預期更冷撐盤。",
+        "今天ES期貨幾乎打平,市場在等美東上午的7月零售銷售與密西根大學消費者信心初值。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 26803.029296875,
+      "overnight_pct": 0.003391,
+      "drivers": [
+        "上一交易日那斯達克漲0.81%,收26803.03點,同樣寫下歷史新高。",
+        "今天NQ期貨小漲0.34%,四大期貨中領漲,亞洲記憶體股噴出的樂觀有外溢跡象。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 53839.98828125,
+      "overnight_pct": -0.00176,
+      "drivers": [
+        "上一交易日道瓊漲0.13%,收53839.99點,漲幅是四大指數中最小。",
+        "今天YM期貨小跌0.18%,四大期貨中唯一收黑,工業類股偏保守。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 3052.85009765625,
+      "overnight_pct": 0.000621,
+      "drivers": [
+        "上一交易日羅素兩千漲0.24%,收3052.85點,延續對利率敏感的中小型股偏好。",
+        "今天RTY期貨幾乎打平,稍後的零售銷售與消費信心數據對小型股影響通常更大。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普已實現波動降到約13.9%,波動目標模型算出的合理槓桿回升到約1.08倍;開三倍一年要吃掉約8.8%的複利,四大指數裡最溫和。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克已實現波動仍高達21.5%,合理倍數只剩0.70倍;開三倍一年要吃掉超過20%的複利,是四大指數裡槓桿代價最高的一個。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊已實現波動約14.6%,合理倍數約1.03倍,開三倍一年要吃掉約9.6%的複利。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千已實現波動約15.5%,合理倍數約0.97倍,開三倍一年要吃掉約10.8%的複利。"
+    }
+  ],
+  "regime": {
+    "vol": "low",
+    "rates": "falling",
+    "stock_bond_corr": "positive",
+    "breadth": "broad"
+  },
+  "items": [
+    {
+      "headline": "PPI比預期更冷,九月升息機率降到34%",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "7月PPI最終需求月增持平,遠低於預期的+0.2%,核心月增0.2%也低於預期的0.3%,通膨降溫從消費端(CPI)確認延伸到生產端(PPI);但同一天初領失業金意外衝到20.9萬,比預期跟前一週都高,勞動市場鬆動的訊號同時浮現。期貨隱含的九月升息機率因此從42%再降到34%。對一般投資人:通膨降溫的路徑更扎實了,但別忽略同一天冒出來的就業轉弱訊號,兩件事本來就是一體兩面。",
+      "sources": [
+        {"url": "https://www.cnbc.com/2026/08/13/wholesale-prices-were-flat-in-july-below-expectations-for-0point2percent-increase.html", "ts": null},
+        {"url": "https://www.tradingkey.com/analysis/economic/indicators/262102661-us-ppi-fell-short-expectations-july-cooling-inflation-fed-tradingkey", "ts": null},
+        {"url": "https://247wallst.com/investing/2026/08/13/inflation-falls-for-2-months-straight-is-a-fed-september-rate-hike-still-on-the-table/", "ts": null}
+      ]
+    },
+    {
+      "headline": "SanDisk甩出940億美元大單,記憶體行情這次靠真合約",
+      "horizon": "MT",
+      "vs_thesis": "new",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "SanDisk於8/13投資人日公布與八家客戶簽下約940億美元長約,涵蓋2030財年三分之二出貨量,股價當天大漲逾13%;消息帶動亞洲記憶體股全面噴出。對一般投資人:先前淡馬錫的投資傳聞只是消息面,這次是廠商自己揭露的長期訂單合約,是這波記憶體行情目前最具體的基本面訊號,跟單日財報或傳聞驅動的行情不是同一個等級。",
+      "sources": [
+        {"url": "https://www.barchart.com/story/news/3737416/dear-sandisk-stock-fans-mark-your-calendars-for-a-fresh-catalyst-on-august-13", "ts": null},
+        {"url": "https://www.tradingkey.com/analysis/stocks/more/262104505-sandisk-asia-storage-stocks-kioxia-sk-hynix-surge-tradingkey", "ts": null}
+      ]
+    },
+    {
+      "headline": "南韓股市連五漲,KOSPI寫下歷史新高",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "developing",
+      "audience_value": "南韓KOSPI今天再漲2.42%,連續第五個交易日上漲,正式寫下歷史新高;三星電子、SK海力士同步走高,日本鎧俠也跟著大漲。對一般投資人:上次的連漲多半靠傳聞跟單日財報接力,這次多了SanDisk的實際訂單當底,但淡馬錫投資傳言仍未獲官方證實,連漲能不能撐住還要繼續看。",
+      "sources": [
+        {"url": "https://www.koreajoongangdaily.com/business/kospi-spikes-for-fifth-straight-day-on-chip-rally/12825933", "ts": null},
+        {"url": "https://en.sedaily.com/finance/2026/08/14/samsung-up-3-percent-sk-hynix-58-percent-on-us-ppi-relief", "ts": null}
+      ]
+    },
+    {
+      "headline": "Cisco、Cerebras財報後持續重挫,AI故事仍然分裂",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "思科財報創紀錄後股價修正到重挫約6–7%,Cerebras營收年增達70%,股價仍因毛利率疑慮重挫約15–17%。對一般投資人:營收成長不代表股價會漲,市場現在盯的是獲利結構撐不撐得住,同一個AI故事裡贏家跟輸家的差距沒有縮小。",
+      "sources": [
+        {"url": "https://moneycheck.com/market-roundup-cisco-csco-and-cerebras-sink-on-margin-worries-while-sp-500-reaches-new-peak", "ts": null},
+        {"url": "https://www.fool.com/investing/2026/08/13/why-cerebras-systems-stock-sank-today/", "ts": null}
+      ]
+    },
+    {
+      "headline": "今天零售銷售+消費信心雙率考驗消費動能",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 3,
+      "confidence": "developing",
+      "audience_value": "美東上午8:30公布7月零售銷售(預期月增0.3%,前值0.2%),10:00公布密西根大學消費者信心指數初值(預期54.1,前值55.2)。對一般投資人:通膨降溫的故事已經有CPI、PPI撐腰,今天要看的是消費者荷包在利率不確定下撐不撐得住,信心指數若繼續下滑,會是勞動市場鬆動之外的另一個警訊。",
+      "sources": [
+        {"url": "https://www.investing.com/news/stock-market-news/retail-sales-and-core-retail-sales-among-economic-data-due-friday-93CH-4858936", "ts": null}
+      ]
+    },
+    {
+      "headline": "荷姆茲僵局未拍板,原油靠出口流量說法回落到87美元",
+      "horizon": "MT",
+      "vs_thesis": "new",
+      "materiality": 3,
+      "confidence": "developing",
+      "audience_value": "美國能源部長表示經荷姆茲海峽的原油出口七日均值已接近每日900萬桶,布蘭特原油因此連兩天回落到87美元附近。對一般投資人:油價下跌這次不是靠協議簽署,是靠『供應比想像中順暢』的說法撐住,地緣風險溢價還沒有真正從市場裡消失。",
+      "sources": [
+        {"url": "https://www.bloomberg.com/news/articles/2026-08-13/latest-oil-market-news-and-analysis-for-aug-14", "ts": null},
+        {"url": "https://www.cnbc.com/2026/08/13/oil-spill-near-oman-worries-over-supply-.html", "ts": null}
+      ]
+    }
+  ],
+  "catalysts": [
+    "今天(8/14)美東上午8:30:7月零售銷售,市場預期月增0.3%(前值+0.2%),核心零售銷售(不含汽車)預期+0.2%(前值-0.2%)。",
+    "今天(8/14)美東上午10:00:密西根大學消費者信心指數初值,市場預期54.1(前值55.2)。",
+    "持續進行:荷姆茲海峽談判未拍板,布蘭特原油守在87美元附近。",
+    "持續發酵:南韓記憶體股連五天創新高的牛市能否延續,SanDisk合約效應會不會外溢到更多供應鏈。",
+    "接下來:9月17日FOMC利率決議,是九月升息機率的最終裁判。"
+  ],
+  "thesis_delta": {
+    "changed": true,
+    "summary": "7月PPI月增持平、核心月增0.2%,雙雙低於預期,通膨降溫確認從消費端延伸到生產端,期貨隱含的九月升息機率因此從42%再降到34%;但同一天初領失業金意外衝到20.9萬,勞動市場鬆動訊號同時浮現,今天稍後的零售銷售與消費者信心是下一個檢驗點。AI/半導體『窄且不穩』出現子線訊號上修:SanDisk投資人日公布940億美元長約,是這波記憶體行情第一次靠實打實訂單驅動,帶動南韓股市連五漲、寫下歷史新高,但Cisco、Cerebras同日持續因獲利結構疑慮遭修理,題材內部分裂尚未收斂。荷姆茲僵局未解,原油靠出口流量說法回落到87美元,風險溢價未真正解除。三條支柱方向皆維持不變。",
+    "horizon": "MT"
+  },
+  "lead_horizon": "MT",
+  "title_hook": "SanDisk喊940億美元,南韓股市噴上歷史新高"
+}
