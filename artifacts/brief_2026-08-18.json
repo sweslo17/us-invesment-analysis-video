@@ -1,0 +1,141 @@
+{
+  "date": "2026-08-18",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7745.06,
+      "overnight_pct": -0.0010653065177389676,
+      "drivers": [
+        "上一交易日(8/17,週一)標普跌0.52%,收7745.06點,油價與公債殖利率同步跳升,市場重新擔憂美伊衝突再起。",
+        "今天ES期貨小跌0.11%,市場消化川普對阿曼的轟炸威脅與30年期殖利率飆上19年新高的雙重壓力。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 26644.91,
+      "overnight_pct": -0.004874581939799332,
+      "drivers": [
+        "上一交易日那斯達克跌0.32%,收26644.91點,四大指數同步走弱。",
+        "今天NQ期貨跌0.49%,四大期貨中跌最深,亞股記憶體概念股獲利了結的情緒同步外溢。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 53459.78,
+      "overnight_pct": 0.0007104795737122557,
+      "drivers": [
+        "上一交易日道瓊跌0.51%,收53459.78點,工業與金融類股同步走弱。",
+        "今天YM期貨逆勢小漲0.07%,四大期貨中唯一收紅,Home Depot優於預期的財報提供支撐。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 3057.54,
+      "overnight_pct": -0.0006866879059347732,
+      "drivers": [
+        "上一交易日羅素兩千跌0.35%,收3057.54點,四大指數跌幅居中。",
+        "今天RTY期貨小跌0.07%,小型股對今天稍晚的新屋開工與工業生產數據較敏感。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普已實現波動約13.3%,波動目標模型算出的合理槓桿約1.13倍;開三倍一年要吃掉約8.0%的複利,四大指數裡最溫和。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克已實現波動仍高達20.8%,合理倍數只剩0.72倍;開三倍一年要吃掉超過19%的複利,是四大指數裡槓桿代價最高的一個。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊已實現波動約14.2%,合理倍數約1.05倍,開三倍一年要吃掉約9.1%的複利。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千已實現波動約15.4%,合理倍數約0.97倍,開三倍一年要吃掉約10.7%的複利。"
+    }
+  ],
+  "regime": {
+    "vol": "low",
+    "rates": "rising",
+    "stock_bond_corr": "positive",
+    "breadth": "mixed"
+  },
+  "items": [
+    {
+      "headline": "美國嗆聲炸阿曼,60天協商窗口悄悄到期",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "developing",
+      "audience_value": "美國與伊朗今年6月談定的60天協商窗口,昨天(8/17)到期沒有具體結果;川普公開要伊朗投降,還嗆阿曼如果擋路就要轟炸,是這場衝突以來最直接的一次三方對峙,伊朗則表示與阿曼就海峽航路的協商仍在持續。對一般投資人:地緣風險沒有緩解,反而從『美國-伊朗』擴大到牽連第三方國家,油價的風險溢價很可能還要再撐一陣子。",
+      "sources": [
+        {"url": "https://www.nbcnews.com/politics/trump-administration/trump-bomb-oman-iran-strait-hormuz-rcna592971"},
+        {"url": "https://www.cbsnews.com/live-updates/us-iran-war-deal-expired-strait-of-hormuz/"}
+      ]
+    },
+    {
+      "headline": "30年期公債殖利率飆上19年新高",
+      "horizon": "LT",
+      "vs_thesis": "new",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "上一交易日(8/17)30年期公債殖利率衝到5.31%,是2007年以來最高,主因是美國公債發行量龐大、通膨黏著,加上新任主席華許的政策路線市場還沒摸透。對一般投資人:這跟九月會不會升息是兩件不同的事——就算短期政策利率不動,長天期借貸成本(房貸、企業貸款)本身也在往上走。",
+      "sources": [
+        {"url": "https://www.bloomberg.com/news/articles/2026-08-17/us-bond-selloff-drives-30-year-yields-to-the-highest-since-2007"},
+        {"url": "https://www.cnbc.com/2026/08/17/treasury-yields-federal-reserve-fomc-minutes.html"}
+      ]
+    },
+    {
+      "headline": "Home Depot逆勢報喜,消費沒那麼慘",
+      "horizon": "ST",
+      "vs_thesis": "challenges",
+      "materiality": 3,
+      "confidence": "single-print",
+      "audience_value": "上週五零售銷售才剛探底,今天Home Depot卻繳出優於預期的成績單:營收年增5.7%,同店銷售創四年最佳,還維持全年財測不變。對一般投資人:單一零售商的財報不能推翻整個消費轉弱的敘事,但它提醒我們,總經數字探底不代表每家公司的生意都在惡化。",
+      "sources": [
+        {"url": "https://www.prnewswire.com/news-releases/the-home-depot-announces-second-quarter-fiscal-2026-results-reaffirms-fiscal-2026-guidance-302853312.html"},
+        {"url": "https://www.bloomberg.com/news/articles/2026-08-18/home-depot-overcomes-housing-drag-to-post-faster-sales-growth"}
+      ]
+    },
+    {
+      "headline": "記憶體狂潮延燒,馬斯克再加持",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "馬斯克上週重申記憶體是AI最大瓶頸,產能一年只成長兩成、需求卻要衝兩倍;SanDisk跟美光上一交易日分別再大漲逾8%與4%。對一般投資人:這是少數同時有真實訂單跟指標人物背書的AI子題材,但漲勢已經很陡,追高風險同步在累積。",
+      "sources": [
+        {"url": "https://www.fool.com/investing/2026/08/17/elon-musk-just-uttered-3-massively-bullish-words-f/"},
+        {"url": "https://www.techtimes.com/articles/324701/20260817/ai-memory-chip-stocks-moved-when-musk-said-what-analysts-could-only-model.htm"}
+      ]
+    },
+    {
+      "headline": "亞歐股全面翻黑,記憶體狂潮跟著大盤喘息",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "連漲多天的亞股今天集體回檔:日經跌2.47%、南韓KOSPI跌1.55%、台股跌1.25%,連記憶體概念股也跟著獲利了結。對一般投資人:漲多之後遇到地緣風險升溫,獲利了結是很正常的反應,不代表原本的題材已經結束。",
+      "sources": [
+        {"url": "https://finance.yahoo.com/markets/live/stock-market-today-tuesday-august-18-dow-sp-500-nasdaq-080822735.html"}
+      ]
+    }
+  ],
+  "catalysts": [
+    "今天(8/18)美東上午8:30:新屋開工與營建許可(7月)。",
+    "今天(8/18)美東上午9:15:工業生產與產能利用率(7月)。",
+    "今天稍早:Home Depot公布第二季財報,營收與獲利雙雙超預期,同店銷售創四年最佳,重申全年財測。",
+    "本週稍後:Target、Lowe's、TJX接力公布財報。",
+    "持續進行:美伊60天協商窗口8/17到期未談成,川普嗆聲若阿曼擋路將轟炸,原油站上91美元附近。",
+    "接下來:8月27–29日Jackson Hole央行年會,新任主席華許8/28發表首場主題演說。"
+  ],
+  "thesis_delta": {
+    "changed": true,
+    "summary": "美伊60天協商窗口8/17到期未談成,川普公開要伊朗投降並嗆阿曼若擋路將轟炸,地緣風險從雙邊擴大到牽連第三方國家;同一天30年期公債殖利率飆上5.31%、創2007年以來新高,反映公債供給與新任主席華許政策路線不確定性疊加的長天期利率壓力,是九月升息機率之外另一條獨立的利率風險線。Home Depot優於預期的財報則是消費轉弱敘事裡的一個反例。AI/半導體方面,記憶體題材因馬斯克再度加持而延續強勢,但今天亞歐股全面回檔,顯示這波狂潮遇到地緣風險升溫時同樣脆弱。三條既有支柱方向不變,新增的是長天期殖利率這條結構性風險線。",
+    "horizon": "LT"
+  },
+  "lead_horizon": "MT",
+  "title_hook": "美國放話轟炸阿曼,原油衝破91美元"
+}
