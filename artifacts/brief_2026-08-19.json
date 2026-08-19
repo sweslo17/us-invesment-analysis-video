@@ -1,0 +1,139 @@
+{
+  "date": "2026-08-19",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7691.759765625,
+      "overnight_pct": 0.1200246537126545,
+      "drivers": [
+        "上一交易日(8/18,週二)標普跌0.69%,收7691.76點,半導體領跌拖累大盤,市場消化AI資本支出債務發行的擔憂。",
+        "今天ES期貨小漲0.12%,阿聯指控伊朗夜襲飛彈、宣布砍斷對伊貿易,亞股全面重挫,但美股期貨暫時沒有跟著崩。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 26289.7109375,
+      "overnight_pct": -0.04148639838795709,
+      "drivers": [
+        "上一交易日那斯達克重挫1.33%,收26289.71點,科技類股跌2.47%,四大指數跌最深,晶片股被大舉獲利了結。",
+        "今天NQ期貨打平、小跌0.04%,是四大期貨中唯一收黑,盤前晶片股依然抬不起頭,昨天的賣壓還沒消化完。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 53343.3984375,
+      "overnight_pct": 0.1893016456123252,
+      "drivers": [
+        "上一交易日道瓊跌0.22%,收53343.40點,四大指數中跌幅最小,金融類股逆勢上漲0.45%撐住盤面。",
+        "今天YM期貨漲0.19%,四大期貨中領漲,Target、Lowe's財報稍早出爐,結果好壞參半但沒有動搖道瓊的相對抗跌。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 3017.889892578125,
+      "overnight_pct": 0.11247526428577602,
+      "drivers": [
+        "上一交易日羅素兩千跌1.30%,收3017.89點,小型股跟著那斯達克同步走弱,跌幅居四大指數第二深。",
+        "今天RTY期貨小漲0.11%,對地緣風險的敏感度暫時不如亞股,今天稍後的FOMC會議紀錄是小型股的下一個測試。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普已實現波動約13.6%,波動目標模型算出的合理槓桿約1.10倍;開三倍一年要吃掉約8.3%的複利,四大指數裡代價最溫和的一個。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克已實現波動仍高達21.2%,合理倍數只剩0.71倍;開三倍一年要吃掉超過二成的複利,是四大指數裡槓桿代價最高的一個。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊已實現波動約14.1%,合理倍數約1.07倍,開三倍一年要吃掉約8.9%的複利。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千已實現波動約15.3%,合理倍數約0.98倍,開三倍一年要吃掉約10.5%的複利。"
+    }
+  ],
+  "regime": {
+    "vol": "low",
+    "rates": "rising",
+    "stock_bond_corr": "positive",
+    "breadth": "mixed"
+  },
+  "items": [
+    {
+      "headline": "阿聯控伊朗開火,直接砍斷貿易",
+      "horizon": "MT",
+      "vs_thesis": "new",
+      "materiality": 5,
+      "confidence": "developing",
+      "audience_value": "阿聯昨晚指控伊朗對其發射兩枚彈道飛彈(均落海、無人傷亡),是伊朗五月以來首次被指直接攻擊阿聯;阿聯隨即宣布無限期凍結對伊朗的一切貿易與金融往來,伊朗官方否認開火。對一般投資人:這場美伊衝突的威脅對象,從美國、伊朗兩造,擴大到第三個、第四個區域國家(繼川普嗆阿曼之後),地緣風險溢價很難靠一天的市場平靜就解除。",
+      "sources": [
+        {"url": "https://www.thenationalnews.com/news/uae/2026/08/18/uae-air-defence-systems-respond-to-missile-threat/", "ts": null},
+        {"url": "https://www.upi.com/Top_News/World-News/2026/08/19/UAE-Iran-trade-halted/7841787122722/", "ts": null}
+      ]
+    },
+    {
+      "headline": "亞股全面重挫,南韓觸發熔斷",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "南韓KOSPI今天重挫逾5%,直接觸發賣方熔斷機制,日經跌3.2%、上海跌2.4%、台股跌1.2%;連漲多天的記憶體概念股(SK海力士、三星)跟著獲利了結。對一般投資人:漲勢最兇的題材遇到地緣風險升溫時最先被賣,這不代表題材結束,但提醒追高的代價。",
+      "sources": [
+        {"url": "https://www.benzinga.com/markets/equities/26/08/61293924/stock-market-today-sp-500-nasdaq-100-futures-rise-as-trump-says-no-talks-are-happening-with-iran-keysight-technologies-mercury-systems-sk-hynix-in-focus", "ts": null}
+      ]
+    },
+    {
+      "headline": "美股期貨穩住,沒跟著亞股崩",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "亞股全面重挫的同一個早上,美股期貨反而穩住甚至小漲,標普、道瓊、羅素兩千期貨都收紅,只有那斯達克期貨持平。對一般投資人:美股暫時把地緣風險和昨天的半導體賣壓分開處理,但這種脫鉤能撐多久,還要看今天稍後的市場情緒。",
+      "sources": [
+        {"url": "https://www.tradingkey.com/analysis/stocks/us-stocks/262118019-us-stock-pre-market-fed-minutes-ai-chip-memory-stocks-mu-wdc-falling-tradingkey", "ts": null}
+      ]
+    },
+    {
+      "headline": "FOMC七月紀錄今天出爐,考驗鷹派分裂",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "developing",
+      "audience_value": "美東今天下午2點,聯準會將公布7月FOMC會議紀錄;上次會議三位分行總裁主張升息、是2016年以來最鷹派的一次分裂,會後主席華許也不給前瞻指引。對一般投資人:這份紀錄是檢驗鷹派分裂有多深、九月是否升息的下一塊拼圖,結果公布前市場情緒可能偏謹慎。",
+      "sources": [
+        {"url": "https://www.newsquawk.com/headlines/preview-fomc-minutes-due-wednesday-19th-august-2026-at-1900bst1400edt", "ts": null}
+      ]
+    },
+    {
+      "headline": "零售財報喜憂參半,消費仍是分裂劇本",
+      "horizon": "ST",
+      "vs_thesis": "challenges",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "Target營收與每股盈餘雙雙超預期,股價盤前卻跌近4%(市場質疑成長品質);Lowe's調整後每股盈餘小幅超預期,卻把全年財測下修到區間下緣。對一般投資人:昨天Home Depot的正面反例,今天沒有被Target、Lowe's接棒延續,消費到底穩不穩,答案還是分裂的。",
+      "sources": [
+        {"url": "https://www.stocktitan.net/news/TGT/target-corporation-reports-second-quarter-whi1a63iatnc.html", "ts": null},
+        {"url": "https://www.prnewswire.com/news-releases/lowes-reports-second-quarter-2026-sales-and-earnings-results-302854643.html", "ts": null}
+      ]
+    }
+  ],
+  "catalysts": [
+    "今天(8/19)美東下午2:00:7月FOMC會議紀錄公布。",
+    "今天稍早:Target、Lowe's、TJX公布第二季財報,結果好壞參半。",
+    "持續進行:阿聯指控伊朗夜襲飛彈,宣布凍結對伊朗全部貿易與金融往來;伊朗否認,油價站上91美元附近。",
+    "持續進行:南韓KOSPI今天重挫逾5%觸發熔斷,記憶體概念股同步回檔。",
+    "接下來:8月27–29日Jackson Hole央行年會,新任主席華許8/28發表就任後首場主題演說。",
+    "接下來:9月15–16日FOMC會議,是本輪升息與否的最終裁判。"
+  ],
+  "thesis_delta": {
+    "changed": true,
+    "summary": "阿聯昨晚指控伊朗對其發射兩枚彈道飛彈(均落海無傷亡),是伊朗五月以來首次被指直接攻擊阿聯;阿聯隨即宣布無限期凍結對伊朗的一切貿易與金融往來,伊朗官方否認。這場衝突的威脅對象持續擴大——繼川普嗆阿曼之後,阿聯成為被指遭直接攻擊的第四個國家,地緣風險溢價的擴散範圍比8/18又深了一層。同一天,南韓KOSPI重挫逾5%觸發賣方熔斷機制,記憶體概念股跟著獲利了結,回檔幅度明顯超過8/18,顯示AI/半導體『窄且不穩』的不穩定性正在加深。三條既有支柱方向不變,新增的重點是地緣衝突牽連國家數持續增加、且亞股這輪回檔比前一天更劇烈。",
+    "horizon": "MT"
+  },
+  "lead_horizon": "MT",
+  "title_hook": "飛彈砸向阿聯,美伊戰火燒向第四國"
+}
