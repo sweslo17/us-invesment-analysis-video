@@ -1,0 +1,141 @@
+{
+  "date": "2026-08-20",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7707.97998046875,
+      "overnight_pct": -0.32304958811177514,
+      "drivers": [
+        "上一交易日(8/19,週三)標普收漲0.21%,收7707.98點,亞股全面重挫但美股相對抗跌,市場等FOMC會議紀錄與零售財報。",
+        "今天ES期貨跌0.32%,財政部無預警加碼收購長天期公債、殖利率應聲下滑,亞股跟著強彈,但美股期貨沒有跟上這波樂觀。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 26331.08984375,
+      "overnight_pct": -0.6517407895181171,
+      "drivers": [
+        "上一交易日那斯達克收漲0.16%,收26331.09點,是四大指數中漲幅最小,晶片股賣壓沒有完全消化。",
+        "今天NQ期貨跌0.65%,是四大期貨中跌最深,晶片股相關槓桿ETF盤前續跌逾2%,對財政部利多的反應明顯落後亞股。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 53463.05078125,
+      "overnight_pct": -0.46680110538501757,
+      "drivers": [
+        "上一交易日道瓊收漲0.22%,收53463.05點,Walmart稍早公布財報前市場情緒偏謹慎。",
+        "今天YM期貨跌0.47%,四大期貨全數收黑,Walmart財報雖打敗預期但同店銷售放緩,沒能撐住期貨盤面。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 3032.93994140625,
+      "overnight_pct": -0.5186976238988987,
+      "drivers": [
+        "上一交易日羅素兩千收漲0.50%,收3032.94點,四大指數中漲幅最大,對地緣與利率消息相對不敏感。",
+        "今天RTY期貨跌0.52%,今天稍後的初領失業金與費城聯準製造業指數,是小型股對利率敏感度的下一個測試。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普已實現波動約13.6%,波動目標模型算出的合理槓桿約1.11倍;開三倍一年要吃掉約8.3%的複利,四大指數裡代價最溫和的一個。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克已實現波動仍高達21.0%,合理倍數只剩0.71倍;開三倍一年要吃掉近二成的複利,是四大指數裡槓桿代價最高的一個。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊已實現波動約14.1%,合理倍數約1.07倍,開三倍一年要吃掉約8.9%的複利。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千已實現波動約14.9%,合理倍數約1.01倍,開三倍一年要吃掉約10.0%的複利。"
+    }
+  ],
+  "regime": {
+    "vol": "low",
+    "rates": "falling",
+    "stock_bond_corr": "positive",
+    "breadth": "mixed"
+  },
+  "items": [
+    {
+      "headline": "FOMC七月紀錄證實鷹派分裂更深",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "昨天美東下午公布的7月FOMC會議紀錄顯示,不只三位分行總裁投票主張升息,紀錄裡『多位』與會官員認為,通膨若降不下來,升息很可能有其必要,部分官員甚至認為當前金融環境還不夠緊縮。主席華許同時拋出『把FOMC會議次數從一年八次減到六次』的討論,尚無結論。對一般投資人:今天期貨隱含的九月升息機率從34%升到36%,升息風險比表面看到的更真實。",
+      "sources": [
+        {"url": "https://www.bloomberg.com/news/articles/2026-08-19/fed-minutes-show-many-officials-said-rate-hikes-may-be-needed", "ts": null},
+        {"url": "https://thehill.com/business/6040110-fed-july-minutes-rate-hike/", "ts": null}
+      ]
+    },
+    {
+      "headline": "財政部加碼買回長債,殖利率應聲回落",
+      "horizon": "MT",
+      "vs_thesis": "new",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "財政部長貝森特昨天無預警宣布,把10到30年期公債的買回操作規模至少加倍(從單次最高20億美元提高到40億美元以上),9月9日起實施到11月4日,回應的是上週30年期殖利率衝上5.33%、創2007年以來新高,加上近期公債標售需求疲弱。消息一出,10年期殖利率當天跌6個基點、30年期跌9個基點,今天10年期殖利率指數續跌1.13%。對一般投資人:這是短端可能升息、長端被政府買回操作硬壓下來的第一次分裂組合,房貸與企業借貸成本的方向不再只看Fed臉色。",
+      "sources": [
+        {"url": "https://www.cnbc.com/2026/08/19/treasury-announces-upscaled-buyback-operation-for-longer-term-debt-sending-yields-lower.html", "ts": null},
+        {"url": "https://www.bloomberg.com/news/articles/2026-08-19/long-dated-treasuries-rally-as-treasury-boosts-bond-buybacks", "ts": null}
+      ]
+    },
+    {
+      "headline": "亞股強彈,南韓一夕收復熔斷失土",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "在殖利率回落的帶動下,南韓KOSPI今天大漲近5.9%,幾乎完全收復8/19重挫逾5%、觸發賣方熔斷的失土;日經漲1.2%,記憶體概念股同步反彈。對一般投資人:這波反彈是全球利率降溫的外溢效果,不是記憶體基本面出現新的正面訊息,漲得快不代表風險已經解除。",
+      "sources": [
+        {"url": "https://tradingeconomics.com/japan/stock-market", "ts": null}
+      ]
+    },
+    {
+      "headline": "美股期貨卻不領情,晶片股續弱",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "亞股強彈的同一個早上,美股期貨反而是四大期貨全數收黑,那斯達克期貨跌最深(跌0.65%),半導體相關的槓桿部位盤前續跌逾2.5%。對一般投資人:同一則利多(長天期殖利率下滑),亞股與美股本土晶片股的反應完全不同步,上一輪半導體賣壓與AI資本支出發債的疑慮還沒有被一天的好消息完全消化。",
+      "sources": [
+        {"url": "https://finance.yahoo.com/markets/stocks/articles/u-futures-little-changed-semiconductor-095010099.html", "ts": null}
+      ]
+    },
+    {
+      "headline": "Walmart財報打敗預期,同店銷售卻創六年最慢",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "Walmart今天稍早公布財報,每股盈餘0.81美元、營收1,879億美元雙雙超預期,並上修全年財測;但美國同店銷售(不含油品)只成長2.6%,不及市場預期的3.67%,是六年來最慢的一次,盤前股價漲勢因此受限。對一般投資人:接在Target、Lowe's之後,連財報表現最扎實的Walmart都被同店銷售放緩拖後腿,消費轉弱的訊號又添一筆證據。",
+      "sources": [
+        {"url": "https://www.investing.com/news/earnings/walmart-shares-fall-despite-earnings-beat-4869328", "ts": null}
+      ]
+    }
+  ],
+  "catalysts": [
+    "今天稍早:Walmart公布第二季財報,每股盈餘與營收雙雙超預期並上修全年財測,但美國同店銷售成長2.6%不及預期,是六年來最慢。",
+    "今天美東上午8:30:當週初領失業金人數、費城聯準製造業指數公布。",
+    "今天美東上午10:00:7月領先指標(LEI)公布。",
+    "今天美股盤後:Ross Stores公布第二季財報。",
+    "持續進行:阿聯凍結對伊朗一切貿易與金融往來,伊朗否認攻擊,油價維持91-92美元附近。",
+    "接下來:8月26日NVIDIA公布財報,是AI資本支出故事的下一個檢查點。",
+    "接下來:8月27-29日Jackson Hole央行年會,新任主席華許8月28日發表就任後首場演說。",
+    "接下來:9月9日財政部長天期公債買回操作正式啟動;9月15-16日FOMC會議。"
+  ],
+  "thesis_delta": {
+    "changed": true,
+    "summary": "昨天下午公布的7月FOMC會議紀錄證實鷹派分裂比會議當下看到的更深,但同一天財政部無預警宣布把10-30年期公債買回操作規模至少加倍、9月9日起實施,直接壓低長天期殖利率——利率故事第一次出現『短端可能偏鷹、長端被政策買回壓低』的分裂組合。亞股隨殖利率降溫強力反彈、南韓收復熔斷失土,但美股本土晶片股沒有跟上,顯示AI/半導體『窄且不穩』換了一種方式表現。同時Walmart財報打敗預期卻同店銷售創六年最慢,消費分裂敘事持續延伸。三條既有支柱方向未反轉,新增的是長天期利率出現政策對沖這個新變數。",
+    "horizon": "MT"
+  },
+  "lead_horizon": "MT",
+  "title_hook": "殖利率被摁下來,美股期貨卻不埋單"
+}
