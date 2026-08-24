@@ -1,0 +1,154 @@
+{
+  "date": "2026-08-24",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7674.3701171875,
+      "overnight_pct": -0.04555808656036447,
+      "drivers": [
+        "上一交易日(8/21,週五)標普收漲0.43%,收7674.37點,從殖利率上週的重挫中喘過一口氣。",
+        "今天ES期貨幾乎持平、微跌0.05%,市場在等美東下午2點財政部對伊朗制裁的具體內容,不敢貿然表態。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 26180.4609375,
+      "overnight_pct": -0.08455467869222097,
+      "drivers": [
+        "上一交易日那斯達克收漲0.43%,收26180.46點,四大指數同步收紅。",
+        "今天NQ期貨小跌0.08%,是四大期貨中跌最深的一個,但跌幅同樣輕微,盤前情緒偏觀望。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 53277.01171875,
+      "overnight_pct": -0.06750801657696852,
+      "drivers": [
+        "上一交易日道瓊大漲517點、漲0.98%,收53277.01點,是四大指數中漲幅最大的一個。",
+        "今天YM期貨小跌0.07%,美加關稅開打的衝擊尚未反映在道瓊成分股上。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 3017.8701171875,
+      "overnight_pct": -0.01984692744199196,
+      "drivers": [
+        "上一交易日羅素兩千收漲0.85%,收3017.87點,小型股同步跟上大盤反彈。",
+        "今天RTY期貨幾乎打平、微跌0.02%,是四大期貨中最平靜的一個。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普已實現波動約13.2%,波動目標模型算出的合理槓桿約1.14倍;開三倍一年要吃掉約7.8%的複利,四大指數裡代價最溫和的一個。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克已實現波動仍高達19.5%,合理倍數只剩0.77倍;開三倍一年要吃掉約17%的複利,是四大指數裡槓桿代價最高的一個。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊已實現波動約14.8%,合理倍數約1.02倍,開三倍一年要吃掉約9.8%的複利。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千已實現波動約15.7%,合理倍數約0.96倍,開三倍一年要吃掉約11.1%的複利。"
+    }
+  ],
+  "regime": {
+    "vol": "low",
+    "rates": "rising",
+    "stock_bond_corr": "positive",
+    "breadth": "broad"
+  },
+  "items": [
+    {
+      "headline": "貝森特今天下午揭曉對伊朗「經濟D-Day」制裁細節",
+      "horizon": "MT",
+      "vs_thesis": "new",
+      "materiality": 5,
+      "confidence": "developing",
+      "audience_value": "美國財政部長貝森特今天美東下午2點召開記者會,公布對伊朗史上最重的制裁包,鎖定石油走私、換匯管道、現金移轉、匯兌行、船舶登記與空殼公司,並警告任何提供伊朗貿易生命線的第三國都會面臨嚴重後果——市場點名中國,因為中國買下伊朗逾八成的海運原油出口。原油今天反而回落,布蘭特跌1.4%到93美元附近、WTI跌1.6%到85.65美元,市場先獲利了結、等真正細節出爐。對一般投資人:地緣風險的形式從軍事對抗換成金融戰,對油價與通膨的實際衝擊,答案要等下午兩點才揭曉。",
+      "sources": [
+        {"url": "https://www.cnbc.com/2026/08/23/treasury-secretary-bessent-iran-sanctions-press-conference.html", "ts": null},
+        {"url": "https://www.cnbc.com/2026/08/24/oil-price-today-wti-brent-us-sanctions-iran.html", "ts": null}
+      ]
+    },
+    {
+      "headline": "美加貿易談判破局,50%關稅週六生效、加拿大9月8日對等反制",
+      "horizon": "MT",
+      "vs_thesis": "new",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "美加貿易談判上週五在最後關頭破局,美方隔天就對加拿大部分商品加徵50%關稅。加拿大總理卡尼稱美方「獅子大開口」,宣布9月8日起以一比一對等關稅反制,鎖定鋼鐵、乳製品、家電、農業機具、紙漿紙業與電子產品。對一般投資人:貿易戰又多開一條跟最大貿易夥伴之一的正面衝突戰線,通膨與供應鏈成本的變數再添一筆。",
+      "sources": [
+        {"url": "https://www.cnbc.com/2026/08/22/us-canada-trade-talks-collapse-ushering-in-wave-of-new-tariffs.html", "ts": null},
+        {"url": "https://www.bloomberg.com/news/articles/2026-08-22/us-canada-trade-talks-collapse-triggering-trump-s-50-tariffs", "ts": null}
+      ]
+    },
+    {
+      "headline": "三星股價重摔逾8%拖累南韓大盤,SK海力士卻逆勢上漲",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "三星電子上週五公布規模創紀錄的79億美元(90-110兆韓元)股東回饋計畫,市場原本期待更大方的AI獲利分享與明確的庫藏股細節,結果買回具體規劃被延到2027年初才公布,股價今天重摔逾8.3%,拖累南韓KOSPI大跌逾3%;但SK海力士反而逆勢上漲2.4%,同一個記憶體家族,同一天走出完全不同的兩條路。對一般投資人:AI概念股「窄且不穩」的劇本又換了一種演法,這次分裂發生在同一國家、同一產業內部的兩家龍頭之間。",
+      "sources": [
+        {"url": "https://www.koreatimes.co.kr/economy/others/20260824/kospi-plunges-more-than-3-as-samsung-sk-hynix-shares-tumble", "ts": null},
+        {"url": "https://invezz.com/news/2026/08/24/why-is-samsung-stock-crashing-8-despite-record-80b-shareholder-return/", "ts": null}
+      ]
+    },
+    {
+      "headline": "Anthropic機密送件申請上市,營收年化衝上650億美元",
+      "horizon": "LT",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "developing",
+      "audience_value": "Anthropic傳出今年6月初已機密向美國證管會申請上市,七月底的營收年化跑出來已衝上約650億美元,市場預期掛牌可能落在10月底,募資規模有機會挑戰SpaceX的紀錄。對一般投資人:AI故事裡「訂單和營收是真的在成長」這條線,又添一筆比雲端巨頭資本支出更扎實的證據,但IPO估值最終能不能撐住,還是要等真正掛牌那天才知道。",
+      "sources": [
+        {"url": "https://techstartups.com/2026/08/21/top-tech-news-today-august-21-2026-anthropic-apple-broadcom-google-nvidia-openai-tesla-more/", "ts": null},
+        {"url": "https://futuresearch.ai/anthropic-financial-forecast/", "ts": null}
+      ]
+    },
+    {
+      "headline": "上一交易日標普漲0.43%,十大權值股卻全數收黑",
+      "horizon": "MT",
+      "vs_thesis": "new",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "上週五標普500上漲0.43%,但拆開成分股卻發現,輝達、蘋果、微軟、亞馬遜、Alphabet、博通、Meta這些前十大權值股當天全部收黑,對指數的貢獻合計是負的;真正把大盤扛起來的,是原物料這類非權值類股,單日大漲逾2%。對一般投資人:這是近期少見的「指數漲、龍頭跌」畫面,顯示市場內部正從少數幾檔巨頭撐盤,轉向更多類股一起參與。",
+      "sources": [
+        {"url": "https://www.thestreet.com/stock-market-today/stock-market-today-dow-jones-sp-500-nasdaq-updates-aug-21-2026", "ts": null}
+      ]
+    },
+    {
+      "headline": "Fed利率路徑再轉鷹,期貨隱含九月升息機率升到42%",
+      "horizon": "LT",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "developing",
+      "audience_value": "今天期貨隱含的九月升息機率來到42%,比上週四(8/20)的36%再往上一截,12月機率同步升到42%。同一時間,上週五公布的8月S&P Global綜合PMI初值衝上56,是52個月新高,服務業更寫下20個月最強、遠優於預期,經濟動能比外界想像的更硬。對一般投資人:經濟數據越好,升息的理由反而越站得住腳,這種「好消息=升息風險」的矛盾,本週五主席華許在Jackson Hole的首場演說可能給出方向。",
+      "sources": [
+        {"url": "https://www.cnbc.com/video/2026/08/21/sp-global-flash-manufacturing-pmi-comes-in-at-53-point-2-in-august.html", "ts": null},
+        {"url": "https://www.mnimarkets.com/articles/chair-warsh-to-give-jackson-hole-keynote-speech-aug-28-at-10am-et-1787258124058", "ts": null}
+      ]
+    }
+  ],
+  "catalysts": [
+    "今天美東下午2點:財政部長貝森特召開記者會,公布對伊朗「經濟D-Day」制裁具體內容,鎖定石油走私、換匯管道、船舶登記、空殼公司,並警告提供伊朗生命線的第三國。",
+    "持續進行:美加貿易談判破局後,美國50%關稅已於上週六生效,加拿大將於9月8日啟動對等反制關稅。",
+    "本週三(8/26)盤後:NVIDIA公布第二季財報,市場預期營收930-950億美元、年增近96%。",
+    "本週三(8/26)美東上午8:30:第二季GDP第二次估計、核心PCE物價指數第二次估計公布;上午10:00達拉斯Fed PCE。",
+    "本週四至五(8/27-29):Jackson Hole央行年會登場,主題為「金融創新對支付與政策的意涵」。",
+    "本週五(8/28)美東上午10點:新任Fed主席華許發表就任後首場Jackson Hole主題演說。",
+    "持續進行:布蘭特原油今天回落到93美元附近,伊朗總統佩澤希齊揚上週五罕見喊出「該從實力位置結束戰爭」。"
+  ],
+  "thesis_delta": {
+    "changed": true,
+    "summary": "今天美東下午財政部長貝森特要揭曉對伊朗「經濟D-Day」制裁的具體內容,地緣風險從軍事對抗換成金融戰打法;同一時間美加貿易戰開打,加拿大將於9月8日對等反制,通膨與供應鏈風險又添一條新戰線。AI/半導體「窄且不穩」延續但換了主角:三星股東回饋不如預期,股價重摔拖累南韓大盤,SK海力士卻逆勢上漲;Anthropic機密申請上市、營收年化衝上650億美元,持續強化「訂單實績」這條線。Fed利率路徑同時再轉鷹,期貨隱含九月升息機率升到42%,恰好與經濟數據轉強(PMI創52個月新高)同步發生,形成「好消息=升息風險」的矛盾,本週五Jackson Hole是下一個裁判點。三條既有支柱方向未反轉,新增的是地緣風險的金融戰形式、貿易戰新戰線,以及AI題材內部分裂的新主角。",
+    "horizon": "MT"
+  },
+  "lead_horizon": "MT",
+  "title_hook": "貝森特今天下午端出對伊朗「經濟D-Day」,原油卻反而下跌"
+}
