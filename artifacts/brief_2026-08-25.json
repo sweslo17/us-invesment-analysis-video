@@ -1,0 +1,139 @@
+{
+  "date": "2026-08-25",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7652.85986328125,
+      "overnight_pct": 0.31598149716593915,
+      "drivers": [
+        "上一交易日(8/24,週一)標普收跌0.28%,收7652.86點,晶片股領跌拖累大盤。",
+        "今天ES期貨反彈漲0.32%,晶片股賣壓稍緩,市場等明天輝達財報揭曉答案。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 25980.189453125,
+      "overnight_pct": 0.645625948504257,
+      "drivers": [
+        "上一交易日那斯達克收跌0.76%,收25980.19點,是四大指數中跌最深的,美光重挫近6%、超微跌逾3%領跌。",
+        "今天NQ期貨漲0.65%,是四大期貨中反彈最強的,顯示晶片股賣壓正在鬆動。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 53417.16015625,
+      "overnight_pct": 0.43751402288534885,
+      "drivers": [
+        "上一交易日道瓊逆勢收漲0.26%,收53417.16點,金融、必需消費等類股撐盤。",
+        "今天YM期貨漲0.44%,跟上其他期貨的反彈步調。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 2995.080078125,
+      "overnight_pct": 0.48928890262019686,
+      "drivers": [
+        "上一交易日羅素兩千收跌0.76%,收2995.08點,小型股同步被晶片股賣壓拖下水。",
+        "今天RTY期貨漲0.49%,同步跟上大盤期貨的反彈。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普已實現波動約13.3%,波動目標模型算出的合理槓桿約1.13倍;開三倍一年要吃掉約7.9%的複利,四大指數裡代價最溫和的一個。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克已實現波動仍高達19.7%,合理倍數只剩0.76倍;開三倍一年要吃掉約17.5%的複利,是四大指數裡槓桿代價最高的一個。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊已實現波動約14.7%,合理倍數約1.02倍,開三倍一年要吃掉約9.7%的複利。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千已實現波動約15.9%,合理倍數約0.94倍,開三倍一年要吃掉約11.4%的複利。"
+    }
+  ],
+  "regime": {
+    "vol": "low",
+    "rates": "rising",
+    "stock_bond_corr": "positive",
+    "breadth": "broad"
+  },
+  "items": [
+    {
+      "headline": "晶片股上一交易日重挫,那斯達克、羅素兩千走弱,今天期貨全面反彈迎接輝達財報",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "上一交易日(8/24)那斯達克跌0.76%、羅素兩千跌0.76%,道瓊卻逆勢漲0.26%,分歧的關鍵是晶片股領跌:美光重挫近6%,超微跌逾3%,博通跌超2%,市場提前為明天(8/26)輝達財報卡位、也在消化「AI資本支出到底值不值得」的疑慮。今天盤前四大期貨全數翻紅,標普期貨漲0.32%、那斯達克期貨漲0.65%,顯示壓力暫時鬆動。對一般投資人:明天一份財報就可能牽動整個AI題材的信心,答案還沒揭曉前,不必提前猜結果。",
+      "sources": [
+        {"url": "https://finance.yahoo.com/markets/stocks/articles/stock-market-today-aug-24-213541834.html", "ts": null},
+        {"url": "https://intellectia.ai/blog/nvidia-earnings-august-26-2026-preview", "ts": null}
+      ]
+    },
+    {
+      "headline": "貝森特端出「經濟D-Day」制裁清單,伊朗放話反擊揚言痛擊美方能源要害",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "財政部長貝森特昨天(8/24)正式公布代號「Operation Economic Outcast」的制裁行動,一口氣制裁近60個機構、個人與船舶,鎖定石油走私、加密貨幣、黃金與航運等管道,並明確警告任何協助伊朗維持貿易生命線的國家都逃不掉——貝森特直接點名沒有人能豁免美國制裁的觸及範圍,市場解讀矛頭指向中國。伊朗隨即強硬回應,經濟部長稱「完全準備好應戰」,革命衛隊發言人更揚言若伊朗設施受威脅,將對美國的重要利益與能源要害發動猛烈反擊。原油卻沒有跟著地緣風險走高,反而延續回落,顯示市場對這場「金融戰」的實際衝擊還在觀望。對一般投資人:地緣風險從軍事對抗換成制裁清單,但伊朗的反擊威脅代表尾端風險並未消失。",
+      "sources": [
+        {"url": "https://www.cnbc.com/2026/08/24/trump-iran-economy-sanctions-china-bessent.html", "ts": null},
+        {"url": "https://www.usnews.com/news/world/articles/2026-08-24/iran-vows-to-retaliate-after-us-widens-sanctions", "ts": null}
+      ]
+    },
+    {
+      "headline": "三星、SK海力士盤前同步走弱,亞股大反彈仍難掩輝達財報前的緊張",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "developing",
+      "audience_value": "隔夜亞股全面翻紅,南韓KOSPI漲0.68%,從上一交易日重挫逾3%的低點喘過一口氣,日經、台股、歐股同步走高。但三星電子與SK海力士今天盤前雙雙下跌超過2%,原因是美股晶片股賣壓外溢,加上市場在輝達財報前趨於謹慎。對一般投資人:AI概念股「窄且不穩」這幾週換了很多種演法,今天是記憶體雙雄難得同步緊張,顯示這次的不安不是誰的個股問題,而是整個AI供應鏈在等同一份財報。",
+      "sources": [
+        {"url": "https://en.sedaily.com/finance/2026/08/25/samsung-sk-hynix-slide-over-2-percent-in-premarket-on-us", "ts": null}
+      ]
+    },
+    {
+      "headline": "10年期公債殖利率回落到4.70%,九月升息機率持穩42%,週五Jackson Hole是關鍵裁判",
+      "horizon": "LT",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "developing",
+      "audience_value": "公債殖利率曲線今天從3個月3.88%一路排到30年5.27%,沒有倒掛,10年期較上一交易日回落到4.70%附近。期貨隱含的九月升息機率持平在42%、12月同步持平在42%,跟上一交易日相比沒有進一步轉鷹,市場似乎在等更確定的訊號。本週五(8/28)新任Fed主席華許將發表首場Jackson Hole主題演說,是市場能否確認方向的關鍵時刻。對一般投資人:利率的不確定性還沒解除,但至少沒有繼續惡化,真正的答案要等華許開口。",
+      "sources": [
+        {"url": "https://www.mnimarkets.com/articles/chair-warsh-to-give-jackson-hole-keynote-speech-aug-28-at-10am-et-1787258124058", "ts": null}
+      ]
+    },
+    {
+      "headline": "科技類股領跌上一交易日大盤,必需消費、金融、公用事業接棒撐盤",
+      "horizon": "MT",
+      "vs_thesis": "new",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "上一交易日(8/24)十一個類股裡,科技類股重挫1.78%領跌,必需消費逆勢漲1.7%、金融漲1.29%、公用事業漲1.05%,成為撐盤的主力。這跟上週五「指數漲、龍頭跌」的畫面不太一樣——這次是科技類股整體被晶片股賣壓拖累,而防禦型類股接棒扛住指數。對一般投資人:市場輪動仍在持續,大盤的引擎正從科技巨頭換成更分散的一群類股。",
+      "sources": [
+        {"url": "https://www.washingtonpost.com/business/2026/08/24/wall-street-stocks-dow-nasdaq/27d744ee-9ff9-11f1-8606-1d40ad00172e_story.html", "ts": null}
+      ]
+    }
+  ],
+  "catalysts": [
+    "明天(8/26)盤後:輝達公布第二季財報,市場預期營收落在930億至950億美元、年增近96%,是本週AI資本支出故事最重要的檢查點。",
+    "明天(8/26)美東上午8:30:第二季GDP第二次估計、核心PCE物價指數第二次估計公布。",
+    "本週四至五(8/27-29):Jackson Hole央行年會登場。",
+    "本週五(8/28)美東上午10點:新任Fed主席華許發表就任後首場Jackson Hole政策演說。",
+    "持續進行:財政部「經濟D-Day」制裁生效,伊朗革命衛隊揚言反擊、可能瞄準美國能源要害,是否從言語升級為行動待觀察。",
+    "持續進行:加拿大將於9月8日對美國商品啟動一比一對等關稅反制。"
+  ],
+  "thesis_delta": {
+    "changed": true,
+    "summary": "財政部長貝森特昨天正式公布對伊朗「經濟D-Day」制裁清單,近60個機構與個人被鎖定,伊朗隨即放話反擊、革命衛隊揚言痛擊美國能源要害,地緣風險的金融戰形式持續發酵但尚未化為實際行動。晶片股上一交易日領跌大盤,那斯達克、羅素兩千走弱,今天盤前壓力鬆動、四大期貨全面反彈,市場正屏息等待明天輝達財報揭曉AI資本支出故事的下一章。Fed利率路徑維持在九月升息機率42%的觀望格局,尚待本週五華許在Jackson Hole的首場演說定調。三條既有支柱方向皆未反轉,今天新增的是伊朗反擊威脅具體化、晶片股提前為輝達財報卡位這兩條發展。",
+    "horizon": "MT"
+  },
+  "lead_horizon": "MT",
+  "title_hook": "晶片股連夜重摔,輝達明晚要交出答案"
+}
