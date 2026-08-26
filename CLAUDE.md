@@ -26,7 +26,7 @@
 3. **兩個 LLM 步合一。** 研究 + brief + 講稿/選圖 + 報告 + thesis 更新,設計成同一個 routine 的一次 run。
 4. **為最多人最大價值,與個人 portfolio 脫鉤。** 槓桿走資訊/風險教育,**非可跟單策略**;語氣教育而非建議。
 5. **反 AI 腔。** 講稿與報告:自然口語/書面、有個性,**不用「不是…而是」「值得注意的是」等套話**,少清單腔、避免空洞對比。
-6. **開發期一律不對外發布。** 影片、報告產出後落到本機 review 資料夾;YouTube 上傳與發文功能要實作,但預設 **dry-run / 需人工放行**,不可自動公開。
+6. **發布可見度由設定決定(2026-08-26 起自動公開)。** `pmb auto` 的日更影片以 `YOUTUBE_PRIVACY`(預設 **public**)直接上傳公開,不再每天人工到 Studio 轉;報告仍落本機 review 資料夾。`pmb publish` / `pmb run` 仍是**預設 dry-run、`--approve` 才上傳**(避免開發時誤發)。要回到人工放行就設 `YOUTUBE_PRIVACY=private`。
 7. **不提交任何密鑰。** FRED key、YouTube OAuth、TTS 等用 `.env` + `pydantic-settings`;`.gitignore` 排除。研究 routine 只用 web search,**不掛工作的 Drive/Slack connector**。
 8. **每個產出帶「非投資建議」免責**。
 

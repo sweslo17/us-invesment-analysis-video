@@ -7,6 +7,7 @@ from __future__ import annotations
 
 from functools import lru_cache
 from pathlib import Path
+from typing import Literal
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -27,8 +28,11 @@ class Settings(BaseSettings):
     youtube_client_id: str | None = None
     youtube_client_secret: str | None = None
     youtube_refresh_token: str | None = None
-    # 自動上傳的可見度:固定 private/unlisted,人工再到 Studio 改 public(絕不自動公開)
-    youtube_privacy: str = "private"
+    # 自動上傳的可見度。2026-08-26 定案:直接發 public——每天手動去 Studio 轉公開
+    # 是純人工開銷,內容本身已過 schema 驗證與字數預算。要回到人工放行就設
+    # YOUTUBE_PRIVACY=private(或 unlisted)。用 Literal 擋打錯字:值不合法要在啟動時
+    # 就炸,而不是等影片合成完、上傳最後一刻才被 API 打回。
+    youtube_privacy: Literal["public", "unlisted", "private"] = "public"
     # 影片類別:27=教育(預設,切合風險教育定位)、25=新聞與政治、22=人物與網誌
     youtube_category_id: str = "27"
     # 合成內容揭露(Studio「變造內容」):TTS 旁白依頻道政策預設主動揭露
