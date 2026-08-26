@@ -434,7 +434,10 @@ def cmd_publish(args: argparse.Namespace) -> int:
             print(f"   🎞️ 播放清單:{mark}")
         else:
             print("   🎞️ 播放清單:未設定(在 .env 填 YOUTUBE_PLAYLIST_ID 可自動加入)")
-        print("   → 剩最後一步:到 YouTube Studio 看片確認,改成『公開』。")
+        if settings.youtube_privacy == "public":
+            print("   → 已公開,無需人工放行;有問題才到 Studio 撤下。")
+        else:
+            print(f"   → 目前 {settings.youtube_privacy};要公開請到 Studio 放行。")
     else:
         print(f"[dry-run] 未發布。標題:{title}")
         print(f"  manifest:{settings.artifacts_dir / f'publish_{target}.json'}")
