@@ -1,0 +1,141 @@
+{
+  "date": "2026-08-26",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7677.27978515625,
+      "overnight_pct": -0.006501739215240077,
+      "drivers": [
+        "上一交易日(8/25,週二)標普收漲0.32%,收7677.28點,GDP/PCE數據公布前小幅走高。",
+        "今天ES期貨幾乎打平,跌0.01%,市場按兵不動等晚間輝達財報。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 26151.30078125,
+      "overnight_pct": -0.08114941743260327,
+      "drivers": [
+        "上一交易日那斯達克收漲0.66%,收26151.30點,是四大指數裡漲最多的。",
+        "今天NQ期貨小跌0.08%,是四大期貨中唯一走弱的,市場把賭注收斂,留給晚上輝達交卷。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 53577.3984375,
+      "overnight_pct": -0.007451564828614009,
+      "drivers": [
+        "上一交易日道瓊收漲0.30%,收53577.40點。",
+        "今天YM期貨幾乎持平,跌0.01%。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 3010.02001953125,
+      "overnight_pct": 0.006634080022395488,
+      "drivers": [
+        "上一交易日羅素兩千收漲0.50%,收3010.02點。",
+        "今天RTY期貨微幅上漲0.01%,四大期貨裡唯一翻紅。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普已實現波動約13.3%,波動目標模型算出的合理槓桿約1.13倍;開三倍一年要吃掉約7.9%的複利,四大指數裡代價最溫和。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克已實現波動仍高達19.7%,合理倍數只剩0.76倍;開三倍一年要吃掉約17.5%的複利,是四大指數裡槓桿代價最高的一個,今晚遇上輝達這種一次性事件風險更明顯。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊已實現波動約14.3%,合理倍數約1.05倍,開三倍一年要吃掉約9.2%的複利。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千已實現波動約16.0%,合理倍數約0.94倍,開三倍一年要吃掉約11.5%的複利。"
+    }
+  ],
+  "regime": {
+    "vol": "low",
+    "rates": "rising",
+    "stock_bond_corr": "positive",
+    "breadth": "broad"
+  },
+  "items": [
+    {
+      "headline": "四大期貨罕見全數持平,市場屏息等晚間輝達財報揭曉AI資本支出答案",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "上一交易日(8/25)四大指數集體收紅,那斯達克漲0.66%領先。但今天盤前四大期貨幾乎全部打平(ES、YM、NQ都在正負0.1%以內),VIX小漲1.2%到15.64,顯示市場不是樂觀也不是悲觀,而是在等一個具體答案:輝達今天盤後(約美東下午4:20-4:30)公布第二季財報,市場預期營收930-950億美元、年增近96%,是本週AI資本支出故事最重要的檢查點。對一般投資人:今天盤面的平靜是暫時的,不代表風險降低,晚上財報公布後波動大機率會回來。",
+      "sources": [
+        {"url": "https://finance.yahoo.com/markets/stocks/articles/stock-market-today-aug-26-134309776.html", "ts": null},
+        {"url": "https://www.kiplinger.com/investing/live/nvidia-earnings-live-updates-and-commentary-august-2026", "ts": null}
+      ]
+    },
+    {
+      "headline": "美國商務部長公開施壓三星、SK海力士赴美設記憶體晶圓廠,威脅最高百分之百關稅",
+      "horizon": "MT",
+      "vs_thesis": "new",
+      "materiality": 4,
+      "confidence": "developing",
+      "audience_value": "在韓國宣布800兆韓元(約5770億美元)本土半導體投資計畫後,美國商務部長盧特尼克公開喊話三星電子與SK海力士,要求兩家公司在美國本土興建前段記憶體晶圓廠,否則可能面臨川普先前威脅的最高百分之百關稅。這是「AI/半導體窄且不穩」這條主線第一次出現具體的政策施壓面孔,不再只是股價漲跌分裂。今天盤前南韓KOSPI仍上漲0.97%、台股大漲1.84%,市場尚未把這則政策消息計入股價,但這是一條會延續數週甚至數月的新結構性風險。對一般投資人:記憶體供應鏈的不確定性,現在同時來自需求端(輝達財報)和政策端(美國要求在地設廠),兩條線要分開看。",
+      "sources": [
+        {"url": "https://www.techtimes.com/articles/325458/20260825/washington-demands-samsung-sk-hynix-build-us-memory-fabs-after-koreas-577b-chip-bet.htm", "ts": null},
+        {"url": "https://www.koreajoongangdaily.com/business/lutnick-urges-samsung-sk-hynix-to-build-memory-chip-plants-in-us/12767060", "ts": null}
+      ]
+    },
+    {
+      "headline": "今天GDP第二次估計、核心PCE公布,九月升息機率已先降到40%",
+      "horizon": "LT",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "developing",
+      "audience_value": "今天美東上午8:30,第二季GDP第二次估計與核心PCE物價指數第二次估計將公布,是本週「Fed會不會在九月升息」辯論的下一塊拼圖。期貨隱含的九月升息機率目前報40%,比上一交易日的42%小降,12月機率持平在42%,10年期公債殖利率也回落到4.64%附近,結束前幾天的上揚走勢。這代表市場在數據公布前,已經先把賭注收斂一點,但還遠不到「確定不升息」的程度。對一般投資人:利率的不確定性沒有解除,真正的裁判是今天的數據,加上禮拜五新任主席華許在Jackson Hole的首場演說。",
+      "sources": [
+        {"url": "https://www.newsquawk.com/headlines/newsquawk-daily-economic-release---26th-august-2026", "ts": null}
+      ]
+    },
+    {
+      "headline": "伊朗革命衛隊揚言痛擊美國能源要害,油價卻因斡旋消息延續回軟",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "developing",
+      "audience_value": "財政部「經濟D-Day」對伊制裁正式生效後,伊朗經濟部長稱「完全準備好應戰」,革命衛隊發言人重申若伊朗設施受威脅,將對美國重要利益與能源要害發動猛烈反擊。但油價沒有跟著這則威脅走高,反而延續回落走勢,市場消化的是巴基斯坦居中斡旋、可能牽動制裁豁免安排的外交進展。地緣風險的言語拉鋸仍在持續,但油價走勢顯示市場暫時選擇不跟進最壞情境。對一般投資人:威脅與外交進展同時存在時,價格反應往往比新聞標題更誠實。",
+      "sources": [
+        {"url": "https://time.com/article/2026/08/25/iran-vows-retaliation-after-u-s-widens-economic-d-day-sanctions/", "ts": null},
+        {"url": "https://www.cnbc.com/2026/08/24/oil-price-today-wti-brent-us-sanctions-iran.html", "ts": null}
+      ]
+    },
+    {
+      "headline": "美加貿易談判正式破局,九月八日對等關稅反制箭在弦上",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "美國貿易代表葛里爾證實目前沒有安排與加拿大的後續談判,加拿大總理卡尼確認將於9月8日對美國鋼鐵、乳製品、家電、農業機具、紙漿紙業、電子產品等品項啟動一比一對等關稅反制。這條貿易戰戰線從「威脅」正式進入「已確定生效時間表」的階段。對一般投資人:這不是今天股價的主要驅動力,但是一條會在9月初重新浮上檯面的既定風險。",
+      "sources": [
+        {"url": "https://www.cnbc.com/2026/08/22/us-canada-trade-talks-collapse-ushering-in-wave-of-new-tariffs.html", "ts": null},
+        {"url": "https://www.aljazeera.com/news/2026/8/22/carney-canada-will-enact-retaliatory-us-tariffs-starting-september-8", "ts": null}
+      ]
+    }
+  ],
+  "catalysts": [
+    "今天美東上午8:30:第二季GDP第二次估計與核心PCE物價指數第二次估計公布。",
+    "今天盤後(約美東下午4:20-4:30):輝達公布第二季財報,市場預期營收930-950億美元、年增近96%。",
+    "本週四至五(8/27-29):Jackson Hole央行年會登場。",
+    "本週五(8/28)美東上午10點:新任Fed主席華許發表就任後首場政策演說。",
+    "持續進行:財政部對伊制裁生效,伊朗革命衛隊揚言反擊,是否從言語升級為行動待觀察。",
+    "9月8日:加拿大將對美國商品啟動一比一對等關稅反制。"
+  ],
+  "thesis_delta": {
+    "changed": true,
+    "summary": "美國商務部長盧特尼克公開施壓三星電子與SK海力士在美國本土興建記憶體晶圓廠,並以最高百分之百關稅威脅,是「AI/半導體窄且不穩」主線第一次出現具體的美方政策施壓面孔;財政部對伊制裁生效後伊朗革命衛隊揚言反擊,但油價因巴基斯坦斡旋消息延續回落;九月升息機率今天降到40%(前一天42%),10年期殖利率回落到4.64%,市場在GDP/PCE數據與輝達財報公布前收斂賭注。三條既有支柱方向皆未反轉,今天新增的是半導體供應鏈政策風險這個新面孔,以及市場在今晚輝達財報前的觀望姿態。",
+    "horizon": "MT"
+  },
+  "lead_horizon": "ST",
+  "title_hook": "四大期貨全部躺平,今晚等輝達一錘定音"
+}
