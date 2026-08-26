@@ -9,9 +9,12 @@ from __future__ import annotations
 
 import datetime as dt
 import os
+import re
 import subprocess
+import time
 from collections.abc import Callable
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 from loguru import logger
 from pydantic import ValidationError
@@ -27,6 +30,19 @@ from pmb.schemas.snapshot import Snapshot
 InvokeFn = Callable[[str], None]
 
 _HEADLESS_TIMEOUT_MIN = 35.0
+# 額度上限有明確恢復時間,等到重置再試才有意義(2026-08-26:19:46 撞牆、20:00 重置,
+# 卻在 6 秒內把兩次重試燒完,整天沒產出)。等待上限要趕得上美股開盤前出片。
+_MAX_RATE_LIMIT_WAIT_MIN = 75.0
+_RATE_LIMIT_BUFFER_SEC = 90.0  # 重置時間常是整點近似值,多等一點再敲
+_MAX_RATE_LIMIT_WAITS = 2
+_DEFAULT_RATE_LIMIT_WAIT_SEC = 20 * 60.0  # 訊息沒給重置時間時的保守等待
+_RATE_LIMIT_MARKERS = (
+    "session limit",
+    "usage limit",
+    "limit reached",
+    "rate limit",
+    "rate_limit",
+)
 # 成片長度 ≈ 總字數 × SEC_PER_CHAR(實測:0.168–0.171,取 0.17)。Shorts 上限 180s,
 # 留餘裕取 1000 字(≈170s)為硬上限;prompt 給的目標是 850–930 字。
 SEC_PER_CHAR = 0.17
@@ -43,6 +59,50 @@ _ALLOWED_TOOLS = [
     "Edit",
     "Bash(poetry run:*)",
 ]
+
+
+class RateLimitedError(RuntimeError):
+    """headless agent 撞到額度上限;``reset_at`` 是解析出的重置時間(可能為 None)。
+
+    與一般執行失敗分開,因為處置方式完全不同:一般失敗值得馬上重試,額度上限馬上
+    重試必然再撞,要等到重置。
+    """
+
+    def __init__(self, message: str, reset_at: dt.datetime | None = None) -> None:
+        super().__init__(message)
+        self.reset_at = reset_at
+
+
+def parse_reset_at(text: str, now: dt.datetime | None = None) -> dt.datetime | None:
+    """從額度訊息裡解析重置時間,如 ``resets 8pm (Asia/Taipei)`` → 今天 20:00 台北。
+
+    解析不出來回 None(呼叫端改用保守的預設等待,不要因為格式變了就整天不出片)。
+    """
+    now = now or dt.datetime.now().astimezone()
+    m = re.search(r"resets?\s+(?:at\s+)?(\d{1,2})(?::(\d{2}))?\s*(am|pm)?", text, re.I)
+    if not m:
+        return None
+    hour = int(m.group(1))
+    minute = int(m.group(2) or 0)
+    meridiem = (m.group(3) or "").lower()
+    if meridiem == "pm" and hour < 12:
+        hour += 12
+    elif meridiem == "am" and hour == 12:
+        hour = 0
+    if not (0 <= hour <= 23):
+        return None
+    tz_match = re.search(r"\(([A-Za-z]+/[A-Za-z_]+)\)", text)
+    tz = now.tzinfo
+    if tz_match:
+        try:
+            tz = ZoneInfo(tz_match.group(1))
+        except Exception:  # noqa: BLE001 — 未知時區就退回本地時區
+            pass
+    local_now = now.astimezone(tz)
+    reset = local_now.replace(hour=hour, minute=minute, second=0, microsecond=0)
+    if reset <= local_now:  # 已過 → 指的是明天同一時刻
+        reset += dt.timedelta(days=1)
+    return reset
 
 
 def invoke_headless_claude(
@@ -73,7 +133,16 @@ def invoke_headless_claude(
         env=env,
     )
     if proc.returncode != 0:
-        raise RuntimeError(f"claude -p 失敗(rc={proc.returncode}):{proc.stderr[-400:]}")
+        # 額度/API 錯誤是印在 stdout 的,只看 stderr 會得到一行空白錯誤(2026-08-26
+        # 查因得去翻 session transcript 才知道是撞額度)。兩邊都帶上。
+        combined = f"{proc.stdout.strip()}\n{proc.stderr.strip()}".strip()
+        detail = combined[-600:] or "(無輸出)"
+        if any(marker in combined.lower() for marker in _RATE_LIMIT_MARKERS):
+            raise RateLimitedError(
+                f"claude -p 撞到額度上限(rc={proc.returncode}):{detail}",
+                reset_at=parse_reset_at(combined),
+            )
+        raise RuntimeError(f"claude -p 失敗(rc={proc.returncode}):{detail}")
     tail = proc.stdout.strip()[-300:]
     logger.info("headless claude 完成:…{}", tail)
 
@@ -129,18 +198,35 @@ def check_vo_budget(script: Script) -> list[str]:
     ]
 
 
+def rate_limit_wait_seconds(exc: RateLimitedError, now: dt.datetime) -> float | None:
+    """撞額度後該睡多久;None = 重置太晚、趕不上出片,別傻等。"""
+    if exc.reset_at is None:
+        return _DEFAULT_RATE_LIMIT_WAIT_SEC
+    wait = (exc.reset_at - now).total_seconds() + _RATE_LIMIT_BUFFER_SEC
+    if wait > _MAX_RATE_LIMIT_WAIT_MIN * 60:
+        return None
+    return max(wait, _RATE_LIMIT_BUFFER_SEC)
+
+
 def run_local_research(
     target: dt.date,
     settings,
     *,
     invoke: InvokeFn | None = None,
     max_attempts: int = 2,
+    sleep: Callable[[float], None] = time.sleep,
+    now: Callable[[], dt.datetime] | None = None,
 ) -> bool:
     """本機跑一次完整研究(組 prompt → headless agent 寫檔 → 驗證,失敗帶錯誤重試)。
 
     呼叫端需先確保 ``snapshot_<target>.json`` 已存在(缺就先 ``pmb fetch``)。
     成功回 True;用盡重試回 False(不拋例外,交由呼叫端通知)。
+
+    撞到額度上限(``RateLimitedError``)不算一次產物重試:那不是「寫壞了」,而是根本
+    沒跑到,馬上重試必然再撞。改成睡到重置後再敲同一次嘗試,最多 ``_MAX_RATE_LIMIT_WAITS``
+    次;重置晚到趕不上出片就放棄。
     """
+    now = now or (lambda: dt.datetime.now(tz=dt.UTC))
     if invoke is None:
         cwd = Path(__file__).resolve().parent.parent.parent
         model = getattr(settings, "research_claude_model", "") or None
@@ -159,19 +245,43 @@ def run_local_research(
     )
 
     last_errors: list[str] = []
-    for attempt in range(1, max_attempts + 1):
+    attempt = 0
+    rate_limit_waits = 0
+    while attempt < max_attempts:
         prompt = base_prompt
         if last_errors:
             prompt += (
-                f"\n\n【第 {attempt} 次嘗試】前次產物未通過驗證,請修正後重寫檔案:\n"
+                f"\n\n【第 {attempt + 1} 次嘗試】前次產物未通過驗證,請修正後重寫檔案:\n"
                 + "\n".join(f"- {e}" for e in last_errors)
             )
         try:
             invoke(prompt)
+        except RateLimitedError as exc:
+            wait = rate_limit_wait_seconds(exc, now())
+            if wait is None or rate_limit_waits >= _MAX_RATE_LIMIT_WAITS:
+                logger.error(
+                    "撞到額度上限且等不到重置(已等 {} 次,重置 {}),放棄本機研究:{}",
+                    rate_limit_waits,
+                    exc.reset_at,
+                    exc,
+                )
+                break
+            rate_limit_waits += 1
+            logger.warning(
+                "撞到額度上限(重置 {}),等 {:.0f} 分鐘後重試第 {} 次嘗試:{}",
+                exc.reset_at,
+                wait / 60,
+                attempt + 1,
+                exc,
+            )
+            sleep(wait)
+            continue  # 額度上限不吃產物重試次數
         except (RuntimeError, subprocess.TimeoutExpired) as exc:
+            attempt += 1
             logger.warning("本機研究第 {}/{} 次執行失敗:{}", attempt, max_attempts, exc)
             last_errors = [f"agent 執行失敗:{exc}"]
             continue
+        attempt += 1
         last_errors = validate_research_artifacts(settings.artifacts_dir, target)
         if not last_errors:
             logger.info("本機研究完成並通過驗證({})", target)
@@ -182,9 +292,7 @@ def run_local_research(
 
     # 重試用盡:若只剩「字數超標」這類軟錯(產物本身合法),寧可出非 Shorts 的長片,
     # 也不要整天沒影片;硬錯(缺檔/schema 壞)才真的放棄。
-    hard_errors = validate_research_artifacts(
-        settings.artifacts_dir, target, include_budget=False
-    )
+    hard_errors = validate_research_artifacts(settings.artifacts_dir, target, include_budget=False)
     if not hard_errors:
         logger.warning(
             "字數仍超標但產物合法,以「超長片」繼續({})——成片會超過 {:.0f}s、"

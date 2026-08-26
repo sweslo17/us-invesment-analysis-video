@@ -163,3 +163,136 @@ def test_run_local_research_retries_with_error_feedback_then_succeeds(tmp_path):
         if "snapshot" not in f.name:
             f.unlink()
     assert run_local_research(_D, settings, invoke=always_bad, max_attempts=2) is False
+
+
+# --- 額度上限(session limit)處理 ---------------------------------------------
+# 2026-08-26 事故:19:46 撞到 session limit(20:00 重置),兩次重試相隔 6 秒、
+# 全撞同一道牆,整天沒產出。且 log 只印 stderr,而額度訊息在 stdout,查因得翻
+# transcript。以下測試把「錯誤要看得見」與「等重置再試」都釘住。
+
+
+def test_invoke_headless_error_message_includes_stdout(tmp_path):
+    """rc!=0 時錯誤訊息必須含 stdout——額度/API 錯誤訊息印在 stdout,不是 stderr。"""
+    import subprocess
+
+    import pmb.research.local_runner as lr
+
+    def fake_run(cmd, **kwargs):
+        return subprocess.CompletedProcess(
+            cmd, 1, stdout="You've hit your session limit · resets 8pm (Asia/Taipei)", stderr=""
+        )
+
+    orig = lr.subprocess.run
+    lr.subprocess.run = fake_run
+    try:
+        try:
+            lr.invoke_headless_claude("prompt", tmp_path)
+        except RuntimeError as exc:
+            assert "session limit" in str(exc), f"錯誤訊息漏了 stdout:{exc}"
+        else:
+            raise AssertionError("rc=1 應該要拋錯")
+    finally:
+        lr.subprocess.run = orig
+
+
+def test_invoke_headless_raises_rate_limited_with_reset_time(tmp_path):
+    """額度上限要拋可辨識的 RateLimitedError,並帶上解析出的重置時間。"""
+    import subprocess
+
+    import pmb.research.local_runner as lr
+
+    def fake_run(cmd, **kwargs):
+        return subprocess.CompletedProcess(
+            cmd, 1, stdout="You've hit your session limit · resets 8pm (Asia/Taipei)", stderr=""
+        )
+
+    orig = lr.subprocess.run
+    lr.subprocess.run = fake_run
+    try:
+        try:
+            lr.invoke_headless_claude("prompt", tmp_path)
+        except lr.RateLimitedError as exc:
+            assert exc.reset_at is not None
+            assert exc.reset_at.hour == 20 and exc.reset_at.minute == 0
+        else:
+            raise AssertionError("應拋 RateLimitedError")
+    finally:
+        lr.subprocess.run = orig
+
+
+def test_parse_reset_at_handles_common_shapes():
+    import pmb.research.local_runner as lr
+
+    now = dt.datetime(2026, 8, 26, 19, 46, tzinfo=dt.UTC).astimezone(
+        __import__("zoneinfo").ZoneInfo("Asia/Taipei")
+    )
+    got = lr.parse_reset_at("You've hit your session limit · resets 8pm (Asia/Taipei)", now=now)
+    assert got is not None and (got.hour, got.minute) == (20, 0)
+    got = lr.parse_reset_at("usage limit reached · resets at 8:30pm (Asia/Taipei)", now=now)
+    assert got is not None and (got.hour, got.minute) == (20, 30)
+    assert lr.parse_reset_at("some unrelated failure", now=now) is None
+
+
+def test_rate_limit_waits_until_reset_then_succeeds(tmp_path):
+    """撞額度時要睡到重置後再試,而不是 6 秒後重撞、然後放棄整天。"""
+    import pmb.research.local_runner as lr
+
+    settings = _settings(tmp_path)
+    now = dt.datetime.now(tz=dt.UTC)
+    slept: list[float] = []
+    calls: list[str] = []
+
+    def invoke(prompt: str) -> None:
+        calls.append(prompt)
+        if len(calls) == 1:
+            raise lr.RateLimitedError("session limit", reset_at=now + dt.timedelta(minutes=10))
+        _write_valid_artifacts(settings.artifacts_dir)
+
+    ok = run_local_research(
+        _D, settings, invoke=invoke, max_attempts=2, sleep=slept.append, now=lambda: now
+    )
+    assert ok is True, "等重置後應該要成功"
+    assert len(slept) == 1 and 600 <= slept[0] <= 900, f"應睡到重置後(含緩衝),實際 {slept}"
+    assert len(calls) == 2
+
+
+def test_rate_limit_reset_beyond_deadline_gives_up_without_sleeping(tmp_path):
+    """重置時間晚到來不及趕上開盤,就不要傻等(睡到開盤後才出片沒意義)。"""
+    import pmb.research.local_runner as lr
+
+    settings = _settings(tmp_path)
+    now = dt.datetime.now(tz=dt.UTC)
+    slept: list[float] = []
+
+    def invoke(prompt: str) -> None:
+        raise lr.RateLimitedError("session limit", reset_at=now + dt.timedelta(hours=6))
+
+    ok = run_local_research(
+        _D, settings, invoke=invoke, max_attempts=2, sleep=slept.append, now=lambda: now
+    )
+    assert ok is False
+    assert slept == [], f"超過等待上限不該睡,實際 {slept}"
+
+
+def test_rate_limit_does_not_consume_content_retry_budget(tmp_path):
+    """額度上限不是「產物寫壞」,不該吃掉修正產物的重試次數。"""
+    import pmb.research.local_runner as lr
+
+    settings = _settings(tmp_path)
+    now = dt.datetime.now(tz=dt.UTC)
+    calls: list[str] = []
+
+    def invoke(prompt: str) -> None:
+        calls.append(prompt)
+        if len(calls) == 1:
+            raise lr.RateLimitedError("session limit", reset_at=now + dt.timedelta(minutes=5))
+        if len(calls) == 2:
+            (settings.artifacts_dir / f"brief_{_D}.json").write_text("{broken")
+            return
+        _write_valid_artifacts(settings.artifacts_dir)
+
+    ok = run_local_research(
+        _D, settings, invoke=invoke, max_attempts=2, sleep=lambda s: None, now=lambda: now
+    )
+    assert ok is True, "額度重試後仍應保有 2 次產物重試"
+    assert len(calls) == 3
