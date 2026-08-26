@@ -507,7 +507,7 @@ def cmd_auto(args: argparse.Namespace) -> int:
 
 
 def _cmd_auto_inner(args: argparse.Namespace) -> int:
-    """每日全自動:研究(本機/雲端)→ 合成 → 上傳(private)→ 通知;人工只剩改公開。
+    """每日全自動:研究(本機/雲端)→ 合成 → 上傳(可見度依 YOUTUBE_PRIVACY,預設公開)→ 通知。
 
     給 launchd / cron 排程呼叫(``pmb autopilot install``),手動跑也行。冪等:
     當天已上傳過會直接跳過。非交易日 skip。
@@ -603,10 +603,10 @@ def _cmd_auto_inner(args: argparse.Namespace) -> int:
     vid = autopilot.already_published(settings.artifacts_dir, target)
     if vid:
         autopilot.notify(
-            "PMB 影片已上傳(private)",
-            f"{target} 完成,到 Studio 看片改公開:{autopilot.studio_url(vid)}{over_note}",
+            f"PMB 影片已上傳({settings.youtube_privacy})",
+            f"{target} 完成:{autopilot.studio_url(vid)}{over_note}",
         )
-        print(f"🎬 最後一步:{autopilot.studio_url(vid)} → 改『公開』")
+        print(f"🎬 已上傳({settings.youtube_privacy}):{autopilot.studio_url(vid)}")
     else:
         autopilot.notify(
             "PMB 完成合成(未上傳)",
