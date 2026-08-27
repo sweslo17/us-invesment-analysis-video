@@ -1,0 +1,130 @@
+{
+  "date": "2026-08-27",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7675.7001953125,
+      "overnight_pct": -0.0008737015823706436,
+      "drivers": [
+        "上一交易日(8/26,週三)標普收跌0.02%,收7675.70點,盤面在等晚間輝達財報,幾乎不動。",
+        "今天ES期貨續跌0.09%,輝達財報公布後美股期貨反而沒有明顯反應。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 26130.19921875,
+      "overnight_pct": 0.0006348561415983138,
+      "drivers": [
+        "上一交易日那斯達克收跌0.08%,收26130.20點,四大指數集體小跌。",
+        "今天NQ期貨僅小漲0.06%,相對於輝達財報的驚喜程度明顯偏冷淡。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 53463.87890625,
+      "overnight_pct": -0.004078668007598614,
+      "drivers": [
+        "上一交易日道瓊收跌0.21%,收53463.88點,四大指數中跌最多。",
+        "今天YM期貨續跌0.41%,是今天四大期貨中最弱的一個。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 3005.89990234375,
+      "overnight_pct": -0.0009630878482214413,
+      "drivers": [
+        "上一交易日羅素兩千收跌0.14%,收3005.90點。",
+        "今天RTY期貨小跌0.10%,跟大型股期貨同步偏軟。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普已實現波動降到約11.7%,波動目標模型算出的合理槓桿升到約1.28倍;開三倍一年只吃掉約6.2%複利,是四大指數裡代價最溫和的。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克已實現波動仍有約18.3%,合理倍數只剩0.82倍;開三倍一年要吃掉約15.1%複利,是四大指數裡槓桿代價最高的一個,今天輝達財報後的高波動個股更放大這個風險。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊已實現波動約11.6%,合理倍數約1.29倍,開三倍一年要吃掉約6.1%複利。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千已實現波動約14.7%,合理倍數約1.02倍,開三倍一年要吃掉約9.7%複利。"
+    }
+  ],
+  "regime": {
+    "vol": "low",
+    "rates": "rising",
+    "stock_bond_corr": "positive",
+    "breadth": "broad"
+  },
+  "items": [
+    {
+      "headline": "輝達單季營收962億美元、年增106%大勝預期,美股期貨卻異常冷靜",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "輝達第二季營收962.2億美元,年增106%,非公認會計每股盈餘2.22美元,雙雙超越市場預期;下一季營收指引中值約1080億美元,比市場預期再高出3.3%。盤後一度下跌1.3%,隨後在法說會釋出樂觀展望後反彈,一度上漲逾5%。但今天美股期貨的反應明顯克制:那斯達克期貨僅漲0.06%,標普期貨甚至倒跌0.09%。對一般投資人:全世界最受矚目的一份財報開出漂亮成績單,美股本土的反應卻異常安靜,這種落差本身就是今天最值得留意的訊號。",
+      "sources": [
+        {"url": "https://markets.financialcontent.com/stocks/article/stockstory-2026-8-26-nvidia-nasdaqnvda-delivers-impressive-q2", "ts": null},
+        {"url": "https://www.bloomberg.com/news/articles/2026-08-26/nasdaq-futures-rise-on-bullish-nvidia-sales-growth-markets-wrap", "ts": null}
+      ]
+    },
+    {
+      "headline": "三星、SK海力士同步噴出逾3–6%,輝達警告記憶體缺貨恐延續到2028年",
+      "horizon": "MT",
+      "vs_thesis": "challenges",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "輝達法說會提到記憶體缺貨可能一路延續到2028年,南韓記憶體雙雄同步噴出——三星電子漲逾3%、SK海力士飆漲近6%,南韓大盤同步走高。這次不再是先前幾週常見的「一漲一跌」分裂劇本,而是難得的同步大漲,顯示記憶體這條線的訂單能見度正在被市場重新確認。對一般投資人:AI供應鏈裡最常被市場質疑「基本面到底扎不扎實」的一角,今天拿到了迄今最具體的正面訊號,但同一份財報對美股本土期貨的拉抬效果卻相對有限,值得對照著看。",
+      "sources": [
+        {"url": "https://invezz.com/news/2026/08/27/samsung-sk-hynix-climb-sharply-why-nvidia-earnings-strengthened-memory-bull-case/", "ts": null},
+        {"url": "https://www.investing.com/news/stock-market-news/samsung-sk-hynix-rally-to-record-highs-after-upbeat-nvidia-earnings-4526447", "ts": null}
+      ]
+    },
+    {
+      "headline": "GDP第二次估計降至1.5%、報告內通膨數字反被上修,九月升息機率降到36%",
+      "horizon": "LT",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "第二季GDP第二次估計為年化成長1.5%,低於第一季的2.1%;同一份報告的物價指數比初次估計上修,顯示成長放緩的同時,通膨黏性沒有跟著鬆動。今天期貨隱含的九月升息機率降到36%(前一交易日為40%),但12月機率反而回升到48%,10年期公債殖利率也彈回4.664%附近。對一般投資人:這不是「經濟變差所以不用升息」的簡單劇本,成長跟通膨這次沒有同向移動,真正的裁判是明天華許在Jackson Hole的首場演說。",
+      "sources": [
+        {"url": "https://www.bea.gov/news/2026/gdp-second-estimate-and-corporate-profits-2nd-quarter-2026", "ts": null},
+        {"url": "https://www.dailyforex.com/forex-news/2026/08/us-economic-news-26-august-2026/249052", "ts": null}
+      ]
+    },
+    {
+      "headline": "卡達總理飛往德黑蘭重啟美伊斡旋,油價應聲小幅回落",
+      "horizon": "MT",
+      "vs_thesis": "new",
+      "materiality": 3,
+      "confidence": "developing",
+      "audience_value": "卡達總理今天啟程訪問德黑蘭,嘗試重啟因財政部對伊制裁而破局的美伊斡旋,布蘭特原油、WTI雙雙小幅回落。卡達先前是6月停火協議的關鍵中間人,這是制裁生效後第一次出現具體的外交斡旋動作。對一般投資人:地緣風險這幾週一直是威脅與外交進展交替出現,今天的斡旋動作還沒有具體成果,油價的小幅回落更像是市場先給個機會,而不是危機解除。",
+      "sources": [
+        {"url": "https://www.rte.ie/news/world/2026/0827/1589376-iran-middle-east/", "ts": null},
+        {"url": "https://www.agbi.com/oil-and-gas/2026/08/qatar-seeks-to-restart-us-iran-peace-talks-as-oil-slides/", "ts": null}
+      ]
+    }
+  ],
+  "catalysts": [
+    "今天(8/27)至8/29:Jackson Hole央行年會登場,主題「金融創新與支付政策」。",
+    "今天美東上午:當週初領失業金人數公布。",
+    "今天:卡達總理訪問德黑蘭,嘗試重啟美伊斡旋。",
+    "明天(8/28)美東上午:Fed主席華許發表就任後首場Jackson Hole政策演說。",
+    "9月8日:加拿大將對美國商品啟動一比一對等關稅反制。",
+    "9月17日:FOMC九月利率決策會議。"
+  ],
+  "thesis_delta": {
+    "changed": true,
+    "summary": "輝達第二季財報大勝預期(營收962億美元、年增106%,下季指引再優於預期),並警告記憶體缺貨恐延續到2028年,帶動三星、SK海力士罕見同步噴出3–6%,是AI/半導體「窄且不穩」主線裡記憶體子線迄今最具體的正面確認;但美股本土期貨對這份財報的反應異常克制,顯示分裂敘事換了新的表現形式——這次是「亞股全力慶祝、美股期貨觀望」。同一天GDP第二次估計降至1.5%、報告內通膨數字卻被上修,期貨隱含九月升息機率降到36%但12月回升到48%,成長與通膨沒有同向移動。卡達總理啟程訪問德黑蘭重啟美伊斡旋,油價小幅回落,是制裁生效後第一個具體的外交動作。三條既有支柱方向皆未反轉,今天新增的是輝達財報這個近期最重量級的確認,以及美股期貨對利多異常冷靜的新現象。",
+    "horizon": "MT"
+  },
+  "lead_horizon": "ST",
+  "title_hook": "輝達繳出史上最強財報,期貨卻靜悄悄"
+}
