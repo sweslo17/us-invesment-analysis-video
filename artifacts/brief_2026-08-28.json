@@ -1,0 +1,127 @@
+{
+  "date": "2026-08-28",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7730.990234375,
+      "overnight_pct": 0.007203282355355236,
+      "drivers": [
+        "上一交易日標普收7730.99點,漲0.72%,輝達財報大爆發帶動科技股領漲。",
+        "但漲勢集中在科技類股,標普其餘十個類股當天全數收黑,廣度明顯不足。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 26541.349609375,
+      "overnight_pct": 0.015734768833736688,
+      "drivers": [
+        "那斯達克收26541.35點,大漲1.57%,四大指數中表現最強。",
+        "輝達單日暴漲近9%、市值一口氣多了4420億美元,博通、英特爾等晶片股同步走高。",
+        "軟體股同步發威,Salesforce飆逾22%、Okta飆28%、CrowdStrike漲逾20%,暫時壓下SaaS衰退疑慮。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 53569.44140625,
+      "overnight_pct": 0.001974443423298171,
+      "drivers": [
+        "道瓊收53569.44點,小漲0.20%,漲幅明顯落後那斯達克,傳產與金融股沒有跟上科技股熱度。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 3014.340087890625,
+      "overnight_pct": 0.0028078071824892525,
+      "drivers": [
+        "羅素兩千收3014.34點,小漲0.28%,同樣落後大型科技股。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普已實現波動降到約10.6%,波動目標模型算出的合理槓桿升到約1.41倍;開三倍一年只吃掉約5.1%複利,是四大指數裡代價最溫和的一個。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克已實現波動仍有約16.6%,合理倍數只剩約0.90倍;開三倍一年要吃掉約12.5%複利,依然是四大指數裡槓桿代價最高的,輝達財報後的個股高波動更放大這個風險。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊已實現波動約11.0%,合理倍數約1.37倍,開三倍一年要吃掉約5.4%複利。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千已實現波動約14.0%,合理倍數約1.07倍,開三倍一年要吃掉約8.8%複利。"
+    }
+  ],
+  "regime": {
+    "vol": "low",
+    "rates": "rising",
+    "stock_bond_corr": "positive",
+    "breadth": "mixed"
+  },
+  "items": [
+    {
+      "headline": "輝達點燃那斯達克狂漲1.57%,但標普十一個類股裡只有科技收紅",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "上一交易日輝達財報公布後股價暴漲近9%,是2025年4月以來單日最大漲幅,市值一口氣增加4420億美元,帶動博通、英特爾等晶片股同步走高,把那斯達克拉出1.57%的漲幅;標普500也漲0.72%,但拆開來看,十一個類股裡只有科技類股上漲,其餘全數收黑。對一般投資人:指數上漲不代表市場普遍轉強,今天的漲勢是少數權值股扛出來的,不是全面回溫。",
+      "sources": [
+        {"url": "https://www.fool.com/coverage/stock-market-today/2026/08/27/stock-market-today-aug-27-nvidia-surges-on-blowout-results-and-surprising-guidance/", "ts": null},
+        {"url": "https://www.thestreet.com/stock-market-today/stock-market-today-dow-jones-sp-500-nasdaq-updates-aug-27-2026", "ts": null}
+      ]
+    },
+    {
+      "headline": "九月升息機率悄悄升到40%、十年期殖利率彈回4.67%,就等今天10點華許開口",
+      "horizon": "LT",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "developing",
+      "audience_value": "期貨隱含的九月升息機率今天報40%,比前一天的36%又墊高一截,十二月機率持平在48%,十年期公債殖利率同步彈回4.67%附近。今天美東上午10點,新任Fed主席華許將發表就任後首場Jackson Hole政策演說,他本人先前表示演說重點是長期結構性問題、不是近期政策指引,但市場屆時仍會緊盯任何鷹鴿訊號重新定價。對一般投資人:這是這幾個月來最重要的一次政策指引窗口,演說前的機率數字只是起點,不是答案。",
+      "sources": [
+        {"url": "https://www.benzinga.com/markets/equities/26/08/61486721/stock-market-today-sp-500-nasdaq-100-futures-slip-ahead-of-kevin-warshs-jackson-hole-speech-mrvl-pypl-iren-gap-in-focus", "ts": null},
+        {"url": "https://www.axios.com/2026/08/27/warsh-guidance-jackson-hole", "ts": null}
+      ]
+    },
+    {
+      "headline": "三星、SK海力士回吐輝達行情漲幅,南韓KOSPI隔夜跌1.79%",
+      "horizon": "MT",
+      "vs_thesis": "challenges",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "三星、SK海力士前一天才因輝達財報同步噴出3%到6%,今天隔夜卻同步回吐,南韓KOSPI跌1.79%,記憶體雙雄領跌;反觀日經、台股、歐股同步走高。對一般投資人:AI/半導體題材『窄且不穩』的劇本沒有改變,只是換了一種方式表現——同一則利多,昨天讓南韓噴出,今天卻讓南韓率先獲利了結。",
+      "sources": [
+        {"url": "https://www.tradingkey.com/analysis/stocks/more/262137400-japan-south-korea-stocks-kospi-nikkei-softbank-skhynix-samsung-kioxia-nvidia-nvda-hbm-tradingkey", "ts": null}
+      ]
+    },
+    {
+      "headline": "卡達、伊朗談出臨時航運走廊+掃雷方案雛形,油價續回落",
+      "horizon": "MT",
+      "vs_thesis": "new",
+      "materiality": 3,
+      "confidence": "developing",
+      "audience_value": "卡達總理與伊朗外長在德黑蘭談出一個階段性方案雛形,提議由伊朗與阿曼共管一條臨時航運走廊、並進行聯合掃雷,布蘭特原油、WTI雙雙延續小跌。對一般投資人:這是財政部對伊制裁生效以來,第一次出現有具體技術性內容的外交進展,雖然離正式拍板還有距離,但地緣風險這條線今天難得往下走。",
+      "sources": [
+        {"url": "https://www.agbi.com/oil-and-gas/2026/08/qatar-and-iran-hold-hormuz-de-escalation-talks-as-oil-slips/", "ts": null},
+        {"url": "https://english.alarabiya.net/News/middle-east/2026/08/27/qatar-pm-visits-tehran-to-pursue-mediation-efforts", "ts": null}
+      ]
+    }
+  ],
+  "catalysts": [
+    "今天(8/28)美東上午10點:Fed主席華許發表就任後首場Jackson Hole政策演說。",
+    "今天至明天(8/29):Jackson Hole央行年會進入第二、三天議程,明天閉幕。",
+    "今天:卡達持續斡旋美伊荷姆茲海峽降溫方案。",
+    "9月8日:加拿大將對美國商品啟動一比一對等關稅反制。",
+    "9月17日:FOMC九月利率決策會議。"
+  ],
+  "thesis_delta": {
+    "changed": false,
+    "summary": null,
+    "horizon": null
+  },
+  "lead_horizon": "LT",
+  "title_hook": "10點整,華許一開口,九月升不升息就要見真章"
+}
