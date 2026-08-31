@@ -1,0 +1,138 @@
+{
+  "date": "2026-08-31",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7711.76,
+      "overnight_pct": -0.0024873916535915275,
+      "drivers": [
+        "上一交易日(8/28)標普收7711.76點,跌0.25%,Fed主席華許在傑克森洞放鷹引發賣壓。",
+        "十大權值股裡輝達、蘋果、博通、Meta同步收黑,微軟、亞馬遜、Alphabet逆勢收紅,漲跌互抵。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 26402.424,
+      "overnight_pct": -0.005234398006552187,
+      "drivers": [
+        "那斯達克收26402.42點,跌0.52%,跌幅四大指數中第二深,科技股對升息風險最敏感。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 53559.99,
+      "overnight_pct": -0.0001764065482111511,
+      "drivers": [
+        "道瓊收53559.99點,幾乎打平僅跌0.02%,傳產與金融股受升息疑慮影響相對輕。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 2972.372,
+      "overnight_pct": -0.013922586156024768,
+      "drivers": [
+        "羅素兩千收2972.37點,重挫1.39%,四大指數中跌最深,小型股對利率變化最敏感。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普已實現波動約10.6%,波動目標模型算出的合理槓桿約1.41倍,開三倍一年吃掉約5.1%複利,是四大指數裡代價最溫和的一個。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克已實現波動仍有約16.6%,合理倍數只剩約0.90倍,開三倍一年要吃掉約12.5%複利,依然是四大指數裡槓桿代價最高的。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊已實現波動約11.0%,合理倍數約1.37倍,開三倍一年要吃掉約5.4%複利。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千已實現波動約14.0%,合理倍數約1.07倍,開三倍一年要吃掉約8.8%複利。"
+    }
+  ],
+  "regime": {
+    "vol": "low",
+    "rates": "rising",
+    "stock_bond_corr": "positive",
+    "breadth": "narrow"
+  },
+  "items": [
+    {
+      "headline": "傑克森洞放鷹震盪收官,羅素兩千重挫1.39%領跌四大指數",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "上一交易日Fed主席華許在Jackson Hole警告通膨降溫的證據還不夠、升息隨時可能重啟,美股應聲走弱:羅素兩千小型股跌1.39%領跌,那斯達克跌0.52%,標普跌0.25%,道瓊幾乎打平。對一般投資人:利率敏感度愈高的資產(小型股)跌得愈重,是市場對『升息風險變高』最直接的體檢。",
+      "sources": [
+        {"url": "https://www.washingtonpost.com/business/2026/08/28/fed-chair-warsh-speaks-jackson-hole-conference/", "ts": null},
+        {"url": "https://www.cnbc.com/2026/08/28/kevin-warsh-jackson-hole-federal-reserve-inflation.html", "ts": null}
+      ]
+    },
+    {
+      "headline": "九月升息機率一個週末從四成衝上64%,十年期殖利率彈到4.72%",
+      "horizon": "LT",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "華許演說後,期貨隱含的九月升息機率從演說前的約40%一路衝上64%,十二月機率也升到58%,十年期公債殖利率彈到4.72%。對一般投資人:這不是Fed已經拍板,而是市場自己重新押注『這次是玩真的』——升息機率在三天內跳這麼多,是這幾個月來最大的一次單週轉向。",
+      "sources": [
+        {"url": "https://www.cnbc.com/2026/08/28/-september-fed-decision-now-a-coin-flip-as-rate-hike-odds-increase.html", "ts": null},
+        {"url": "https://www.benzinga.com/markets/prediction-markets/26/08/61499396/fed-hike-odds-warsh-jackson-hole", "ts": null}
+      ]
+    },
+    {
+      "headline": "美軍週日轟炸伊朗火箭發射架,是一個月來首次真的動手",
+      "horizon": "MT",
+      "vs_thesis": "new",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "週日美軍出手炸毀伊朗在拉拉克島準備對荷姆茲海峽佈雷的火箭發射架,是這場已延續超過六個月的衝突裡,近一個月來首次真的動武。伊朗革命衛隊證實有傷亡,揚言報復。對一般投資人:地緣風險從『制裁與言語拉鋸』重新升級為實際軍事行動,油價已經先反應,後續是否引發實質報復才是真正的觀察點。",
+      "sources": [
+        {"url": "https://www.bloomberg.com/news/articles/2026-08-30/us-strikes-iranian-rocket-launchers-in-first-attack-in-weeks", "ts": null},
+        {"url": "https://www.nbcnews.com/politics/national-security/us-forces-strike-iranian-rocket-launchers-strait-hormuz-first-military-rcna595194", "ts": null}
+      ]
+    },
+    {
+      "headline": "輝達行情兩天退燒,標普十大權值股漲跌互抵",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "上一交易日拆開標普成分股貢獻,輝達單獨拖累指數約0.012個百分點,蘋果、博通、Meta同步扣分,靠微軟、亞馬遜、Alphabet撐住盤面。三天前輝達財報才讓那斯達克狂飆1.57%,現在角色互換。對一般投資人:AI題材『窄且不穩』沒有解除,只是這次連財報行情本身都撐不過一個週末。",
+      "sources": [
+        {"url": "https://www.thestreet.com/stock-market-today/stock-market-today-dow-jones-sp-500-nasdaq-updates-aug-31-2026", "ts": null}
+      ]
+    },
+    {
+      "headline": "亞股今天分歧收官,南韓晶片股翻紅、布蘭特原油跳升近3%站回90美元",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "受美伊衝突升溫牽動,南韓Samsung、SK海力士早盤一度重跌,但記憶體買盤撐盤,KOSPI終場仍漲0.46%;日經、台股偏弱,歐股分歧。布蘭特原油跳升近3%重回90美元上方。對一般投資人:同一則地緣新聞,股市選擇淡化、油市選擇認真對待,兩邊看法還沒收斂。",
+      "sources": [
+        {"url": "https://en.sedaily.com/finance/2026/08/31/kospi-closes-at-6820-as-samsung-sk-hynix-rebound", "ts": null},
+        {"url": "https://tradingeconomics.com/commodity/brent-crude-oil", "ts": null}
+      ]
+    }
+  ],
+  "catalysts": [
+    "明天(9/1)美東上午10點:8月ISM製造業PMI,同日稍早公布JOLTS職缺數據。",
+    "9/3:8月ISM非製造業(服務業)PMI。",
+    "9/4(週五)美東上午8:30:8月非農就業報告,是華許鷹派表態後第一個關鍵就業硬數據。",
+    "近期觀察:伊朗革命衛隊揚言對美軍週日空襲進行報復,後續是否有具體行動。",
+    "9/8:加拿大對美國商品啟動一比一對等關稅反制。",
+    "9/17:FOMC九月利率決策會議。"
+  ],
+  "thesis_delta": {
+    "changed": false,
+    "summary": null,
+    "horizon": null
+  },
+  "lead_horizon": "LT",
+  "title_hook": "美軍出手炸伊朗,九月升息機率衝上64%"
+}
