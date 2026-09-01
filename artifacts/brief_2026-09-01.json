@@ -1,0 +1,145 @@
+{
+  "date": "2026-09-01",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7686.14013671875,
+      "overnight_pct": -0.003322181095009468,
+      "drivers": [
+        "上一交易日(8/31)標普收7686.14點,跌0.33%,推力是伊朗當天對約旦、阿聯發動實際軍事報復,加上九月升息機率繼續墊高。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 26370.890625,
+      "overnight_pct": -0.001194336360934097,
+      "drivers": [
+        "那斯達克收26370.89點,跌0.12%,四大指數中跌最淺,主要是升息預期升溫壓抑成長股估值。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 53185.8984375,
+      "overnight_pct": -0.00698453383766498,
+      "drivers": [
+        "道瓊收53185.90點,跌0.70%,四大指數中跌最深,工業、公用事業等利率敏感類股領跌。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 2956.449951171875,
+      "overnight_pct": -0.005356614145015404,
+      "drivers": [
+        "羅素兩千收2956.45點,跌0.54%,小型股對殖利率走高與地緣風險同樣敏感。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普已實現波動約10.8%,波動目標模型算出的合理槓桿約1.39倍,開三倍一年吃掉約5.3%複利,是四大指數裡代價最溫和的一個。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克已實現波動仍有約16.7%,合理倍數只剩約0.90倍,開三倍一年要吃掉約12.6%複利,依然是四大指數裡槓桿代價最高的。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊已實現波動約11.3%,合理倍數約1.33倍,開三倍一年要吃掉約5.7%複利。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千已實現波動約15.7%,合理倍數約0.96倍,開三倍一年要吃掉約11.0%複利。"
+    }
+  ],
+  "regime": {
+    "vol": "low",
+    "rates": "rising",
+    "stock_bond_corr": "positive",
+    "breadth": "narrow"
+  },
+  "items": [
+    {
+      "headline": "伊朗飛彈打約旦、無人機炸阿聯基地,美伊六個多月來首次真正互相開火",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "美軍週日炸毀伊朗在拉拉克島的火箭發射架後,伊朗昨天正式報復:革命衛隊以彈道飛彈攻擊約旦的侯賽因與阿茲拉克兩座基地(約旦攔截8枚),同時出動數十架無人機攻擊阿聯阿爾明哈德基地,鎖定美軍人員與直升機所在位置。對一般投資人:地緣風險從『制裁與嘴上威脅』正式升級成雙方實際互相開火,是這場衝突六個多月來第一次。",
+      "sources": [
+        {"url": "https://www.aljazeera.com/news/2026/8/31/iran-attacks-jordan-uae-after-us-bombs-larak-island-whats-the-latest", "ts": null},
+        {"url": "https://edition.cnn.com/2026/08/30/politics/us-iran-strikes-larak-island", "ts": null}
+      ]
+    },
+    {
+      "headline": "荷姆茲海峽再添變數,兩艘超級油輪深夜遭不明拋射物擊中,原油彈到86美元附近",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "昨晚到今天凌晨,兩艘超級油輪在荷姆茲海峽附近幾乎同時被不明拋射物擊中,是這幾天航運風險再度具體化的證據。對一般投資人:能源成本一旦跟著地緣風險墊高,原本已經降溫的通膨故事就更難走下去。",
+      "sources": [
+        {"url": "https://www.bloomberg.com/news/articles/2026-09-01/two-oil-supertankers-hit-by-projectiles-in-hormuz-marisks-says", "ts": null}
+      ]
+    },
+    {
+      "headline": "九月升息機率衝上68%創新高,今天ISM製造業與JOLTS先交卷",
+      "horizon": "LT",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "從上週五演說前的約四成,到現在期貨隱含的九月升息機率已經來到68%,十二月機率也有58%,隱含利率一路推向4.005%。對一般投資人:今天稍晚公布的ISM製造業PMI與JOLTS職缺數據,會是這一輪鷹派定價第一次被硬數據檢驗。",
+      "sources": [
+        {"url": "https://www.cnbc.com/2026/08/28/-september-fed-decision-now-a-coin-flip-as-rate-hike-odds-increase.html", "ts": null},
+        {"url": "https://www.cnbc.com/2026/08/31/markets-see-warsh-endorsing-a-rate-hike-in-september-not-everyone-is-convinced.html", "ts": null}
+      ]
+    },
+    {
+      "headline": "30年期公債殖利率頂在5.22%,彭博稱寫下2006年以來最慘開局",
+      "horizon": "LT",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "長天期利率的壓力不只是Fed會不會升息,還疊加了財政赤字、公債供給疑慮堆出來的期限溢酬,全球公債市場同步遭殃。對一般投資人:房貸、企業融資這類跟長天期利率掛鉤的成本,短期內很難真正鬆手。",
+      "sources": [
+        {"url": "https://www.bloomberg.com/news/articles/2026-09-01/us-30-year-bond-enters-september-on-its-worst-stretch-since-2006", "ts": null}
+      ]
+    },
+    {
+      "headline": "美股晶片股盤前走弱,台股卻逆勢大漲2.1%",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "developing",
+      "audience_value": "殖利率走高讓輝達、超微、美光盤前跌超過1%,費半ETF跟著跌,但台股頂著同一則地緣新聞逆勢大漲2.1%,南韓KOSPI也小幅收紅。對一般投資人:AI供應鏈『窄且不穩』的分裂,今天換成美股本土晶片股跟亞洲供應鏈解讀不同調。",
+      "sources": [
+        {"url": "https://www.cnbc.com/2026/09/01/stocks-making-the-biggest-moves-premarket-nvda-hood-nvs.html", "ts": null}
+      ]
+    },
+    {
+      "headline": "能源類股靠油價噴出漲2.04%,是上一交易日唯一像樣的漲幅",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 2,
+      "confidence": "confirmed",
+      "audience_value": "公用事業跌2.2%、工業跌2.05%,對利率最敏感的族群跌最深,反而是能源類股吃到地緣風險推升油價的紅利。對一般投資人:同一則地緣新聞,受益跟受害的產業完全不同。",
+      "sources": []
+    }
+  ],
+  "catalysts": [
+    "今天(9/1)美東上午10點:8月ISM製造業PMI(市場預期55.2,前值55.6)。",
+    "今天(9/1)美東下午2點:JOLTS職缺數據(市場預期733萬,前值735.9萬)。",
+    "9/3:8月ISM非製造業(服務業)PMI。",
+    "9/4(週五)美東上午8:30:8月非農就業報告,是九月升息賭注的關鍵測試。",
+    "近期觀察:伊朗是否有進一步升級行動、美方新一輪制裁細節、荷姆茲海峽航運風險是否持續。",
+    "9/8:加拿大對美國商品啟動一比一對等關稅反制。",
+    "9/17:FOMC九月利率決策會議。"
+  ],
+  "thesis_delta": {
+    "changed": true,
+    "summary": "地緣風險從『制裁與言語拉鋸』正式升級為美伊雙方實際互相開火(伊朗飛彈打約旦、無人機炸阿聯,加上荷姆茲海峽兩艘油輪遭不明拋射物擊中),把8/31標記的『伊朗是否有具體反制動作』開放問題坐實,信心從developing上修為confirmed;Fed九月升息機率同步刷新高至68%。",
+    "horizon": "MT"
+  },
+  "lead_horizon": "MT",
+  "title_hook": "美伊真的打起來,兩艘油輪跟著遭殃"
+}
