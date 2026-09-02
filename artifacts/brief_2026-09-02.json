@@ -1,0 +1,137 @@
+{
+  "date": "2026-09-02",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7631.47021484375,
+      "overnight_pct": -0.007112775093382416,
+      "drivers": [
+        "上一交易日(9/1)標普收7631.47點,跌0.71%,市場在消化週日伊朗打約旦、阿聯的後座力,加上殖利率持續走高。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 26099.76953125,
+      "overnight_pct": -0.010281013611258962,
+      "drivers": [
+        "那斯達克收26099.77點,跌1.03%,四大指數中跌最深,Alphabet、博通等權值股領跌拖累指數。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 52766.87890625,
+      "overnight_pct": -0.007878424427338852,
+      "drivers": [
+        "道瓊收52766.88點,跌0.79%,工業、原物料類股同步走弱。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 2920.1298828125,
+      "overnight_pct": -0.012285711788150195,
+      "drivers": [
+        "羅素兩千收2920.13點,跌1.23%,四大指數中跌最深,小型股對殖利率走高最敏感。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普已實現波動降到約10%,波動目標模型算出的合理槓桿回升到約1.5倍,開三倍一年吃掉約4.5%複利,是四大指數裡代價最溫和的一個。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克已實現波動仍有約15.6%,合理倍數只剩約0.96倍,開三倍一年要吃掉約11%複利,依然是四大指數裡槓桿代價最高的。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊已實現波動約10.6%,合理倍數約1.41倍,開三倍一年要吃掉約5.1%複利。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千已實現波動約15%,合理倍數約1.0倍,開三倍一年要吃掉約10.1%複利。"
+    }
+  ],
+  "regime": {
+    "vol": "low",
+    "rates": "rising",
+    "stock_bond_corr": "positive",
+    "breadth": "narrow"
+  },
+  "items": [
+    {
+      "headline": "美伊衝突全面升級,美軍空襲炸中婚禮致傷亡,伊朗同夜飛彈打約旦、巴林、科威特,無人機襲伊拉克",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "美軍再度空襲伊朗沿海多個地點,其中一枚炸中一場婚禮宴會,造成平民死傷,伊朗痛批是戰爭罪;伊朗隨即以彈道飛彈、無人機同時攻擊約旦(王子哈山空軍基地等)、巴林(伊薩親王空軍基地)、科威特(阿里薩利姆基地)與伊拉克埃爾比勒的美軍設施,伊朗軍方發言人更表態「不再克制」。對一般投資人:地緣風險從上週的雙邊互射,一口氣擴大成四國同時被捲入,顯示這條風險線還沒有見頂。",
+      "sources": [
+        {"url": "https://www.aljazeera.com/news/2026/9/2/iran-us-exchange-new-attacks-who-was-hit-in-latest-strikes", "ts": null},
+        {"url": "https://www.khaleejtimes.com/world/mena/us-israel-iran-lebanon-live-updates-september-2-2026", "ts": null}
+      ]
+    },
+    {
+      "headline": "荷姆茲海峽疑遭水雷攻擊、油輪起火,沙烏地籍貨輪事故2人喪生,原油延續上漲",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "developing",
+      "audience_value": "繼上週兩艘超級油輪遭不明拋射物擊中後,今天傳出荷姆茲海峽附近再有油輪疑似觸雷起火,沙烏地籍貨輪Sidr號也發生事故、造成2人死亡;原油價格延續近幾個交易日的漲勢。對一般投資人:能源成本一旦跟著地緣風險持續墊高,原本降溫的通膨故事會更難走下去。",
+      "sources": [
+        {"url": "https://www.khaleejtimes.com/world/mena/us-israel-iran-lebanon-live-updates-september-2-2026", "ts": null}
+      ]
+    },
+    {
+      "headline": "Fed數據落地:8月ISM製造業與JOLTS結果大致符合鷹派定價,10年期殖利率創2023年11月以來新高",
+      "horizon": "LT",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "昨天公布的8月ISM製造業PMI與JOLTS職缺數據雙雙落地,結果沒有明顯打破先前已經墊高的鷹派定價,期貨隱含的九月升息機率維持在六成以上高檔;10年期公債殖利率同步來到4.8%附近,創2023年11月以來新高。對一般投資人:硬數據沒有反轉市場對Fed偏鷹的預期,借貸成本持續承壓。",
+      "sources": [
+        {"url": "https://www.fxstreet.com/news/united-states-ism-manufacturing-pmi-came-in-at-546-below-forecasts-552-in-august-202609011400", "ts": null},
+        {"url": "https://www.cnbc.com/2026/09/02/bond-yields-treasurys-inflation.html", "ts": null}
+      ]
+    },
+    {
+      "headline": "戴爾財報大好,AI伺服器全年展望大幅上修至740億美元,股價與惠普科技齊漲",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "戴爾公布財報,營收年增58%創紀錄,AI伺服器訂單、營收與待出貨積壓同步創新高,全年AI伺服器銷售展望從先前預估103%成長大幅上修到200%成長,股價應聲大漲,連帶帶動惠普科技盤前走高。對一般投資人:AI資本支出故事又添一筆來自訂單與出貨量的實績證據,不是單純畫大餅。",
+      "sources": [
+        {"url": "https://www.cnbc.com/2026/09/01/dell-q2-earnings-report-2027.html", "ts": null}
+      ]
+    },
+    {
+      "headline": "中國記憶體廠CXMT傳HBM3E技術突破與擴產籌資,美光、SanDisk重挫,三星、SK海力士同步走弱",
+      "horizon": "MT",
+      "vs_thesis": "new",
+      "materiality": 4,
+      "confidence": "developing",
+      "audience_value": "中國記憶體廠CXMT傳出已試產HBM3E晶片、並籌劃大規模融資擴產,市場擔憂中國在AI記憶體供應鏈的競爭力追上,美光、西部數據、SanDisk昨晚股價重挫,南韓三星電子、SK海力士今天跟著走弱。不過CXMT目前在HBM市場的實際份額仍小,部分分析認為這波賣壓有過度反應之嫌。對一般投資人:AI/半導體「窄且不穩」的敘事,今天多了一條中國競爭的新變數。",
+      "sources": [
+        {"url": "https://en.bloomingbit.io/feed/news/119569", "ts": null},
+        {"url": "https://the-decoder.com/chinas-cxmt-makes-its-first-hbm3e-chips-closing-the-ai-memory-gap/", "ts": null}
+      ]
+    }
+  ],
+  "catalysts": [
+    "今天(9/2)美東上午9:05:Fed理事巴爾(Michael Barr)公開發言,是9月5日進入FOMC會前靜默期前最後幾次官員表態機會之一。",
+    "9/3:8月ISM非製造業(服務業)PMI。",
+    "9/4(週五)美東上午8:30:8月非農就業報告,是九月升息賭注的關鍵測試。",
+    "9/5:FOMC進入會前靜默期。",
+    "近期觀察:美伊衝突是否進一步升級、荷姆茲海峽航運安全、中國記憶體廠CXMT後續動向。",
+    "9/8:加拿大對美國商品啟動一比一對等關稅反制。",
+    "9/17:FOMC九月利率決策會議。"
+  ],
+  "thesis_delta": {
+    "changed": true,
+    "summary": "地緣風險從雙邊互射升級為美伊多國同時交火:美軍再度空襲伊朗沿海(炸中一場婚禮宴會致平民傷亡),伊朗同夜以飛彈、無人機攻擊約旦、巴林、科威特與伊拉克四國目標,並表態「不再克制」;荷姆茲海峽疑遭水雷攻擊,油輪起火,原油延續上漲。Fed數據面,8月ISM製造業與JOLTS結果落地,大致符合先前鷹派定價,九月升息機率維持高檔,10年期殖利率創2023年11月以來新高。AI/半導體則新增中國競爭變數:記憶體廠CXMT傳出HBM3E技術突破,拖累美光、SK海力士等記憶體股重挫,同一天戴爾財報卻用實際訂單證明AI資本支出仍在加速,供應鏈上下游的分裂又添新面孔。",
+    "horizon": "MT"
+  },
+  "lead_horizon": "MT",
+  "title_hook": "美伊四國同夜開火,伊朗放話不再克制"
+}
