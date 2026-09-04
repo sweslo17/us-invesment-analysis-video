@@ -1,0 +1,182 @@
+{
+  "segments": [
+    {
+      "vo": "Fed理事才放鴿,主席才放鷹。今天8點半,非農就業報告來裁判。",
+      "chart_id": null,
+      "headline": "鷹鴿吵不完,今天非農裁判",
+      "title": null,
+      "tag": "2026-09-04 · 盤前快報",
+      "t_start": 0.0,
+      "duration": 5.27
+    },
+    {
+      "vo": "上一交易日美股大漲,標普漲1.06%收7747點,寫下八月初以來最佳單日。推手是Fed理事沃勒放話:若通膨數據延續降溫,他傾向九月按兵不動,升息機率應聲下滑。今天盤前卻異常安靜,標普期貨只漲0.03%,市場在等真正的裁判。",
+      "chart_id": "ov_close",
+      "headline": null,
+      "title": "昨收 vs 今日盤前",
+      "tag": null,
+      "t_start": 5.27,
+      "duration": 18.87
+    },
+    {
+      "vo": "輝達宣布收購開源AI平台抱抱臉,金額近129億美元,是輝達史上第二大收購案。",
+      "chart_id": null,
+      "headline": "輝達砸129億",
+      "title": null,
+      "tag": "AI霸主的防守戰",
+      "t_start": 24.14,
+      "duration": 6.46
+    },
+    {
+      "vo": "拆開標普成分股貢獻,昨天輝達、Meta、亞馬遜、Google都收黑,十大權值股合計倒扣約0.03個百分點。真正把指數推高1.06%的,是後面七成多收紅的中小型股——這是本週第二次,AI龍頭沒跟上大盤腳步。",
+      "chart_id": "conc_now",
+      "headline": null,
+      "title": "誰在扛這波漲勢",
+      "tag": null,
+      "t_start": 30.6,
+      "duration": 17.34
+    },
+    {
+      "vo": "集中度,是指漲跌有多依賴少數幾檔權值股。這幾天集中度反著來,權值股落後,反而成了大盤的隱藏風險。",
+      "chart_id": null,
+      "headline": "集中度",
+      "title": null,
+      "tag": "名詞小教室",
+      "t_start": 47.94,
+      "duration": 8.16
+    },
+    {
+      "vo": "隔夜亞股全面噴出:南韓KOSPI漲1.64%,香港恆生漲1.74%,台股漲1.44%,日經漲1.17%,接力昨晚的Fed鴿派行情。上海只小跌0.29%,是少數沒跟上的市場。",
+      "chart_id": "global_now",
+      "headline": null,
+      "title": "全球股市接力大漲",
+      "tag": null,
+      "t_start": 56.1,
+      "duration": 14.62
+    },
+    {
+      "vo": "美伊戰爭打超過190天,荷姆茲海峽日均通行量比戰前掉了九成五。前一天美軍打了伊朗油輪,伊朗回射二十多枚飛彈到巴林、科威特跟伊拉克。",
+      "chart_id": null,
+      "headline": "荷姆茲海峽,實質關閉",
+      "title": null,
+      "tag": "戰爭第190天",
+      "t_start": 70.72,
+      "duration": 11.05
+    },
+    {
+      "vo": "布蘭特原油站上95美元,本週漲了將近一成,是荷姆茲海峽停擺以來的高檔。但VIX今天只有14.12,反而比昨天還低。市場好像已經習慣把戰爭新聞當背景音,寧願盯著今天的非農。",
+      "chart_id": "vix_now",
+      "headline": null,
+      "title": "戰爭升溫,VIX卻很淡定",
+      "tag": null,
+      "t_start": 81.77,
+      "duration": 14.45
+    },
+    {
+      "vo": "換算Fed基金期貨,九月升息隱含機率現在是56%,十二月來到58%,比前幾天的六成八已經降溫。沃勒昨天鬆口,主席華許在Jackson Hole卻還在放鷹——這場鷹鴿拉鋸,今天的非農數字就是裁判。",
+      "chart_id": "fed_now",
+      "headline": null,
+      "title": "Fed內部,鷹鴿對打",
+      "tag": null,
+      "t_start": 96.22,
+      "duration": 16.49
+    },
+    {
+      "vo": "今天8點半非農就業報告,市場預期新增約5萬人,區間卻大到從負2萬5到正14萬都有人猜。今晚特斯拉發表Cybercab機器計程車。9月16日,FOMC正式公布九月利率決策。",
+      "chart_id": "cal_now",
+      "headline": null,
+      "title": "接下來盯緊這幾天",
+      "tag": null,
+      "t_start": 112.71,
+      "duration": 14.45
+    },
+    {
+      "vo": "標普已實現波動約8.5%,合理槓桿倍數還有1.77倍,開三倍一年吃掉約3.2%複利。那斯達克波動13.2%,合理倍數只剩1.13倍,三倍要吃掉近7.9%複利。事件日波動說變就變,倍數也跟著現形。",
+      "chart_id": "lev_now",
+      "headline": null,
+      "title": "非農公布前,槓桿要更謹慎",
+      "tag": null,
+      "t_start": 127.16,
+      "duration": 16.49
+    },
+    {
+      "vo": "巴菲特說,別人恐懼的時候要貪婪。可是戰爭打到190天,VIX還在打瞌睡——你敢貪婪,還是只敢等非農出爐?以上非投資建議,我們明天盤前見。",
+      "chart_id": null,
+      "headline": "別人恐懼我貪婪\n我只敢等非農",
+      "title": null,
+      "tag": "巴菲特 不知道有沒有說過",
+      "t_start": 143.65,
+      "duration": 11.56
+    }
+  ],
+  "charts": [
+    {
+      "id": "ov_close",
+      "module": "overnight_vs_close",
+      "params": {}
+    },
+    {
+      "id": "conc_now",
+      "module": "concentration",
+      "params": {
+        "top_n": 10
+      }
+    },
+    {
+      "id": "global_now",
+      "module": "global_equity_overnight",
+      "params": {}
+    },
+    {
+      "id": "vix_now",
+      "module": "vix_regime",
+      "params": {}
+    },
+    {
+      "id": "fed_now",
+      "module": "fed_path",
+      "params": {}
+    },
+    {
+      "id": "cal_now",
+      "module": "catalyst_timeline",
+      "params": {
+        "events": [
+          {
+            "date": "9/4",
+            "label": "8月非農就業報告",
+            "highlight": true
+          },
+          {
+            "date": "9/4晚",
+            "label": "特斯拉Cybercab發表會",
+            "highlight": false
+          },
+          {
+            "date": "9/5",
+            "label": "Fed會前靜默期開始",
+            "highlight": false
+          },
+          {
+            "date": "9/8",
+            "label": "加拿大關稅反制生效",
+            "highlight": false
+          },
+          {
+            "date": "9/16",
+            "label": "FOMC九月利率決策",
+            "highlight": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "lev_now",
+      "module": "leverage_decay",
+      "params": {}
+    }
+  ],
+  "coverage_gaps": [
+    "目前圖表模組庫沒有原油/大宗商品價格走勢圖,布蘭特原油站上95美元、本週累漲近一成只能口述帶過,建議之後補 oil_price 模組。"
+  ]
+}
