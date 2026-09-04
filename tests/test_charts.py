@@ -294,3 +294,15 @@ def test_render_chart_dispatches_to_module(tmp_path):
 def test_every_chart_module_has_a_renderer():
     # 固定模組庫(Literal)的每個模組都要有對應 render,不能有缺口
     assert set(get_args(ChartModule)) == set(implemented_modules())
+
+
+def test_overnight_vs_close_negative_label_anchors_right_of_zero():
+    """負值長條的數值標註放在零軸右側(同列空的一側),不再往左擠到 y 軸的指數名稱上。
+
+    9/4 成片實例:道瓊盤前 −0.06% 的標註直接壓在「道瓊工業指數」字上。
+    """
+    from pmb.charts.library import _bar_label_anchor
+
+    assert _bar_label_anchor(1.06) == (1.06, "left")
+    assert _bar_label_anchor(-0.06) == (0.0, "left")
+    assert _bar_label_anchor(0.0) == (0.0, "left")

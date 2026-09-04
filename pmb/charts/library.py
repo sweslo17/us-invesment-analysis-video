@@ -46,12 +46,13 @@ _TEAL = "#4DD0E1"
 _PINK = "#F48FB1"
 _INDIGO = "#8C9EFF"
 
-# 直式短影片畫布:圖比例約 9:10(填滿手機畫面中段),解析度與字級都放大
-_FIG: tuple[float, float] = (9.0, 10.0)
+# 直式短影片畫布:圖比例約 9:7.6,等比塞進合成端 1040×850 的圖框時剛好填滿寬度
+# (2026-09-05 改版:圖框變矮,下方讓給大數字 callout;字級再放大,手機上刻度/圖例要看得清)
+_FIG: tuple[float, float] = (9.0, 7.6)
 _DPI = 120
 # 數值標註字級(rcParams 管 label/tick/legend;annotate 要另外指定才放得大)
-_ANNOT = 26
-_ANNOT_BIG = 30
+_ANNOT = 32
+_ANNOT_BIG = 38
 # 圖不畫標題:合成時畫面頂部會以 seg.title 烤上大字標題(避免雙標題、把版面留給數據)
 
 
@@ -82,11 +83,12 @@ def _apply_chart_style() -> None:
 
     plt.rcParams.update(
         {
-            "font.size": 24,
-            "axes.labelsize": 30,
-            "xtick.labelsize": 26,
-            "ytick.labelsize": 26,
-            "legend.fontsize": 24,
+            "font.size": 30,
+            "axes.labelsize": 34,
+            "xtick.labelsize": 30,
+            "ytick.labelsize": 30,
+            "legend.fontsize": 27,
+            "lines.linewidth": 3.0,
             "figure.dpi": _DPI,
             # 深色主題:圖底 = 影片畫布色,繪圖區稍亮一階
             "figure.facecolor": _CANVAS,
@@ -290,6 +292,14 @@ def render_econ_print(
     return _finalize(fig, out_path)
 
 
+def _bar_label_anchor(pct: float) -> tuple[float, str]:
+    """橫向長條的數值標註錨點:正值貼在長條右端;負值改放**零軸右側**(同列空的那一側)。
+
+    負值若照慣例放長條左端,小負值(如 −0.06%)會直接壓到 y 軸的指數名稱上(9/4 成片實例)。
+    """
+    return (pct if pct >= 0 else 0.0), "left"
+
+
 def render_overnight_vs_close(
     out_path: str | Path,
     indices: Sequence[Quote],
@@ -345,14 +355,18 @@ def render_overnight_vs_close(
     )
     for bars, pcts in ((bars_close, close_pcts), (bars_fut, fut_pcts)):
         for bar, pct in zip(bars, pcts, strict=True):
+            x, ha = _bar_label_anchor(pct)
             ax.annotate(
                 f"{pct:+.2f}%",
-                (pct, bar.get_y() + bar.get_height() / 2),
+                (x, bar.get_y() + bar.get_height() / 2),
+                xytext=(6, 0),
+                textcoords="offset points",
                 va="center",
-                ha="left" if pct >= 0 else "right",
+                ha=ha,
+                color=_NEGATIVE if pct < 0 else _FG,
                 fontsize=_ANNOT,
             )
-    ax.margins(x=0.2)
+    ax.margins(x=0.25)
     ax.grid(True, axis="x", alpha=0.3)
     return _finalize(fig, out_path)
 

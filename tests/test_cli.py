@@ -50,3 +50,34 @@ def test_format_snapshot_includes_key_numbers():
     assert "ES=F" in text
     assert "10.0" in text  # +10% overnight
     assert "VIX" in text
+
+
+def test_cover_spec_prefers_hook_headline_and_first_stat():
+    """封面 = 開場鉤子字卡的大標 + 第一個圖表段的大數字(有就用),不再是日期字卡。"""
+    from pmb.cli import cover_spec
+    from pmb.schemas.script import Script
+
+    script = Script.model_validate({
+        "segments": [
+            {"vo": "開場。", "headline": "鷹鴿吵不完", "tag": "今日盤前",
+             "t_start": 0, "duration": 1},
+            {"vo": "圖。", "chart_id": "c", "stat": "+1.06%", "stat_label": "標普昨收",
+             "t_start": 1, "duration": 1},
+        ],
+        "charts": [{"id": "c", "module": "leverage_decay", "params": {}}],
+    })
+    spec = cover_spec(script)
+    assert spec == {
+        "headline": "鷹鴿吵不完", "tag": "今日盤前", "stat": "+1.06%", "accent_index": 0,
+    }
+
+
+def test_cover_spec_without_headline_card_is_none():
+    from pmb.cli import cover_spec
+    from pmb.schemas.script import Script
+
+    script = Script.model_validate({
+        "segments": [{"vo": "圖。", "chart_id": "c", "t_start": 0, "duration": 1}],
+        "charts": [{"id": "c", "module": "leverage_decay", "params": {}}],
+    })
+    assert cover_spec(script) is None

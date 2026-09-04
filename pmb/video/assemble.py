@@ -2,9 +2,13 @@
 
 每個 segment 一支 clip,段內把旁白切成句、逐句配音後串接(句間留呼吸、段尾留停頓),
 字幕以「頁」為單位逐字卡拉OK掃色(edge-tts word boundary 對齊;拿不到就按字寬比例),
-每頁最多兩行、永不蓋到中段的圖表。圖表段有 Ken Burns 緩推、段首自畫布色淡入、
-全片底部金色進度條。最終串接後過音訊母帶鏈(BGM ducking + loudnorm),見
-``finalize_master``。配音以可注入的 ``synth_fn`` 提供。
+每頁最多兩行、永不蓋到中段的圖表。圖表段有 Ken Burns 緩推 + 滑入、段首自畫布色淡入、
+全片底部金色進度條。字卡的文字也走 ASS(pop-in 動畫),底圖只是漸層色。
+
+**版面避開 YouTube Shorts 播放器的 UI**(見 ``layout_safe_zone``):底部約 400px 被標題/
+頻道列蓋住、右側約 170px 是按讚欄,字幕、大數字 callout、CTA 一律放在安全區內。
+最終串接後過音訊母帶鏈(BGM ducking + loudnorm),見 ``finalize_master``。
+配音以可注入的 ``synth_fn`` 提供。
 """
 
 from __future__ import annotations
@@ -20,7 +24,7 @@ from typing import NamedTuple
 
 from loguru import logger
 
-from pmb.charts.cards import accent_for, render_headline_card
+from pmb.charts.cards import accent_for, render_card_background
 from pmb.charts.select import render_chart
 from pmb.schemas.script import Script
 from pmb.schemas.snapshot import Snapshot
@@ -33,20 +37,50 @@ SynthFn = Callable[[str, Path, float], SynthResult]
 _WIDTH, _HEIGHT = 1080, 1920
 _BG_HEX = "0D1B2A"  # 與 charts.library._CANVAS 一致
 _GOLD_HEX = "FFD166"  # 品牌金(標題/進度條/字幕掃色)
-# 圖表置於畫面中段:上方留給標題、下方留給逐頁字幕。圖為直式,等比縮放後塞進此框置中。
-_CHART_BAND_TOP = 250
+
+# Shorts 播放器 UI 遮蔽區(實機量測的保守值):底部標題/頻道/描述列、右側按讚/留言/分享欄。
+# 所有文字都不得落進去,否則觀眾在 app 裡根本看不到。
+_BOTTOM_UI = 400
+_RIGHT_UI = 170
+# 版面(由上而下,單位 px):角標(品牌·日期)→ 主題標題 → 圖表 → 大數字 callout → 字幕 → UI 遮蔽區
+_BADGE_TOP = 100
+_TITLE_TOP = 150  # 標題 92px,約到 245
+_CHART_BAND_TOP = 270
 _CHART_BOX_W = 1040
-_CHART_BOX_H = 1180  # 框底 = 250+1180 = 1430,字幕頁最多兩行、頂緣約 1560,不會相蓋
+_CHART_BOX_H = 850  # 框底 = 270+850 = 1120,下方留給 callout
+_STAT_LABEL_TOP = 1122  # 48px
+_STAT_TOP = 1172  # 132px,約到 1340;字幕頂緣約 1365
+_SUB_MARGIN_V = _BOTTOM_UI  # 字幕底緣 = 1520;兩行 64px 頂緣約 1365,不蓋 callout
+_CTA_MARGIN_V = 430
+# 字卡:大標以「可見區」(0 ~ 1920-_BOTTOM_UI)的中心偏上為錨點置中;kicker 緊貼大標上方
+_CARD_CENTER_Y = 820
+_CARD_FONT = 136
+_CARD_LINE_H = int(_CARD_FONT * 1.25)
+_CARD_MAX_UNITS = (_WIDTH - 2 * 70) / _CARD_FONT  # 每行寬度(中文 1 單位 = 一個字寬)
+_KICKER_GAP = 96  # kicker 基線到大標頂緣的距離
 _FPS = 25
 _GAP = 0.18  # 句間呼吸(秒)
 _TAIL = 0.35  # 段尾停頓(秒)
 _FADE_IN = 0.20  # 段首自畫布色淡入
 _FADE_OUT = 0.60  # 全片收尾淡出(烤在最後一段)
-_ZOOM_AMOUNT = 0.06  # Ken Burns 段內總推進幅度
+_ZOOM_AMOUNT = 0.08  # Ken Burns 段內總推進幅度
+_SLIDE_PX = 70  # 圖表段首自下方滑入的位移
+_SLIDE_SEC = 0.40
 _PROGRESS_H = 10  # 底部進度條高(px)
-_MAX_UNITS = 14  # 字幕每行寬度上限(中文 1、英數 0.55)
+_MAX_UNITS = 13  # 字幕每行寬度上限(中文 1、英數 0.55);13×64px 塞得進左右邊界內
 _MAX_LINES = 2  # 字幕每頁最多行數(保證不蓋圖)
+_CTA_SEC = 3.0  # 片尾 CTA 出現秒數
 _SHORTS_CAP = 180.0  # YouTube Shorts 長度上限(超過會被當一般影片)
+
+
+def layout_safe_zone() -> dict[str, int]:
+    """回傳版面安全區參數,供測試/文件確認文字都避開 Shorts 播放器 UI。"""
+    return {
+        "bottom_ui": _BOTTOM_UI,
+        "right_ui": _RIGHT_UI,
+        "sub_margin_v": _SUB_MARGIN_V,
+        "sub_margin_r": _RIGHT_UI,
+    }
 
 # 用 .ass 並指定 PlayResY=1920,字級/邊界都以實際像素計。字幕在底(Alignment=2)、
 # 標題在頂(Alignment=8),都不蓋到中間的圖表。含 SecondaryColour 供卡拉OK掃色:
@@ -58,6 +92,8 @@ _STYLE_FORMAT = (
 _EVENT_FORMAT = (
     "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
 )
+# 顏色為 ASS 的 &HAABBGGRR。sub 的 Primary=金(唸過)、Secondary=白(未唸);
+# 版面座標全部引用上面的常數,改版面只改常數。
 _ASS_TEMPLATE = "\n".join(
     [
         "[Script Info]",
@@ -69,8 +105,27 @@ _ASS_TEMPLATE = "\n".join(
         "",
         "[V4+ Styles]",
         _STYLE_FORMAT,
-        "Style: sub,{font},64,&H0066D1FF,&H00FFFFFF,&H00201810,&H78000000,1,1,5,1,2,60,60,200",
-        "Style: title,{font},120,&H0066D1FF,&H00FFFFFF,&H00201810,&H00000000,1,1,3,0,8,40,40,64",
+        # 字幕:底部置中,避開底部 UI 與右側按讚欄
+        f"Style: sub,{{font}},64,&H0066D1FF,&H00FFFFFF,&H00201810,&H78000000,1,1,5,1,2,"
+        f"60,{_RIGHT_UI},{_SUB_MARGIN_V}",
+        # 主題標題:頂部置中
+        f"Style: title,{{font}},92,&H0066D1FF,&H00FFFFFF,&H00201810,&H00000000,1,1,3,0,8,"
+        f"40,40,{_TITLE_TOP}",
+        # 字卡大標與 kicker:位置由事件的 \\pos 決定(依行數對可見區置中),樣式只管字型
+        f"Style: card,{{font}},{_CARD_FONT},&H00FFFFFF,&H00FFFFFF,&H40000000,&H00000000,1,1,2,0,5,"
+        "80,80,0",
+        "Style: kicker,{font},52,&H0066D1FF,&H00FFFFFF,&H40000000,&H00000000,1,1,2,0,5,80,80,0",
+        # 大數字 callout:左對齊,圖表下方;右側留 UI 欄
+        f"Style: stat,{{font}},132,&H0066D1FF,&H00FFFFFF,&H00201810,&H00000000,1,1,3,0,7,"
+        f"70,{_RIGHT_UI},{_STAT_TOP}",
+        f"Style: statlabel,{{font}},48,&H00E6EDF5,&H00FFFFFF,&H00201810,&H00000000,1,1,2,0,7,"
+        f"70,{_RIGHT_UI},{_STAT_LABEL_TOP}",
+        # 品牌·日期角標:最頂,小而淡
+        f"Style: badge,{{font}},36,&H00D9C58F,&H00FFFFFF,&H00201810,&H00000000,0,1,2,0,8,"
+        f"40,40,{_BADGE_TOP}",
+        # 片尾 CTA:底部安全區內
+        f"Style: cta,{{font}},48,&H00FFFFFF,&H00FFFFFF,&H00201810,&H78000000,1,1,4,0,2,"
+        f"60,{_RIGHT_UI},{_CTA_MARGIN_V}",
         "",
         "[Events]",
         _EVENT_FORMAT,
@@ -78,6 +133,10 @@ _ASS_TEMPLATE = "\n".join(
         "",
     ]
 )
+
+# 文字 pop-in:淡入 + 由 82% 放大到 100%(靜止字卡是滑走的主因之一)
+_POP_IN = "{\\fad(120,0)\\fscx82\\fscy82\\t(0,240,\\fscx100\\fscy100)}"
+_FADE_TAG = "{\\fad(160,0)}"
 
 # 句尾標點不含 ASCII 句點「.」,否則 3.8% 這類小數會被誤切
 _SENT_RE = re.compile(r"[^。!?！?;;；\n]+[。!?！?;;；]?")
@@ -132,15 +191,27 @@ def _char_units(ch: str) -> float:
     return 1.0 if not ch.isascii() else 0.55
 
 
+def _is_ascii_alnum(ch: str) -> bool:
+    return ch.isascii() and ch.isalnum()
+
+
 def _wrap_lines(text: str, max_units: int = _MAX_UNITS) -> list[str]:
-    """依寬度切行(中文算 1、英數算 0.55),優先在標點後斷行。行串接 == 原文。"""
+    """依寬度切行(中文算 1、英數算 0.55),優先在標點後斷行。行串接 == 原文。
+
+    數字/英文的連續串(7747、1.06%、VIX)不從中間切:寬度到了但下一個字仍是同一串,
+    就多塞幾個字把串講完再斷(略超寬,總比「收7 / 747點」好讀)。
+    """
     lines: list[str] = []
     cur: list[str] = []
     width = 0.0
-    for ch in text:
+    for i, ch in enumerate(text):
         cur.append(ch)
         width += _char_units(ch)
-        if (ch in _BREAK_AFTER and width >= max_units * 0.55) or width >= max_units:
+        nxt = text[i + 1] if i + 1 < len(text) else ""
+        in_run = _is_ascii_alnum(ch) and (_is_ascii_alnum(nxt) or nxt in ".%")
+        if (ch in _BREAK_AFTER and width >= max_units * 0.55) or (
+            width >= max_units and not in_run
+        ):
             lines.append("".join(cur))
             cur = []
             width = 0.0
@@ -296,19 +367,76 @@ class _Take(NamedTuple):
     words: list[WordBoundary]
 
 
+def _full_event(style: str, seg_duration: float, text: str) -> str:
+    return f"Dialogue: 0,0:00:00.00,{_ass_time(seg_duration)},{style},,0,0,0,,{text}"
+
+
+def _common_events(
+    seg_duration: float, *, badge: str | None, cta: str | None
+) -> list[str]:
+    """所有段共用的疊層:品牌·日期角標(全段)+ 片尾 CTA(最後 ``_CTA_SEC`` 秒)。"""
+    events: list[str] = []
+    if badge:
+        events.append(_full_event("badge", seg_duration, badge))
+    if cta:
+        start = max(seg_duration - _CTA_SEC, 0.0)
+        events.append(
+            f"Dialogue: 0,{_ass_time(start)},{_ass_time(seg_duration)},cta,,0,0,0,,"
+            f"{_FADE_TAG}{cta}"
+        )
+    return events
+
+
+def build_card_ass(
+    headline: str,
+    *,
+    tag: str | None,
+    duration: float,
+    font: str,
+    badge: str | None = None,
+    cta: str | None = None,
+) -> str:
+    """組字卡用的 .ass:大標 pop-in(置中)+ 選配 kicker 小標(上方)+ 角標/CTA。
+
+    字卡底圖只有漸層色(``cards.render_card_background``),文字全走這裡,才能動。
+    """
+    from pmb.charts.cards import wrap_card_text
+
+    lines = wrap_card_text(headline, max_units=_CARD_MAX_UNITS)
+    top = _CARD_CENTER_Y - len(lines) * _CARD_LINE_H // 2
+    pos = f"{{\\an5\\pos(540,{_CARD_CENTER_Y})}}"
+    events: list[str] = [_full_event("card", duration, pos + _POP_IN + "\\N".join(lines))]
+    if tag:
+        kicker_pos = f"{{\\an5\\pos(540,{top - _KICKER_GAP})}}"
+        events.append(_full_event("kicker", duration, kicker_pos + _FADE_TAG + tag))
+    events += _common_events(duration, badge=badge, cta=cta)
+    return _ASS_TEMPLATE.format(font=font, events="\n".join(events))
+
+
 def build_segment_ass(
     takes: list[_Take],
     seg_duration: float,
     *,
     title: str | None,
     font: str,
+    stat: str | None = None,
+    stat_label: str | None = None,
+    badge: str | None = None,
+    cta: str | None = None,
 ) -> str:
-    """組一段用的 .ass:各句逐頁卡拉OK字幕(含句間偏移)+ 選配頂部標題。"""
+    """組圖表段用的 .ass:逐頁卡拉OK字幕(含句間偏移)+ 頂部標題 + 大數字 callout + 角標/CTA。
+
+    callout(``stat``/``stat_label``)疊在圖表下方的留白處,是手機上一眼能抓到的重點數字;
+    沒給就不畫,舊 script 相容。
+    """
     events: list[str] = []
     if title:
-        events.append(
-            f"Dialogue: 0,0:00:00.00,{_ass_time(seg_duration)},title,,0,0,0,,{title}"
-        )
+        events.append(_full_event("title", seg_duration, _FADE_TAG + title))
+    if stat:
+        if stat_label:
+            events.append(_full_event("statlabel", seg_duration, _FADE_TAG + stat_label))
+        events.append(_full_event("stat", seg_duration, _POP_IN + stat))
+    events += _common_events(seg_duration, badge=badge, cta=cta)
     offset = 0.0
     for take in takes:
         for page in build_caption_pages(take.text, take.words, take.duration):
@@ -427,7 +555,12 @@ def _render_segment_clip(
             f"zoompan=z='1+{_ZOOM_AMOUNT}*on/{frames}':"
             f"x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=1:s={out_w}x{out_h}:fps={_FPS}[ken]"
         ),
-        f"[bg][ken]overlay={ox}:{oy}[v0]",
+        # 圖表段首自下方滑入 {_SLIDE_PX}px(二次緩出);字卡底圖不滑,文字本身有 pop-in
+        (
+            f"[bg][ken]overlay={ox}:{oy}[v0]"
+            if is_card
+            else f"[bg][ken]overlay={ox}:'{oy}+{_SLIDE_PX}*pow(max(0,1-t/{_SLIDE_SEC}),2)'[v0]"
+        ),
     ]
     label = "[v0]"
     if ass_name:
@@ -598,27 +731,38 @@ def assemble_video(
             _SHORTS_CAP,
         )
 
-    # Pass B:逐段渲染 clip(圖表段帶字幕;卡片段大字已烤進圖、不疊字幕)
+    # Pass B:逐段渲染 clip。圖表段:字幕 + 標題 + stat callout;字卡段:漸層底 + ASS 大字
+    # pop-in。每段都疊品牌·日期角標;片尾 CTA 只放在最後一段且該段是字卡(圖表段底部有
+    # 字幕,再疊 CTA 會打架)。
+    d = snapshot.session_date
+    badge = f"{channel_name} · {d.month}/{d.day}"
+    cta_text = f"明天盤前見 · 追蹤 {channel_name}"
+    last_idx = usable[-1] if usable else len(script.segments) - 1
     clip_names: list[str] = []
     for i, seg in enumerate(script.segments):
         takes = seg_takes[i]
         if not takes:
             continue  # Pass A 判定無可配音內容,已跳過
-        is_last = i == (usable[-1] if usable else len(script.segments) - 1)
+        is_last = i == last_idx
+        cta = cta_text if (is_last and seg.headline is not None) else None
         if seg.headline is not None:
             card_name = f"card{i}.png"
-            render_headline_card(
-                str(work_dir / card_name),
-                seg.headline,
-                accent=accent_for(i),
-                tag=seg.tag or channel_name,
-            )
-            image, is_card, ass_name = card_name, True, None
-        else:
-            image, is_card = chart_paths[seg.chart_id], False
-            ass_name = f"seg{i}.ass"
+            render_card_background(str(work_dir / card_name), accent=accent_for(i))
+            image, is_card, ass_name = card_name, True, f"card{i}.ass"
             (work_dir / ass_name).write_text(
-                build_segment_ass(takes, seg_durations[i], title=seg.title, font=font),
+                build_card_ass(
+                    seg.headline, tag=seg.tag, duration=seg_durations[i], font=font,
+                    badge=badge, cta=cta,
+                ),
+                encoding="utf-8",
+            )
+        else:
+            image, is_card, ass_name = chart_paths[seg.chart_id], False, f"seg{i}.ass"
+            (work_dir / ass_name).write_text(
+                build_segment_ass(
+                    takes, seg_durations[i], title=seg.title, font=font,
+                    stat=seg.stat, stat_label=seg.stat_label, badge=badge, cta=cta,
+                ),
                 encoding="utf-8",
             )
         clip_name = f"clip{i}.mp4"

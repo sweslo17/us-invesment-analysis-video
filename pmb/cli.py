@@ -356,8 +356,21 @@ def cmd_run(args: argparse.Namespace) -> int:
     return 0
 
 
+def cover_spec(script) -> dict | None:
+    """決定封面內容:開場鉤子字卡的大標 + kicker,再配第一個圖表段的大數字(有就用)。
+
+    封面是靜態圖,大數字是最能在頻道頁/搜尋結果抓眼球的元素。沒有字卡就回 None。
+    """
+    hook = next(((i, seg) for i, seg in enumerate(script.segments) if seg.headline), None)
+    if hook is None:
+        return None
+    idx, seg = hook
+    stat = next((s.stat for s in script.segments if s.chart_id and s.stat), None)
+    return {"headline": seg.headline, "tag": seg.tag, "stat": stat, "accent_index": idx}
+
+
 def _render_cover(target, settings) -> Path | None:
-    """用講稿的開場鉤子卡產出封面圖(Shorts 首幀同款),回傳路徑;無講稿則 None。"""
+    """用講稿產出封面圖(鉤子大標 + 大數字 + 品牌線),回傳路徑;無講稿/無字卡則 None。"""
     from pmb.charts.cards import accent_for, render_headline_card
     from pmb.schemas.script import Script
 
@@ -365,17 +378,19 @@ def _render_cover(target, settings) -> Path | None:
     if not script_path.exists():
         return None
     script = Script.model_validate_json(script_path.read_text(encoding="utf-8"))
-    for idx, seg in enumerate(script.segments):
-        if seg.headline:
-            cover = settings.artifacts_dir / f"cover_{target}.png"
-            render_headline_card(
-                str(cover),
-                seg.headline,
-                accent=accent_for(idx),
-                tag=seg.tag or settings.channel_name,
-            )
-            return cover
-    return None
+    spec = cover_spec(script)
+    if spec is None:
+        return None
+    cover = settings.artifacts_dir / f"cover_{target}.png"
+    render_headline_card(
+        str(cover),
+        spec["headline"],
+        accent=accent_for(spec["accent_index"]),
+        tag=spec["tag"],
+        stat=spec["stat"],
+        brand=f"{settings.channel_name} · 每天盤前更新",
+    )
+    return cover
 
 
 def cmd_publish(args: argparse.Namespace) -> int:
