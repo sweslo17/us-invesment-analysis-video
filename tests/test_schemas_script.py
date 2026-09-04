@@ -76,3 +76,15 @@ def test_segment_cannot_have_both_chart_and_headline():
     data["segments"][0]["headline"] = "兩個都填"
     with pytest.raises(ValidationError):
         Script.model_validate(data)
+
+
+def test_chart_segment_accepts_optional_stat_callout():
+    """圖表段可帶一個「大數字 callout」(stat + stat_label),合成時疊在圖下方留白處。"""
+    data = _valid_script()
+    data["segments"][0]["stat"] = "+1.06%"
+    data["segments"][0]["stat_label"] = "標普昨收"
+    script = Script.model_validate(data)
+    assert script.segments[0].stat == "+1.06%"
+    assert script.segments[0].stat_label == "標普昨收"
+    # 沒填就是 None(舊 script 相容)
+    assert script.segments[1].stat is None and script.segments[1].stat_label is None

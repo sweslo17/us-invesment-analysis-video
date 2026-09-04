@@ -296,3 +296,28 @@ def test_rate_limit_does_not_consume_content_retry_budget(tmp_path):
     )
     assert ok is True, "額度重試後仍應保有 2 次產物重試"
     assert len(calls) == 3
+
+
+def test_validate_rejects_vo_over_short_form_budget(tmp_path):
+    """2026-09-05 改版:成片目標 65–80 秒(380–450 字),硬上限 520 字(≈88s)。
+
+    2.5 分鐘的 Shorts 留不住人:8 月起觀看數掉約 4 倍。600 字(≈100s)必須被擋下,
+    錯誤訊息要帶新的目標區間,agent 重寫時才知道要砍到哪。
+    """
+    _write_valid_artifacts(tmp_path)
+    script = json.loads((tmp_path / f"script_{_D}.json").read_text())
+    script["segments"][0]["vo"] = "這是一句很長的旁白內容需要控制字數。" * 34  # 612 字
+    (tmp_path / f"script_{_D}.json").write_text(json.dumps(script), encoding="utf-8")
+
+    errors = validate_research_artifacts(tmp_path, _D)
+    msg = next((e for e in errors if "字數" in e), None)
+    assert msg is not None, f"612 字應被擋下,實際錯誤:{errors}"
+    assert "380–450" in msg
+
+
+def test_validate_accepts_vo_at_short_form_target(tmp_path):
+    _write_valid_artifacts(tmp_path)
+    script = json.loads((tmp_path / f"script_{_D}.json").read_text())
+    script["segments"][0]["vo"] = "這是一句很長的旁白內容需要控制字數。" * 25  # 450 字
+    (tmp_path / f"script_{_D}.json").write_text(json.dumps(script), encoding="utf-8")
+    assert validate_research_artifacts(tmp_path, _D) == []

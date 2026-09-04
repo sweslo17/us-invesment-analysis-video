@@ -21,7 +21,12 @@ class Segment(BaseModel):
     chart_id: str | None = None
     headline: str | None = None
     title: str | None = None  # 圖表段頂部標題(主題);標題卡不需要
-    tag: str | None = None  # 標題卡頂部小標籤(放日期 / 金句出處等)
+    tag: str | None = None  # 標題卡的小標籤(kicker:名詞小教室 / 金句出處等)
+    # 圖表段的「大數字 callout」:合成時疊在圖下方留白處,手機上一眼看到重點數字。
+    # stat 是含符號/單位的數字(如 "+1.06%"、"95美元"),stat_label 是它的短說明(≤10 字)。
+    # 數字仍只能引用快照;不填就不畫。
+    stat: str | None = None
+    stat_label: str | None = None
     t_start: float
     duration: float
 

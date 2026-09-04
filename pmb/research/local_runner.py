@@ -43,11 +43,14 @@ _RATE_LIMIT_MARKERS = (
     "rate limit",
     "rate_limit",
 )
-# 成片長度 ≈ 總字數 × SEC_PER_CHAR(實測:0.168–0.171,取 0.17)。Shorts 上限 180s,
-# 留餘裕取 1000 字(≈170s)為硬上限;prompt 給的目標是 850–930 字。
+# 成片長度 ≈ 總字數 × SEC_PER_CHAR(實測:0.168–0.171,取 0.17)。
+# 2026-09-05 改版:成片目標 65–80 秒。2.5 分鐘的 Shorts 留不住人(8 月起每支觀看數掉約
+# 4 倍),完整研究本來就在 report.md,影片只做鉤子。prompt 目標 380–450 字,硬上限 520 字
+# (≈88s)。Shorts 180s 的絕對上限仍留著當最後防線。
 SEC_PER_CHAR = 0.17
 SHORTS_CAP_SEC = 180.0
-MAX_VO_CHARS = 1000
+TARGET_VO_CHARS = (380, 450)
+MAX_VO_CHARS = 520
 # 研究只需要:搜尋 + 讀寫 repo 檔案 + 跑 schema 驗證;不給其他 Bash
 _ALLOWED_TOOLS = [
     "WebSearch",
@@ -190,11 +193,12 @@ def check_vo_budget(script: Script) -> list[str]:
     if total <= MAX_VO_CHARS:
         return []
     est = total * SEC_PER_CHAR
+    lo, hi = TARGET_VO_CHARS
     return [
-        f"講稿字數超標:{total} 字(上限 {MAX_VO_CHARS} 字),預估成片 {est:.0f} 秒 "
-        f"會超過 YouTube Shorts 的 {SHORTS_CAP_SEC:.0f} 秒上限、失去 Shorts 資格。"
-        f"請砍到 {MAX_VO_CHARS} 字以內(目標 850–930):刪掉次要段落或把每段講得更精簡,"
-        f"不要只是刪句尾;保留貫穿主軸與數字精準度。"
+        f"講稿字數超標:{total} 字(上限 {MAX_VO_CHARS} 字),預估成片 {est:.0f} 秒。"
+        f"這支是 Shorts,目標 65–80 秒:太長觀眾直接滑走,演算法就不再推。"
+        f"請砍到 {MAX_VO_CHARS} 字以內(目標 {lo}–{hi}):刪掉次要段落、圖表段控制在 3–4 張,"
+        f"每段講得更精簡,不要只是刪句尾;保留貫穿主軸與數字精準度,細節留給 report.md。"
     ]
 
 
