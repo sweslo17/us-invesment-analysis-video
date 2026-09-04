@@ -366,7 +366,12 @@ def render_overnight_vs_close(
                 color=_NEGATIVE if pct < 0 else _FG,
                 fontsize=_ANNOT,
             )
-    ax.margins(x=0.25)
+    # x 範圍手動留白:右側要放得下「+1.40%」這類標註(tight_layout 不算 annotate 的寬度),
+    # 平盤日全部接近 0 時也要有最小寬度,標註才不會疊在一起
+    all_pcts = close_pcts + fut_pcts
+    lo = min(0.0, min(all_pcts))
+    hi = max(0.5, max(all_pcts) * 1.5)
+    ax.set_xlim(lo * 1.3 - 0.05, hi + 0.05)
     ax.grid(True, axis="x", alpha=0.3)
     return _finalize(fig, out_path)
 

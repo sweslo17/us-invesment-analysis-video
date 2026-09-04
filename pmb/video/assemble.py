@@ -56,7 +56,7 @@ _CTA_MARGIN_V = 430
 _CARD_CENTER_Y = 820
 _CARD_FONT = 136
 _CARD_LINE_H = int(_CARD_FONT * 1.25)
-_CARD_MAX_UNITS = (_WIDTH - 2 * 70) / _CARD_FONT  # 每行寬度(中文 1 單位 = 一個字寬)
+_CARD_MAX_UNITS = (_WIDTH - 2 * 60) / _CARD_FONT  # 每行寬度 ≈7 字(中文 1 單位 = 一個字寬)
 _KICKER_GAP = 96  # kicker 基線到大標頂緣的距離
 _FPS = 25
 _GAP = 0.18  # 句間呼吸(秒)

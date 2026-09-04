@@ -43,11 +43,12 @@ _RATE_LIMIT_MARKERS = (
     "rate limit",
     "rate_limit",
 )
-# 成片長度 ≈ 總字數 × SEC_PER_CHAR(實測:0.168–0.171,取 0.17)。
+# 成片長度 ≈ 總字數 × SEC_PER_CHAR。長片時實測 0.17;短版段數少、每段的段尾停頓占比
+# 變高,2026-09-05 實測 391 字 → 71.9s(0.184),取 0.18。
 # 2026-09-05 改版:成片目標 65–80 秒。2.5 分鐘的 Shorts 留不住人(8 月起每支觀看數掉約
 # 4 倍),完整研究本來就在 report.md,影片只做鉤子。prompt 目標 380–450 字,硬上限 520 字
-# (≈88s)。Shorts 180s 的絕對上限仍留著當最後防線。
-SEC_PER_CHAR = 0.17
+# (≈94s)。Shorts 180s 的絕對上限仍留著當最後防線。
+SEC_PER_CHAR = 0.18
 SHORTS_CAP_SEC = 180.0
 TARGET_VO_CHARS = (380, 450)
 MAX_VO_CHARS = 520

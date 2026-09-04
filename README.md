@@ -109,5 +109,6 @@ poetry run pmb publish                  # 只寫 publish manifest,不上傳(需 
 - [x] Phase 6 — 雲端 routine + 文件
 - [x] 頻道品牌「美股早發車」+ YouTube metadata(標題/描述/tags/封面/語言)
 - [x] 影片品質 v2 — 深色圖表主題、逐字卡拉OK字幕(分頁不蓋圖)、Ken Burns、進度條、BGM+ducking、loudnorm -14 LUFS
+- [x] 影片品質 v3(2026-09-05)— **成片縮到 65–80 秒**(vo 380–450 字、硬上限 520;2.5 分鐘的 Shorts 留不住人,8 月觀看數掉四倍)、版面避開 Shorts 播放器 UI(底部 400px/右側 170px)、字卡改漸層底 + ASS pop-in、圖表段疊 stat 大數字、圖內字級放大、角標 + 片尾追蹤 CTA、封面帶大數字
 - [x] 全自動化 — `pmb auto` + `pmb autopilot`(launchd);上傳自動帶合成內容揭露/播放清單/語言,並直接發公開(2026-08-26 起)
 - [x] 桌面控台(Tauri):狀態儀表板 + 觸發 + 內容檢視 + 即時日誌
