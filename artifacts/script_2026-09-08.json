@@ -1,0 +1,106 @@
+{
+  "segments": [
+    {
+      "vo": "美國軍艦真的被鎖定,原油衝向100美元。",
+      "chart_id": null,
+      "headline": "軍艦挨彈\n油衝百元",
+      "title": null,
+      "tag": "美伊衝突",
+      "stat": null,
+      "stat_label": null,
+      "t_start": 0.0,
+      "duration": 3.6
+    },
+    {
+      "vo": "上週五美股全面收黑:標普跌0.38%收7718點,道瓊領跌0.51%。8月非農爆增16.2萬人,遠超預期5.3萬,澆熄降息希望。今天盤前期貨偏弱,道瓊期貨跌0.8%最深。",
+      "chart_id": "ovc",
+      "headline": null,
+      "title": "昨收 vs 今日盤前",
+      "tag": null,
+      "stat": "+16.2萬",
+      "stat_label": "8月新增就業人數",
+      "t_start": 3.6,
+      "duration": 15.3
+    },
+    {
+      "vo": "Fed基金期貨顯示,九月升息機率彈回六成,比週三沃勒鴿派發言後回升。白宮罕見高調施壓要降息,酸FOMC是「小丑」,但主席華許不鬆口,十八位官員九位仍主張升息。真正裁判是週五CPI。",
+      "chart_id": "fed_now",
+      "headline": null,
+      "title": "Fed鷹鴿還在吵",
+      "tag": null,
+      "stat": "60%",
+      "stat_label": "九月升息隱含機率",
+      "t_start": 18.9,
+      "duration": 16.2
+    },
+    {
+      "vo": "週末美伊爆發開戰以來最大規模互攻:伊朗飛彈鎖定兩艘美國軍艦,美軍擊沉一艘伊朗油輪,布蘭特衝上97美元、逼近百元大關。但VIX今天只有15.75,只比上週五微升,市場像把戰爭當背景音。",
+      "chart_id": "vix_now",
+      "headline": null,
+      "title": "戰事升溫VIX淡定",
+      "tag": null,
+      "stat": "15.75",
+      "stat_label": "VIX恐慌指數",
+      "t_start": 35.1,
+      "duration": 16.38
+    },
+    {
+      "vo": "今天盤前類股很不均勻:十一個類股只有科技、工業、公用事業三個翻紅,其餘八個收黑,金融、原物料跌最深。窄格局跟升息疑慮、油價衝高同時發生,不是巧合。",
+      "chart_id": "breadth_now",
+      "headline": null,
+      "title": "漲的只剩三類股",
+      "tag": null,
+      "stat": "3/11",
+      "stat_label": "翻紅類股數",
+      "t_start": 51.48,
+      "duration": 13.14
+    },
+    {
+      "vo": "廣度,是看多少類股一起漲。",
+      "chart_id": null,
+      "headline": "廣度",
+      "title": null,
+      "tag": "名詞小教室",
+      "stat": null,
+      "stat_label": null,
+      "t_start": 64.62,
+      "duration": 2.34
+    },
+    {
+      "vo": "葛拉漢說,短期市場是投票機,長期是體重機。軍艦被打、油價衝百,投票機明顯緊張;真正該看的是Fed政策這台體重機,九月到底升不升。以上非投資建議,我們明天盤前見。",
+      "chart_id": null,
+      "headline": "短期投票機\n長期體重機",
+      "title": null,
+      "tag": "葛拉漢 不知道有沒有說過",
+      "stat": null,
+      "stat_label": null,
+      "t_start": 66.96,
+      "duration": 14.4
+    }
+  ],
+  "charts": [
+    {
+      "id": "ovc",
+      "module": "overnight_vs_close",
+      "params": {}
+    },
+    {
+      "id": "fed_now",
+      "module": "fed_path",
+      "params": {}
+    },
+    {
+      "id": "vix_now",
+      "module": "vix_regime",
+      "params": {}
+    },
+    {
+      "id": "breadth_now",
+      "module": "breadth",
+      "params": {}
+    }
+  ],
+  "coverage_gaps": [
+    "目前圖表模組庫沒有原油/大宗商品價格走勢圖,布蘭特原油衝上97美元、逼近100美元大關這條今天最重要的領先訊號只能口述帶過,建議之後補一個 oil_price 模組。"
+  ]
+}
