@@ -1,0 +1,106 @@
+{
+  "segments": [
+    {
+      "vo": "美伊真的打起來了,原油衝破100美元。",
+      "chart_id": null,
+      "headline": "五艘油輪\n一夜蒸發",
+      "title": null,
+      "tag": "美伊開戰",
+      "stat": null,
+      "stat_label": null,
+      "t_start": 0.0,
+      "duration": 3.5
+    },
+    {
+      "vo": "上一交易日道瓊重挫1.18%領跌,標普跌0.58%收7673點。今天盤前期貨同步走弱,那斯達克期貨跌0.63%最深,市場在消化美伊衝突升級、原油衝破100美元的衝擊。",
+      "chart_id": "ovc",
+      "headline": null,
+      "title": "昨收收黑,今晨續弱",
+      "tag": null,
+      "stat": "-1.18%",
+      "stat_label": "道瓊昨收跌幅",
+      "t_start": 3.5,
+      "duration": 15.28
+    },
+    {
+      "vo": "隔夜全球股市反應不一:南韓KOSPI逆勢漲1.4%,但歐洲重摔,德國DAX跌1.48%、STOXX50跌1.83%、英國FTSE跌1.11%,能源成本壓力對歐洲殺傷力明顯更大。",
+      "chart_id": "geo",
+      "headline": null,
+      "title": "歐股跌深,亞股分歧",
+      "tag": null,
+      "stat": "-1.83%",
+      "stat_label": "歐股STOXX50跌幅",
+      "t_start": 18.78,
+      "duration": 16.2
+    },
+    {
+      "vo": "Fed基金期貨顯示,九月升息機率彈到64%,10年期公債殖利率站上4.8%,創2023年以來新高。財政部今天起加碼長債買回,想壓殖利率,但市場定價反而更鷹。",
+      "chart_id": "fed_now",
+      "headline": null,
+      "title": "升息機率衝上64%",
+      "tag": null,
+      "stat": "64%",
+      "stat_label": "九月升息隱含機率",
+      "t_start": 34.98,
+      "duration": 14.36
+    },
+    {
+      "vo": "標普過去20天已實現波動只有8.5%,合理槓桿約1.76倍;開三倍一年吃掉3.3%複利當波動耗損。今天VIX剛跳升3.9%到16.3,低波動時最容易讓人加過頭槓桿。",
+      "chart_id": "lev_now",
+      "headline": null,
+      "title": "低波動,高槓桿誘惑",
+      "tag": null,
+      "stat": "1.76倍",
+      "stat_label": "標普波動目標槓桿",
+      "t_start": 49.34,
+      "duration": 15.1
+    },
+    {
+      "vo": "槓桿開越高,來回震盪越會偷偷吃掉你的報酬。",
+      "chart_id": null,
+      "headline": "波動耗損",
+      "title": null,
+      "tag": "名詞小教室",
+      "stat": null,
+      "stat_label": null,
+      "t_start": 64.44,
+      "duration": 3.87
+    },
+    {
+      "vo": "巴菲特說要在別人恐懼時貪婪。可是戰爭打成這樣VIX才16,說明別人根本沒在看新聞。真正的風險不是今天頭條,是九月十六日FOMC會不會真的升息。以上非投資建議,明天盤前見。",
+      "chart_id": null,
+      "headline": "戰爭震天響\nVIX裝睡中",
+      "title": null,
+      "tag": "巴菲特 不知道有沒有說過",
+      "stat": null,
+      "stat_label": null,
+      "t_start": 68.31,
+      "duration": 15.65
+    }
+  ],
+  "charts": [
+    {
+      "id": "ovc",
+      "module": "overnight_vs_close",
+      "params": {}
+    },
+    {
+      "id": "geo",
+      "module": "global_equity_overnight",
+      "params": {}
+    },
+    {
+      "id": "fed_now",
+      "module": "fed_path",
+      "params": {}
+    },
+    {
+      "id": "lev_now",
+      "module": "leverage_decay",
+      "params": {}
+    }
+  ],
+  "coverage_gaps": [
+    "目前圖表模組庫沒有原油/大宗商品價格走勢圖,布蘭特原油今天衝破100美元大關這條今天最重要的地緣風險訊號只能口述帶過,建議之後補一個 oil_price 模組。"
+  ]
+}

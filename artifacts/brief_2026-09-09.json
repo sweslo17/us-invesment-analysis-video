@@ -1,0 +1,146 @@
+{
+  "date": "2026-09-09",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7673.52001953125,
+      "overnight_pct": -0.5840434854604509,
+      "drivers": [
+        "上一交易日(9/8)標普收7673.52點,跌0.58%,美伊衝突再度升級——美軍摧毀5艘伊朗油輪,伊朗以10艘船隻反擊並攻擊約旦阿茲拉克基地,原油同步衝破100美元大關,10年期公債殖利率彈上4.81%,創2023年以來新高。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 26421.41015625,
+      "overnight_pct": -0.3228576452852685,
+      "drivers": [
+        "那斯達克收26421.41點,跌0.32%,四大指數中跌幅最小。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 52786.0703125,
+      "overnight_pct": -1.1760526217254759,
+      "drivers": [
+        "道瓊收52786.07點,重挫1.18%,四大指數中跌最深。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 2960.199951171875,
+      "overnight_pct": -0.5191490669637382,
+      "drivers": [
+        "羅素兩千收2960.20點,跌0.52%。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普已實現波動約8.5%,波動目標模型算出的合理槓桿約1.76倍,開三倍一年吃掉約3.3%複利,是四大指數裡代價最溫和的一個。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克已實現波動仍有約12.4%,合理倍數只剩約1.21倍,開三倍一年要吃掉約6.9%複利,依然是四大指數裡槓桿代價最高的。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊已實現波動約10.1%,合理倍數約1.49倍,開三倍一年要吃掉約4.6%複利。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千已實現波動約12.5%,合理倍數約1.20倍,開三倍一年要吃掉約7.0%複利。"
+    }
+  ],
+  "regime": {
+    "vol": "low",
+    "rates": "rising",
+    "stock_bond_corr": "positive",
+    "breadth": "narrow"
+  },
+  "items": [
+    {
+      "headline": "美軍摧毀5艘伊朗油輪,伊朗以10艘船反擊並攻擊約旦基地,原油衝破100美元",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "美伊衝突延燒逾190天後再度全面升級:美軍在阿曼灣與哈爾克島附近摧毀5艘伊朗油輪,指控伊朗對美艦發射彈道飛彈;伊朗隨即以攻擊10艘船隻反擊,並以飛彈打擊約旦阿茲拉克基地。布蘭特原油應聲衝破100美元關卡,是這場衝突開打以來首度站上這個整數大關。對一般投資人:風險溢價的性質從『牽連第三國、打擊陸上設施』進一步升級到雙方直接互相摧毀對方船隻,但VIX目前只小漲到16.3左右,股市price action明顯落後於這則新聞的嚴重程度。",
+      "sources": [
+        {
+          "url": "https://www.aljazeera.com/news/2026/9/9/us-destroys-five-iranian-tankers-iran-retaliates-with-attacks-on-jordan-base",
+          "ts": null
+        },
+        {
+          "url": "https://fortune.com/article/price-of-oil-09-09-2026/",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "10年期公債殖利率站上4.8%創2023年新高,Fed九月升息機率彈到64%",
+      "horizon": "LT",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "10年期公債殖利率上一交易日一度衝上4.81%、收在4.79%附近,創2023年10月以來新高,主因是油價衝高帶動的通膨疑慮疊加原本就偏鷹的Fed路徑。期貨隱含的九月升息機率同步彈到64%,比上週稍早的六成再墊高一截。與此同時,財政部把10-30年期公債的流動性支持買回操作規模至少加倍到40億美元,今天(9/9)正式生效,目的是壓低長天期殖利率,但油價與通膨疑慮這次力道更強。對一般投資人:短端政策利率預期與長端利率同步走高是近幾個月少見的組合,顯示財政部的政策工具這次可能不夠力。",
+      "sources": [
+        {
+          "url": "https://www.cnbc.com/2026/09/08/us-treasury-yields-bonds.html",
+          "ts": null
+        },
+        {
+          "url": "https://home.treasury.gov/news/press-releases/sb0607",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "隔夜歐股重摔逾1.5%,亞股卻分歧:南韓逆勢漲1.4%",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 2,
+      "confidence": "confirmed",
+      "audience_value": "同一則油價衝擊新聞,今天在全球股市的反應並不一致:南韓KOSPI逆勢上漲1.4%、台股小漲0.16%,但歐洲重摔,德國DAX跌1.48%、歐洲STOXX50跌1.83%、英國FTSE跌1.11%。對一般投資人:歐洲對能源進口成本的敏感度明顯更高,同一場地緣衝突,不同區域市場的痛感並不相同。",
+      "sources": []
+    },
+    {
+      "headline": "Apple今天發表首款折疊iPhone,新任執行長John Ternus首次主持秋季發表會",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 2,
+      "confidence": "confirmed",
+      "audience_value": "Apple今天美東下午1點舉行「Surprise and shine」秋季發表會,預計發表iPhone 18 Pro、Pro Max與首款折疊iPhone,由新任執行長John Ternus首次主持。對一般投資人:這是今天少數跟總經、地緣風險無關的個股層級催化劑,盤中AAPL股價與供應鏈個股波動值得留意,但對大盤影響有限。",
+      "sources": [
+        {
+          "url": "https://www.macrumors.com/2026/08/26/apple-iphone-event-2026/",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "盤前類股廣度依然窄,僅科技、能源、公用事業三類股翻紅",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 2,
+      "confidence": "confirmed",
+      "audience_value": "11個類股裡只有科技(+0.32%)、能源(+1.11%,受惠油價衝高)、公用事業(+0.86%)翻紅,金融(-1.38%)、醫療(-2.52%)跌最深。對一般投資人:窄幅上漲延續了近期常見的格局,資金在不確定性升高時傾向集中在少數看得懂方向的類股。",
+      "sources": []
+    }
+  ],
+  "catalysts": [
+    "今天(9/9)美東下午1點:Apple「Surprise and shine」秋季發表會,預計發表iPhone 18 Pro/Pro Max與首款折疊iPhone,新任執行長John Ternus首次主持。",
+    "今天(9/9)起:財政部把10-30年期公債流動性支持買回操作規模至少加倍到40億美元,持續到11/4,目標壓低長天期殖利率。",
+    "9/10(四)美東上午8:30:8月PPI(生產者物價指數)公布。",
+    "9/11(五)美東上午8:30:8月CPI公布,是FOMC 9/16決策前最後一份重量級通膨數據。",
+    "9/15–16:FOMC召開九月利率會議,9/16(三)美東下午2點公布決策、利率點陣圖與經濟預測;會議已於9/5進入會前靜默期。",
+    "持續觀察:美伊衝突後續軍事行動、原油能否守穩100美元、財政部長債買回能否真正壓低長天期殖利率、白宮與Fed主席華許的政治角力後續發展。"
+  ],
+  "thesis_delta": {
+    "changed": true,
+    "summary": "美伊衝突再度全面升級:美軍摧毀5艘伊朗油輪,伊朗以攻擊10艘船隻反擊並打擊約旦阿茲拉克基地,布蘭特原油應聲衝破100美元大關,是這場衝突開打以來首度站上這個整數關卡,但VIX反應依然平淡。同時10年期公債殖利率衝上4.81%、創2023年以來新高,期貨隱含九月升息機率彈到64%,財政部今天起把長天期公債買回規模加倍以對沖,但油價推升的通膨疑慮這次力道更強,短端與長端利率預期罕見同步走高。",
+    "horizon": "MT"
+  },
+  "lead_horizon": "MT",
+  "title_hook": "五艘油輪一夜蒸發,原油衝破100美元"
+}
