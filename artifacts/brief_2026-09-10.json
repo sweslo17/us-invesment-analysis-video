@@ -1,0 +1,141 @@
+{
+  "date": "2026-09-10",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7636.35986328125,
+      "overnight_pct": -0.48426454506863126,
+      "drivers": [
+        "上一交易日(9/9)標普收7636.36點,跌0.48%,四大指數全數收黑;葉門青年運動(胡塞)前一日大規模攻擊沙烏地阿拉伯南部吉贊煉油廠等能源設施,造成逾73人受傷,是這場地緣衝突六個月來首度直接打擊沙烏地本土能源基礎設施,疊加10年期公債殖利率再創新高。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 26253.33984375,
+      "overnight_pct": -0.6361210227901531,
+      "drivers": [
+        "那斯達克收26253.34點,跌0.64%,半導體類股延續近期降溫氣氛,中國記憶體廠CXMT技術與市佔持續追趕,拖累美系晶片股估值。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 52380.66015625,
+      "overnight_pct": -0.7680242983612906,
+      "drivers": [
+        "道瓊收52380.66點,跌0.77%。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 2921.239990234375,
+      "overnight_pct": -1.3162476312651206,
+      "drivers": [
+        "羅素兩千收2921.24點,重挫1.32%,四大指數中跌最深,對10年期殖利率衝上4.84%這類利率新高最敏感。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普已實現波動約8.6%,波動目標模型算出的合理槓桿約1.74倍,開三倍一年吃掉約3.3%複利當波動耗損,是四大指數裡代價最溫和的一個。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克已實現波動仍有約12.4%,合理倍數只剩約1.21倍,開三倍一年要吃掉約7.0%複利,依然是四大指數裡槓桿代價最高的。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊已實現波動約10.3%,合理倍數約1.45倍,開三倍一年要吃掉約4.8%複利。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千已實現波動約13.1%,合理倍數約1.14倍,開三倍一年要吃掉約7.7%複利,是四大指數裡槓桿代價最高的一個。"
+    }
+  ],
+  "regime": {
+    "vol": "low",
+    "rates": "rising",
+    "stock_bond_corr": "positive",
+    "breadth": "narrow"
+  },
+  "items": [
+    {
+      "headline": "8月PPI年增5.4%超預期,九月升息機率彈到66%",
+      "horizon": "LT",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "美東今天上午公布的8月生產者物價指數(PPI)月增0.4%,雖與市場預期一致,但年增5.4%比預期高出0.1個百分點,是通膨數據連兩個月轉熱後的又一次確認。期貨隱含的九月升息機率因此彈到66%(前一交易日64%)、12月機率62%,10年期公債殖利率同步再創2023年來新高、來到4.84%附近。對一般投資人:這是FOMC 9/16決策前倒數第二份重量級數據,明天(9/11)CPI才是最後的裁判,但今天的PPI已經朝『升息』又推了一把。",
+      "sources": [
+        {"url": "https://www.cnbc.com/2026/09/10/ppi-inflation-report-august-2026.html", "ts": null}
+      ]
+    },
+    {
+      "headline": "胡塞飛彈炸進沙烏地煉油廠,伊朗揚言「不再按比例回應」",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "美伊衝突的地理範圍再度擴大:葉門青年運動(胡塞)近日對沙烏地阿拉伯南部發動大規模飛彈與無人機攻擊,鎖定吉贊(Jazan)煉油廠等能源設施與空軍基地,造成至少73人受傷、部分產能一度暫停,是這場衝突逾六個月來首度直接打擊沙烏地本土能源基礎設施。同一時間,伊朗新任安全首長雷扎伊(Rezaee)宣稱對美軍的軍事姿態「已根本重新校準」,國會議長加利巴夫更公開表示「按比例回應」的時代已經結束。對一般投資人:風險溢價的地理範圍從美伊雙邊、牽連約旦阿聯,再擴大到沙烏地本土能源設施,顯示這條線的耐受度比市場定價的還要更緊。",
+      "sources": [
+        {"url": "https://www.nbcnews.com/world/middle-east/houthi-attacks-saudi-arabia-oil-yemen-iran-war-rcna596535", "ts": null},
+        {"url": "https://www.bloomberg.com/news/articles/2026-09-09/iran-ready-for-more-intense-war-and-won-t-relent-official-says", "ts": null}
+      ]
+    },
+    {
+      "headline": "布蘭特原油站穩100美元上方,來到101美元附近",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "布蘭特原油延續昨天首度站上100美元大關的走勢,今天來到約101美元附近,過去一個月累計上漲近14%。對一般投資人:油價守穩三位數不是曇花一現,而是跟胡塞攻擊沙國能源設施、伊朗強硬表態同步發生,通膨這條線短期內很難因為單一事件降溫。",
+      "sources": [
+        {"url": "https://tradingeconomics.com/commodity/brent-crude-oil", "ts": null}
+      ]
+    },
+    {
+      "headline": "半導體降溫延續,港股領跌隔夜亞股",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "developing",
+      "audience_value": "隔夜全球股市分裂:香港恆生跌1.27%領跌,上海、南韓、台股同步小幅走弱,反映中國記憶體廠CXMT上半年營收年增874%、DRAM市佔從去年同期4%衝上10%,持續追趕三星、SK海力士與美光,拖累亞股晶片供應鏈信心;日經卻逆勢漲0.19%,歐股大致持平。對一般投資人:AI/半導體『窄且不穩』這條線,今天換上『中國記憶體競爭力被具體量化』這個新變數,加上10年期殖利率衝高,兩頭一起壓估值。",
+      "sources": [
+        {"url": "https://finance.yahoo.com/markets/stocks/articles/chinas-biggest-memory-chip-stock-102600116.html", "ts": null}
+      ]
+    },
+    {
+      "headline": "蘋果首款折疊iPhone登場,股價卻只是小幅下跌",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 2,
+      "confidence": "confirmed",
+      "audience_value": "蘋果昨天(9/9)發表首款折疊iPhone「iPhone Duo」與iPhone 18 Pro系列,新任執行長John Ternus首次主持秋季發表會,iPhone 18 Pro系列同步調漲約100美元。市場反應偏冷淡,AAPL股價小幅收黑,反映投資人對漲價能否真正抵銷成本壓力、消費者買單意願仍有疑慮。對一般投資人:這是少數跟總經、地緣風險無關的個股層級事件,對大盤影響有限,但反映『重大新品發表≠股價立刻反應』的常見模式。",
+      "sources": [
+        {"url": "https://www.cnbc.com/2026/09/09/apple-drops-its-folding-iphone-our-first-reaction-plus-the-other-key-launch-news.html", "ts": null}
+      ]
+    },
+    {
+      "headline": "盤前類股廣度極窄,僅科技持平、能源翻紅",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 2,
+      "confidence": "confirmed",
+      "audience_value": "上一交易日11個類股裡,只有能源(+0.83%,受惠油價衝高)真正翻紅,科技持平於0%,其餘全部收黑,工業(-1.51%)、非必需消費(-1.34%)跌最深。對一般投資人:窄幅格局比前幾天更極端,資金幾乎只願意留在看得懂邏輯的能源股裡。",
+      "sources": []
+    }
+  ],
+  "catalysts": [
+    "今天(9/10)美東上午8:30已公布:8月PPI月增0.4%、年增5.4%(比預期高0.1個百分點);當週初領失業金、8月成屋銷售同步公布。",
+    "明天(9/11,五)美東上午8:30:8月CPI公布,是FOMC 9/16決策前最後一份重量級通膨數據。",
+    "9月15–16日:FOMC召開九月利率會議,9/16(三)美東下午2點公布決策、利率點陣圖與經濟預測;會議已進入會前靜默期,官員不再公開表態。",
+    "持續觀察:胡塞對沙烏地能源設施攻擊後續、伊朗是否有進一步軍事行動、布蘭特原油能否守穩100美元上方、CXMT技術與市佔追趕進度。"
+  ],
+  "thesis_delta": {
+    "changed": true,
+    "summary": "美伊衝突的地理範圍擴大到沙烏地阿拉伯本土能源設施(胡塞飛彈攻擊吉贊煉油廠,逾73人受傷),伊朗新任安全首長與國會議長同步釋出比先前更強硬的表態,原油延續站上100美元的走勢;同一天8月PPI年增5.4%超預期,九月升息機率彈到66%,10年期殖利率再創新高。地緣與利率兩條主線都往更確定的方向再推進一格,AI/半導體則新增中國記憶體廠CXMT市佔追趕的量化證據。",
+    "horizon": "MT"
+  },
+  "lead_horizon": "MT",
+  "title_hook": "PPI超預期,九月升息機率衝上66%"
+}

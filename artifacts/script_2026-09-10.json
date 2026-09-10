@@ -1,0 +1,112 @@
+{
+  "segments": [
+    {
+      "vo": "美股還沒開盤,今天的PPI已經先開了一槍,九月升息機率又往上衝了一截。",
+      "chart_id": null,
+      "headline": "PPI爆熱\n升息更近了",
+      "title": null,
+      "tag": "PPI日",
+      "stat": null,
+      "stat_label": null,
+      "t_start": 0.0,
+      "duration": 6.3
+    },
+    {
+      "vo": "上一交易日美股四大指數全數收黑,羅素兩千重挫1.32%最深,標普跌0.48%收7636點,10年期殖利率衝上4.84%創新高。今天盤前期貨淡定,標普期貨只跌0.14%。",
+      "chart_id": "ovc",
+      "headline": null,
+      "title": "昨收全黑,今晨淡定",
+      "tag": null,
+      "stat": "-1.32%",
+      "stat_label": "羅素兩千昨收跌幅",
+      "t_start": 6.3,
+      "duration": 15.12
+    },
+    {
+      "vo": "隔夜全球股市分裂,香港恆生跌1.27%領跌,南韓、台股同步走弱,反映中國記憶體廠CXMT急起直追;日經逆勢漲0.19%,歐股持平。半導體「窄且不穩」換上中國變數當主角。",
+      "chart_id": "geo",
+      "headline": null,
+      "title": "港股領跌,日股逆勢",
+      "tag": null,
+      "stat": "-1.27%",
+      "stat_label": "恆生指數跌幅",
+      "t_start": 21.42,
+      "duration": 15.12
+    },
+    {
+      "vo": "今天公布的8月PPI月增0.4%、年增5.4%,比預期高0.1個百分點。期貨隱含九月升息機率彈到66%,12月機率62%,10年期殖利率刷新高。",
+      "chart_id": "fed",
+      "headline": null,
+      "title": "PPI超標,機率彈升",
+      "tag": null,
+      "stat": "66%",
+      "stat_label": "九月升息隱含機率",
+      "t_start": 36.54,
+      "duration": 12.96
+    },
+    {
+      "vo": "今天的PPI只是前菜,明天CPI才是FOMC九月決策前最後一份重量級數據。會議已進入靜默期,官員不再公開表態。",
+      "chart_id": "cal",
+      "headline": null,
+      "title": "本週最後兩張考卷",
+      "tag": null,
+      "stat": "9/16",
+      "stat_label": "FOMC決策日",
+      "t_start": 49.5,
+      "duration": 9.9
+    },
+    {
+      "vo": "開會前這幾天,Fed官員全部閉嘴,不再對外多說一句話。",
+      "chart_id": null,
+      "headline": "FOMC靜默期",
+      "title": null,
+      "tag": "名詞小教室",
+      "stat": null,
+      "stat_label": null,
+      "t_start": 59.4,
+      "duration": 4.86
+    },
+    {
+      "vo": "PPI比預期熱,原油站穩100美元,殖利率創新高,但股市今天只是小幅震盪。真正的體重機,是明天CPI跟九月十六日FOMC。以上非投資建議,明天盤前見。",
+      "chart_id": null,
+      "headline": "短期投票機\n長期體重機",
+      "title": null,
+      "tag": "葛拉漢 不知道有沒有說過",
+      "stat": null,
+      "stat_label": null,
+      "t_start": 64.26,
+      "duration": 13.5
+    }
+  ],
+  "charts": [
+    {
+      "id": "ovc",
+      "module": "overnight_vs_close",
+      "params": {}
+    },
+    {
+      "id": "geo",
+      "module": "global_equity_overnight",
+      "params": {}
+    },
+    {
+      "id": "fed",
+      "module": "fed_path",
+      "params": {}
+    },
+    {
+      "id": "cal",
+      "module": "catalyst_timeline",
+      "params": {
+        "events": [
+          {"date": "9/10", "label": "PPI:年增5.4%超預期", "highlight": false},
+          {"date": "9/11", "label": "CPI公布", "highlight": true},
+          {"date": "9/16", "label": "FOMC九月決策", "highlight": true}
+        ]
+      }
+    }
+  ],
+  "coverage_gaps": [
+    "目前圖表模組庫沒有原油/大宗商品價格走勢圖,布蘭特原油連兩天站穩100美元上方這條今天最重要的地緣風險訊號只能口述帶過,建議之後補一個 oil_price 模組。"
+  ]
+}
