@@ -1,0 +1,161 @@
+{
+  "date": "2026-09-11",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7591.7001953125,
+      "overnight_pct": -0.5848310541606168,
+      "drivers": [
+        "上一交易日(9/10)標普收7591.70點,跌0.58%,主因是8月PPI年增5.4%超預期,推升九月升息機率到66%,10年期殖利率同步刷新2023年來新高。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 26081.720703125,
+      "overnight_pct": -0.6537046214881617,
+      "drivers": [
+        "那斯達克收26081.72點,跌0.65%,盤中甲骨文財報後段才公布,尚未反映在收盤價裡;隔夜甲骨文AI訂單積壓大增消息帶動盤後與今天期貨走強。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 52064.1015625,
+      "overnight_pct": -0.6043422085556072,
+      "drivers": [
+        "道瓊收52064.10點,跌0.60%。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 2890.949951171875,
+      "overnight_pct": -1.0367004040526437,
+      "drivers": [
+        "羅素兩千收2890.95點,重挫1.04%,四大指數中跌最深,對10年期殖利率逼近5%這類利率新高最敏感。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普已實現波動約8.7%,波動目標模型算出的合理槓桿約1.72倍,開三倍一年吃掉約3.4%複利當波動耗損,是四大指數裡代價最溫和的一個。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克已實現波動仍有約12.4%,合理倍數只剩約1.21倍,開三倍一年要吃掉約6.9%複利,依然是四大指數裡槓桿代價最高的。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊已實現波動約10.5%,合理倍數約1.43倍,開三倍一年要吃掉約4.9%複利。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千已實現波動約13.1%,合理倍數約1.14倍,開三倍一年要吃掉約7.7%複利,是四大指數裡槓桿代價最高的一個,也是今天利率衝擊下跌最深的指數。"
+    }
+  ],
+  "regime": {
+    "vol": "low",
+    "rates": "rising",
+    "stock_bond_corr": "positive",
+    "breadth": "narrow"
+  },
+  "items": [
+    {
+      "headline": "今天8月CPI公布,是FOMC九月決策前最後一份數據",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "美東今天上午8:30公布8月CPI,市場預期年增3.4%(與7月持平)、核心年增2.4%(較7月的2.5%略降)、月增0.4%。這是9/16 FOMC決策前最後一份重量級通膨數據,昨天(9/10)的PPI已經超預期轉熱,把九月升息隱含機率推到66%,10年期殖利率同步逼近5%。對一般投資人:今天這份數字如果比預期熱,升息機率恐怕還會再往上推;如果符合或低於預期,才有機會讓緊繃的利率預期喘口氣。",
+      "sources": [
+        {
+          "url": "https://finance.yahoo.com/markets/live/stock-market-today-friday-september-11-dow-sp-500-nasdaq-cpi-inflation-082201751.html",
+          "ts": null
+        },
+        {
+          "url": "https://www.cnbc.com/2026/09/10/fridays-cpi-inflation-report-is-even-more-important-than-usual-heres-what-to-expect.html",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "全球公債同步遭拋售,10年期殖利率逼近5%大關",
+      "horizon": "LT",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "美國10年期公債殖利率(快照顯示)來到4.94%,直逼5%整數關卡、續創這波以來新高;這波拋售不是美國獨有——日本10年期公債殖利率近日站上3%,約30年來首見,英國30年期公債標售利率創1998年有紀錄以來新高,德國、法國長天期殖利率也同步刷新多年高點。對一般投資人:這代表市場正在全球同步重新定價『通膨黏著+政府舉債規模龐大』這件事,不只是Fed升不升息的單一問題,而是資金對所有政府的『借錢成本』都在重新喊價。",
+      "sources": [
+        {
+          "url": "https://www.bloomberg.com/news/articles/2026-09-11/global-bond-selloff-sends-10-year-treasury-yields-to-cusp-of-5",
+          "ts": null
+        },
+        {
+          "url": "https://www.weforum.org/stories/financial-and-monetary-systems/why-global-bond-market-treasury-yields/",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "標普十大權值股全數收紅,廣度卻重挫",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "拆解上一交易日(9/10)標普成分股貢獻可見,輝達、蘋果、微軟、亞馬遜、Alphabet(兩個代碼)、博通、Meta、美光、特斯拉這十檔權值股全數收紅,合計貢獻指數正0.13個百分點,但標普整體卻收跌0.58%——真正把大盤往下拖的是後面數百檔中小型股,對利率最敏感的羅素兩千重挫逾1%。對一般投資人:這跟前幾天『廣度撐盤、龍頭落後』的劇本正好顛倒,顯示這波利率衝擊主要在傷害中小型股,而不是AI權值股本身。",
+      "sources": []
+    },
+    {
+      "headline": "甲骨文AI訂單積壓飆到6380億美元,年增363%",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "甲骨文昨天(9/10)公布財報,雲端基礎設施營收年增77%,剩餘履約義務(RPO,可理解為未來訂單積壓)衝上6380億美元,單季暴增850億美元、年增363%,公司預告下個財年營收成長約34%。這是繼CoreWeave、Anthropic、戴爾之後,AI供應鏈裡又一筆來自實際訂單、而非單純資本支出宣示的證據。但同一個晚上,南韓、日本記憶體股(三星、SK海力士)仍因油價與殖利率走高同步下跌,顯示『窄且不穩』沒有解除,只是這次美股本土AI訂單端與亞股晶片端的分裂又換了一種形式。",
+      "sources": [
+        {
+          "url": "https://finance.yahoo.com/technology/ai/articles/oracle-bets-big-ai-638-123230440.html",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "布蘭特原油從逼近108美元回落,外交線出現鬆動訊號",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "developing",
+      "audience_value": "布蘭特原油這幾天一度衝上108美元(胡塞攻擊沙烏地吉贊煉油廠帶動),今天據報回落到106美元附近,單月漲幅仍近兩成。同一時間出現幾個緩和訊號:伊朗外長與巴基斯坦軍方領導人通話討論重啟斡旋,川普則婉拒沙國王儲要求美方直接打擊胡塞的請求。對一般投資人:油價從高點小幅退燒,但地緣風險溢價並未真正解除,回落是否能延續還要看外交線是否真有進展。",
+      "sources": [
+        {
+          "url": "https://tradingeconomics.com/commodity/brent-crude-oil",
+          "ts": null
+        },
+        {
+          "url": "https://www.timesofisrael.com/liveblog-september-11-2026/",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "殖利率逼近5%、廣度重挫,VIX卻還在往下走",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "VIX今天來到17.09,比前一天還再降4.2%,持續處於歷史偏低區間,跟10年期殖利率逼近5%、羅素兩千重挫逾1%的緊張程度不成比例。對一般投資人:這正是波動目標模型最容易誤導人的時候——帳面上的『低波動』會算出『可以加更多槓桿』,但這往往是風險正在累積、還沒被價格反映出來的階段,而不是真的安全。",
+      "sources": []
+    }
+  ],
+  "catalysts": [
+    "今天(9/11,五)美東上午8:30:8月CPI公布,市場預期年增3.4%、核心年增2.4%,是FOMC 9/16決策前最後一份重量級通膨數據。",
+    "9月15–16日:FOMC召開九月利率會議,9/16(三)美東下午2點公布決策、利率點陣圖與經濟預測;會議已進入會前靜默期。",
+    "持續觀察:全球公債殖利率(美、日、英、德)同步走高的後續、財政部10-30年期公債買回操作的實際壓制效果、布蘭特原油能否延續從108美元的回落、美伊/胡塞衝突的外交斡旋進展。"
+  ],
+  "thesis_delta": {
+    "changed": true,
+    "summary": "10年期公債殖利率逼近5%,且這波拋售罕見地在全球同步發生——日本10年期站上3%創約30年新高、英國30年期標售利率創1998年以來新高、德法長天期殖利率同步刷新多年高點,顯示『higher-for-longer』不只是Fed的問題,而是全球資金對通膨與政府舉債規模的重新定價;今天8月CPI是FOMC 9/16前最後裁判。同一天,標普十大權值股全數收紅但廣度重挫,顯示利率衝擊主要在傷害中小型股;甲骨文AI訂單積壓年增363%替AI資本支出敘事添一筆實績,但亞股記憶體股仍因油價與殖利率走高同步走弱,『窄且不穩』未解除。布蘭特原油從108美元回落到106美元附近,外交線出現鬆動跡象。",
+    "horizon": "LT"
+  },
+  "lead_horizon": "ST",
+  "title_hook": "殖利率卡在5%門口,今天CPI說了算"
+}

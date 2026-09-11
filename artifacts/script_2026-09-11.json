@@ -1,0 +1,107 @@
+{
+  "segments": [
+    {
+      "vo": "殖利率卡在5%門口,今天CPI說了算。",
+      "chart_id": null,
+      "headline": "殖利率\n卡關5%",
+      "title": null,
+      "tag": "CPI日",
+      "stat": null,
+      "stat_label": null,
+      "t_start": 0.0,
+      "duration": 3.42
+    },
+    {
+      "vo": "標普上一交易日跌0.59%收7591點,那斯達克跌0.65%,羅素兩千摔逾1%最深;今天盤前期貨全面翻紅,那斯達克期貨漲0.81%領漲。",
+      "chart_id": "ovc",
+      "headline": null,
+      "title": "昨收全黑,期貨翻紅",
+      "tag": null,
+      "stat": "+0.81%",
+      "stat_label": "那指期貨領漲",
+      "t_start": 3.42,
+      "duration": 12.24
+    },
+    {
+      "vo": "10年期公債殖利率衝到4.94%,逼近5%整數關卡,創下這波以來新高。這不只是美國故事,日本、英國、德國公債殖利率同步刷新多年高點,全球資金重新計價通膨與政府舉債風險。",
+      "chart_id": "rt",
+      "headline": null,
+      "title": "殖利率衝向5%",
+      "tag": null,
+      "stat": "4.94%",
+      "stat_label": "10年期殖利率",
+      "t_start": 15.66,
+      "duration": 15.12
+    },
+    {
+      "vo": "標普上一交易日跌0.59%,但輝達、蘋果、微軟等十大權值股全數收紅,合計貢獻指數正0.13個百分點。真正拖累大盤的是後面數百檔中小型股,對利率最敏感的羅素兩千重挫逾1%。",
+      "chart_id": "conc",
+      "headline": null,
+      "title": "龍頭撐,廣度崩",
+      "tag": null,
+      "stat": "10/10",
+      "stat_label": "十大權值股全紅",
+      "t_start": 30.78,
+      "duration": 15.3
+    },
+    {
+      "vo": "隔夜亞股全面走弱,南韓KOSPI跌1.76%、日經跌1.72%、台股跌1.6%,記憶體三星、SK海力士同步下跌,反映油價與殖利率走高壓力;甲骨文AI訂單積壓年增363%,撐住科技股信心。",
+      "chart_id": "geo",
+      "headline": null,
+      "title": "亞股重挫,甲骨文報喜",
+      "tag": null,
+      "stat": "363%",
+      "stat_label": "甲骨文訂單年增",
+      "t_start": 46.08,
+      "duration": 16.74
+    },
+    {
+      "vo": "少數權值股主導指數漲跌,這種現象叫集中度。",
+      "chart_id": null,
+      "headline": "集中度",
+      "title": null,
+      "tag": "名詞小教室",
+      "stat": null,
+      "stat_label": null,
+      "t_start": 62.82,
+      "duration": 3.78
+    },
+    {
+      "vo": "殖利率逼近5%,廣度全線塌陷,VIX卻還在裝沒事。今天的風險不是CPI一份數據,是市場對地心引力的免疫力還能撐多久。以上非投資建議,明天盤前見。",
+      "chart_id": null,
+      "headline": "殖利率是地心引力\n拉太緊,泡沫會摔",
+      "title": null,
+      "tag": "巴菲特 不知道有沒有說過",
+      "stat": null,
+      "stat_label": null,
+      "t_start": 66.6,
+      "duration": 12.96
+    }
+  ],
+  "charts": [
+    {
+      "id": "ovc",
+      "module": "overnight_vs_close",
+      "params": {}
+    },
+    {
+      "id": "rt",
+      "module": "rates_trend",
+      "params": {}
+    },
+    {
+      "id": "conc",
+      "module": "concentration",
+      "params": {}
+    },
+    {
+      "id": "geo",
+      "module": "global_equity_overnight",
+      "params": {}
+    }
+  ],
+  "coverage_gaps": [
+    "圖表模組庫沒有原油/大宗商品價格走勢圖,布蘭特原油從逼近108美元回落到106美元附近這條訊號只能口述帶過,建議之後補一個 oil_price 模組。",
+    "沒有多國公債殖利率對照圖,日本、英國、德國殖利率同步創多年新高的『全球同步』視覺效果目前只能用 rates_trend(僅美國10年期)代打,建議之後補一個 global_yields 模組。"
+  ]
+}
