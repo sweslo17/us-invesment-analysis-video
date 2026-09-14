@@ -1,0 +1,107 @@
+{
+  "segments": [
+    {
+      "vo": "AI教父自己喊煞車,輝達博通應聲重摔。",
+      "chart_id": null,
+      "headline": "AI巨頭喊煞車\n輝達應聲摔",
+      "title": null,
+      "tag": "今日盤前",
+      "stat": null,
+      "stat_label": null,
+      "t_start": 0.0,
+      "duration": 3.42
+    },
+    {
+      "vo": "上週五標普收7656點、漲0.86%,結束連四天下跌。但今天風向全變:那指期貨轉跌,道瓊期貨卻逆勢翻紅,盤前輝達、博通應聲重挫,這次AI股自己扛下賣壓。",
+      "chart_id": "ovc",
+      "headline": null,
+      "title": "昨收全紅,今晨轉黑",
+      "tag": null,
+      "stat": "-0.26%",
+      "stat_label": "那指期貨",
+      "t_start": 3.42,
+      "duration": 13.68
+    },
+    {
+      "vo": "隔夜南韓KOSPI重挫逾3%,記憶體雙雄三星、SK海力士同步走弱。上週高盛才喊記憶體股轉多,這個週末AI巨頭喊煞車的消息,直接把買氣澆熄。",
+      "chart_id": "geo",
+      "headline": null,
+      "title": "AI寒意吹向亞股",
+      "tag": null,
+      "stat": "-3.26%",
+      "stat_label": "南韓KOSPI",
+      "t_start": 17.1,
+      "duration": 12.42
+    },
+    {
+      "vo": "上週五CPI核心月增比預期熱一截,稍早PPI也超預期轉熱,期貨隱含九月FOMC升息機率衝上94%。10年期殖利率逼近4.98%,卡在多年高點,升息幾乎是市場預設劇本。",
+      "chart_id": "fp",
+      "headline": null,
+      "title": "升息機率衝上94%",
+      "tag": null,
+      "stat": "94%",
+      "stat_label": "九月升息機率",
+      "t_start": 29.52,
+      "duration": 14.94
+    },
+    {
+      "vo": "VIX今天跳升逾10%來到17.53,像同時吃下三支箭:AI巨頭喊煞車、沙國東西輸油管線遭無人機癱瘓、荷姆茲斡旋談判又告吹。三箭齊發,市場這才開始真的喊痛。",
+      "chart_id": "vix",
+      "headline": null,
+      "title": "VIX一天跳一成",
+      "tag": null,
+      "stat": "+10.67%",
+      "stat_label": "VIX單日漲幅",
+      "t_start": 44.46,
+      "duration": 14.04
+    },
+    {
+      "vo": "期貨是盤前先落地的股市方向賭注。",
+      "chart_id": null,
+      "headline": "期貨",
+      "title": null,
+      "tag": "名詞小教室",
+      "stat": null,
+      "stat_label": null,
+      "t_start": 58.5,
+      "duration": 2.88
+    },
+    {
+      "vo": "AI巨頭自己喊煞車,甲骨文燒到現金流轉負,故事終於被問「撐不撐得住」。這週三FOMC升不升息已經沒有懸念,真正的考驗是誰的資產負債表禁得起波動。以上非投資建議,明天盤前見。",
+      "chart_id": null,
+      "headline": "衝得快不稀奇\n撐得住才是本事",
+      "title": null,
+      "tag": "蒙格 不知道有沒有說過",
+      "stat": null,
+      "stat_label": null,
+      "t_start": 61.38,
+      "duration": 15.48
+    }
+  ],
+  "charts": [
+    {
+      "id": "ovc",
+      "module": "overnight_vs_close",
+      "params": {}
+    },
+    {
+      "id": "geo",
+      "module": "global_equity_overnight",
+      "params": {}
+    },
+    {
+      "id": "fp",
+      "module": "fed_path",
+      "params": {}
+    },
+    {
+      "id": "vix",
+      "module": "vix_regime",
+      "params": {}
+    }
+  ],
+  "coverage_gaps": [
+    "圖表模組庫沒有原油/大宗商品價格走勢圖,布蘭特原油衝破107美元、沙烏地東西輸油管線遭攻擊這條訊號只能口述帶過,建議之後補一個 oil_price 模組。",
+    "沒有個股/類股層級的圖表(如AI晶片股單日跌幅對照),輝達、博通、甲骨文盤前重挫的細節只能口述,建議之後補一個 stock_movers 模組。"
+  ]
+}

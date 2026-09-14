@@ -1,0 +1,165 @@
+{
+  "date": "2026-09-14",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7656.97998046875,
+      "overnight_pct": 0.8598861976731191,
+      "drivers": [
+        "上一交易日(9/11)標普收7656.98點,漲0.86%,結束連四天下跌;8月CPI年增3.4%、核心年增2.4%皆符合預期,加上油價當天回落約3%,市場鬆一口氣,戴爾、HPE等AI基建股領漲。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 26333.0390625,
+      "overnight_pct": 0.9635638076085898,
+      "drivers": [
+        "那斯達克收26333.04點,漲0.96%,同步受惠CPI落在預期內與AI基建股走強。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 52573.2890625,
+      "overnight_pct": 0.9780041573752384,
+      "drivers": [
+        "道瓊收52573.29點,漲0.98%,四大指數中漲幅最大。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 2903.93994140625,
+      "overnight_pct": 0.44943547585790683,
+      "drivers": [
+        "羅素兩千收2903.94點,漲0.45%,漲幅四大指數中最小,對利率仍相對敏感。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普已實現波動回落到約9.0%,波動目標模型算出的合理槓桿約1.67倍,開三倍一年要吃掉約3.6%複利當波動耗損,是四大指數裡代價最溫和的一個。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克已實現波動仍有約12.6%,合理倍數只剩約1.19倍,開三倍一年要吃掉約7.1%複利,是四大指數裡槓桿代價最高的,恰好也是這波AI賣壓的主戰場。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊已實現波動約11.2%,合理倍數約1.34倍,開三倍一年要吃掉約5.6%複利。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千已實現波動約13.2%,合理倍數約1.13倍,開三倍一年要吃掉約7.9%複利,是四大指數裡槓桿代價最高的一個。"
+    }
+  ],
+  "regime": {
+    "vol": "normal",
+    "rates": "rising",
+    "stock_bond_corr": "positive",
+    "breadth": "narrow"
+  },
+  "items": [
+    {
+      "headline": "AI巨頭週末喊「踩煞車」,輝達、博通、英特爾盤前全面重挫",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "Anthropic執行長阿莫岱週六發表文章,主張AI公司必須放慢推進最強模型的腳步,警告若放任不管,6至12個月內可能出現具破壞力的失控AI殭屍網路;OpenAI執行長奧特曼公開附和,並證實OpenAI原定2026年的IPO計畫延到2027年,理由是安全與對齊疑慮未解,三巨頭並討論成立新的AI安全機構。今天美股開盤前輝達跌近3%、博通跌3%、英特爾跌5%、邁威爾跌7%,那斯達克期貨領跌四大期貨快照。對一般投資人:這是AI股題材第一次不是被財報或政策打壓,而是業界龍頭自己承認風險,值得留意這是情緒性賣壓還是資本支出敘事的真正轉折點。",
+      "sources": [
+        {
+          "url": "https://www.npr.org/2026/09/12/nx-s1-5950588/openai-anthropic-ai-safety-researchers-hacks",
+          "ts": null
+        },
+        {
+          "url": "https://www.cnbc.com/2026/09/14/sam-altman-ai-slowdown-anthropic-amodei-musk.html",
+          "ts": null
+        },
+        {
+          "url": "https://www.benzinga.com/markets/equities/26/09/61758310/dow-sp500-nasdaq-futures-us-stock-market-sept-14-2026",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "甲骨文自由現金流轉負54億美元,AI燒錢速度被市場放大檢視",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "甲骨文單季資本支出高達285億美元投入AI雲端資料中心與GPU建置,自由現金流轉負54億美元,股價盤前重挫近5%;同一天創辦人賴瑞·艾利森撤回原訂拋售5000萬股(約75億美元)的計畫。對一般投資人:這跟先前『訂單積壓年增363%』的樂觀故事是同一家公司,現在市場開始問的問題從『訂單夠不夠多』變成『燒錢速度撐不撐得住』,AI資本支出敘事正在被重新檢視。",
+      "sources": [
+        {
+          "url": "https://www.fool.com/investing/2026/09/14/why-oracle-stock-fell-quickly-today/",
+          "ts": null
+        },
+        {
+          "url": "https://www.tradingkey.com/news/market-movers/262166554-market-movers-orcl-20260914",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "沙烏地東西輸油管線遭無人機癱瘓,荷姆茲斡旋會談又告吹,布蘭特衝破107美元",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "週末疑似源自伊拉克境內的無人機攻擊癱瘓沙烏地阿拉伯東西輸油管線的抽油站,這條管線是沙國在荷姆茲海峽實質封鎖以來,用來將約500萬桶/日原油改道紅海延布港出口的主要替代路線,預期至少停產一個月;同一時間,原訂由阿曼居中安排的伊朗與波灣國家荷姆茲海峽斡旋會談也被無限期延後。布蘭特原油今天盤前站上107美元上方,終結上週五CPI落在預期內帶來的短暫回落。對一般投資人:這次不是伊朗與交戰方互打,而是沙國自己的出口動脈被切斷,油價風險比想像中更廣。",
+      "sources": [
+        {
+          "url": "https://www.aljazeera.com/news/2026/9/12/saudi-arabia-shuts-critical-oil-pipeline-after-drone-attack-what-happened",
+          "ts": null
+        },
+        {
+          "url": "https://www.cnn.com/2026/09/13/politics/iran-gulf-countries-strait-of-hormuz",
+          "ts": null
+        },
+        {
+          "url": "https://www.bloomberg.com/news/articles/2026-09-13/us-stock-futures-fall-on-ai-warning-oil-gains-markets-wrap",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "8月CPI核心月增略超預期,九月升息機率衝上94%高檔",
+      "horizon": "LT",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "上週五公布的8月CPI年增3.4%、核心年增2.4%皆符合市場預期,但核心月增0.3%比預期的0.2%熱一截,加上前一天PPI已超預期轉熱,期貨隱含九月升息機率應聲衝破85%,今天快照顯示已達94%,幾乎已是市場的預設劇本;10年期公債殖利率來到4.975%,持續逼近5%整數關卡。FOMC會議本週二、三召開,決策與點陣圖將於週三美東下午2點公布。對一般投資人:升息幾乎已被市場當成定局,真正的懸念是點陣圖對後續路徑怎麼寫。",
+      "sources": [
+        {
+          "url": "https://www.cbsnews.com/news/august-cpi-report-inflation-fed-rates/",
+          "ts": null
+        },
+        {
+          "url": "https://finance.yahoo.com/markets/live/stock-market-today-friday-september-11-dow-sp-500-nasdaq-cpi-inflation-082201751.html",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "隔夜南韓KOSPI重挫逾3%,記憶體雙雄被AI寒意波及",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "隔夜南韓KOSPI重挫3.26%,三星電子、SK海力士同步走弱,日經跌0.80%、台股跌0.84%;上週高盛才因DRAM/HBM訂單能見度排到2027年喊多記憶體股,這個週末AI巨頭喊煞車的消息直接把買氣澆熄。對一般投資人:AI/半導體『窄且不穩』沒有解除,只是這次連記憶體這條相對強勢的子線也被拖下水。",
+      "sources": []
+    }
+  ],
+  "catalysts": [
+    "今天(9/14,一):無重大經濟數據;市場消化AI安全減速呼籲對科技股的衝擊,輝達、博通、英特爾、邁威爾盤前全面重挫,甲骨文盤前跌近5%。",
+    "9月15日(二):9月Empire State製造業指數公布;FOMC會議開議(9/15–16)。",
+    "9月16日(三)美東下午2點:FOMC公布九月利率決策、點陣圖與經濟預測;期貨隱含升息機率已衝上94%高檔。",
+    "持續觀察:沙烏地東西輸油管線修復進度(預估至少停產一個月)、阿曼居中的荷姆茲海峽斡旋會談何時重新排期、AI安全機構籌組後續進展、甲骨文與其他AI雲端業者的現金流指引。"
+  ],
+  "thesis_delta": {
+    "changed": true,
+    "summary": "AI/半導體『窄且不穩』新增結構性變數:Anthropic、OpenAI執行長週末公開呼籲放慢AI推進速度、OpenAI IPO延到2027年,加上甲骨文自由現金流轉負,市場首度不是因財報或政策打壓AI股,而是業界自己承認風險與燒錢速度疑慮,今天輝達、博通等晶片股與南韓記憶體股同步重挫。地緣風險同步升級:沙烏地東西輸油管線遭無人機癱瘓、荷姆茲海峽斡旋會談告吹,布蘭特原油衝破107美元。Fed政策鷹派程度進一步確認:8月CPI核心月增略超預期,九月升息機率衝上94%,FOMC本週三見真章。三條既有支柱方向皆未反轉。",
+    "horizon": "MT"
+  },
+  "lead_horizon": "ST",
+  "title_hook": "AI巨頭喊煞車,輝達盤前摔近3%"
+}
