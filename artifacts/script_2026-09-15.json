@@ -1,0 +1,107 @@
+{
+  "segments": [
+    {
+      "vo": "FOMC今天開議,升息機率衝上96%。",
+      "chart_id": null,
+      "headline": "三年首見\n升息倒數",
+      "title": null,
+      "tag": "FOMC週",
+      "stat": null,
+      "stat_label": null,
+      "t_start": 0.0,
+      "duration": 3.5
+    },
+    {
+      "vo": "標普昨天收7620點,跌0.48%,那斯達克重挫0.56%,AI股全面回落。今天早盤四大期貨小跌不到0.1%,市場按兵不動,等明天FOMC真正的答案。",
+      "chart_id": "ovc",
+      "headline": null,
+      "title": "昨收落地,今晨屏息",
+      "tag": null,
+      "stat": "-0.48%",
+      "stat_label": "標普昨收",
+      "t_start": 3.5,
+      "duration": 13.6
+    },
+    {
+      "vo": "期貨隱含九月升息機率衝上96%,如果成真,是三年多來Fed第一次真正升息。明天下午兩點的點陣圖,才是市場真正在等的答案。",
+      "chart_id": "fp",
+      "headline": null,
+      "title": "三年來,第一次升息",
+      "tag": null,
+      "stat": "96%",
+      "stat_label": "九月升息機率",
+      "t_start": 17.1,
+      "duration": 11.05
+    },
+    {
+      "vo": "點陣圖是每位官員各自猜的未來利率路線圖。",
+      "chart_id": null,
+      "headline": "點陣圖",
+      "title": null,
+      "tag": "名詞小教室",
+      "stat": null,
+      "stat_label": null,
+      "t_start": 28.15,
+      "duration": 3.68
+    },
+    {
+      "vo": "拆開類股看,昨天真正慘的只有科技,跌了1.8%;醫療、民生消費、通訊服務反而收紅。輝達執行長黃仁勳同一天嗆聲,說AI滅絕論是「幻想」,跟阿莫岱的煞車說對著幹。",
+      "chart_id": "brd",
+      "headline": null,
+      "title": "科技挨打,防守當家",
+      "tag": null,
+      "stat": "-1.81%",
+      "stat_label": "科技類股昨跌",
+      "t_start": 31.83,
+      "duration": 14.54
+    },
+    {
+      "vo": "VIX還在17附近,幾個月來市場對地緣、利率風險都反應遲鈍。數學不會說謊:波動睡著的時候,系統建議的槓桿反而最高,這正是最容易掉進去的陷阱。",
+      "chart_id": "vix",
+      "headline": null,
+      "title": "VIX還很淡定",
+      "tag": null,
+      "stat": "17.11",
+      "stat_label": "VIX目前水位",
+      "t_start": 46.37,
+      "duration": 12.89
+    },
+    {
+      "vo": "FOMC開議,三年來最鷹的一次決策幾乎板上釘釘,但VIX還很淡定,像沒人真的在怕。三年多的低利率時代,可能就在明天下午兩點畫下句點。以上非投資建議,明天盤前見。",
+      "chart_id": null,
+      "headline": "升息不稀奇\n沒準備才尷尬",
+      "title": null,
+      "tag": "坦伯頓  不知道有沒有說過",
+      "stat": null,
+      "stat_label": null,
+      "t_start": 59.26,
+      "duration": 14.73
+    }
+  ],
+  "charts": [
+    {
+      "id": "ovc",
+      "module": "overnight_vs_close",
+      "params": {}
+    },
+    {
+      "id": "fp",
+      "module": "fed_path",
+      "params": {}
+    },
+    {
+      "id": "brd",
+      "module": "breadth",
+      "params": {}
+    },
+    {
+      "id": "vix",
+      "module": "vix_regime",
+      "params": {}
+    }
+  ],
+  "coverage_gaps": [
+    "圖表模組庫沒有個股層級的圖表(如輝達、博通等晶片股單日跌幅對照),黃仁勳與阿莫岱的AI安全對打只能口述帶過,建議之後補一個 stock_movers 模組。",
+    "沒有原油/大宗商品價格走勢圖,沙國東西輸油管線癱瘓、布蘭特原油維持高檔這條訊號只能口述,建議之後補一個 oil_price 模組。"
+  ]
+}

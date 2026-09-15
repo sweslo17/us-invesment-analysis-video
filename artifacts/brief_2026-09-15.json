@@ -1,0 +1,130 @@
+{
+  "date": "2026-09-15",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7619.97998046875,
+      "overnight_pct": -0.48321948772557277,
+      "drivers": [
+        "上一交易日(9/14,週一)標普收7619.98點,跌0.48%,結束上週五的反彈;10年期公債殖利率盤中一度觸及5%整數大關,創2023年以來新高。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 26186.41015625,
+      "overnight_pct": -0.556809512272322,
+      "drivers": [
+        "那斯達克收26186.41點,跌0.56%,四大指數中跌幅最深,輝達、超微等晶片股延續AI安全爭議帶來的賣壓。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 52421.19921875,
+      "overnight_pct": -0.28929287333929615,
+      "drivers": [
+        "道瓊收52421.20點,跌0.29%,跌幅四大指數中最小,金融、必需消費等防禦類股相對抗跌。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 2892.239990234375,
+      "overnight_pct": -0.4030487005424006,
+      "drivers": [
+        "羅素兩千收2892.24點,跌0.40%,對利率仍相對敏感,殖利率逼近5%持續壓抑中小型股表現。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普已實現波動約9.1%,波動目標模型算出的合理槓桿約1.65倍,開三倍一年要吃掉約3.7%複利當波動耗損,是四大指數裡代價最溫和的一個。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克已實現波動仍有約12.7%,合理倍數只剩約1.18倍,開三倍一年要吃掉約7.2%複利,是四大指數裡槓桿代價最高的,恰好也是這波AI賣壓最深的地方。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊已實現波動約11.2%,合理倍數約1.34倍,開三倍一年要吃掉約5.6%複利。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千已實現波動約12.9%,合理倍數約1.16倍,開三倍一年要吃掉約7.5%複利,同樣是四大指數裡代價偏高的一個。"
+    }
+  ],
+  "regime": {
+    "vol": "normal",
+    "rates": "rising",
+    "stock_bond_corr": "positive",
+    "breadth": "narrow"
+  },
+  "items": [
+    {
+      "headline": "FOMC今天開議,升息機率衝上96%,可能是三年多來首次升息",
+      "horizon": "LT",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "聯準會為期兩天的九月會議今天正式開議,決策與利率點陣圖預計明天(週三)美東下午兩點公布。CME FedWatch顯示升息機率已來到93%以上,今天的期貨快照隱含機率更達96%;如果成真,將是Fed三年多來第一次升息,終結這一輪維持利率不動的格局。對一般投資人:升息幾乎已是市場共識,真正該盯的是明天記者會與點陣圖透露的後續路徑,而不是升不升息本身。",
+      "sources": [
+        {"url": "https://www.cnbc.com/2026/09/14/fed-rate-hike-anticipated-what-it-means-for-your-money.html", "ts": null},
+        {"url": "https://finance.yahoo.com/markets/live/stock-market-today-tuesday-september-15-dow-sp-500-nasdaq-081307838.html", "ts": null}
+      ]
+    },
+    {
+      "headline": "黃仁勳嗆聲「AI滅絕論是幻想」,正面對打阿莫岱的煞車說",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "輝達執行長黃仁勳針對Anthropic執行長阿莫岱週末呼籲放慢AI推進腳步的說法正面回應,直言AI導致人類滅絕是「幻想」;微軟同一時間發布初版AI行為準則,強調系統要維持人類可控。對一般投資人:AI業界對「該不該踩煞車」出現公開對打、不是一言堂,這場辯論本身會持續影響晶片股的情緒面。",
+      "sources": [
+        {"url": "https://finance.yahoo.com/technology/article/heres-where-the-biggest-tech-names-stand-on-slowing-ai-development-195849555.html", "ts": null},
+        {"url": "https://dmnews.com/dmn-nvidias-jensen-huang-calls-ai-extinction-talk-complete-nonsense-as-openai-and-anthropic-file-for-ipos-amid-safety-warnings/", "ts": null}
+      ]
+    },
+    {
+      "headline": "沙國東西輸油管線確認需數週修復,布蘭特原油續留103美元上方",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "遭無人機攻擊癱瘓的沙烏地阿拉伯東西輸油管線,官員證實修復需要數週時間,這條管線原本是荷姆茲海峽實質封鎖後,沙國把每天約500萬桶原油改道紅海出口的主要替代路線。布蘭特原油今天回落到103美元附近,較上一交易日大漲後稍微喘息,但仍處於這波衝突以來的高檔區間。對一般投資人:油價的風險不再只來自伊朗與交戰方互打,沙國自己的出口動脈受損,代表供給風險比想像中分布得更廣。",
+      "sources": [
+        {"url": "https://www.cp24.com/news/world/2026/09/14/saudi-pipeline-hit-by-drones-will-be-out-of-service-for-weeks-further-restricting-oil-flow/", "ts": null}
+      ]
+    },
+    {
+      "headline": "10年期公債殖利率週一觸及5%,創2023年以來新高",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "10年期公債殖利率上一交易日盤中一度觸及5%整數大關,是2023年以來首見,今天稍微回落到4.96%附近。這波利率走高疊加Fed升息在即,對利率敏感的中小型股與高估值成長股壓力最直接。對一般投資人:5%的10年期殖利率代表無風險資產的報酬率明顯墊高,估值偏貴的資產相對吸引力會被削弱。",
+      "sources": [
+        {"url": "https://www.thestreet.com/stock-market-today/stock-market-today-dow-jones-sp-500-nasdaq-updates-sept-14-2026", "ts": null}
+      ]
+    },
+    {
+      "headline": "產業類股昨天只有科技真的重傷,醫療、通訊服務逆勢收紅",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "拆開類股報酬,上一交易日科技類股重挫1.81%,是十一大類股裡跌最深的,通訊服務反而逆勢大漲2.19%,醫療、必需消費同步收紅。對一般投資人:這波賣壓沒有全面性,主要集中在AI/晶片相關的科技股,不是整個美股基本面轉差,「窄且不穩」的分裂持續存在。",
+      "sources": []
+    }
+  ],
+  "catalysts": [
+    "今天(9/15,二):FOMC為期兩天的九月會議開議(9/15–16);9月Empire State製造業指數預定公布;市場持續消化黃仁勳與Anthropic對AI安全的公開對打。",
+    "9月16日(三)美東下午2點:FOMC公布九月利率決策、點陣圖與經濟預測;期貨隱含升息機率已達96%,可能是三年多來首次升息。",
+    "持續觀察:沙烏地東西輸油管線修復進度(預估數週)、10年期公債殖利率能否守穩5%下方、AI業界安全機構籌組後續進展、南韓與美股晶片股能否止穩。"
+  ],
+  "thesis_delta": {
+    "changed": true,
+    "summary": "Fed政策這條主線今天迎來決定性一週的開端:FOMC九月會議今天開議,期貨隱含升息機率衝上96%,若成真將是三年多來首次升息,10年期公債殖利率上一交易日一度觸及5%整數大關。AI/半導體『窄且不穩』新增業界內部公開對打的一幕:輝達執行長黃仁勳正面回應Anthropic執行長阿莫岱的煞車說,直言AI滅絕論是幻想,顯示業界對放慢腳步並非共識;類股報酬也證實賣壓仍集中在科技,非全面性下跌。地緣風險線持續confirmed:沙國東西輸油管線確認需數週修復,油價維持高檔。三條既有支柱方向皆未反轉,真正的裁判是明天FOMC實際決策與點陣圖。",
+    "horizon": "LT"
+  },
+  "lead_horizon": "LT",
+  "title_hook": "三年最鷹一戰,FOMC今天開議"
+}
