@@ -1,0 +1,107 @@
+{
+  "segments": [
+    {
+      "vo": "美股連跌第六天,今天兩點,答案終於揭曉。",
+      "chart_id": null,
+      "headline": "美股連跌6天\n今天兩點揭曉",
+      "title": null,
+      "tag": "決策日",
+      "stat": null,
+      "stat_label": null,
+      "t_start": 0.0,
+      "duration": 3.68
+    },
+    {
+      "vo": "標普昨天收7585點,跌0.45%,連六個交易日收黑;那斯達克重挫0.78%。今天早盤期貨翻紅,四大期貨全面走高,像在屏息等兩點。",
+      "chart_id": "ovc",
+      "headline": null,
+      "title": "連跌六天,今天喘口氣",
+      "tag": null,
+      "stat": "-0.45%",
+      "stat_label": "標普昨收",
+      "t_start": 3.68,
+      "duration": 11.96
+    },
+    {
+      "vo": "10年期殖利率上一交易日衝上5.04%,創2007年以來新高,今天稍回落到4.996%,仍逼近5%大關,利率壓力疊加Fed升息在即,壓在股市頭上。",
+      "chart_id": "rates",
+      "headline": null,
+      "title": "殖利率衝上18年新高",
+      "tag": null,
+      "stat": "4.996%",
+      "stat_label": "10年期殖利率",
+      "t_start": 15.64,
+      "duration": 13.43
+    },
+    {
+      "vo": "CME FedWatch顯示今天升息機率達92.5%,三年多來首見。真正懸念是點陣圖怎麼講未來——單次動作,還是連續升息的開始,這決定接下來房貸、車貸利率的走向。",
+      "chart_id": "fed",
+      "headline": null,
+      "title": "今天兩點,揭曉答案",
+      "tag": null,
+      "stat": "92.5%",
+      "stat_label": "升息機率",
+      "t_start": 29.07,
+      "duration": 14.9
+    },
+    {
+      "vo": "波動越大,槓桿吃掉的複利越多。",
+      "chart_id": null,
+      "headline": "波動耗損",
+      "title": null,
+      "tag": "名詞小教室",
+      "stat": null,
+      "stat_label": null,
+      "t_start": 43.97,
+      "duration": 3.0
+    },
+    {
+      "vo": "標普已實現波動剩9%,合理槓桿還有1.66倍;那斯達克波動仍有12.9%,合理倍數剩1.16倍,開三倍一年要吃掉7.48%複利,這正是這波AI賣壓最深的地方。",
+      "chart_id": "lev",
+      "headline": null,
+      "title": "波動不高,代價還在",
+      "tag": null,
+      "stat": "7.48%",
+      "stat_label": "那指3倍年耗損",
+      "t_start": 46.97,
+      "duration": 14.54
+    },
+    {
+      "vo": "今天兩點決定的不只是三個月利率,是接下來一年的方向。荷姆茲海峽卡了大半年,葉門青年軍上週又拿下曼德海峽,能源要道兩頭卡關,升息、地緣、槓桿代價全疊在今天。以上非投資建議,明天盤前見。",
+      "chart_id": null,
+      "headline": "升息用猜的\n耗損不會騙人",
+      "title": null,
+      "tag": "蒙格  不知道有沒有說過",
+      "stat": null,
+      "stat_label": null,
+      "t_start": 61.51,
+      "duration": 16.74
+    }
+  ],
+  "charts": [
+    {
+      "id": "ovc",
+      "module": "overnight_vs_close",
+      "params": {}
+    },
+    {
+      "id": "rates",
+      "module": "rates_trend",
+      "params": {}
+    },
+    {
+      "id": "fed",
+      "module": "fed_path",
+      "params": {}
+    },
+    {
+      "id": "lev",
+      "module": "leverage_decay",
+      "params": {}
+    }
+  ],
+  "coverage_gaps": [
+    "圖表模組庫沒有原油/大宗商品價格走勢圖,曼德海峽落入胡塞掌控、原油這週站上100美元這條線只能口述,建議之後補一個 oil_price 模組。",
+    "沒有航運咽喉點地圖類的圖表,荷姆茲海峽與曼德海峽『雙咽喉同時卡關』的地緣風險只能靠旁白帶過,建議之後補一個地圖類模組。"
+  ]
+}

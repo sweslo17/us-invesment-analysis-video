@@ -1,0 +1,134 @@
+{
+  "date": "2026-09-16",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7585.72998046875,
+      "overnight_pct": -0.44947650166075986,
+      "drivers": [
+        "上一交易日(9/15,週二)標普收7585.73點,跌0.45%,是七個交易日以來第六次收黑;10年期公債殖利率盤中一度衝上5.04%,創2007年以來新高。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 25981.5703125,
+      "overnight_pct": -0.7822517718539113,
+      "drivers": [
+        "那斯達克收25981.57點,跌0.78%,四大指數中跌幅最深,但AI晶片股裡的超微上漲2%、高通大漲逾4%,跌勢並非全面性。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 52093.109375,
+      "overnight_pct": -0.6258739307760928,
+      "drivers": [
+        "道瓊收52093.11點,跌0.63%,是美股連六個交易日下跌的一部分,殖利率飆升壓抑各類股表現。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 2870.2900390625,
+      "overnight_pct": -0.7588093220831303,
+      "drivers": [
+        "羅素兩千收2870.29點,跌0.76%,對利率仍最敏感,10年期殖利率逼近5%持續壓抑中小型股表現。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普已實現波動約9.1%,波動目標模型算出的合理槓桿約1.66倍,開三倍一年要吃掉約3.7%複利當波動耗損,是四大指數裡代價最溫和的一個。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克已實現波動仍有約12.9%,合理倍數只剩約1.16倍,開三倍一年要吃掉約7.5%複利,是四大指數裡槓桿代價最高的,恰好也是這波AI賣壓最深的地方。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊已實現波動約11.3%,合理倍數約1.33倍,開三倍一年要吃掉約5.7%複利。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千已實現波動約13.0%,合理倍數約1.15倍,開三倍一年要吃掉約7.7%複利,同樣是四大指數裡代價偏高的一個。"
+    }
+  ],
+  "regime": {
+    "vol": "normal",
+    "rates": "rising",
+    "stock_bond_corr": "positive",
+    "breadth": "narrow"
+  },
+  "items": [
+    {
+      "headline": "FOMC今天下午兩點公布決策,CME FedWatch升息機率衝上92.5%",
+      "horizon": "LT",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "developing",
+      "audience_value": "聯準會為期兩天的九月會議今天邁入尾聲,利率決策與點陣圖將在美東下午2點公布,2點半主席華許召開記者會。CME FedWatch的升息機率已經來到92.5%,如果成真,會是Fed三年多來第一次真正升息,終結先前維持利率不動的格局。對一般投資人:升不升息幾乎已是市場共識,真正該盯的是點陣圖透露的後續路徑——這次會是單次動作,還是連續升息週期的起點,直接牽動接下來一整年的房貸、車貸與存款利率。",
+      "sources": [
+        {"url": "https://finance.yahoo.com/economy/policy/live/federal-reserve-meeting-live-updates-chairman-kevin-warsh-143452661.html", "ts": null},
+        {"url": "https://www.npr.org/2026/09/16/nx-s1-5968724/federal-reserve-interest-rates-inflation-economy", "ts": null},
+        {"url": "https://www.cnbc.com/2026/09/15/stock-market-today-live-updates.html", "ts": null}
+      ]
+    },
+    {
+      "headline": "10年期公債殖利率一度衝上5.04%,創2007年來新高",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "10年期公債殖利率上一交易日盤中一度衝上5.04%,是2007年金融海嘯前以來的最高水位,今天稍微回落到4.996%附近但仍逼近5%大關。標普500也因此連續第六個交易日收黑,是七個交易日以來第六次下跌。對一般投資人:無風險資產的報酬率持續墊高,股市裡估值偏貴的資產吸引力正在被持續削弱,而且這個壓力不用等Fed升息才會發生,現在就已經在發生。",
+      "sources": [
+        {"url": "https://www.bloomberg.com/news/articles/2026-09-14/us-10-year-yield-breaches-5-as-inflation-supply-worries-mount", "ts": null},
+        {"url": "https://www.cnbc.com/2026/09/16/10-year-treasury-yeilds-rise-impact-markets.html", "ts": null}
+      ]
+    },
+    {
+      "headline": "葉門青年軍拿下培林島,紅海第二咽喉曼德海峽落入胡塞掌控",
+      "horizon": "MT",
+      "vs_thesis": "new",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "伊朗背後支持的葉門青年運動(胡塞)上週五攻佔戰略要地培林島,取得曼德海峽兩側航道的控制權,加上稍早已掌控葉門紅海沿岸與哈尼什群島,等於實質掌握這條全球第二繁忙的能源航道。這是繼荷姆茲海峽之後,第二個被地緣衝突卡住的關鍵咽喉點,原油這週一度站上100美元大關。對一般投資人:全球能源運輸現在同時有兩個瓶頸卡關,只要其中一個進一步惡化,油價與通膨的風險都可能比市場現在定價的更高。",
+      "sources": [
+        {"url": "https://www.cnbc.com/2026/09/11/iran-houthis-mokha-red-sea-yemen.html", "ts": null},
+        {"url": "https://www.euronews.com/2026/09/12/houthis-seize-yemeni-island-in-bab-el-mandeb-taking-control-of-the-strait", "ts": null}
+      ]
+    },
+    {
+      "headline": "API報告意外增產711萬桶,原油今天回落到102美元附近",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 3,
+      "confidence": "single-print",
+      "audience_value": "美國石油協會(API)公布上週美國原油庫存意外增加711萬桶,扭轉前一週小幅去化的走勢,帶動布蘭特原油今天從四個月高點回落到102美元附近。不過拉長來看,過去22週美國商業原油庫存(不含戰備儲油)已經累計流失4100萬桶,這次單週增產還沒有扭轉整體去化的趨勢。對一般投資人:油價今天的回落是短線的供需消息,不代表曼德海峽、荷姆茲海峽的地緣風險已經解除,這條風險線還在。",
+      "sources": [
+        {"url": "https://oilprice.com/Latest-Energy-News/World-News/US-Crude-Oil-Inventories-See-Surprise-Build-API.html", "ts": null}
+      ]
+    },
+    {
+      "headline": "馬斯克加入「放慢AI腳步」陣營,但業界推進的腳步還沒真的慢下來",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 2,
+      "confidence": "developing",
+      "audience_value": "繼阿莫岱、奧特曼之後,馬斯克近日也公開表態AI的發展需要放慢腳步,呼應Anthropic一名研究員離職前對AI風險提出的警告。但阿莫岱自己也坦言,要業界真正放慢腳步,最難落實的提案是各國政府一起限制AI整體研發速度,商業競爭、獲利動機與政治壓力都是阻力。對一般投資人:業界喊煞車的聲音變多了,但目前還停留在倡議與外部監督機制的討論階段,還沒有轉化成任何一家公司實際放慢資本支出或產品節奏的證據。",
+      "sources": [
+        {"url": "https://www.clickorlando.com/news/politics/2026/09/16/ai-rivals-found-rare-agreement-on-safety-putting-it-into-practice-is-harder/", "ts": null}
+      ]
+    }
+  ],
+  "catalysts": [
+    "今天(9/16,三)美東上午8:30:8月零售銷售公布,是FOMC決策前最後一塊消費數據拼圖。",
+    "今天美東下午2點:FOMC公布九月利率決策與點陣圖,CME FedWatch升息機率達92.5%,可能是三年多來首次升息;下午2:30主席華許召開記者會。",
+    "持續觀察:曼德海峽落入胡塞掌控後全球能源運輸的替代路線、10年期殖利率能否守穩5%下方、美股晶片股能否延續今天早盤的反彈。"
+  ],
+  "thesis_delta": {
+    "changed": true,
+    "summary": "FOMC九月會議今天進入決定的一刻,決策與點陣圖排定美東下午2點公布,CME FedWatch升息機率衝上92.5%,若成真將是Fed三年多來第一次真正升息;真正的懸念是點陣圖要把這次定調成單次動作、還是連續升息週期的起點。10年期公債殖利率上一交易日一度衝上5.04%,創2007年以來新高,標普500連六個交易日收黑。地緣風險線新增一個結構性變數:葉門青年運動上週五攻佔培林島,取得曼德海峽控制權,等於荷姆茲海峽之外又多了一個被地緣衝突卡住的關鍵能源咽喉點,原油這週一度站上100美元,今天因美國原油庫存單週意外增產711萬桶而回落到102美元附近。AI/半導體『窄且不穩』出現一絲喘息:美股晶片股今天早盤期貨翻紅,但AI業界『放慢腳步』陣營從阿莫岱、奧特曼擴大到馬斯克。三條既有支柱方向皆未反轉,今天新增的是決策當天的臨門一腳,以及曼德海峽淪陷這個新的結構性地緣風險。",
+    "horizon": "LT"
+  },
+  "lead_horizon": "LT",
+  "title_hook": "92.5%機率,今天兩點見真章"
+}
