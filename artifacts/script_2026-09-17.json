@@ -1,0 +1,90 @@
+{
+  "segments": [
+    {
+      "vo": "三年來首次升息,道瓊摔611點。今天期貨,卻大漲。",
+      "chart_id": null,
+      "headline": "升息第一次\n期貨已經笑了",
+      "title": null,
+      "tag": "Fed出手",
+      "stat": null,
+      "stat_label": null,
+      "t_start": 0.0,
+      "duration": 4.0
+    },
+    {
+      "vo": "聯準會昨天升息一碼,利率拉到3.75%到4%,三年來頭一次真正升息,12票通過。道瓊記者會後摔611點,那斯達克卻幾乎打平。今天盤前期貨翻紅,標普期貨漲0.18%,像已經消化完了。",
+      "chart_id": "ovc",
+      "headline": null,
+      "title": "摔完就漲,期貨翻紅",
+      "tag": null,
+      "stat": "+0.18%",
+      "stat_label": "標普期貨",
+      "t_start": 4.0,
+      "duration": 14.0
+    },
+    {
+      "vo": "更關鍵的是點陣圖:18位官員裡16位認為今年還要再升一次,只有2位喊停。這代表今天很可能不是終點,是升息週期的開頭,房貸車貸的壓力恐怕還沒到頭。",
+      "chart_id": "rates",
+      "headline": null,
+      "title": "升息只是開頭",
+      "tag": null,
+      "stat": "5.006%",
+      "stat_label": "10年期殖利率",
+      "t_start": 18.0,
+      "duration": 13.0
+    },
+    {
+      "vo": "官員匿名點出利率預測,畫成一張點陣圖。",
+      "chart_id": null,
+      "headline": "點陣圖",
+      "title": null,
+      "tag": "名詞小教室",
+      "stat": null,
+      "stat_label": null,
+      "t_start": 31.0,
+      "duration": 5.0
+    },
+    {
+      "vo": "VIX今天重挫9.9%到15.96,不確定感消失得比想像中快。波動一睡著,模型算出的合理槓桿就跳高,那斯達克開三倍一年要吃掉6.55%複利,這正是最容易超額槓桿的時候。",
+      "chart_id": "lev",
+      "headline": null,
+      "title": "VIX降,槓桿別大意",
+      "tag": null,
+      "stat": "-9.88%",
+      "stat_label": "VIX單日跌幅",
+      "t_start": 36.0,
+      "duration": 15.0
+    },
+    {
+      "vo": "今天早盤的反彈,治好的是情緒,治不好利率往上走的方向。升息、地緣、AI窄且不穩,三條主線今天沒有一條反轉,只是多了一次確認。以上非投資建議,明天盤前見。",
+      "chart_id": null,
+      "headline": "情緒治好了\n方向沒有變",
+      "title": null,
+      "tag": "巴菲特  不知道有沒有說過",
+      "stat": null,
+      "stat_label": null,
+      "t_start": 51.0,
+      "duration": 15.0
+    }
+  ],
+  "charts": [
+    {
+      "id": "ovc",
+      "module": "overnight_vs_close",
+      "params": {}
+    },
+    {
+      "id": "rates",
+      "module": "rates_trend",
+      "params": {}
+    },
+    {
+      "id": "lev",
+      "module": "leverage_decay",
+      "params": {}
+    }
+  ],
+  "coverage_gaps": [
+    "圖表模組庫沒有Fed點陣圖(dot plot)專屬視覺,今天最重要的『18位官員裡16位認為還要再升息』這個結構性訊息只能靠旁白帶過,建議補一個 fed_dot_plot 模組直接畫出官員預測分布。"
+  ]
+}

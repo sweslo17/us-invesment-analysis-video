@@ -1,0 +1,136 @@
+{
+  "date": "2026-09-17",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7551.81005859375,
+      "overnight_pct": -0.4471546101199168,
+      "drivers": [
+        "標普上一交易日(9/16,週三)收7551.81點,跌0.45%。FOMC宣布升息一碼後,主席華許記者會偏鷹的用詞讓股市在會後由漲轉跌。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 25978.4296875,
+      "overnight_pct": -0.012086692605565056,
+      "drivers": [
+        "那斯達克收25978.43點,幾乎打平(跌0.01%),是四大指數中跌幅最小的,升息決策對它的直接衝擊相對有限。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 51461.8984375,
+      "overnight_pct": -1.2116987496043155,
+      "drivers": [
+        "道瓊收51461.90點,重挫611點、跌1.21%,是四大指數中跌最深的,對升息後的利率環境最敏感。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 2858.81005859375,
+      "overnight_pct": -0.39979792275187015,
+      "drivers": [
+        "羅素兩千收2858.81點,跌0.40%,中小型股同樣承壓於升息後偏高的融資成本。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普已實現波動約8.9%,波動目標模型算出的合理槓桿約1.69倍,開三倍一年要吃掉約3.55%複利當波動耗損,是四大指數裡代價最溫和的一個。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克已實現波動約12.1%,合理倍數只剩約1.24倍,開三倍一年要吃掉約6.55%複利,是四大指數裡槓桿代價最高的。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊已實現波動約11.9%,合理倍數約1.26倍,開三倍一年要吃掉約6.38%複利。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千已實現波動約12.5%,合理倍數約1.20倍,開三倍一年要吃掉約7.05%複利,同樣偏高。"
+    }
+  ],
+  "regime": {
+    "vol": "normal",
+    "rates": "rising",
+    "stock_bond_corr": "positive",
+    "breadth": "narrow"
+  },
+  "items": [
+    {
+      "headline": "FOMC升息一碼至3.75%–4%,12票全數通過,三年多來首見",
+      "horizon": "LT",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "聯準會昨天下午正式宣布升息一碼,把政策利率拉到3.75%–4%區間,是2023年以來第一次真正升息,12位官員投票全數同意、沒有一票反對。過去快兩個月市場一直在賭這一天會不會來,現在答案揭曉:higher-for-longer不再是預期,是現實。對一般投資人:信用卡、房貸、車貸這類浮動利率商品,接下來的成本很可能跟著往上調,而且是已經生效、不是理論上的風險。",
+      "sources": [
+        {"url": "https://www.cnn.com/2026/09/16/economy/fed-rate-decision-september", "ts": null},
+        {"url": "https://www.bloomberg.com/news/articles/2026-09-16/fed-raises-rates-as-warsh-bucks-trump-to-contain-inflation", "ts": null},
+        {"url": "https://www.cnbc.com/2026/09/16/fed-rate-decision-september-2026.html", "ts": null}
+      ]
+    },
+    {
+      "headline": "點陣圖曝光:18位官員裡16位認為今年還要再升息",
+      "horizon": "LT",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "這次會議真正的關鍵不是升不升,而是點陣圖怎麼講後面的路。結果揭曉:18位官員裡16位預期今年剩下兩次會議至少還會再升一次,其中12位認為升一次、4位認為要升兩次,只有2位認為到此為止。這代表今天這次升息大機率不是單一動作,而是一個升息週期的開端。對一般投資人:如果你在等利率見頂,可能還要再等,這個故事還沒說完。",
+      "sources": [
+        {"url": "https://www.techtimes.com/articles/327619/20260916/fed-hikes-rates-today-first-time-since-2023-dot-plot-may-signal-more-come-tech.htm", "ts": null},
+        {"url": "https://finance.yahoo.com/markets/live/stock-market-today-wednesday-september-16-dow-sp-500-nasdaq-fed-meeting-decision-080356525.html", "ts": null}
+      ]
+    },
+    {
+      "headline": "道瓊記者會後重摔611點,今天期貨卻由黑翻紅",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 3,
+      "confidence": "developing",
+      "audience_value": "華許記者會上『我們是認真的』這句話被市場解讀為偏鷹,道瓊當場摔611點收在51461點,是FOMC懸念揭曉後的第一個反應。但今天盤前風向就變了——期貨全面翻紅,標普期貨漲0.18%、那斯達克期貨漲0.31%,主因是油價連兩天回落、殖利率從高點稍微降溫,加上市場開始把華許的強硬態度解讀成『他是玩真的、通膨有人管』的正面訊號。VIX同時重挫9.88%到15.96,顯示不確定感正在快速消化。對一般投資人:這種急速的情緒反轉,恰好也是最容易低估風險的時候。",
+      "sources": [
+        {"url": "https://www.bloomberg.com/news/articles/2026-09-17/us-stocks-primed-to-rebound-from-fed-day-slump-as-futures-rally", "ts": null},
+        {"url": "https://www.mitrade.com/insights/shares-analysis/us-stocks/dow-631-points-fed-hike-futures-rebound-20260917J1037", "ts": null}
+      ]
+    },
+    {
+      "headline": "沙國東西輸油管線首度公布修復時間表,數天內先通一半",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "developing",
+      "audience_value": "沙烏地阿拉伯這條繞開荷姆茲海峽的替代輸油管線,自9月上旬遭無人機攻擊癱瘓以來首次公布具體修復時程:數天內先恢復大約一半運能,完全修復要六週。這是這條開放性風險線第一個具體的時間座標。布蘭特原油目前仍在105.8美元附近的高檔,胡塞持續朝曼德海峽方向推進,顯示風險還沒解除,只是多了一個可以追蹤的進度表。對一般投資人:油價短期或許喘口氣,但荷姆茲、曼德兩個能源咽喉點同時卡關的格局沒有改變。",
+      "sources": [
+        {"url": "https://www.nbcnews.com/business/business-news/oil-prices-brent-gas-iran-war-trump-hormuz-red-sea-houthis-rcna588671", "ts": null},
+        {"url": "https://www.cnbc.com/2026/09/17/oil-prices-today-wti-brent-hormuz-iran-war.html", "ts": null}
+      ]
+    },
+    {
+      "headline": "台股續強、亞股表現分歧,晶片供應鏈跟美股情緒不同調",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 2,
+      "confidence": "single-print",
+      "audience_value": "隔夜台股大漲逾1%,日經上漲、南韓與香港小幅走弱,亞股對同一個AI故事反應分歧。上週阿莫岱、黃仁勳的AI安全公開對打讓美股晶片股股價承壓,但供應鏈本身的實際出貨數字沒有跟著轉弱,顯示『窄且不穩』這次換成股價情緒面跟訂單基本面各走各的路。對一般投資人:同一個AI故事裡,挑訊號時要分清楚自己看的是股價情緒,還是實際訂單。",
+      "sources": [
+        {"url": "https://finance.yahoo.com/markets/stocks/articles/taiwan-semiconductor-just-set-company-165000278.html", "ts": null}
+      ]
+    }
+  ],
+  "catalysts": [
+    "今天(9/17,四)美東上午8:30:8月營建許可(預期140.0萬戶)與新屋開工(預期132.0萬戶)公布,是升息後第一份房市數據。",
+    "今天美東上午8:30:當週初領失業金人數公布(前值20.6萬人),同時公布費城聯準銀製造業指數。",
+    "今天稍晚:9月成屋待完成銷售(Pending Home Sales)公布。",
+    "持續觀察:今天期貨反彈能否延續到開盤、10年期殖利率能否守穩5%下方、沙國東西輸油管線修復進度、布蘭特原油走勢。"
+  ],
+  "thesis_delta": {
+    "changed": true,
+    "summary": "FOMC九月會議結果昨天下午正式揭曉:聯準會升息一碼,政策利率拉到3.75%–4%,12位官員投票全數通過,是2023年以來第一次真正升息,結束了先前維持利率不動超過一年的格局。更關鍵的是點陣圖:18位官員裡16位認為今年剩下兩次會議至少還要再升一次(12位一次、4位兩次),只有2位喊停,顯示這很可能是一個升息週期的開端,而不是單次動作。市場當下的反應是道瓊記者會後重摔611點、跌1.21%收51461點,那斯達克反而幾乎打平;但今天盤前風向整個翻過來,四大期貨全面翻紅,VIX同步重挫9.88%到15.96,不確定感消失的速度比想像中快。地緣風險線新增一則具體進展:沙國東西輸油管線首度公布修復時間表(數天內半通、六週全通),布蘭特原油維持105.8美元附近高檔,曼德海峽、荷姆茲海峽雙咽喉風險未解除。AI/半導體『窄且不穩』今天換成台股大漲、美股晶片股情緒仍謹慎的分裂形式。三條既有支柱方向皆未反轉,今天是Fed政策這條主線最重量級的一次確認落地。",
+    "horizon": "LT"
+  },
+  "lead_horizon": "LT",
+  "title_hook": "首次升息重摔611點,今天期貨卻大反彈"
+}
