@@ -1,0 +1,134 @@
+{
+  "date": "2026-09-18",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7637.759765625,
+      "overnight_pct": 1.138134640900653,
+      "drivers": [
+        "標普上一交易日(9/17,週四)收7637.76點,大漲1.14%,是FOMC升息隔天最猛的一次反彈,科技類股領漲2.25%,昨天預告的期貨翻紅真的走成一整天的實質反彈。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 26418.30078125,
+      "overnight_pct": 1.6932389018286902,
+      "drivers": [
+        "那斯達克收26418.30點,大漲1.69%,四大指數中漲最兇,科技與AI相關類股全面反彈。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 51778.0390625,
+      "overnight_pct": 0.6143167323787083,
+      "drivers": [
+        "道瓊收51778.04點,漲0.61%,漲幅不如科技指數,反映升息後利率敏感類股相對保守。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 2874.6298828125,
+      "overnight_pct": 0.553327280205593,
+      "drivers": [
+        "羅素兩千收2874.63點,漲0.55%,中小型股同步回溫但漲幅落後大型股。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普已實現波動約9.85%,波動目標模型算出的合理槓桿約1.52倍,開三倍一年要吃掉約4.37%複利當波動耗損,是四大指數裡代價最溫和的一個。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克已實現波動約13.55%,合理倍數只剩約1.11倍,開三倍一年要吃掉約8.26%複利,是四大指數裡槓桿代價最高的。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊已實現波動約12.16%,合理倍數約1.23倍,開三倍一年要吃掉約6.65%複利。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千已實現波動約12.56%,合理倍數約1.19倍,開三倍一年要吃掉約7.10%複利,同樣偏高。"
+    }
+  ],
+  "regime": {
+    "vol": "normal",
+    "rates": "rising",
+    "stock_bond_corr": "positive",
+    "breadth": "narrow"
+  },
+  "items": [
+    {
+      "headline": "FOMC後最猛反彈:標普收7637點大漲1.14%,科技領軍",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "上一交易日美股交出升息後最強力的反彈,標普大漲1.14%收7637.76點,那斯達克更衝1.69%,科技類股領漲2.25%,昨天預告的『期貨翻紅』真的走成一整天的實質反彈,不只是盤前情緒。對一般投資人:市場消化升息消息的速度比想像中快,但這不代表升息的實際成本(房貸、車貸利率)也跟著消失。",
+      "sources": [
+        {"url": "https://www.thestreet.com/stock-market-today/stock-market-today-dow-jones-sp-500-nasdaq-updates-sept-17-2026", "ts": null},
+        {"url": "https://finance.yahoo.com/markets/stocks/articles/stock-market-today-sept-17-134502255.html", "ts": null}
+      ]
+    },
+    {
+      "headline": "日本央行升到1995年以來最高:1.25%,全球央行接力升息",
+      "horizon": "LT",
+      "vs_thesis": "new",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "日本央行今天把政策利率升息一碼到1.25%,是1995年以來最高,委員會以7比2的分裂投票通過。這跟美國聯準會本週才升息的動作前後呼應,顯示『升息』不再只是Fed一家的故事,而是主要央行同步在收緊資金環境。對一般投資人:全球資金成本一起墊高,過去靠低利率撐起的估值(尤其是高本益比的成長股),承受的壓力來源比原本想的更廣。",
+      "sources": [
+        {"url": "https://www.cnbc.com/2026/09/18/japan-raises-rates-30-year-high-yen-jgb.html", "ts": null},
+        {"url": "https://www.bloomberg.com/news/articles/2026-09-18/boj-hikes-rates-at-fastest-pace-since-1990-as-inflation-persists", "ts": null},
+        {"url": "https://www.japantimes.co.jp/business/2026/09/18/economy/boj-meeting-september/", "ts": null}
+      ]
+    },
+    {
+      "headline": "10年期殖利率從逼近5%回落到4.947%,升息後暫時喘息",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 2,
+      "confidence": "developing",
+      "audience_value": "10年期公債殖利率今天回落到4.947%,較昨天的5.006%小幅降溫,結束連續多個交易日逼近5%大關的緊張。但這更像是升息利空正式落地後的技術性喘息,而非趨勢反轉——今年剩下兩次FOMC會議、16位官員仍預期至少再升一次的格局沒有改變。對一般投資人:房貸族先別急著鬆一口氣,這條線的方向仍然偏向更高。",
+      "sources": []
+    },
+    {
+      "headline": "川普稱與伊朗直接對話、樂觀戰爭近尾聲,但伊朗否認、荷姆茲又傳油輪遇襲",
+      "horizon": "MT",
+      "vs_thesis": "new",
+      "materiality": 3,
+      "confidence": "developing",
+      "audience_value": "川普這兩天多次表示美伊已有『直接』接觸,樂觀認為戰爭『可能接近尾聲』,是這場衝突逾七個月來美方第一次公開釋出這麼具體的和談訊號。但伊朗官員隨即否認,堅持要美方先滿足條件才會談判;同一時間荷姆茲海峽今天稍早又傳出至少一艘油輪遭不明拋射物擊中起火,伊朗革命衛隊並宣稱主動攻擊一艘多哥籍油輪。布蘭特原油延續近三個交易日的回落,顯示市場目前選擇相信『供應在鬆動』,而非戰爭訊號。對一般投資人:和談訊號跟實際攻擊事件同時存在,油價方向仍有反覆的空間。",
+      "sources": [
+        {"url": "https://www.aljazeera.com/news/2026/9/17/trump-claims-direct-talks-with-iran-is-diplomacy-picking-up-again", "ts": null},
+        {"url": "https://www.cnbc.com/2026/09/17/us-iran-war-trump-hormuz.html", "ts": null},
+        {"url": "https://politicalwire.com/2026/09/18/two-ships-attacked-in-strait-of-hormuz/", "ts": null}
+      ]
+    },
+    {
+      "headline": "今天是四巫日:本季最大成交量,盤中震盪別急著找基本面理由",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 2,
+      "confidence": "confirmed",
+      "audience_value": "今天是9月第三個週五,股票期貨、指數期貨、股票選擇權、指數選擇權四種合約同時到期,俗稱『四巫日』,通常是每一季成交量最大、也最容易出現大幅震盪的一天。對一般投資人:如果今天盤中看到不尋常的價格跳動,先想到的應該是到期日的機械性平倉效應,不必急著解讀成新的基本面訊息。",
+      "sources": [
+        {"url": "https://optionalpha.com/learn/quadruple-witching", "ts": null}
+      ]
+    }
+  ],
+  "catalysts": [
+    "今天(9/18,五)是9月第三個週五,股票期貨、指數期貨、股票選擇權、指數選擇權同時到期,俗稱四巫日(quadruple witching),通常是本季成交量最大的一天。",
+    "今天美東上午8:15:8月工業生產(Industrial Production)公布。",
+    "今天美東上午10:00:8月Conference Board領先指標(LEI)公布。",
+    "持續觀察:10年期公債殖利率能否守穩5%下方、布蘭特原油能否延續近三日回落、伊朗官方是否證實或持續否認川普宣稱的直接對話、荷姆茲海峽今天稍早的油輪遇襲事件後續。"
+  ],
+  "thesis_delta": {
+    "changed": true,
+    "summary": "日本央行今天升息一碼到1.25%,是1995年以來最高,7比2表決通過,是繼美國聯準會本週升息後第二個主要央行加入緊縮行列,『higher-for-longer』的故事第一次明確擴大成美日同步緊縮。美股上一交易日交出升息後最強反彈,標普大漲1.14%、那斯達克漲1.69%,顯示市場消化升息消息的速度依然很快;10年期殖利率也從逼近5%回落到4.947%,暫時喘息但方向未變。地緣風險線新增一個潛在轉折訊號:川普宣稱與伊朗已有直接接觸、樂觀認為戰爭『可能接近尾聲』,但伊朗官方否認、荷姆茲海峽今天稍早又傳油輪遇襲,和談訊號與實際攻擊同時存在。三條既有支柱方向皆未反轉,今天新增的是全球央行同步緊縮的具體確認,以及伊朗衝突第一個公開的和談訊號。",
+    "horizon": "LT"
+  },
+  "lead_horizon": "LT",
+  "title_hook": "美股才噴完,日本也升息了"
+}

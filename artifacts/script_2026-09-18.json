@@ -1,0 +1,90 @@
+{
+  "segments": [
+    {
+      "vo": "日本央行今天升到31年最高,美股才剛噴完最猛反彈。",
+      "chart_id": null,
+      "headline": "日本央行\n31年最高",
+      "title": null,
+      "tag": "今日盤前",
+      "stat": null,
+      "stat_label": null,
+      "t_start": 0.0,
+      "duration": 4.0
+    },
+    {
+      "vo": "標普昨天收7637點,大漲1.14%,那斯達克更衝1.69%,科技股領漲2.25%。但今天盤前降溫,標普期貨只漲0.04%,道瓊、羅素兩千期貨甚至翻黑,像是先讓子彈飛一下。",
+      "chart_id": "ovc",
+      "headline": null,
+      "title": "噴完就觀望",
+      "tag": null,
+      "stat": "+1.14%",
+      "stat_label": "標普昨收",
+      "t_start": 4.0,
+      "duration": 16.0
+    },
+    {
+      "vo": "日本央行今天升息一碼到1.25%,是1995年以來最高,7比2表決。日經漲1.44%,南韓KOSPI噴2.66%,但歐股已經收黑,STOXX50跌近1%,壓力還沒同步消化。",
+      "chart_id": "geo",
+      "headline": null,
+      "title": "亞股噴,歐股縮",
+      "tag": null,
+      "stat": "1.25%",
+      "stat_label": "日本央行利率",
+      "t_start": 20.0,
+      "duration": 16.0
+    },
+    {
+      "vo": "股票、指數的期貨跟選擇權今天同時到期,叫四巫日,今天成交量通常是全季最大。",
+      "chart_id": null,
+      "headline": "四巫日",
+      "title": null,
+      "tag": "名詞小教室",
+      "stat": null,
+      "stat_label": null,
+      "t_start": 36.0,
+      "duration": 5.0
+    },
+    {
+      "vo": "VIX今天續跌到15.37,標普實現波動只剩9.85%,算出來的合理槓桿是1.52倍。但升息循環才剛開始,美日央行現在一起收緊,波動隨時可能回來,這正是最容易超額槓桿的時候。",
+      "chart_id": "lev",
+      "headline": null,
+      "title": "VIX貼地,槓桿別滿",
+      "tag": null,
+      "stat": "15.37",
+      "stat_label": "VIX指數",
+      "t_start": 41.0,
+      "duration": 15.0
+    },
+    {
+      "vo": "今天期貨很平靜,但美日央行正一起收緊,升息循環才剛開始。風平浪靜的時候,通常都是要出事的時候。以上非投資建議,明天盤前見。",
+      "chart_id": null,
+      "headline": "風平浪靜\n通常要出事",
+      "title": null,
+      "tag": "凱因斯  不知道有沒有說過",
+      "stat": null,
+      "stat_label": null,
+      "t_start": 56.0,
+      "duration": 14.0
+    }
+  ],
+  "charts": [
+    {
+      "id": "ovc",
+      "module": "overnight_vs_close",
+      "params": {}
+    },
+    {
+      "id": "geo",
+      "module": "global_equity_overnight",
+      "params": {}
+    },
+    {
+      "id": "lev",
+      "module": "leverage_decay",
+      "params": {}
+    }
+  ],
+  "coverage_gaps": [
+    "今天最重要的敘事是『美、日央行同步升息』,但圖表模組庫沒有能並列多國央行政策利率/路徑的視覺,只能靠旁白與 global_equity_overnight 的股市反應間接帶過;建議補一個 central_bank_rates 模組,直接畫出 Fed 與其他主要央行的政策利率走勢對照。"
+  ]
+}
