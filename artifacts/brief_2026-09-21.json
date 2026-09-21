@@ -1,0 +1,162 @@
+{
+  "date": "2026-09-21",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7650.5,
+      "overnight_pct": 0.16680283224400586,
+      "drivers": [
+        "標普上一交易日(9/18,週五)收7650.50點,小漲0.17%,為FOMC升息當週收出小幅上漲,但那一整週道瓊仍重挫1.7%,是三月以來最差一週。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 26522.5390625,
+      "overnight_pct": 0.3945752241656472,
+      "drivers": [
+        "那斯達克收26522.54點,漲0.39%,那一週逆勢上漲0.7%,記憶體概念股SanDisk飆逾一成、美光漲近4%,AI敘事撐住科技股相對抗跌。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 51682.640625,
+      "overnight_pct": -0.1842467868617678,
+      "drivers": [
+        "道瓊收51682.64點,跌0.18%,單週跌1.7%,是三月以來最差一週,對利率最敏感的傳產、金融股在升息週後承受續跌壓力。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 2860.396484375,
+      "overnight_pct": -5.462529349568487e-7,
+      "drivers": [
+        "羅素兩千收2860.40點,幾乎打平,中小型股在升息週後動能明顯落後大型股。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普已實現波動降到約9.38%,波動目標模型算出的合理槓桿倍數來到1.60倍,開三倍一年要吃掉約3.96%複利當波動耗損,是四大指數裡代價最溫和的一個。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克已實現波動仍有約13.05%,合理倍數只剩約1.15倍,開三倍一年要吃掉約7.66%複利,是四大指數裡槓桿代價最高的。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊已實現波動約11.35%,合理倍數約1.32倍,開三倍一年要吃掉約5.80%複利。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千已實現波動約11.30%,合理倍數約1.33倍,開三倍一年要吃掉約5.74%複利,跟道瓊相近。"
+    }
+  ],
+  "regime": {
+    "vol": "low",
+    "rates": "rising",
+    "stock_bond_corr": "positive",
+    "breadth": "narrow"
+  },
+  "items": [
+    {
+      "headline": "油價重摔逾3%,川普鬆口不排除在聯合國跟伊朗總統見面",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 4,
+      "confidence": "developing",
+      "audience_value": "川普這個週末表態不排除在本週紐約聯合國大會期間與伊朗總統佩澤希齊揚會面,伊朗也透過卡達轉交七項條件,布蘭特原油、WTI雙雙重摔逾3%,跌破100美元與98美元。但荷姆茲海峽目前每天實際通行船隻仍只有個位數,遠低於戰前的85艘,油價這次跌的是「談判有機會」的預期,不是海峽真的重新開放,對一般投資人來說,這條風險線還沒真正解除。",
+      "sources": [
+        {
+          "url": "https://www.cnbc.com/2026/09/21/us-iran-war-trump-hormuz.html",
+          "ts": null
+        },
+        {
+          "url": "https://www.theweek.in/news/middle-east/2026/09/20/trump-pezeshkian-meet-on-the-cards-us-president-in-deciding-mode-over-west-asia-deadlock.html",
+          "ts": null
+        },
+        {
+          "url": "https://easternherald.com/2026/09/20/iran-seven-conditions-us-qatar-diplomacy-war/",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "亞歐股全面翻紅,半導體領軍迎戰週四川普習近平會",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "隔夜南韓KOSPI大漲1.65%、日經漲1.44%、台股漲1.27%,歐股同步走高,這次領軍的是半導體與科技股,呼應本週四川普將在華盛頓與習近平會談,議程涵蓋貿易休兵延長、關鍵礦產、AI與台灣,對一般投資人來說,這場會談的結果可能直接牽動晶片股接下來的方向。",
+      "sources": [
+        {
+          "url": "https://www.newsbricks.com/world-news/trump-xi-summit-trade-truce-ai-taiwan-agenda",
+          "ts": null
+        },
+        {
+          "url": "https://www.thestreet.com/stock-market-today/stock-market-today-dow-jones-sp-500-nasdaq-updates-sept-21-2026",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "10年期殖利率彈回4.998%,日圓套利交易收手是新推手",
+      "horizon": "LT",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "developing",
+      "audience_value": "10年期公債殖利率今天回彈到4.998%,重新逼近5%整數大關,跟油價因地緣風險降溫而下跌的方向恰好相反。市場分析指出,日本央行上週升息後,借日圓、買美債賺利差的套利交易正被迫收手,資金從海外回流日本,這股力道可能正把包括美債在內的全球利率一起往上推。對一般投資人來說,這代表升息故事不再只靠Fed一家撐,連國際資金流動本身都在把利率往上頂。",
+      "sources": [
+        {
+          "url": "https://www.forbes.com/sites/investor-hub/article/how-japan-bond-market-affects-your-portfolio/",
+          "ts": null
+        },
+        {
+          "url": "https://www.stonex.com/en-us/insights/japan-yield-curve-pressure-threatens-global-carry-trades/",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "標普窄漲老毛病未改:蘋果一人扛盤,Alphabet倒扣近全部漲幅",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "上一交易日標普裡只有約18%的成分股上漲,蘋果單獨貢獻指數正0.03個百分點,是最大功臣;Alphabet兩個股票代碼合計倒扣掉0.02個百分點,幾乎抵銷掉蘋果的貢獻。指數表面平穩,其實是少數權值股在拔河,對一般投資人來說,「大盤沒跌」不代表你手上的股票也沒跌。",
+      "sources": []
+    },
+    {
+      "headline": "Fed理事古斯比:通膨降溫這條路不會不痛",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 2,
+      "confidence": "confirmed",
+      "audience_value": "芝加哥Fed總裁古斯比今天在倫敦OMFIF論壇上表示,反覆出現的供給面衝擊讓央行不能再用老方法處理通膨,若通膨真的降到2%目標,他不會反對降息——語氣比主席華許溫和許多。Fed內部鷹鴿分歧持續存在,對一般投資人來說,10月、12月是否真的再升息,現在還不是定局。",
+      "sources": [
+        {
+          "url": "https://www.bloomberg.com/news/articles/2026-09-21/fed-s-goolsbee-says-road-to-2-inflation-may-not-be-painless",
+          "ts": null
+        },
+        {
+          "url": "https://www.chicagofed.org/publications/speeches/2026/sept-21-omfif",
+          "ts": null
+        }
+      ]
+    }
+  ],
+  "catalysts": [
+    "今天美東時間:芝加哥聯準銀行8月全國經濟活動指數(Chicago Fed National Activity Index)公布,今天並有多位Fed官員(包括芝加哥Fed總裁古斯比)公開發言。",
+    "本週三(9/23):9月S&P Global製造業/服務業PMI初值公布,是本週最重量級的單一數據。",
+    "本週四(9/24):川普將在華盛頓與習近平會談,議程涵蓋貿易休兵延長、關鍵礦產、AI技術管制與台灣議題。",
+    "本週聯合國大會高層會議在紐約舉行(明天9/22起),伊朗總統佩澤希齊揚將出席,川普表態不排除在會期期間與其會面。",
+    "持續觀察:荷姆茲海峽實際通行船隻能否隨談判契機回升(目前仍遠低於戰前水準)、10年期殖利率能否守住5%下方、日圓套利交易收手效應是否延續推升全球公債殖利率。"
+  ],
+  "thesis_delta": {
+    "changed": true,
+    "summary": "地緣風險線出現這場衝突以來層級最高的外交訊號:川普表態不排除本週在聯合國大會期間與伊朗總統佩澤希齊揚會面,伊朗也透過卡達轉交七項條件,油價應聲重摔逾3%、跌破100美元,但荷姆茲海峽實際通行量仍遠低於戰前水準,風險溢價還沒有真正解除。同一天,10年期公債殖利率不跟著油價降溫,反而彈回4.998%再度逼近5%,市場分析指向日本央行升息後日圓套利交易收手、資金回流日本,把全球利率同步往上推——這是『higher-for-longer』第一次明確從央行政策故事,延伸成金融體系資金流動本身的結構性推力。本週四川普將與習近平在華盛頓會談,議程納入AI與台灣,是AI/半導體線新增的重量級變數。三條既有支柱方向皆未反轉,新增的是地緣風險升級為UNGA層級外交接觸,以及全球緊縮故事出現央行政策之外的資金流動新推手。",
+    "horizon": "LT"
+  },
+  "lead_horizon": "LT",
+  "title_hook": "殖利率又要摸5%,全球股市卻狂歡"
+}

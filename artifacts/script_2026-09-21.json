@@ -1,0 +1,104 @@
+{
+  "segments": [
+    {
+      "vo": "全球股市一起噴,殖利率卻悄悄摸回5%關口。",
+      "chart_id": null,
+      "headline": "全球股市噴\n殖利率反攻",
+      "title": null,
+      "tag": "今日盤前",
+      "stat": null,
+      "stat_label": null,
+      "t_start": 0.0,
+      "duration": 4.0
+    },
+    {
+      "vo": "上週五標普收7650點,小漲0.17%,道瓊那一週卻跌1.7%,寫下三月以來最差一週。今天盤前四大期貨全面翻紅,道瓊期貨領漲0.53%,油價重摔逾3%,市場在賭美伊真的要重啟談判。",
+      "chart_id": "ovc",
+      "headline": null,
+      "title": "噴完還要噴",
+      "tag": null,
+      "stat": "+0.53%",
+      "stat_label": "道瓊期貨",
+      "t_start": 4.0,
+      "duration": 15.0
+    },
+    {
+      "vo": "南韓大漲1.65%,日經漲1.44%,台股歐股同步跟進,這次亞股由半導體領軍。市場提前卡位週四川普跟習近平在華盛頓的會談,議程裡就有AI晶片和台灣這兩個敏感詞。",
+      "chart_id": "geo",
+      "headline": null,
+      "title": "亞歐股全面噴",
+      "tag": null,
+      "stat": "+1.65%",
+      "stat_label": "南韓大漲",
+      "t_start": 19.0,
+      "duration": 14.0
+    },
+    {
+      "vo": "10年期公債殖利率今天彈到4.998%,又逼近5%大關。日本央行上週升息,逼著借日圓炒美債的套利交易收手,資金從海外抽回,這股力道正把全球利率一起往上推。",
+      "chart_id": "rate",
+      "headline": null,
+      "title": "殖利率偷偷加班",
+      "tag": null,
+      "stat": "4.998%",
+      "stat_label": "10年期殖利率",
+      "t_start": 33.0,
+      "duration": 14.0
+    },
+    {
+      "vo": "上週五標普裡只有18%成分股上漲,蘋果一個人貢獻指數正0.03個百分點,Alphabet兩檔合計倒扣0.02個百分點,幾乎抵銷蘋果的功勞。窄漲的老毛病,還是沒改。",
+      "chart_id": "conc",
+      "headline": null,
+      "title": "蘋果一人扛盤",
+      "tag": null,
+      "stat": "18%",
+      "stat_label": "個股上漲比例",
+      "t_start": 47.0,
+      "duration": 14.0
+    },
+    {
+      "vo": "借便宜日圓買美債賺利差,叫套利交易。",
+      "chart_id": null,
+      "headline": "套利交易",
+      "title": null,
+      "tag": "名詞小教室",
+      "stat": null,
+      "stat_label": null,
+      "t_start": 61.0,
+      "duration": 5.0
+    },
+    {
+      "vo": "全球股市在狂歡,10年期利率卻在悄悄加班,又往5%那條線摸近一步。真正的風險,往往藏在最不吵的那條線裡。以上非投資建議,明天盤前見。",
+      "chart_id": null,
+      "headline": "大家在狂歡\n利率在加班",
+      "title": null,
+      "tag": "彼得林區 不知道有沒有說過",
+      "stat": null,
+      "stat_label": null,
+      "t_start": 66.0,
+      "duration": 14.0
+    }
+  ],
+  "charts": [
+    {
+      "id": "ovc",
+      "module": "overnight_vs_close",
+      "params": {}
+    },
+    {
+      "id": "geo",
+      "module": "global_equity_overnight",
+      "params": {}
+    },
+    {
+      "id": "rate",
+      "module": "rates_trend",
+      "params": {}
+    },
+    {
+      "id": "conc",
+      "module": "concentration",
+      "params": {}
+    }
+  ],
+  "coverage_gaps": []
+}
