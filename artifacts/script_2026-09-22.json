@@ -1,0 +1,104 @@
+{
+  "segments": [
+    {
+      "vo": "美國明天禁飛伊朗全部航空,伊朗卻同時喊話願意開放海峽。",
+      "chart_id": null,
+      "headline": "禁飛伊朗\n卻喊開海峽",
+      "title": null,
+      "tag": "今日盤前",
+      "stat": null,
+      "stat_label": null,
+      "t_start": 0.0,
+      "duration": 4.9
+    },
+    {
+      "vo": "昨天Meta新AI助手爆紅,股價暴漲11%,AMD市值衝破一兆美元,標普大漲1.49%創八月最佳單日。但今天盤前那斯達克期貨轉跌0.26%,道瓊期貨卻上漲,狂歡先喘口氣。",
+      "chart_id": "ovc",
+      "headline": null,
+      "title": "AI噴完先喘口氣",
+      "tag": null,
+      "stat": "+1.49%",
+      "stat_label": "標普昨收",
+      "t_start": 4.9,
+      "duration": 15.3
+    },
+    {
+      "vo": "今天盤前博通跌0.5%,Google、亞馬遜同步下跌,反而蘋果、微軟、輝達、Meta撐住指數。AMD破兆風光,但漲勢還是集中在幾檔巨頭手上,不是全面開花。",
+      "chart_id": "conc",
+      "headline": null,
+      "title": "AI漲勢還是很窄",
+      "tag": null,
+      "stat": "-0.50%",
+      "stat_label": "博通盤前",
+      "t_start": 20.2,
+      "duration": 13.9
+    },
+    {
+      "vo": "隔夜日經漲1.44%最搶眼,南韓、台股、歐股同步翻紅,半導體熱度延燒過去。明天習近平抵達華盛頓,週四要跟川普談貿易休兵、AI晶片管制跟台灣。",
+      "chart_id": "geo",
+      "headline": null,
+      "title": "亞歐股溫和跟漲",
+      "tag": null,
+      "stat": "+1.44%",
+      "stat_label": "日經領漲",
+      "t_start": 34.1,
+      "duration": 12.6
+    },
+    {
+      "vo": "VIX只有14.71,比昨天還低。但明天伊朗航空就要被全球禁飛,川普見面選項也被伊朗排除,風險沒解除,VIX卻睡得很沉。",
+      "chart_id": "vix",
+      "headline": null,
+      "title": "VIX低到有點怪",
+      "tag": null,
+      "stat": "14.71",
+      "stat_label": "VIX指數",
+      "t_start": 46.7,
+      "duration": 10.8
+    },
+    {
+      "vo": "VIX是用選擇權價格算出來的恐慌指數,數字越高代表市場越怕。",
+      "chart_id": null,
+      "headline": "VIX",
+      "title": null,
+      "tag": "名詞小教室",
+      "stat": null,
+      "stat_label": null,
+      "t_start": 57.5,
+      "duration": 5.4
+    },
+    {
+      "vo": "10年期殖利率卡在4.96%,離5%只差一點,十月十二月是否再升息還沒底。伊朗禁飛令、海峽變數也都沒解,VIX卻異常淡定。真正的風險,常藏在沒人在乎那天。以上非投資建議,明天盤前見。",
+      "chart_id": null,
+      "headline": "別人恐慌時\nVIX選擇裝睡",
+      "title": null,
+      "tag": "查理蒙格 不知道有沒有說過",
+      "stat": null,
+      "stat_label": null,
+      "t_start": 62.9,
+      "duration": 16.4
+    }
+  ],
+  "charts": [
+    {
+      "id": "ovc",
+      "module": "overnight_vs_close",
+      "params": {}
+    },
+    {
+      "id": "conc",
+      "module": "concentration",
+      "params": {}
+    },
+    {
+      "id": "geo",
+      "module": "global_equity_overnight",
+      "params": {}
+    },
+    {
+      "id": "vix",
+      "module": "vix_regime",
+      "params": {}
+    }
+  ],
+  "coverage_gaps": []
+}
