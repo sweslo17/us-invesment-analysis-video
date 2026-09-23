@@ -1,0 +1,104 @@
+{
+  "segments": [
+    {
+      "vo": "明天,習近平走進白宮。AI晶片管制,這次真的要攤牌了。",
+      "chart_id": null,
+      "headline": "明天白宮桌上\nAI晶片見真章",
+      "title": null,
+      "tag": "今日盤前",
+      "stat": null,
+      "stat_label": null,
+      "t_start": 0.0,
+      "duration": 5.0
+    },
+    {
+      "vo": "上一交易日那斯達克連兩天刷新高,但十大權值股只有輝達翻紅,微軟重摔0.51%,撐盤的其實是中小型股。今天風向轉彎,四大期貨盤前全數翻黑,羅素期貨跌最重。",
+      "chart_id": "ovc",
+      "headline": null,
+      "title": "全面轉守,期貨齊跌",
+      "tag": null,
+      "stat": "-0.47%",
+      "stat_label": "羅素期貨跌幅",
+      "t_start": 5.0,
+      "duration": 14.1
+    },
+    {
+      "vo": "拆開標普十大權值股,上一交易日合計倒扣指數0.07個百分點,微軟、Meta、博通全數收黑,只剩輝達撐著——這就是『集中度』。今天換中小型股扛,少見的反轉劇本。",
+      "chart_id": "conc",
+      "headline": null,
+      "title": "撐盤的人換了",
+      "tag": null,
+      "stat": "-0.07pp",
+      "stat_label": "十大貢獻合計",
+      "t_start": 19.1,
+      "duration": 14.6
+    },
+    {
+      "vo": "集中度,就是漲幅靠幾檔股票撐起來的程度。",
+      "chart_id": null,
+      "headline": "集中度",
+      "title": null,
+      "tag": "名詞小教室",
+      "stat": null,
+      "stat_label": null,
+      "t_start": 33.7,
+      "duration": 3.7
+    },
+    {
+      "vo": "隔夜日經大漲1.44%衝上新高,南韓、台股跟漲。加上美伊昨晚談出『不錯』進展,油價回落。香港卻重摔1.01%、歐股收黑,亞洲西方股市走出不同的路。",
+      "chart_id": "geo",
+      "headline": null,
+      "title": "亞股噴,中港歐股弱",
+      "tag": null,
+      "stat": "+1.44%",
+      "stat_label": "日經隔夜漲幅",
+      "t_start": 37.4,
+      "duration": 13.5
+    },
+    {
+      "vo": "VIX只有14.25,比昨天還低,今年數一數二平靜。可是10年期殖利率彈回4.97%,逼近5%大關,風平浪靜的背後,借錢成本沒真的鬆手。",
+      "chart_id": "vix",
+      "headline": null,
+      "title": "VIX低,殖利率不低",
+      "tag": null,
+      "stat": "14.25",
+      "stat_label": "VIX指數",
+      "t_start": 50.9,
+      "duration": 12.6
+    },
+    {
+      "vo": "明天習近平走進白宮,AI晶片管制是最大變數;美伊也還沒談成。VIX很淡定,不代表風險解除,它只是還沒被叫醒。以上非投資建議,明天盤前見。",
+      "chart_id": null,
+      "headline": "你得懂買了什麼\n不是它今天漲跌",
+      "title": null,
+      "tag": "彼得·林區 不知道有沒有說過",
+      "stat": null,
+      "stat_label": null,
+      "t_start": 63.5,
+      "duration": 12.6
+    }
+  ],
+  "charts": [
+    {
+      "id": "ovc",
+      "module": "overnight_vs_close",
+      "params": {}
+    },
+    {
+      "id": "conc",
+      "module": "concentration",
+      "params": {}
+    },
+    {
+      "id": "geo",
+      "module": "global_equity_overnight",
+      "params": {}
+    },
+    {
+      "id": "vix",
+      "module": "vix_regime",
+      "params": {}
+    }
+  ],
+  "coverage_gaps": []
+}

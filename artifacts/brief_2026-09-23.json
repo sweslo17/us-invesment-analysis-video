@@ -1,0 +1,132 @@
+{
+  "date": "2026-09-23",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7764.64,
+      "overnight_pct": -0.0007727278581206059,
+      "drivers": [
+        "標普上一交易日(9/22,週二)收7764.64點,較前一天幾乎打平(僅跌0.06點),延續週一的狂歡後盤面轉為觀望。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 27244.277,
+      "overnight_pct": 0.45049250253316453,
+      "drivers": [
+        "那斯達克收27244.28點,再漲0.45%,連兩天刷新歷史高點,但十大權值股裡只有輝達收紅,真正撐盤的是後面的中小型股。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 51863.69,
+      "overnight_pct": -0.3557044413870579,
+      "drivers": [
+        "道瓊收51863.69點,跌0.36%,傳產與部分權值股拖累,沒有跟上那斯達克的漲勢。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 2889.919,
+      "overnight_pct": 0.506336597852086,
+      "drivers": [
+        "羅素兩千收2889.92點,漲0.51%,中小型股連兩天扛起大盤漲幅。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普已實現波動約10.66%,波動目標模型算出的合理槓桿倍數約1.41倍,硬開三倍一年要吃掉約5.11%複利當波動耗損。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克已實現波動來到15.09%,合理倍數只剩約0.99倍,等於連一倍槓桿都嫌多;開三倍一年要吃掉約10.25%複利,四大指數裡代價最高。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊已實現波動約11.05%,合理倍數約1.36倍,開三倍一年要吃掉約5.49%複利。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千已實現波動約11.61%,合理倍數約1.29倍,開三倍一年要吃掉約6.06%複利。"
+    }
+  ],
+  "regime": {
+    "vol": "low",
+    "rates": "rising",
+    "stock_bond_corr": "positive",
+    "breadth": "mixed"
+  },
+  "items": [
+    {
+      "headline": "習近平明天進白宮,AI晶片管制牌局要攤牌",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "習近平今天抵達華盛頓,是中國領導人自2015年以來首次國是訪問,明天(9/24)將與川普在白宮舉行今年第二次峰會,議程涵蓋貿易休兵延長、關鍵礦產、AI晶片出口管制與台灣議題。對一般投資人來說,這場會談的結果很可能直接牽動半導體與AI供應鏈接下來的方向,是這週最大的單一變數。",
+      "sources": [
+        {"url": "https://kathmandupost.com/world/2026/09/21/xi-rolls-into-trump-summit-with-china-s-trade-engine-roaring"},
+        {"url": "https://theconversation.com/three-ts-will-dominate-trump-xi-summit-but-expect-little-movement-on-trade-less-on-taiwan-and-who-knows-on-tech-291819"}
+      ]
+    },
+    {
+      "headline": "美伊三小時密談,伊朗開出重開海峽的具體條件",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "developing",
+      "audience_value": "川普特使威特科夫、庫許納昨天與伊朗外長阿拉格齊在紐約召開三小時會談,川普稱談得『很不錯』,下一輪很快安排;伊朗則提出解除海上封鎖、解凍資產、停止區域戰事,才願意七天內重開荷姆茲海峽,但排除川普與伊朗總統直接見面。對一般投資人來說,油價接下來可能因任何一則具體進展或挫敗大幅擺動。",
+      "sources": [
+        {"url": "https://www.thenationalnews.com/news/us/2026/09/23/live-un-general-assembly-2026-al-shara-pezeshkian/"},
+        {"url": "https://www.iranintl.com/en/202609224536"}
+      ]
+    },
+    {
+      "headline": "伊朗全球航空禁令今天生效,史上最大規模制裁之一",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "財政部長貝森特宣布的制裁今天正式生效,全球機場、油商、售票商只要服務伊朗航空業,就會被踢出以美元清算為核心的金融體系。對一般投資人來說,這是地緣風險『制裁面』持續加碼的具體證據,跟同一時間桌上的談判進展形成拉鋸。",
+      "sources": [
+        {"url": "https://www.wionews.com/world/iranian-airlines-shut-worldwide-september-23-bessent-us-banking-ban-1790001315581"}
+      ]
+    },
+    {
+      "headline": "9月PMI連兩月降溫,但還沒跌出擴張區",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 2,
+      "confidence": "confirmed",
+      "audience_value": "今天公布的9月S&P Global美國綜合PMI初值降到53.6(前值54.6),服務業降到53.9、製造業降到52,連續第二個月放緩。對一般投資人來說,經濟動能還在擴張,只是速度變慢,離『需要降息救經濟』的情境還有距離。",
+      "sources": [
+        {"url": "https://www.fxstreet.com/news/sp-global-pmi-expected-to-highlight-us-economic-resilience-in-september-202509230800"}
+      ]
+    },
+    {
+      "headline": "標普十大權值股倒扣0.07個百分點,靠中小型股撐平盤",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "拆開上一交易日標普十大權值股貢獻,只有輝達收紅,微軟、Meta、博通等全數收黑,十檔合計倒扣指數約0.07個百分點,靠後面中小型股才撐住平盤。對一般投資人來說,這是近期少見的『龍頭落後、廣度頂上』組合,如果能延續,代表漲勢正從幾檔巨頭擴散開來。",
+      "sources": []
+    }
+  ],
+  "catalysts": [
+    "今天(9/23)美東時間:Fed副主席巴爾10:05am、副主席傑佛遜10:20am發言(主題為貼現窗口現代化與公債市場流動性),紐約Fed總裁威廉斯在財政部會議發表主題演說;9月S&P Global製造業/服務業PMI初值已公布(綜合53.6、服務53.9、製造52);伊朗全球航空制裁今天正式生效。",
+    "明天(9/24):川普與習近平在白宮舉行今年第二次雙邊峰會,議程涵蓋貿易休兵延長、關鍵礦產、AI技術管制與台灣議題。",
+    "本週聯合國大會持續進行:美方特使威特科夫、庫許納與伊朗外長阿拉格齊的下一輪會談預計『很快安排』。",
+    "今天財報:Cintas、Paychex、General Mills 公布財報,市場觀察消費與勞動力相關數據。",
+    "持續觀察:10年期殖利率能否守在5%下方、明天峰會結果對AI/半導體供應鏈的影響、伊朗下一輪會談的具體進展。"
+  ],
+  "thesis_delta": {
+    "changed": true,
+    "summary": "習近平今天抵達華盛頓、明天與川普在白宮舉行峰會,同時川普特使昨天與伊朗外長三小時會談,伊朗提出解封鎖、解凍資產、停戰的具體條件才願重開荷姆茲海峽,但排除元首見面,美國對伊朗航空的全球禁令也在今天正式生效。9月PMI連續第二個月溫和降溫,10年期殖利率卻又彈回4.97%附近逼近5%,沒有跟著油價回落。AI/半導體延續前一天『龍頭落後、廣度撐盤』的組合。三條既有支柱方向皆未反轉,新增的是中美峰會前夕的觀望氣氛,以及美伊三小時會談這個具體外交進展。",
+    "horizon": "MT"
+  },
+  "lead_horizon": "ST",
+  "title_hook": "習近平明天踏進白宮,AI晶片牌局要攤牌"
+}
