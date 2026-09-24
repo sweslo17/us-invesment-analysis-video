@@ -1,0 +1,104 @@
+{
+  "segments": [
+    {
+      "vo": "習近平踏進白宮,AI晶片管制,今天要攤牌。",
+      "chart_id": null,
+      "headline": "習近平踏進白宮\n晶片牌局要攤牌",
+      "title": null,
+      "tag": "今日盤前",
+      "stat": null,
+      "stat_label": null,
+      "t_start": 0.0,
+      "duration": 3.9
+    },
+    {
+      "vo": "上一交易日美股全線重挫,標普跌0.75%、那斯達克跌1.13%、羅素兩千重摔1.77%,罕見同步下殺。今天期貨續弱,但跌幅收斂到不到1%,市場在等峰會定調。",
+      "chart_id": "ovc",
+      "headline": null,
+      "title": "全線重挫,期貨續弱",
+      "tag": null,
+      "stat": "-1.77%",
+      "stat_label": "羅素兩千昨收跌幅",
+      "t_start": 3.9,
+      "duration": 14.4
+    },
+    {
+      "vo": "殖利率是元兇。上一交易日9月PMI初值飆上58.4,創五年多最快擴張,直接把10年期公債殖利率推上5.135%,寫下2007年以來新高。經濟太好,在這個環境下反而是利空。",
+      "chart_id": "rates",
+      "headline": null,
+      "title": "殖利率殺到19年新高",
+      "tag": null,
+      "stat": "5.14%",
+      "stat_label": "10年期殖利率",
+      "t_start": 18.3,
+      "duration": 15.6
+    },
+    {
+      "vo": "PMI是企業主的生意問卷,50以上代表在擴張。",
+      "chart_id": null,
+      "headline": "PMI\n採購經理人指數",
+      "title": null,
+      "tag": "名詞小教室",
+      "stat": null,
+      "stat_label": null,
+      "t_start": 33.9,
+      "duration": 4.2
+    },
+    {
+      "vo": "隔夜日經連假回歸大漲,鎧俠、東京威力科創等半導體股領漲衝新高。反觀美股本土晶片股,那斯達克期貨今天續跌近0.8%,同一個AI熱潮,兩邊股市反應不同調。",
+      "chart_id": "geo",
+      "headline": null,
+      "title": "亞股噴,晶片股觀望",
+      "tag": null,
+      "stat": "+0.48%",
+      "stat_label": "日經隔夜漲幅",
+      "t_start": 38.1,
+      "duration": 13.8
+    },
+    {
+      "vo": "那斯達克已實現波動衝到15%,波動目標模型算出的合理槓桿只有0.99倍,不到一倍。硬開三倍一年要吃掉超過一成複利當波動耗損。VIX才16,不代表現在適合加碼更多槓桿。",
+      "chart_id": "lev",
+      "headline": null,
+      "title": "波動夠高,別加碼槓桿",
+      "tag": null,
+      "stat": "0.99倍",
+      "stat_label": "那指合理槓桿",
+      "t_start": 51.9,
+      "duration": 15.3
+    },
+    {
+      "vo": "今天雙邊會談,AI晶片管制是變數;伊朗聯大嗆聲,油價還沒真的鬆手。殖利率創19年新高提醒我們,升息故事沒有結束。以上非投資建議,明天盤前見。",
+      "chart_id": null,
+      "headline": "短期靠投票\n長期靠體重",
+      "title": null,
+      "tag": "葛拉漢 不知道有沒有說過",
+      "stat": null,
+      "stat_label": null,
+      "t_start": 67.2,
+      "duration": 12.9
+    }
+  ],
+  "charts": [
+    {
+      "id": "ovc",
+      "module": "overnight_vs_close",
+      "params": {}
+    },
+    {
+      "id": "rates",
+      "module": "rates_trend",
+      "params": {}
+    },
+    {
+      "id": "geo",
+      "module": "global_equity_overnight",
+      "params": {}
+    },
+    {
+      "id": "lev",
+      "module": "leverage_decay",
+      "params": {}
+    }
+  ],
+  "coverage_gaps": []
+}
