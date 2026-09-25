@@ -1,0 +1,104 @@
+{
+  "segments": [
+    {
+      "vo": "殖利率今天又破新高,但美股期貨卻不跌反漲。",
+      "chart_id": null,
+      "headline": "殖利率破新高\n期貨卻在笑",
+      "title": null,
+      "tag": "今日盤前",
+      "stat": null,
+      "stat_label": null,
+      "t_start": 0.0,
+      "duration": 3.9
+    },
+    {
+      "vo": "昨天美股跌幅收斂,標普僅跌0.02%,那斯達克逆勢小漲。今天期貨全面翻紅,標普期貨漲0.43%、那斯達克漲0.61%,VIX跌近4%。殖利率還在創新高,期貨卻像沒事一樣。",
+      "chart_id": "ovc",
+      "headline": null,
+      "title": "殖利率新高,期貨卻噴",
+      "tag": null,
+      "stat": "+0.43%",
+      "stat_label": "標普期貨漲幅",
+      "t_start": 3.9,
+      "duration": 15.6
+    },
+    {
+      "vo": "財政部昨天標售440億美元7年期公債,得標殖利率5.085%,創1993年以來新高,標售倍數與外國買盤占比雙雙下滑,長天期美債買氣正在減弱。10年期殖利率今天續彈到5.16%附近。",
+      "chart_id": "rates",
+      "headline": null,
+      "title": "標售遇冷,殖利率再飆",
+      "tag": null,
+      "stat": "5.16%",
+      "stat_label": "10年期殖利率",
+      "t_start": 19.5,
+      "duration": 16.6
+    },
+    {
+      "vo": "標售倍數看投資人搶不搶買公債,越低代表買氣越冷。",
+      "chart_id": null,
+      "headline": "標售倍數",
+      "title": null,
+      "tag": "名詞小教室",
+      "stat": null,
+      "stat_label": null,
+      "t_start": 36.1,
+      "duration": 4.4
+    },
+    {
+      "vo": "隔夜亞股分裂:南韓、日本半導體股延續熱潮,KOSPI漲0.9%、日經漲逾1%,呼應中國新晶片消息;香港、上海卻走跌。晶片管制本身沒有鬆動。",
+      "chart_id": "geo",
+      "headline": null,
+      "title": "亞股分裂,晶片各表態",
+      "tag": null,
+      "stat": "+1.09%",
+      "stat_label": "日經隔夜漲幅",
+      "t_start": 40.5,
+      "duration": 12.7
+    },
+    {
+      "vo": "VIX今天跌到15,看起來風平浪靜。那斯達克已實現波動還有15%,合理槓桿只剩1倍出頭,開三倍一年要吃掉超過一成複利。波動低時,數學反而叫你別加碼,這是最容易被忽略的陷阱。",
+      "chart_id": "lev",
+      "headline": null,
+      "title": "波動低,別急著加碼",
+      "tag": null,
+      "stat": "1.0倍",
+      "stat_label": "那指合理槓桿",
+      "t_start": 53.2,
+      "duration": 15.8
+    },
+    {
+      "vo": "峰會沒鬆綁晶片管制,殖利率照樣衝上2007年新高,槓桿數學也跟著更貴。以上非投資建議,明天盤前見。",
+      "chart_id": null,
+      "headline": "利息越滾越貴\n槓桿也跟著貴",
+      "title": null,
+      "tag": "蒙格 不知道有沒有說過",
+      "stat": null,
+      "stat_label": null,
+      "t_start": 69.0,
+      "duration": 9.0
+    }
+  ],
+  "charts": [
+    {
+      "id": "ovc",
+      "module": "overnight_vs_close",
+      "params": {}
+    },
+    {
+      "id": "rates",
+      "module": "rates_trend",
+      "params": {}
+    },
+    {
+      "id": "geo",
+      "module": "global_equity_overnight",
+      "params": {}
+    },
+    {
+      "id": "lev",
+      "module": "leverage_decay",
+      "params": {}
+    }
+  ],
+  "coverage_gaps": []
+}

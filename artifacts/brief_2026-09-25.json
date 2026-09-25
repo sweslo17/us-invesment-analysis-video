@@ -1,0 +1,131 @@
+{
+  "date": "2026-09-25",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7704.1298828125,
+      "overnight_pct": -0.024657536857496602,
+      "drivers": [
+        "標普500上一交易日(9/24,週四)收7704.13點,小跌0.02%,在9月PMI爆熱推升殖利率創2007年以來新高後,跌勢比開盤時收斂不少。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 26939.369140625,
+      "overnight_pct": 0.012370567448358264,
+      "drivers": [
+        "那斯達克收26939.37點,小漲0.01%,四大指數裡唯一收紅,顯示科技股對殖利率壓力的抵抗力略強於其他指數。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 51349.98046875,
+      "overnight_pct": -0.3137343095990563,
+      "drivers": [
+        "道瓊收51349.98點,跌0.31%,連續第四週承壓,利率敏感類股持續是主要拖累。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 2835.570068359375,
+      "overnight_pct": -0.10886584533413045,
+      "drivers": [
+        "羅素兩千收2835.57點,跌0.11%,跌幅比前一天的1.77%大幅收斂,中小型股跌勢暫時喘息。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普已實現波動約10.94%,波動目標模型算出的合理槓桿倍數約1.37倍,硬開三倍一年要吃掉約5.39%複利當波動耗損。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克已實現波動約14.93%,合理倍數只剩約1.0倍,幾乎連一倍槓桿都嫌多;開三倍一年要吃掉約10.03%複利,四大指數裡代價最高。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊已實現波動約11.28%,合理倍數約1.33倍,開三倍一年要吃掉約5.72%複利。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千已實現波動約11.74%,合理倍數約1.28倍,開三倍一年要吃掉約6.20%複利。"
+    }
+  ],
+  "regime": {
+    "vol": "low",
+    "rates": "rising",
+    "stock_bond_corr": "positive",
+    "breadth": "narrow"
+  },
+  "items": [
+    {
+      "headline": "殖利率今天續創新高,期貨卻不跟著跌",
+      "horizon": "LT",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "10年期公債殖利率今天續彈到5.16%附近,疊在昨天才創下的2007年新高之上;財政部昨天標售440億美元7年期公債,得標殖利率5.085%創1993年以來新高,標售倍數與外國買盤占比雙雙下滑,顯示市場對長天期美債的胃口正在減退。但今天美股期貨全面翻紅、VIX反而下跌近4%,股市這次沒有跟著債市壓力走。對一般投資人來說,這種脫鉤不會永遠持續,利率成本墊高遲早會反映到股市估值上。",
+      "sources": [
+        {"url": "https://cryptobriefing.com/us-treasury-7-year-note-auction-yield-5-percent/", "ts": null},
+        {"url": "https://helious.io/news/auc-91282CRM5-2026-09-24/7-year-note-auction-in-line", "ts": null}
+      ]
+    },
+    {
+      "headline": "習近平峰會落幕,晶片管制原地踏步",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "川普與習近平的白宮峰會昨天落幕,氣氛友好但沒有實質突破——貿易休兵維持延長至明年1/10的既有結果,AI晶片出口管制沒有鬆動,台灣議題也沒有新表態。對一般投資人來說,峰會沒有帶來半導體股期待中的政策解禁,晶片股接下來還是得靠自己的訂單與財報說話。",
+      "sources": [
+        {"url": "https://www.cnbc.com/2026/09/24/trump-xi-meeting-china-washington.html", "ts": null},
+        {"url": "https://www.bloomberg.com/news/articles/2026-09-24/trump-xi-buy-time-on-trade-with-neither-able-to-afford-a-fight", "ts": null}
+      ]
+    },
+    {
+      "headline": "中國秀出新晶片,峰會桌上多一張牌",
+      "horizon": "MT",
+      "vs_thesis": "new",
+      "materiality": 3,
+      "confidence": "developing",
+      "audience_value": "中國華為、阿里巴巴這幾天接連發布新一代AI晶片與模型,外媒解讀這是北京刻意在峰會前秀出的籌碼,向川普傳達『技術封鎖擋不住中國自己的路』。對一般投資人來說,這代表美系晶片股的護城河敘事多了一個需要持續觀察的變數,不是立即的營收威脅,但是新的長期關注點。",
+      "sources": [
+        {"url": "https://www.cnbc.com/2026/09/24/trump-xi-china-summit-ai-export-control-nvidia-huawei-alibaba-.html", "ts": null}
+      ]
+    },
+    {
+      "headline": "美伊悄悄在談解封,油價還沒真的信",
+      "horizon": "MT",
+      "vs_thesis": "new",
+      "materiality": 3,
+      "confidence": "developing",
+      "audience_value": "外媒報導美伊雙方談判代表正在討論解除荷姆茲海峽的美方海上封鎖、換取伊朗恢復部分原油出口,呼應先前伊朗提出的七天內重開海峽條件,但尚未有官方證實或具體時間表,布蘭特原油仍在100美元上方整理。對一般投資人來說,這條線只要有一則正式聲明,油價很可能大幅擺動,值得持續留意而非現在就下定論。",
+      "sources": [
+        {"url": "https://www.cbsnews.com/live-updates/iran-war-us-strait-of-hormuz-oil-gas-price-strikes/", "ts": null}
+      ]
+    },
+    {
+      "headline": "亞股分裂:日韓晶片熱、中港卻降溫",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "隔夜南韓KOSPI漲0.90%、日經漲1.09%,半導體與AI概念股延續熱潮;但香港恆生跌1.01%、上海跌1.26%。對一般投資人來說,同一則中國晶片新聞在不同市場的解讀不一樣,『中國能不能追上』這個問題本身,市場都還沒有一致答案。",
+      "sources": []
+    }
+  ],
+  "catalysts": [
+    "今天(9/25,週五)美東時間:克里夫蘭Fed總裁哈瑪克下午2點在通膨研討會發言;紐約Fed總裁威廉斯稍早已在政策座談發言,重申年底前可能再升一次息。",
+    "美東時間今天將公布8月耐久財訂單與9月密西根大學消費者信心終值。",
+    "美伊:雙方是否就解除荷姆茲海峽封鎖釋出正式聲明,尚待觀察。",
+    "持續觀察:10年期殖利率能否守在5.1%上方或回落、7年期公債標售需求走弱是否延續到後續標售。"
+  ],
+  "thesis_delta": {
+    "changed": true,
+    "summary": "川普與習近平的白宮峰會昨天落幕,氣氛友好但沒有實質突破,晶片管制與台灣議題原地踏步,中國華為、阿里巴巴同一天秀出新一代AI晶片作為峰會桌上的籌碼。利率線同步轉緊:7年期公債標售需求走弱、得標殖利率創1993年以來新高,10年期殖利率今天續創2007年以來新高;但股市今天反而脫鉤走高、VIX下跌,顯示風險偏好尚未跟上債市壓力。地緣風險線出現美伊討論解封荷姆茲海峽的傳聞,尚待證實。三條既有支柱方向皆未反轉,新增的是中國晶片自主敘事、公債標售需求走弱,以及股債市場反應不同步這三個新變數。",
+    "horizon": "LT"
+  },
+  "lead_horizon": "LT",
+  "title_hook": "殖利率又破新高,今天期貨卻笑著開盤"
+}
