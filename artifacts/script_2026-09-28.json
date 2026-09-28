@@ -1,0 +1,106 @@
+{
+  "segments": [
+    {
+      "vo": "川普親口回絕伊朗的解封提案,平靜的市場又起浪了。",
+      "chart_id": null,
+      "headline": "川普拒解封\n油價又燒了",
+      "title": null,
+      "tag": "今日盤前",
+      "stat": null,
+      "stat_label": null,
+      "t_start": 0.0,
+      "duration": 4.32
+    },
+    {
+      "vo": "上一交易日美股全線收紅,標普漲0.51%、道瓊大漲0.93%。但今天盤前風向轉了,標普期貨小跌0.06%,VIX一口氣跳升9.2%來到16.24,市場開始正視風險。",
+      "chart_id": "ovc",
+      "headline": null,
+      "title": "昨收收紅,今晨轉守",
+      "tag": null,
+      "stat": "+0.93%",
+      "stat_label": "道瓊昨收漲幅",
+      "t_start": 4.32,
+      "duration": 14.76
+    },
+    {
+      "vo": "隔夜南韓KOSPI重挫2.7%,三星電子、SK海力士雙雙重摔逾5%,SK海力士子公司傳出赴美掛牌計畫,牽動集團股權結構疑慮;台股跌0.13%,日經跌0.74%,亞股這次是全面挨打。",
+      "chart_id": "geo",
+      "headline": null,
+      "title": "南韓重摔,晶片挨打",
+      "tag": null,
+      "stat": "-2.70%",
+      "stat_label": "南韓KOSPI跌幅",
+      "t_start": 19.08,
+      "duration": 16.2
+    },
+    {
+      "vo": "VIX今天暴衝9.2%來到16.24,像平靜海面忽然揚起浪頭。伊朗解封提案被川普否決後,原油應聲走高,10年期公債殖利率也續彈到5.18%附近,三條線一起把浪推得更高。",
+      "chart_id": "vix",
+      "headline": null,
+      "title": "VIX一夕跳升",
+      "tag": null,
+      "stat": "16.24",
+      "stat_label": "VIX今日水準",
+      "t_start": 35.28,
+      "duration": 15.12
+    },
+    {
+      "vo": "還沒真的出事,價格已經先幫風險定價,這就是風險溢價。",
+      "chart_id": null,
+      "headline": "風險溢價",
+      "title": null,
+      "tag": "名詞小教室",
+      "stat": null,
+      "stat_label": null,
+      "t_start": 50.4,
+      "duration": 4.68
+    },
+    {
+      "vo": "10年期公債殖利率今天來到5.18%附近,逼近今年高點。這波利率居高不下,不只是Fed升息,AI資料中心大量靠發債建設,也是推升長天期利率的力道之一。",
+      "chart_id": "rates",
+      "headline": null,
+      "title": "AI建設,也在推升利率",
+      "tag": null,
+      "stat": "5.18%",
+      "stat_label": "10年期殖利率",
+      "t_start": 55.08,
+      "duration": 13.5
+    },
+    {
+      "vo": "地緣風險説來就來,殖利率照樣往上頂,三條主線都還沒反轉。以上非投資建議,明天盤前見。",
+      "chart_id": null,
+      "headline": "風平浪靜時\n連錨都懶得拋",
+      "title": null,
+      "tag": "柏格 不知道有沒有說過",
+      "stat": null,
+      "stat_label": null,
+      "t_start": 68.58,
+      "duration": 7.56
+    }
+  ],
+  "charts": [
+    {
+      "id": "ovc",
+      "module": "overnight_vs_close",
+      "params": {}
+    },
+    {
+      "id": "geo",
+      "module": "global_equity_overnight",
+      "params": {}
+    },
+    {
+      "id": "vix",
+      "module": "vix_regime",
+      "params": {}
+    },
+    {
+      "id": "rates",
+      "module": "rates_trend",
+      "params": {}
+    }
+  ],
+  "coverage_gaps": [
+    "圖表模組庫目前沒有原油(WTI/Brent)價格走勢圖,今天最大的驅動力——川普否決伊朗荷姆茲解封提案後油價應聲走高——只能口述帶過,建議之後補一個 oil_price 模組。"
+  ]
+}

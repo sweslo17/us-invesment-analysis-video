@@ -1,0 +1,154 @@
+{
+  "date": "2026-09-28",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7743.41015625,
+      "overnight_pct": 0.5098584298291942,
+      "drivers": [
+        "標普500上一交易日(9/25,週五)收7743.41點,漲0.51%,美股全週收在波動的高檔,殖利率創新高的壓力沒有擋住週線上漲。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 27068.720703125,
+      "overnight_pct": 0.4801437031403827,
+      "drivers": [
+        "那斯達克收27068.72點,漲0.48%,科技股延續近期熱度收紅。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 51828.62109375,
+      "overnight_pct": 0.9321154433750447,
+      "drivers": [
+        "道瓊收51828.62點,大漲0.93%,是四大指數裡漲幅最大的一個,結束連四週的承壓格局。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 2837.550048828125,
+      "overnight_pct": 0.06968073091245439,
+      "drivers": [
+        "羅素兩千收2837.55點,小漲0.07%,漲幅遠不及其他三大指數,中小型股對利率壓力依然敏感。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普已實現波動約10.79%,波動目標模型算出的合理槓桿倍數約1.39倍,硬開三倍一年要吃掉約5.24%複利當波動耗損。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克已實現波動約14.51%,合理倍數只剩約1.03倍,幾乎連一倍槓桿都嫌多;開三倍一年要吃掉約9.47%複利,四大指數裡代價最高。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊已實現波動約11.65%,合理倍數約1.29倍,開三倍一年要吃掉約6.11%複利。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千已實現波動約12.65%,合理倍數約1.19倍,開三倍一年要吃掉約7.20%複利。"
+    }
+  ],
+  "regime": {
+    "vol": "normal",
+    "rates": "rising",
+    "stock_bond_corr": "positive",
+    "breadth": "narrow"
+  },
+  "items": [
+    {
+      "headline": "川普否決伊朗解封方案,荷姆茲僵局重新升溫",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "伊朗上週在聯合國大會提出七天內重開荷姆茲海峽的條件,川普週末正式回絕、稱其『不可接受』,並表示伊朗『把牌打得太過頭』,但也說本週可能重啟談判;消息一出原油應聲走高,VIX今天跳升逾9%。對一般投資人來說,這代表『美伊悄悄在談解封』的樂觀被證明太早,地緣風險溢價還沒有真正解除,油價與市場波動可能因單一聲明就大幅擺動。",
+      "sources": [
+        {
+          "url": "https://www.aljazeera.com/economy/2026/9/27/strait-of-hormuz-tensions-linger-as-iran-and-us-move-further-from-a-deal",
+          "ts": null
+        },
+        {
+          "url": "https://www.bloomberg.com/news/articles/2026-09-27/iran-says-won-t-soften-demands-after-trump-rejects-hormuz-offer",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "南韓開盤重摔,三星、SK海力士雙雙跌逾5%",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "南韓連假結束後補跌,KOSPI重挫2.7%、跌破7000點,三星電子與SK海力士各跌逾5%,除了殖利率與油價升溫的外部壓力,SK海力士子公司Solidigm傳出赴美掛牌計畫,連帶讓集團股權結構被重新檢視。對一般投資人來說,這是AI/半導體『窄且不穩』故事的最新一集——同樣的晶片股,今天在美股期貨只是小跌,在南韓卻是重摔,反映的不是基本面突變,而是資金結構的疑慮。",
+      "sources": [
+        {
+          "url": "https://en.sedaily.com/finance/2026/09/28/kospi-falls-270-percent-to-close-at-688974",
+          "ts": null
+        },
+        {
+          "url": "https://en.sedaily.com/finance/2026/09/28/samsung-electronics-sk-hynix-slide-4-percent-as-kospi",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "VIX單日跳升逾9%,風險情緒明顯轉向",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "VIX今天從14.87跳升到16.24,漲幅超過9%,是近期少見的單日跳動。對一般投資人來說,VIX本身不是用來預測漲跌的工具,但這麼大的單日跳升代表市場正在重新替不確定性定價,是提醒自己檢查部位槓桿與風險承受度的好時機,而不是恐慌訊號。",
+      "sources": []
+    },
+    {
+      "headline": "本週三大關卡:PCE、美光財報、非農就業",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "這週三(9/30)公布8月PCE物價指數、美光公布第四財季財報(市場關注HBM4訂單能見度與2027年資本支出指引);週四(10/1)ISM製造業PMI;週五(10/2)9月非農就業報告,市場預期新增約10萬人、遠低於8月的16.2萬人,失業率預估小升到4.2%。對一般投資人來說,這幾份數據會共同決定市場對10月底FOMC會議的預期,是本週最值得留意的排程。",
+      "sources": [
+        {
+          "url": "https://www.cnbc.com/2026/09/25/stock-market-next-week-outlook-for-sept-28-oct-2-2026.html",
+          "ts": null
+        },
+        {
+          "url": "https://www.kiplinger.com/investing/economy/this-weeks-economic-calendar",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "AI資料中心大舉發債,長天期利率多了新推手",
+      "horizon": "LT",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "developing",
+      "audience_value": "近期分析指出,AI資料中心建設大量透過發債籌資,是10年期公債殖利率創2007年以來新高的原因之一,疊加Fed升息路徑與財政部發債規模,長天期利率的上行壓力來源正在變得更多元。對一般投資人來說,這代表『higher-for-longer』不只是Fed的故事,AI資本支出的融資方式本身,也正在變成推升整體利率的一股結構性力量,值得放進中長期的風險評估。",
+      "sources": [
+        {
+          "url": "https://mystockresearch.substack.com/p/ai-infrastructure-weekly-intelligence-8fa",
+          "ts": null
+        }
+      ]
+    }
+  ],
+  "catalysts": [
+    "今天(9/28,週一)美東時間:Dallas Fed 9月製造業活動指數;紐約Fed總裁威廉斯展開兩天西紐約區域訪問行程。",
+    "本週三(9/30):8月PCE物價指數公布;美光公布2026財年第四季財報(電話會議美東下午4:30),市場關注HBM4訂單能見度與2027財年資本支出指引。",
+    "本週四(10/1):9月ISM製造業PMI。",
+    "本週五(10/2):9月非農就業報告,市場預期新增約10萬人(前值16.2萬),失業率預估升至4.2%。",
+    "持續觀察:川普所說本週可能重啟的美伊談判是否成真、荷姆茲海峽通行量能否回升、10年期殖利率能否守穩5.1%上方。"
+  ],
+  "thesis_delta": {
+    "changed": true,
+    "summary": "川普週末正式回絕伊朗在聯合國大會提出的七天內重開荷姆茲海峽方案,稱其不可接受,但表示本週可能重啟談判;這代表上週五(9/25)brief標記的『美伊悄悄在談解封』傳聞,實際結果是談判觸礁而非接近突破,地緣風險溢價沒有解除。同一個週末,南韓連假結束後補跌重摔,三星電子、SK海力士雙雙下跌逾5%,除了殖利率與油價升溫,SK海力士子公司Solidigm赴美掛牌計畫牽動集團股權結構疑慮,是AI/半導體『窄且不穩』的最新一集。10年期公債殖利率續彈到5.18%附近,VIX單日跳升逾9%,顯示風險情緒正在重新定價。三條既有支柱方向皆未反轉,新增的是荷姆茲談判觸礁的具體結果,以及南韓晶片股補跌的新驅動因素。",
+    "horizon": "MT"
+  },
+  "lead_horizon": "MT",
+  "title_hook": "川普否決伊朗解封方案,荷姆茲僵局又燒了"
+}
