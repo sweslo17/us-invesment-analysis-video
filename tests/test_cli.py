@@ -105,3 +105,28 @@ def test_validate_research_command_reports_errors_and_rc(tmp_path, monkeypatch, 
     rc = cli.main(["validate-research", "--date", "2026-07-10"])
     out = capsys.readouterr().out
     assert rc == 1 and "缺 brief_2026-07-10.json" in out
+
+
+def test_research_prompt_command_includes_recent_history_block(tmp_path, monkeypatch, capsys):
+    """pmb research-prompt 印的 prompt 要與本機研究同一份:含「最近 N 個交易日」回顧塊。"""
+    from pmb.schemas.script import Script
+
+    arts, state = tmp_path / "artifacts", tmp_path / "state"
+    arts.mkdir()
+    state.mkdir()
+    day = dt.date(2026, 7, 10)
+    snap = Snapshot(session_date=day, generated_at=dt.datetime.now(tz=dt.UTC))
+    (arts / f"snapshot_{day}.json").write_text(snap.model_dump_json(), encoding="utf-8")
+    yesterday = Script.model_validate({
+        "segments": [{"kind": "card", "vo": "開場。", "headline": "昨天的鉤子", "tag": "債市日"}],
+        "charts": [],
+    })
+    (arts / "script_2026-07-09.json").write_text(yesterday.model_dump_json(), encoding="utf-8")
+    prompt_path = tmp_path / "prompt.md"
+    prompt_path.write_text("研究任務模板", encoding="utf-8")
+    settings = types.SimpleNamespace(artifacts_dir=arts, state_dir=state, prompt_path=prompt_path,
+                                     ensure_dirs=lambda: None)
+    monkeypatch.setattr(cli, "get_settings", lambda: settings)
+    assert cli.main(["research-prompt", "--date", str(day)]) == 0
+    out = capsys.readouterr().out
+    assert "研究任務模板" in out and "最近 1 個交易日的影片" in out and "昨天的鉤子" in out

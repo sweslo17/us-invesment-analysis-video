@@ -243,6 +243,24 @@ def _restore_outputs(snapshot: _OutputSnapshot) -> None:
             path.write_bytes(data)
 
 
+def build_local_research_prompt(target: dt.date, settings) -> str:
+    """本機研究(files 模式)的完整 prompt:模板 + 快照 + thesis + 昨日 brief + 最近幾天回顧塊。
+
+    ``pmb research-local`` 與 ``pmb research-prompt`` 共用,給 agent 的內容一字不差。
+    呼叫端需先確保 ``snapshot_<target>.json`` 已存在。
+    """
+    snap_path = settings.artifacts_dir / f"snapshot_{target}.json"
+    snapshot = Snapshot.model_validate_json(snap_path.read_text(encoding="utf-8"))
+    thesis = load_thesis(settings.state_dir / "thesis.json")
+    previous_brief = load_previous_brief(settings.artifacts_dir, target)
+    template = settings.prompt_path.read_text(encoding="utf-8")
+    recent = load_recent_scripts(settings.artifacts_dir, target, LESSON_LOOKBACK)
+    return build_research_prompt(
+        snapshot, thesis, template, previous_brief, output_mode="files",
+        recent_summary=summarize_recent(recent),
+    )
+
+
 def rate_limit_wait_seconds(exc: RateLimitedError, now: dt.datetime) -> float | None:
     """撞額度後該睡多久;None = 重置太晚、趕不上出片,別傻等。"""
     if exc.reset_at is None:
@@ -283,16 +301,7 @@ def run_local_research(
             p, cwd, model=model, oauth_token=token
         )
 
-    snap_path = settings.artifacts_dir / f"snapshot_{target}.json"
-    snapshot = Snapshot.model_validate_json(snap_path.read_text(encoding="utf-8"))
-    thesis = load_thesis(settings.state_dir / "thesis.json")
-    previous_brief = load_previous_brief(settings.artifacts_dir, target)
-    template = settings.prompt_path.read_text(encoding="utf-8")
-    recent = load_recent_scripts(settings.artifacts_dir, target, LESSON_LOOKBACK)
-    base_prompt = build_research_prompt(
-        snapshot, thesis, template, previous_brief, output_mode="files",
-        recent_summary=summarize_recent(recent),
-    )
+    base_prompt = build_local_research_prompt(target, settings)
 
     last_errors: list[str] = []
     attempt = 0

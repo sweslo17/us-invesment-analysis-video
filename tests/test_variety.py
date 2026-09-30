@@ -141,6 +141,15 @@ def test_load_recent_scripts_newest_first_skips_broken_and_future(tmp_path):
     assert load_recent_scripts(tmp_path / "missing", dt.date(2026, 9, 30), 5) == []
 
 
+def test_load_recent_scripts_skips_impossible_date_in_filename(tmp_path):
+    """檔名日期不存在(2 月 30 日)只略過該檔並記 WARNING,不能讓整個研究崩潰。"""
+    good = _script([_CHART_A, _BIG, _CHART_B])
+    (tmp_path / "script_2026-02-30.json").write_text(good.model_dump_json(), encoding="utf-8")
+    (tmp_path / "script_2026-09-28.json").write_text(good.model_dump_json(), encoding="utf-8")
+    recent = load_recent_scripts(tmp_path, dt.date(2026, 9, 30), 5)
+    assert [r.date for r in recent] == [dt.date(2026, 9, 28)]
+
+
 def test_summarize_recent_lists_sequence_hook_quote_gags_and_lessons():
     s = _script([_CHART_A, _BIG, _CHART_B], lesson="期限溢酬", gags=("Fed 不急債市急",))
     text = summarize_recent([_day(29, s)])

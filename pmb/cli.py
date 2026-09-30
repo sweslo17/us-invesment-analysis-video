@@ -25,8 +25,12 @@ from pmb.orchestrator import build_review_manifest, review_summary
 from pmb.publish.report import render_report
 from pmb.publish.youtube import build_youtube_metadata, upload_video
 from pmb.research.dedup import load_previous_brief
-from pmb.research.local_runner import SHORTS_CAP_SEC, validate_research_artifacts
-from pmb.research.runner import build_research_prompt, make_anthropic_caller, research_once
+from pmb.research.local_runner import (
+    SHORTS_CAP_SEC,
+    build_local_research_prompt,
+    validate_research_artifacts,
+)
+from pmb.research.runner import make_anthropic_caller, research_once
 from pmb.research.sample import sample_brief_json
 from pmb.research.script_builder import build_script_from_brief
 from pmb.research.thesis import load_thesis
@@ -723,7 +727,8 @@ def cmd_research_local(args: argparse.Namespace) -> int:
 
 
 def cmd_research_prompt(args: argparse.Namespace) -> int:
-    """輸出今日「研究 prompt」(模板 + 真實快照 + thesis + 昨日 brief),供貼進 Claude Code。
+    """輸出今日「研究 prompt」(模板 + 真實快照 + thesis + 昨日 brief + 最近幾天回顧塊),
+    供貼進 Claude Code;與 ``pmb research-local`` 給 headless agent 的是同一份。
 
     研究這步是 Claude Code(雲端 routine 或本機 Claude Code session)做的,不走 API key。
     """
@@ -738,13 +743,7 @@ def cmd_research_prompt(args: argparse.Namespace) -> int:
     if not snap_path.exists():
         print(f"缺快照({target}),請先跑 pmb fetch。")
         return 1
-    snapshot = Snapshot.model_validate_json(snap_path.read_text(encoding="utf-8"))
-    thesis = load_thesis(settings.state_dir / "thesis.json")
-    previous_brief = load_previous_brief(settings.artifacts_dir, target)
-    template = settings.prompt_path.read_text(encoding="utf-8")
-    prompt = build_research_prompt(
-        snapshot, thesis, template, previous_brief, output_mode="files"
-    )
+    prompt = build_local_research_prompt(target, settings)
     if args.out:
         Path(args.out).write_text(prompt, encoding="utf-8")
         print(f"研究 prompt 已寫入 {args.out}")

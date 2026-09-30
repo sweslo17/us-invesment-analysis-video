@@ -55,7 +55,11 @@ def load_recent_scripts(artifacts_dir: str | Path, before: dt.date,
         match = _SCRIPT_RE.match(path.name)
         if match is None:
             continue
-        day = dt.date.fromisoformat(match.group(1))
+        try:
+            day = dt.date.fromisoformat(match.group(1))
+        except ValueError:
+            logger.warning("略過檔名日期不合法的歷史 script {}", path.name)
+            continue
         if day < before:
             dated.append((day, path))
     out: list[DayRecord] = []
