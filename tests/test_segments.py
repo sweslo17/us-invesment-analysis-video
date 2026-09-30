@@ -2,7 +2,6 @@
 
 import random
 import re
-from pathlib import Path
 
 import pytest
 
@@ -96,7 +95,7 @@ def test_registry_knows_chart_and_card_and_rejects_unknown():
         renderer_for("hologram")
 
 
-def _ctx(takes, duration=6.0, work_dir=Path("/tmp"), lead_in=0.0):
+def _ctx(takes, *, work_dir, duration=6.0, lead_in=0.0):
     return RenderContext(index=2, duration=duration, takes=takes,
                          starts=take_starts(takes, lead_in), font="F", work_dir=work_dir,
                          badge="美股早發車 · 9/30")

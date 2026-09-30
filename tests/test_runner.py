@@ -160,7 +160,8 @@ def test_build_research_prompt_files_mode_instructs_writing_artifacts():
 
 
 def test_research_prompt_describes_v4_kinds_persona_and_guardrails():
-    text = Path("prompts/daily_research.md").read_text(encoding="utf-8")
+    prompt_path = Path(__file__).resolve().parents[1] / "prompts" / "daily_research.md"
+    text = prompt_path.read_text(encoding="utf-8")
     for kw in ("`dialogue`", "`split`", "`bignum`", "`recap`", "script.gags", "頻道人設",
                "梗的護欄", "不可以是真實人物", "上車", "……", "pmb validate-research",
                "不知道有沒有說過", "查不到出處就不寫這句比較", "查不到就不寫這個梗",

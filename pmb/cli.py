@@ -36,7 +36,7 @@ from pmb.research.script_builder import build_script_from_brief
 from pmb.research.thesis import load_thesis
 from pmb.schemas.brief import Brief
 from pmb.schemas.chart import ChartSpec
-from pmb.schemas.script import Script
+from pmb.schemas.script import Script, VoiceKey
 from pmb.schemas.snapshot import Quote, Snapshot
 from pmb.tts.edge import edge_synthesize, probe_duration, silent_synth
 from pmb.video.assemble import assemble_video
@@ -279,6 +279,11 @@ def _resolve_bgm(settings, target: dt.date, work_dir: Path) -> Path | None:
     return generate_default_pad(work_dir / "bgm_pad.wav")
 
 
+def voice_map(settings) -> dict[VoiceKey, str]:
+    """voice_key(旁白 / A 角 / B 角)→ edge-tts 聲線名稱;語速與音高三個聲線共用(規格 §4)。"""
+    return {"narrator": settings.tts_voice, "a": settings.tts_voice_a, "b": settings.tts_voice_b}
+
+
 def cmd_assemble(args: argparse.Namespace) -> int:
     settings = get_settings()
     settings.ensure_dirs()
@@ -304,9 +309,7 @@ def cmd_assemble(args: argparse.Namespace) -> int:
         )
     else:
         rate, pitch = settings.tts_rate, settings.tts_pitch
-        voices = {
-            "narrator": settings.tts_voice, "a": settings.tts_voice_a, "b": settings.tts_voice_b,
-        }
+        voices = voice_map(settings)
         synth_fn = lambda text, path, planned, voice: edge_synthesize(  # noqa: E731
             text, path, voice=voices[voice], rate=rate, pitch=pitch
         )

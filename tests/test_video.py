@@ -1,10 +1,18 @@
-"""影片合成的純邏輯測試:SRT 字幕格式、時間軸累積(不跑 ffmpeg)。"""
+"""影片合成測試:SRT 字幕格式、斷行、時間軸累積等純邏輯,以及用靜音配音實跑 ffmpeg 的
+整合測試(``_NEEDS_FFMPEG``,沒裝 ffmpeg/ffprobe 就跳過)。"""
+
+import shutil
 
 import pytest
 
 from pmb.video.ass import build_ass
 from pmb.video.assemble import segment_timeline
 from pmb.video.captions import build_srt, has_speakable, split_sentences, wrap_caption
+
+_NEEDS_FFMPEG = pytest.mark.skipif(
+    shutil.which("ffmpeg") is None or shutil.which("ffprobe") is None,
+    reason="需要 ffmpeg/ffprobe(靜音配音 + 實際合成)",
+)
 
 
 def test_build_srt_formats_cues_with_ms():
@@ -167,6 +175,7 @@ def test_layout_keeps_text_out_of_shorts_ui_overlay():
     assert zone["sub_margin_r"] >= zone["right_ui"]
 
 
+@_NEEDS_FFMPEG
 def test_assemble_video_wires_card_ass_stat_badge_and_cta(tmp_path):
     """整合(靜音 TTS + ffmpeg):字卡文字走 ASS 動畫、圖表段疊 stat、全片角標、片尾 CTA。"""
     import datetime as dt
@@ -236,6 +245,7 @@ def _sting_snapshot():
     )
 
 
+@_NEEDS_FFMPEG
 def test_assemble_inserts_sting_after_hook_and_appends_outro(tmp_path):
     from pmb.schemas.script import Script
     from pmb.tts.edge import silent_synth
@@ -270,6 +280,7 @@ def test_assemble_inserts_sting_after_hook_and_appends_outro(tmp_path):
     assert len(clips) == 4
 
 
+@_NEEDS_FFMPEG
 def test_assemble_without_slogans_adds_nothing(tmp_path):
     """沒給 slogan_intro / slogan_outro:不插口號轉場、不多念收尾口號(舊行為不變)。"""
     from pmb.schemas.script import Script
@@ -295,6 +306,7 @@ def test_assemble_without_slogans_adds_nothing(tmp_path):
     assert len((work / "clips.txt").read_text().splitlines()) == 2
 
 
+@_NEEDS_FFMPEG
 def test_assemble_appends_outro_to_last_segment_that_has_speech(tmp_path):
     """最後一段沒有可念內容被跳過時,收尾口號接在「最後一個有句子計畫的段」,不被吃掉。"""
     from pmb.schemas.script import Script
@@ -320,6 +332,7 @@ def test_assemble_appends_outro_to_last_segment_that_has_speech(tmp_path):
     assert spoken == ["開場。", "美股早發車,發車!", "結論。", "以上非投資建議,明天盤前見。"]
 
 
+@_NEEDS_FFMPEG
 def test_sting_tts_failure_is_skipped_not_fatal(tmp_path):
     from pmb.schemas.script import Script
     from pmb.tts.edge import silent_synth
@@ -355,6 +368,7 @@ def _two_segment_script():
     })
 
 
+@_NEEDS_FFMPEG
 def test_undecodable_sting_sfx_retries_without_sfx_and_ships(tmp_path, monkeypatch):
     """音效檔解不開 → 口號轉場拿掉音效重渲一次,口號照播、影片照出(規格 §8)。"""
     from pmb.tts.edge import silent_synth
@@ -383,6 +397,7 @@ def test_undecodable_sting_sfx_retries_without_sfx_and_ships(tmp_path, monkeypat
     assert len((work / "clips.txt").read_text().splitlines()) == 3
 
 
+@_NEEDS_FFMPEG
 def test_sting_clip_render_failure_is_skipped_and_timeline_closes_gap(tmp_path, monkeypatch):
     """口號轉場連不帶音效都渲染失敗 → 整段略過;其餘段的進度條總長/起點不含它,不留空洞。"""
     from pmb.tts.edge import silent_synth
@@ -415,6 +430,7 @@ def test_sting_clip_render_failure_is_skipped_and_timeline_closes_gap(tmp_path, 
     assert chart["is_last"] and not hook["is_last"]
 
 
+@_NEEDS_FFMPEG
 def test_non_optional_segment_clip_failure_still_raises(tmp_path, monkeypatch):
     """腳本段的 clip 渲染失敗照舊讓整支片失敗(只有系統插入的口號轉場可以略過)。"""
     from pmb.tts.edge import silent_synth
@@ -432,6 +448,7 @@ def test_non_optional_segment_clip_failure_still_raises(tmp_path, monkeypatch):
         )
 
 
+@_NEEDS_FFMPEG
 def test_non_optional_segment_tts_failure_still_raises(tmp_path):
     """只有系統插入的口號轉場可以配音失敗後略過;腳本裡的段配音失敗照舊讓整支片失敗。"""
     from pmb.schemas.script import Script
@@ -454,6 +471,7 @@ def test_non_optional_segment_tts_failure_still_raises(tmp_path):
                        work_dir=tmp_path / "work", font="PingFang TC", master_audio=False)
 
 
+@_NEEDS_FFMPEG
 def test_assemble_all_kinds_smoke(tmp_path):
     """整合(靜音 TTS + ffmpeg):六種段型 + 口號轉場 + 收尾口號一起合成不炸,產物齊全。"""
     import datetime as dt

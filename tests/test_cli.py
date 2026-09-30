@@ -130,3 +130,18 @@ def test_research_prompt_command_includes_recent_history_block(tmp_path, monkeyp
     assert cli.main(["research-prompt", "--date", str(day)]) == 0
     out = capsys.readouterr().out
     assert "研究任務模板" in out and "最近 1 個交易日的影片" in out and "昨天的鉤子" in out
+
+
+def test_voice_map_maps_narrator_and_both_roles_to_their_settings():
+    """voice_key → edge-tts 聲線(規格 §4、§9):旁白 / A 角 / B 角各自對到設定,三個 key 都要有。"""
+    from typing import get_args
+
+    from pmb.schemas.script import VoiceKey
+
+    settings = types.SimpleNamespace(tts_voice="zh-TW-HsiaoChenNeural",
+                                     tts_voice_a="zh-TW-YunJheNeural",
+                                     tts_voice_b="zh-TW-HsiaoYuNeural")
+    voices = cli.voice_map(settings)
+    assert voices == {"narrator": "zh-TW-HsiaoChenNeural", "a": "zh-TW-YunJheNeural",
+                      "b": "zh-TW-HsiaoYuNeural"}
+    assert set(voices) == set(get_args(VoiceKey))
