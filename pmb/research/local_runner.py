@@ -212,6 +212,37 @@ def check_vo_budget(script: Script) -> list[str]:
     ]
 
 
+# 研究產物快照:路徑 → 內容(None = 當時不存在)
+_OutputSnapshot = dict[Path, bytes | None]
+
+
+def _research_outputs(settings, target: dt.date) -> list[Path]:
+    """研究 agent 會寫的檔:當日 brief/script/report + thesis。"""
+    arts = settings.artifacts_dir
+    return [
+        arts / f"brief_{target}.json",
+        arts / f"script_{target}.json",
+        arts / f"report_{target}.md",
+        settings.state_dir / "thesis.json",
+    ]
+
+
+def _snapshot_if_shippable(settings, target: dt.date) -> _OutputSnapshot | None:
+    """產物沒有硬錯(可出片)就把內容整份存起來,否則回 None。"""
+    if validate_research_artifacts(settings.artifacts_dir, target, include_soft=False):
+        return None
+    paths = _research_outputs(settings, target)
+    return {p: (p.read_bytes() if p.exists() else None) for p in paths}
+
+
+def _restore_outputs(snapshot: _OutputSnapshot) -> None:
+    for path, data in snapshot.items():
+        if data is None:
+            path.unlink(missing_ok=True)
+        else:
+            path.write_bytes(data)
+
+
 def rate_limit_wait_seconds(exc: RateLimitedError, now: dt.datetime) -> float | None:
     """撞額度後該睡多久;None = 重置太晚、趕不上出片,別傻等。"""
     if exc.reset_at is None:
@@ -239,6 +270,9 @@ def run_local_research(
     撞到額度上限(``RateLimitedError``)不算一次產物重試:那不是「寫壞了」,而是根本
     沒跑到,馬上重試必然再撞。改成睡到重置後再敲同一次嘗試,最多 ``_MAX_RATE_LIMIT_WAITS``
     次;重置晚到趕不上出片就放棄。
+
+    每次嘗試結束後,產物只要沒有硬錯就整份快照;重試把產物改壞(寫到一半逾時、schema 壞)時
+    還原最後一份可出片的快照,不讓「為了修軟錯的重試」毀掉本來能出的片。
     """
     now = now or (lambda: dt.datetime.now(tz=dt.UTC))
     if invoke is None:
@@ -263,6 +297,9 @@ def run_local_research(
     last_errors: list[str] = []
     attempt = 0
     rate_limit_waits = 0
+    shippable: _OutputSnapshot | None = None  # 最後一份沒有硬錯的產物
+    shippable_attempt = 0
+    stop_reason = f"重試 {max_attempts} 次仍未全過驗證"
     while attempt < max_attempts:
         prompt = base_prompt
         if last_errors:
@@ -281,6 +318,7 @@ def run_local_research(
                     exc.reset_at,
                     exc,
                 )
+                stop_reason = "撞到額度上限且等不到重置"
                 break
             rate_limit_waits += 1
             logger.warning(
@@ -296,26 +334,52 @@ def run_local_research(
             attempt += 1
             logger.warning("本機研究第 {}/{} 次執行失敗:{}", attempt, max_attempts, exc)
             last_errors = [f"agent 執行失敗:{exc}"]
-            continue
-        attempt += 1
-        last_errors = validate_research_artifacts(settings.artifacts_dir, target)
-        if not last_errors:
-            logger.info("本機研究完成並通過驗證({})", target)
-            return True
-        logger.warning(
-            "本機研究第 {}/{} 次驗證失敗:{}", attempt, max_attempts, "; ".join(last_errors)
-        )
+            stop_reason = f"最後一次(第 {attempt} 次)agent 執行失敗:{exc}"
+        else:
+            attempt += 1
+            last_errors = validate_research_artifacts(settings.artifacts_dir, target)
+            if not last_errors:
+                logger.info("本機研究完成並通過驗證({})", target)
+                return True
+            logger.warning(
+                "本機研究第 {}/{} 次驗證失敗:{}", attempt, max_attempts, "; ".join(last_errors)
+            )
+            stop_reason = f"重試 {max_attempts} 次仍未全過驗證"
+        saved = _snapshot_if_shippable(settings, target)
+        if saved is not None:
+            shippable, shippable_attempt = saved, attempt
 
     # 重試用盡:只剩軟錯(字數超標、反重複、風格)時產物本身合法,寧可照樣出片也不要整天
-    # 沒影片;硬錯(缺檔/schema 壞)才真的放棄。
-    hard_errors = validate_research_artifacts(settings.artifacts_dir, target, include_soft=False)
-    if not hard_errors:
-        logger.warning(
-            "軟規則仍未全過但產物合法,照樣出片({}):{}(若是字數超標,成片可能超過 {:.0f}s、"
-            "失去 Shorts 資格)",
-            target,
-            "; ".join(last_errors),
-            SHORTS_CAP_SEC,
+    # 沒影片;最後一次把產物改壞了就還原最後一份可出片的;硬錯(缺檔/schema 壞)才真的放棄。
+    return _ship_if_no_hard_errors(settings, target, stop_reason, shippable, shippable_attempt)
+
+
+def _ship_if_no_hard_errors(
+    settings,
+    target: dt.date,
+    stop_reason: str,
+    shippable: _OutputSnapshot | None,
+    shippable_attempt: int,
+) -> bool:
+    """重試用盡後的降級出片判斷;WARNING 依實際原因措辭(agent 失敗/額度/軟錯/已還原)。"""
+    arts = settings.artifacts_dir
+    notes = [stop_reason]
+    hard_errors = validate_research_artifacts(arts, target, include_soft=False)
+    if hard_errors and shippable is not None:
+        _restore_outputs(shippable)
+        notes.append(
+            f"最後的產物有硬錯({'; '.join(hard_errors)}),已還原第 {shippable_attempt} 次嘗試的產物"
         )
-        return True
-    return False
+        hard_errors = validate_research_artifacts(arts, target, include_soft=False)
+    if hard_errors:
+        logger.error("研究產物仍有硬錯,不出片({}):{}", target, "; ".join(hard_errors))
+        return False
+    soft_errors = validate_research_artifacts(arts, target)
+    if soft_errors:
+        notes.append(f"尚有軟錯:{'; '.join(soft_errors)}")
+    else:
+        notes.append("規則全數通過")
+    if any(e.startswith("講稿字數超標") for e in soft_errors):
+        notes.append(f"字數超標,成片可能超過 {SHORTS_CAP_SEC:.0f}s、失去 Shorts 資格")
+    logger.warning("產物合法,照樣出片({}):{}", target, ";".join(notes))
+    return True

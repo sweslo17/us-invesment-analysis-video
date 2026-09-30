@@ -2,10 +2,18 @@
 
 import datetime as dt
 import json
+import subprocess
+from contextlib import contextmanager
 from pathlib import Path
 from types import SimpleNamespace
 
-from pmb.research.local_runner import run_local_research, validate_research_artifacts
+from loguru import logger
+
+from pmb.research.local_runner import (
+    RateLimitedError,
+    run_local_research,
+    validate_research_artifacts,
+)
 from pmb.research.sample import sample_brief_json
 from pmb.schemas.brief import Brief
 from pmb.schemas.snapshot import Snapshot
@@ -384,3 +392,89 @@ def test_prompt_includes_recent_history_block(tmp_path):
     assert "最近 1 個交易日的影片" in calls[0]
     assert str(yesterday) in calls[0]
     assert "pmb validate-research" in calls[0]
+
+
+@contextmanager
+def _warnings():
+    """收集 loguru 的 WARNING 以上訊息。"""
+    messages: list[str] = []
+    handler = logger.add(lambda m: messages.append(m.record["message"]), level="WARNING")
+    try:
+        yield messages
+    finally:
+        logger.remove(handler)
+
+
+def _outputs(settings) -> list[Path]:
+    arts = settings.artifacts_dir
+    return [arts / f"brief_{_D}.json", arts / f"script_{_D}.json", arts / f"report_{_D}.md",
+            settings.state_dir / "thesis.json"]
+
+
+def _write_soft_only_artifacts(settings) -> None:
+    """合法但有軟錯(沒有 gags)的產物 + thesis 更新。"""
+    _write_valid_artifacts(settings.artifacts_dir)
+    path = settings.artifacts_dir / f"script_{_D}.json"
+    script = json.loads(path.read_text())
+    script["gags"] = []
+    path.write_text(json.dumps(script), encoding="utf-8")
+    (settings.state_dir / "thesis.json").write_text('{"attempt": 1}', encoding="utf-8")
+
+
+def test_broken_crashing_retry_restores_last_shippable_attempt(tmp_path):
+    """第 1 次只有軟錯(可出片);第 2 次改寫到一半就逾時、把 script 寫壞 → 還原第 1 次的產物出片。"""
+    settings = _settings(tmp_path)
+    calls: list[str] = []
+    first: dict[Path, bytes] = {}
+
+    def invoke(prompt: str) -> None:
+        calls.append(prompt)
+        if len(calls) == 1:
+            _write_soft_only_artifacts(settings)
+            first.update({p: p.read_bytes() for p in _outputs(settings)})
+            return
+        (settings.artifacts_dir / f"script_{_D}.json").write_text('{"segments": [', "utf-8")
+        (settings.state_dir / "thesis.json").write_text('{"attempt": 2, ', encoding="utf-8")
+        raise subprocess.TimeoutExpired("claude", 2100)
+
+    with _warnings() as warned:
+        assert run_local_research(_D, settings, invoke=invoke, max_attempts=2)
+    assert len(calls) == 2
+    assert {p: p.read_bytes() for p in _outputs(settings)} == first
+    assert validate_research_artifacts(settings.artifacts_dir, _D, include_soft=False) == []
+    assert any("還原" in m for m in warned)
+
+
+def test_fallback_warning_names_agent_crash_not_soft_rules(tmp_path):
+    """最後一次 agent 逾時但產物合法且規則全過:WARNING 要講 agent 失敗,不能說「軟規則仍未全過」。"""
+    settings = _settings(tmp_path)
+    calls: list[str] = []
+
+    def invoke(prompt: str) -> None:
+        calls.append(prompt)
+        if len(calls) == 1:
+            _write_soft_only_artifacts(settings)
+            return
+        _write_valid_artifacts(settings.artifacts_dir)  # 修好了,但收尾時逾時
+        raise subprocess.TimeoutExpired("claude", 2100)
+
+    with _warnings() as warned:
+        assert run_local_research(_D, settings, invoke=invoke, max_attempts=2)
+    final = warned[-1]
+    assert "agent 執行失敗" in final and "照樣出片" in final
+    assert "軟規則仍未全過" not in final
+
+
+def test_fallback_warning_names_rate_limit_when_nothing_ran(tmp_path):
+    """撞額度等不到重置、本次沒跑出新產物,沿用既有合法產物:WARNING 講額度上限。"""
+    settings = _settings(tmp_path)
+    _write_valid_artifacts(settings.artifacts_dir)  # 例如稍早雲端 routine 已產出
+
+    def invoke(prompt: str) -> None:
+        raise RateLimitedError("usage limit", reset_at=None)
+
+    with _warnings() as warned:
+        assert run_local_research(_D, settings, invoke=invoke, sleep=lambda s: None)
+    final = warned[-1]
+    assert "額度上限" in final and "照樣出片" in final
+    assert "軟規則仍未全過" not in final
