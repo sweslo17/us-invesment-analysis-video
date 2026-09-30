@@ -28,6 +28,25 @@ def test_ellipsis_ends_a_sentence_and_marks_a_beat():
     assert strip_beat("不急……") == "不急"
 
 
+def test_ellipsis_after_sentence_end_attaches_to_previous_sentence():
+    out = split_sentences("Fed說不急。……債市不信。")
+    assert out == ["Fed說不急。……", "債市不信。"]
+    assert is_beat(out[0]) and not is_beat(out[1])
+    assert [u.gap_after for u in plan_vo("Fed說不急。……債市不信。")] == [BEAT_GAP, GAP]
+
+
+def test_leading_ellipsis_is_kept_in_first_sentence_and_is_not_a_beat():
+    out = split_sentences("……好吧,Fed又改口了。")
+    assert out == ["……好吧,Fed又改口了。"]
+    assert not is_beat(out[0])
+
+
+def test_split_sentences_never_drops_trailing_punctuation_runs():
+    assert split_sentences("真的假的!?") == ["真的假的!?"]
+    assert split_sentences("好吧。……") == ["好吧。……"]
+    assert split_sentences("……") == []
+
+
 def test_plan_vo_uses_long_gap_after_beat():
     utts = plan_vo("Fed說不急……債市說我急。")
     assert [u.gap_after for u in utts] == [BEAT_GAP, GAP]

@@ -352,7 +352,9 @@ def assemble_video(
         renderer = renderer_for(seg.kind)
         plan = [utt for utt in renderer.utterances(seg) if has_speakable(utt.tts_text)]
         if not plan:
-            logger.warning("segment {}({})無可發音內容,跳過", i, seg.kind)
+            logger.warning(
+                "segment {}({})無可發音內容,跳過:{!r}", i, seg.kind, seg.spoken_text[:40]
+            )
             seg_takes.append([])
             seg_durations.append(0.0)
             continue

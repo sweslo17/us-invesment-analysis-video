@@ -6,6 +6,7 @@
 from __future__ import annotations
 
 import re
+from collections.abc import Iterator
 from typing import NamedTuple
 
 from pmb.tts.edge import WordBoundary
@@ -39,22 +40,40 @@ def strip_beat(text: str) -> str:
     return text.replace("…", "").replace("⋯", "")
 
 
+def _fragments(text: str) -> Iterator[str]:
+    """依原文順序吐出 ``_SENT_RE`` 的比對結果與比對之間沒被吃掉的空隙(不丟任何字元)。
+
+    空隙只會是句首字元類別排除掉的符號(連續的句尾標點、「……」、換行),不含可發音內容。
+    """
+    cursor = 0
+    for m in _SENT_RE.finditer(text):
+        yield text[cursor : m.start()]
+        yield m.group()
+        cursor = m.end()
+    yield text[cursor:]
+
+
 def split_sentences(text: str) -> list[str]:
     """把旁白切成句子(保留句尾標點),供逐句配音與逐頁字幕。沒有標點則整段為一句。
 
     刻意不把 ASCII 句點當句尾,避免 3.8%、0.53 這類小數被切斷。沒有可發音內容的
-    碎片(句尾標點後的右引號、破折號…)併回前一句,避免送空文字給 TTS。
+    碎片(句尾標點後的右引號、破折號、緊接在句末後的「……」…)併回前一句,避免送空文字給
+    TTS;開頭沒有前句可併的符號碎片(如開場的「……」)黏在第一句前面。保留原文,不丟字。
     """
-    parts = [m.group().strip() for m in _SENT_RE.finditer(text)]
-    merged: list[str] = []
-    for part in parts:
-        if not part:
+    sentences: list[str] = []
+    lead = ""  # 開頭尚無前句可併的符號碎片
+    for frag in (f.strip() for f in _fragments(text)):
+        if not frag:
             continue
-        if not has_speakable(part) and merged:
-            merged[-1] += part  # 純符號碎片黏回前句(保留原文,不丟字)
+        if not has_speakable(frag):
+            if sentences:
+                sentences[-1] += frag
+            else:
+                lead += frag
             continue
-        merged.append(part)
-    return [p for p in merged if has_speakable(p)]
+        sentences.append(lead + frag)
+        lead = ""
+    return sentences
 
 
 def _timestamp(seconds: float) -> str:
