@@ -22,7 +22,7 @@ from pmb.video.segments.base import (
     canvas_background,
     caption_events,
 )
-from pmb.video.textfit import fit_lines
+from pmb.video.textfit import fit_lines, wrap_px
 
 _X = 60
 _W = 830  # 右緣 890,避開右側按讚欄
@@ -34,9 +34,7 @@ _INNER_W = _W - 2 * _INSET  # 格內文字最寬 750px:任何文字都落在 x=1
 _LABEL_FS = 48
 _STAT_FS = 100
 _BODY_SIZES = (96, 80)
-# 有大數字時內文只留 1 行(字要讓位給數字),沒有時可 2 行
-_BODY_LINES_WITH_STAT = 1
-_BODY_LINES_NO_STAT = 2
+_BODY_MAX_LINES = 2
 _TONES = {  # (底色, 標籤色)
     "good": ("#173404", "#97C459"),
     "bad": ("#501313", "#F09595"),
@@ -45,9 +43,18 @@ _TONES = {  # (底色, 標籤色)
 
 
 def panel_text_layout(text: str, *, has_stat: bool) -> tuple[list[str], int]:
-    """格子內文斷行 + 字級:放不下先縮字級,縮到底還是放不下就截成允許的行數並補「…」。"""
-    max_lines = _BODY_LINES_WITH_STAT if has_stat else _BODY_LINES_NO_STAT
-    return fit_lines(text, max_width=_INNER_W, sizes=_BODY_SIZES, max_lines=max_lines)
+    """格子內文斷行 + 字級:放不下先縮字級,縮到底還是放不下就截成 2 行並補「…」。
+
+    沒有大數字:96px → 80px,最多 2 行。有大數字:內文要讓位給數字,只有 96px 一行放得下才
+    用大字;否則直接 80px、最多 2 行(2 行 80px 離大數字頂緣仍有空隙),再放不下才縮字級/截斷。
+    """
+    if not has_stat:
+        return fit_lines(text, max_width=_INNER_W, sizes=_BODY_SIZES, max_lines=_BODY_MAX_LINES)
+    large, small = _BODY_SIZES
+    one_line = wrap_px(" ".join(text.split()), large, _INNER_W)
+    if len(one_line) <= 1:
+        return one_line, large
+    return fit_lines(text, max_width=_INNER_W, sizes=(small,), max_lines=_BODY_MAX_LINES)
 
 
 def _fit_one_line(text: str, size: int) -> tuple[str, int]:

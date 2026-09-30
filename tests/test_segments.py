@@ -268,8 +268,16 @@ def test_panel_text_layout_fits_or_shrinks():
     assert panel_text_layout("Fed說不急", has_stat=False) == (["Fed說不急"], 96)
     lines, size = panel_text_layout("債市完全沒在聽而且還很生氣", has_stat=True)
     assert size == 80 and len(lines) <= 2
-    lines, size = panel_text_layout("字" * 40, has_stat=True)
-    assert len(lines) <= 2 and lines[-1].endswith("…")  # 有大數字只留 1 行,縮到底才截斷補「…」
+    body = "債市完全沒在聽而且還很生氣啊真的假的欸欸"
+    assert len(body) == 20
+    lines, size = panel_text_layout(body, has_stat=True)  # 96px 一行放不下 → 80px 兩行
+    assert size == 80 and len(lines) == 2 and not lines[-1].endswith("…")
+    assert panel_text_layout("字" * 13, has_stat=True) == (["字" * 13], 80)
+    assert panel_text_layout("字" * 10, has_stat=True) == (["字" * 10], 96)
+    lines, size = panel_text_layout("字" * 40, has_stat=True)  # 80px 兩行裝不下 → 續縮,內容完整
+    assert len(lines) == 2 and size < 80 and not lines[-1].endswith("…")
+    lines, size = panel_text_layout("字" * 80, has_stat=True)  # 縮到底還放不下 → 截斷補「…」
+    assert len(lines) == 2 and size == FLOOR_SIZE and lines[-1].endswith("…")
     assert len(panel_text_layout("字" * 40, has_stat=False)[0]) == 2
 
 
@@ -332,10 +340,12 @@ def _text_extents(ass: str):
     ("Fed說不急", "債市沒在聽", "一二三四五六七八九十一二", "壞消息"),  # 12 個全形字的大數字
     ("Fed說不急\n再說一次\n第三行\n第四行", "債\n市\n沒\n在\n聽", "5.26%", "壞消息"),  # 含換行
     ("字" * 60, "字" * 60, "W" * 20, "壞" * 40),  # 全部過長:縮字級後截斷
+    ("Fed說不急", "債市完全沒在聽而且還很生氣啊真的假的欸欸", "5.26%", "壞消息"),  # 20 字兩行
 ])
 def test_split_text_never_leaves_its_panel(top, bottom, stat, label, tmp_path):
-    """逐個文字事件:估計右緣(錨點 x + line_px)<= 890、行數在允許範圍、文字不超出所屬格子,
-    下格內文不壓到大數字。事件順序 = 上格 [標籤, 內文] + 下格 [標籤, 內文, 大數字]。"""
+    """逐個文字事件:估計右緣(錨點 x + line_px)<= 890、行數在允許範圍(下格有大數字時內文最多 2 行)、
+    文字不超出所屬格子,下格內文底緣(y + 行數 × 字級)不壓到大數字頂緣(格底 - 24 - 數字字級)。
+    事件順序 = 上格 [標籤, 內文] + 下格 [標籤, 內文, 大數字]。"""
     takes = [Take("好。", "a.mp3", 1.0, []), Take("壞。", "b.mp3", 1.0, [])]
     seg = SplitSegment(vo="好。壞。",
                        top={"label": "好消息", "text": top, "tone": "good"},
@@ -346,7 +356,7 @@ def test_split_text_never_leaves_its_panel(top, bottom, stat, label, tmp_path):
     assert len(boxes) == 2 and len(events) == 5
     panels = [boxes[0]] * 2 + [boxes[1]] * 3
     for (x, y, size, bottom_anchored, lines), allowed, (bx, by, bw, bh) in zip(
-            events, [1, 2, 1, 1, 1], panels, strict=True):
+            events, [1, 2, 1, 2, 1], panels, strict=True):
         assert 1 <= len(lines) <= allowed
         assert x >= bx and x + max(line_px(ln, size) for ln in lines) <= bx + bw <= 890
         bottom_edge = y if bottom_anchored else y + len(lines) * size
