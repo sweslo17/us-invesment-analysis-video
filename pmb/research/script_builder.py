@@ -11,7 +11,7 @@ from pmb.research.punchlines import punchline_for
 from pmb.research.thesis import Thesis
 from pmb.schemas.brief import Brief
 from pmb.schemas.chart import ChartSpec
-from pmb.schemas.script import Script, Segment
+from pmb.schemas.script import CardSegment, ChartSegment, Script
 
 # 圖表段頂部主題標題(放畫面上方,與底部字幕分開)
 _CHART_TITLES: dict[str, str] = {
@@ -97,13 +97,13 @@ def build_script_from_brief(
     charts_total = max(total_seconds - n_cardlike * card_dur, float(len(ordered)))
     per_chart = charts_total / len(ordered)
 
-    def card(headline: str, *, vo: str | None = None, tag: str | None = None) -> Segment:
-        return Segment(
+    def card(headline: str, *, vo: str | None = None, tag: str | None = None) -> CardSegment:
+        return CardSegment(
             vo=vo or headline, headline=headline, tag=tag, t_start=0.0, duration=card_dur
         )
 
-    def chart_seg(idx: int, module: str, vo: str) -> Segment:
-        return Segment(
+    def chart_seg(idx: int, module: str, vo: str) -> ChartSegment:
+        return ChartSegment(
             vo=vo,
             chart_id=charts[idx].id,
             title=_CHART_TITLES.get(module),
@@ -126,7 +126,7 @@ def build_script_from_brief(
     )
 
     # 編排:開場(含日期)→(時事卡、圖表交錯)→ 每日金句,讓視覺一直變
-    sequence: list[Segment] = [intro]
+    sequence: list[CardSegment | ChartSegment] = [intro]
     ci = 0
     for idx, (module, vo) in enumerate(ordered):
         if ci < len(card_texts):

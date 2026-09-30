@@ -743,9 +743,11 @@ def assemble_video(
         takes = seg_takes[i]
         if not takes:
             continue  # Pass A 判定無可配音內容,已跳過
+        if seg.kind not in ("chart", "card"):
+            raise ValueError(f"段型「{seg.kind}」尚未支援合成")
         is_last = i == last_idx
-        cta = cta_text if (is_last and seg.headline is not None) else None
-        if seg.headline is not None:
+        cta = cta_text if (is_last and seg.kind == "card") else None
+        if seg.kind == "card":
             card_name = f"card{i}.png"
             render_card_background(str(work_dir / card_name), accent=accent_for(i))
             image, is_card, ass_name = card_name, True, f"card{i}.ass"

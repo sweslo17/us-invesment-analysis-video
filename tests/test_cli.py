@@ -81,3 +81,18 @@ def test_cover_spec_without_headline_card_is_none():
         "charts": [{"id": "c", "module": "leverage_decay", "params": {}}],
     })
     assert cover_spec(script) is None
+
+
+def test_cover_spec_takes_bignum_value_when_it_comes_first():
+    from pmb.cli import cover_spec
+    from pmb.schemas.script import Script
+
+    script = Script.model_validate({
+        "segments": [
+            {"vo": "開場。", "headline": "債市暴走", "tag": "債市日"},
+            {"kind": "bignum", "vo": "5.26%。", "value": "5.26%", "label": "10年期"},
+            {"vo": "圖。", "chart_id": "c", "stat": "+1.06%"},
+        ],
+        "charts": [{"id": "c", "module": "leverage_decay", "params": {}}],
+    })
+    assert cover_spec(script)["stat"] == "5.26%"

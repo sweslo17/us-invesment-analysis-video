@@ -9,12 +9,12 @@ from pmb.orchestrator import (
     script_coverage_gaps,
 )
 from pmb.schemas.chart import ChartSpec
-from pmb.schemas.script import Script, Segment
+from pmb.schemas.script import ChartSegment, Script
 
 
 def _write_script_with_gap(artifacts_dir, target):
     script = Script(
-        segments=[Segment(vo="x", chart_id="c0", t_start=0, duration=10)],
+        segments=[ChartSegment(vo="x", chart_id="c0", t_start=0, duration=10)],
         charts=[ChartSpec(id="c0", module="index_overnight_grid")],
         coverage_gaps=["想講『信用利差』但沒有對應圖表模組"],
     )

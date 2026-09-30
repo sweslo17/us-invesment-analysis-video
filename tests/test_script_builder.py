@@ -40,8 +40,8 @@ def test_build_script_mixes_cards_and_charts_about_30s():
     script = build_script_from_brief(_brief())
     assert script.total_duration == pytest.approx(30.0, abs=0.1)  # 每段四捨五入會有微小誤差
 
-    cards = [s for s in script.segments if s.headline]
-    chart_segs = [s for s in script.segments if s.chart_id]
+    cards = [s for s in script.segments if s.kind == "card"]
+    chart_segs = [s for s in script.segments if s.kind == "chart"]
     assert len(cards) >= 1  # 有時事標題卡(視覺變化)
     assert len(chart_segs) == len(script.charts)  # 圖表段一一對應 charts
     assert len(script.segments) >= 6

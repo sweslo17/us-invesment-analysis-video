@@ -225,7 +225,8 @@ def cmd_research(args: argparse.Namespace) -> int:
         print("  (今日無項目)")
     print(f"\n=== script({script.total_duration:.0f}s,{len(script.segments)} 段)===")
     for seg in script.segments:
-        print(f"  [{seg.t_start:>4.0f}s +{seg.duration:.0f}s · {seg.chart_id}] {seg.vo}")
+        label = getattr(seg, "chart_id", None) or seg.kind
+        print(f"  [{seg.t_start:>4.0f}s +{seg.duration:.0f}s · {label}] {seg.spoken_text}")
     print(f"\n報告:{report_path}")
     print("※ 本內容為市場資訊與風險教育,非投資建議。")
     return 0
@@ -357,15 +358,23 @@ def cmd_run(args: argparse.Namespace) -> int:
 
 
 def cover_spec(script) -> dict | None:
-    """決定封面內容:開場鉤子字卡的大標 + kicker,再配第一個圖表段的大數字(有就用)。
+    """決定封面內容:開場鉤子字卡的大標 + kicker,再配第一個帶大數字的段落(有就用)。
 
+    大數字依段落順序取圖表段 stat / 全屏大數字 value / 好壞消息格子的 stat;對帳結果不算。
     封面是靜態圖,大數字是最能在頻道頁/搜尋結果抓眼球的元素。沒有字卡就回 None。
     """
-    hook = next(((i, seg) for i, seg in enumerate(script.segments) if seg.headline), None)
+    hook = next(((i, seg) for i, seg in enumerate(script.segments) if seg.kind == "card"), None)
     if hook is None:
         return None
     idx, seg = hook
-    stat = next((s.stat for s in script.segments if s.chart_id and s.stat), None)
+    stat = next(
+        (
+            s.display_numbers[0]
+            for s in script.segments
+            if s.kind in ("chart", "bignum", "split") and s.display_numbers
+        ),
+        None,
+    )
     return {"headline": seg.headline, "tag": seg.tag, "stat": stat, "accent_index": idx}
 
 
