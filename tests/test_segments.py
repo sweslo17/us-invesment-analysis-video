@@ -23,9 +23,9 @@ from pmb.video.segments.base import (
 )
 from pmb.video.segments.bignum import count_up_frames, parse_number, value_font_size
 from pmb.video.segments.dialogue import bubble_layout, speakable_lines
-from pmb.video.segments.recap import result_layout, row_times
+from pmb.video.segments.recap import _ask_layout, result_layout, row_times
 from pmb.video.segments.registry import renderer_for
-from pmb.video.segments.split import panel_text_layout, reveal_times
+from pmb.video.segments.split import _fit_one_line, panel_text_layout, reveal_times
 from pmb.video.textfit import FLOOR_SIZE, fit_lines, line_px, wrap_px
 
 
@@ -299,6 +299,18 @@ def test_fit_lines_normalises_whitespace_and_newlines():
     assert fit_lines("", max_width=750, sizes=(60,), max_lines=2) == ([], 60)
 
 
+def test_fit_lines_keeps_a_fitting_text_on_one_line_despite_punctuation():
+    """整段放得進寬度就是一行:行寬過半後遇標點「想斷行」只是 wrap_px 的偏好,不能讓
+    max_lines=1 誤判放不下而縮字級、截斷。"""
+    text = "好消息是Fed說不急，債市沒在聽"
+    assert line_px(text, 60) <= 750 < line_px(text, 96)
+    assert wrap_px(text, 60, 750) != [text]  # 前提:wrap_px 會在逗號斷行
+    assert fit_lines(text, max_width=750, sizes=(60,), max_lines=1) == ([text], 60)
+    assert fit_lines(text, max_width=750, sizes=(60,), max_lines=2) == ([text], 60)
+    assert fit_lines(text, max_width=750, sizes=(60, 48), max_lines=1) == ([text], 60)  # 第一個字級
+    assert fit_lines(text, max_width=750, sizes=(96, 60), max_lines=1) == ([text], 60)  # 96 放不下
+
+
 @pytest.mark.parametrize("text", [
     "x" * 40, "W" * 60, "A" * 30, "1234567890" * 5, "字" * 200, "a b c " * 30, "5.26%" * 12,
     "VIX 與 10 年期殖利率同步飆升到 2026 年新高點", "好,壞。" * 30, "{花括號}" * 20,
@@ -489,7 +501,7 @@ def test_recap_render_rows_marks_and_default_title(tmp_path):
     ass = visual.ass
     assert visual.stem == "recap" and "昨天說要看的" in ass
     assert "威廉斯怎麼說" in ass and "沒守住5.26%" in ass and "12年新低" in ass
-    assert ass.count("\\p1") >= 3 + 2  # 三個 mark + 兩條分隔線
+    assert ass.count("\\p1") == 3 + 2  # 三個 mark + 兩條分隔線
     # 2 句 < 3 列 → 三列平均分布在 6 秒段內:0 / 2 / 4 秒
     assert "Dialogue: 1,0:00:02.00" in ass and "Dialogue: 1,0:00:04.00" in ass
 
@@ -542,3 +554,20 @@ def test_recap_text_never_leaves_its_row_or_the_safe_column(tmp_path):
         assert ay + a_size <= ry  # ask 底緣不壓到 result 頂緣
         next_top = tops[k + 1] if k + 1 < len(tops) else top + 250
         assert ry + len(r_lines) * r_size <= next_top
+
+
+def test_recap_ask_with_punctuation_stays_one_line_without_ellipsis():
+    ask = "十年期殖利率會不會守住百分之五點二，還是失守？"
+    assert line_px(ask, 44) < 820  # 整句放得下
+    assert _ask_layout(ask) == (ask, 44)
+
+
+def test_recap_result_with_punctuation_stays_one_line_at_full_size():
+    text = "殖利率破5.26%，創一年新高"
+    assert line_px(text, 72) <= _RECAP_RESULT_MAX_W
+    assert result_layout(text) == ([text], 72)
+
+
+def test_split_one_line_fit_keeps_size_when_punctuated_text_fits():
+    text = "一二三四五六七八，九"
+    assert _fit_one_line(text, 100) == (text, 100)

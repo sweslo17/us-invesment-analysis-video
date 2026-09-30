@@ -103,14 +103,17 @@ def fit_lines(
     """把文字放進 ``max_width`` × ``max_lines`` 的框:回傳 (斷行結果, 字級)。
 
     先壓縮空白(換行併成空白,斷行只由寬度決定);依序試 ``sizes``(由大到小)、再每次縮
-    ``SIZE_STEP`` 直到 ``floor``,第一個行數放得下的字級就用;全部都放不下,在最小字級截成
-    ``max_lines`` 行、尾端補「…」。保證每一行 ``line_px(line, size) <= max_width``
-    (只要最小字級放得下單一全形字)。
+    ``SIZE_STEP`` 直到 ``floor``,第一個行數放得下的字級就用。某字級下整段放得進一行就直接回
+    一行——``wrap_px`` 行寬過半後遇標點就斷的偏好只在真的需要多行時才生效,否則單行框會把
+    放得下的句子誤判成兩行而縮字級、截斷。全部都放不下,在最小字級截成 ``max_lines`` 行、
+    尾端補「…」。保證每一行 ``line_px(line, size) <= max_width``(只要最小字級放得下單一全形字)。
     """
     text = " ".join(text.split())
     smallest = min(sizes)
     candidates = [*sizes, *range(smallest - SIZE_STEP, floor - 1, -SIZE_STEP)]
     for size in candidates:
+        if text and line_px(text, size) <= max_width:
+            return [text], size  # 整段放得進一行就是一行:標點斷行偏好不該害單行框縮字級
         lines = wrap_px(text, size, max_width)
         if len(lines) <= max_lines:
             return lines, size
