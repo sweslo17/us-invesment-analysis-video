@@ -380,6 +380,19 @@ def _synthesize_takes(
     return takes
 
 
+def _render_optional(render: Callable[..., str], u: int, kind: str) -> str | None:
+    """渲染 optional 段:失敗先不帶音效重試一次,仍失敗回 None(呼叫端略過該段,影片照出)。"""
+    try:
+        return render(u)
+    except RuntimeError as exc:
+        logger.warning("{} 渲染失敗,拿掉音效重試一次:{}", kind, exc)
+    try:
+        return render(u, with_sfx=False)
+    except RuntimeError as exc:
+        logger.warning("{} 不帶音效仍渲染失敗,略過該段(影片照出):{}", kind, exc)
+        return None
+
+
 def assemble_video(
     script: Script,
     snapshot: Snapshot,
@@ -399,7 +412,8 @@ def assemble_video(
     """合成直式短影片並回傳 mp4 路徑。段級渲染 + 卡拉OK字幕 + 動態;詳見模組 docstring。
 
     ``slogan_intro`` 給了就在 hook 後插口號轉場(``sting_sfx`` 為其音效);``slogan_outro``
-    接在最後一段(模型已寫同義句就不重複)。口號轉場配音失敗只略過該段,影片照出。"""
+    接在最後一段(模型已寫同義句就不重複)。口號轉場配音失敗只略過該段;渲染失敗(如音效檔
+    解不開)先拿掉音效重試,仍失敗才略過該段——影片都照出。"""
     out_path = Path(out_path).resolve()
     work_dir = Path(work_dir)
     work_dir.mkdir(parents=True, exist_ok=True)
@@ -452,14 +466,13 @@ def assemble_video(
     d = snapshot.session_date
     badge = f"{channel_name} · {d.month}/{d.day}"
     cta_text = f"明天盤前見 · 追蹤 {channel_name}"
-    last_u = usable[-1] if usable else len(units) - 1
-    clip_names: list[str] = []
-    for u, (i, seg) in enumerate(units):
+
+    def render_unit(u: int, *, with_sfx: bool = True) -> str:
+        """渲染第 ``u`` 個 unit 的 clip,回傳檔名;時間軸(starts/total/usable)在呼叫當下讀。"""
+        i, seg = units[u]
         takes = seg_takes[u]
-        if not takes:
-            continue  # Pass A 判定無可配音內容,已跳過
         renderer = renderer_for(seg.kind)
-        is_last = u == last_u
+        is_last = u == (usable[-1] if usable else len(units) - 1)
         ctx = RenderContext(
             index=i, duration=seg_durations[u], takes=takes,
             starts=take_starts(takes, renderer.lead_in), font=font, work_dir=work_dir,
@@ -474,12 +487,30 @@ def assemble_video(
             image=visual.image, is_card=visual.is_card, takes=takes,
             seg_duration=seg_durations[u], ass_name=ass_name, global_offset=starts[u],
             global_total=total, is_last=is_last, out=clip_name, work_dir=work_dir,
-            lead_in=renderer.lead_in, sfx=visual.sfx,
+            lead_in=renderer.lead_in, sfx=visual.sfx if with_sfx else None,
         )
-        clip_names.append(clip_name)
         logger.info(
             "segment {}/{}({})完成({:.1f}s)", u + 1, len(units), seg.kind, seg_durations[u]
         )
+        return clip_name
+
+    # optional 段(口號轉場)先渲染:失敗先拿掉音效重試一次(音效壞檔不該殺掉整支片),仍失敗
+    # 就整段略過並從時間軸拿掉,再渲染其餘各段——進度條與總長都以定案的時間軸計算,不留空洞。
+    # 目前只有一段 optional,它渲染時時間軸就是最終版本。
+    clips: dict[int, str] = {}
+    for u in [u for u in usable if renderer_for(units[u][1].kind).optional]:
+        clip = _render_optional(render_unit, u, units[u][1].kind)
+        if clip is not None:
+            clips[u] = clip
+            continue
+        seg_takes[u] = []
+        seg_durations[u] = 0.0
+        usable.remove(u)
+        starts, total = segment_timeline(seg_durations)
+    for u in usable:  # Pass A 判定無可配音內容的段不在 usable 裡,已跳過
+        if u not in clips:
+            clips[u] = render_unit(u)
+    clip_names = [clips[u] for u in usable]
 
     listing = work_dir / "clips.txt"
     listing.write_text("".join(f"file '{name}'\n" for name in clip_names), encoding="utf-8")

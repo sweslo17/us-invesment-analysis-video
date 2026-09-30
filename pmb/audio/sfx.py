@@ -5,11 +5,14 @@
 
 from __future__ import annotations
 
+import subprocess
 import wave
 from pathlib import Path
 
 import numpy as np
 from loguru import logger
+
+from pmb.tts.edge import probe_duration
 
 _SR = 44100
 _TOTAL_SEC = 0.55
@@ -63,12 +66,19 @@ def generate_sting(out_path: str | Path) -> Path:
 
 
 def resolve_sting_sfx(sfx_dir: Path, work_dir: Path) -> Path | None:
-    """挑轉場音效:自備檔優先,否則程序化合成;失敗就略過音效(口號照播)。"""
+    """挑轉場音效:自備檔優先(要 ffprobe 讀得出長度,壞檔記 WARNING 跳過),否則程序化合成;
+    合成也失敗就略過音效(口號照播)。"""
     for name in _USER_NAMES:
         candidate = Path(sfx_dir) / name
-        if candidate.exists():
-            logger.info("轉場音效用自備檔:{}", candidate)
-            return candidate.resolve()
+        if not candidate.exists():
+            continue
+        try:
+            probe_duration(candidate)
+        except (subprocess.CalledProcessError, ValueError, OSError) as exc:
+            logger.warning("自備轉場音效 {} 解不開,改用程序化音效:{}", candidate, exc)
+            continue
+        logger.info("轉場音效用自備檔:{}", candidate)
+        return candidate.resolve()
     try:
         return generate_sting(Path(work_dir) / "sting_sfx.wav").resolve()
     except Exception as exc:  # noqa: BLE001

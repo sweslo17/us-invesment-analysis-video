@@ -345,6 +345,93 @@ def test_sting_tts_failure_is_skipped_not_fatal(tmp_path):
     assert len((work / "clips.txt").read_text().splitlines()) == 2
 
 
+def _two_segment_script():
+    from pmb.schemas.script import Script
+
+    return Script.model_validate({
+        "segments": [{"vo": "開場。", "headline": "標題", "tag": "k"},
+                     {"vo": "圖表。", "chart_id": "lev"}],
+        "charts": [{"id": "lev", "module": "leverage_decay", "params": {}}],
+    })
+
+
+def test_undecodable_sting_sfx_retries_without_sfx_and_ships(tmp_path, monkeypatch):
+    """音效檔解不開 → 口號轉場拿掉音效重渲一次,口號照播、影片照出(規格 §8)。"""
+    from pmb.tts.edge import silent_synth
+    from pmb.video import assemble as asm
+
+    junk = tmp_path / "sting.mp3"
+    junk.write_bytes(b"not audio at all")
+    calls: list[tuple[str, str | None]] = []
+    real = asm._render_segment_clip
+
+    def spy(**kw):
+        calls.append((kw["out"], kw["sfx"]))
+        return real(**kw)
+
+    monkeypatch.setattr(asm, "_render_segment_clip", spy)
+    work = tmp_path / "work"
+    out = asm.assemble_video(
+        _two_segment_script(), _sting_snapshot(), tmp_path / "o.mp4",
+        synth_fn=lambda text, path, planned, voice: silent_synth(text, path, duration=0.5),
+        work_dir=work, font="PingFang TC", master_audio=False,
+        slogan_intro="美股早發車,發車!", sting_sfx=junk,
+    )
+    assert out.exists() and out.stat().st_size > 0
+    sting_calls = [sfx for name, sfx in calls if name == "clip1.mp4"]
+    assert sting_calls == [str(junk.resolve()), None]  # 帶音效失敗 → 不帶音效重試成功
+    assert len((work / "clips.txt").read_text().splitlines()) == 3
+
+
+def test_sting_clip_render_failure_is_skipped_and_timeline_closes_gap(tmp_path, monkeypatch):
+    """口號轉場連不帶音效都渲染失敗 → 整段略過;其餘段的進度條總長/起點不含它,不留空洞。"""
+    from pmb.tts.edge import silent_synth
+    from pmb.video import assemble as asm
+
+    real = asm._render_segment_clip
+    rendered: list[dict] = []
+
+    def flaky(**kw):
+        if kw["ass_name"].startswith("sting"):
+            raise RuntimeError("ffmpeg 失敗(rc=183)")
+        rendered.append(kw)
+        return real(**kw)
+
+    monkeypatch.setattr(asm, "_render_segment_clip", flaky)
+    work = tmp_path / "work"
+    out = asm.assemble_video(
+        _two_segment_script(), _sting_snapshot(), tmp_path / "o.mp4",
+        synth_fn=lambda text, path, planned, voice: silent_synth(text, path, duration=0.5),
+        work_dir=work, font="PingFang TC", master_audio=False, slogan_intro="美股早發車,發車!",
+    )
+    assert out.exists()
+    assert (work / "clips.txt").read_text().splitlines() == ["file 'clip0.mp4'", "file 'clip2.mp4'"]
+    hook, chart = rendered
+    assert hook["global_offset"] == 0.0
+    assert chart["global_offset"] == pytest.approx(hook["seg_duration"])  # 沒有 sting 的空洞
+    total = hook["seg_duration"] + chart["seg_duration"]
+    assert hook["global_total"] == pytest.approx(total)
+    assert chart["global_total"] == pytest.approx(total)
+    assert chart["is_last"] and not hook["is_last"]
+
+
+def test_non_optional_segment_clip_failure_still_raises(tmp_path, monkeypatch):
+    """腳本段的 clip 渲染失敗照舊讓整支片失敗(只有系統插入的口號轉場可以略過)。"""
+    from pmb.tts.edge import silent_synth
+    from pmb.video import assemble as asm
+
+    def broken(**kw):
+        raise RuntimeError("ffmpeg 失敗(rc=1)")
+
+    monkeypatch.setattr(asm, "_render_segment_clip", broken)
+    with pytest.raises(RuntimeError, match="ffmpeg"):
+        asm.assemble_video(
+            _two_segment_script(), _sting_snapshot(), tmp_path / "o.mp4",
+            synth_fn=lambda text, path, planned, voice: silent_synth(text, path, duration=0.5),
+            work_dir=tmp_path / "work", font="PingFang TC", master_audio=False,
+        )
+
+
 def test_non_optional_segment_tts_failure_still_raises(tmp_path):
     """只有系統插入的口號轉場可以配音失敗後略過;腳本裡的段配音失敗照舊讓整支片失敗。"""
     from pmb.schemas.script import Script
