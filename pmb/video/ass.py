@@ -14,6 +14,7 @@ from pmb.video.captions import wrap_caption
 WIDTH, HEIGHT = 1080, 1920
 BG_HEX = "0D1B2A"  # 與 charts.library._CANVAS 一致
 GOLD_HEX = "FFD166"  # 品牌金(標題/進度條/字幕掃色)
+WHITE_HEX = "FFFFFF"  # 色塊上的內文白
 
 # Shorts 播放器 UI 遮蔽區(實機量測的保守值):底部標題/頻道/描述列、右側按讚/留言/分享欄。
 # 所有文字都不得落進去,否則觀眾在 app 裡根本看不到。

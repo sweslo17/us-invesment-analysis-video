@@ -2,13 +2,12 @@
 
 from __future__ import annotations
 
-from loguru import logger
-
 from pmb.schemas.script import Panel, SplitSegment
 from pmb.video.ass import (
     ASS_TEMPLATE,
     FADE_TAG,
     GOLD_HEX,
+    WHITE_HEX,
     ass_color,
     common_events,
     full_event,
@@ -16,7 +15,6 @@ from pmb.video.ass import (
     shape_event,
     text_event,
 )
-from pmb.video.captions import wrap_lines
 from pmb.video.segments.base import (
     RenderContext,
     SegmentRenderer,
@@ -24,6 +22,7 @@ from pmb.video.segments.base import (
     canvas_background,
     caption_events,
 )
+from pmb.video.textfit import fit_lines
 
 _X = 60
 _W = 830  # 右緣 890,避開右側按讚欄
@@ -31,29 +30,30 @@ _TOPS = (290, 800)
 _H = 470
 _RADIUS = 28
 _INSET = 40
+_INNER_W = _W - 2 * _INSET  # 格內文字最寬 750px:任何文字都落在 x=100..850
 _LABEL_FS = 48
 _STAT_FS = 100
-# (字級, 最多行數):有 stat 時字要讓位給數字
-_LAYOUTS_WITH_STAT = ((96, 1), (80, 2))
-_LAYOUTS_NO_STAT = ((96, 2), (80, 2))
+_BODY_SIZES = (96, 80)
+# 有大數字時內文只留 1 行(字要讓位給數字),沒有時可 2 行
+_BODY_LINES_WITH_STAT = 1
+_BODY_LINES_NO_STAT = 2
 _TONES = {  # (底色, 標籤色)
     "good": ("#173404", "#97C459"),
     "bad": ("#501313", "#F09595"),
     "neutral": ("#0C447C", "#85B7EB"),
 }
-_TEXT_HEX = "#FFFFFF"
 
 
 def panel_text_layout(text: str, *, has_stat: bool) -> tuple[list[str], int]:
-    """格子內文斷行 + 字級;都放不下就用最小字級截成允許的行數。"""
-    layouts = _LAYOUTS_WITH_STAT if has_stat else _LAYOUTS_NO_STAT
-    for size, max_lines in layouts:
-        lines = wrap_lines(text, int((_W - 2 * _INSET) / size))
-        if len(lines) <= max_lines:
-            return lines, size
-    size, max_lines = layouts[-1]
-    logger.warning("好壞消息格子文字過長,截斷:{}", text)
-    return wrap_lines(text, int((_W - 2 * _INSET) / size))[:max_lines], size
+    """格子內文斷行 + 字級:放不下先縮字級,縮到底還是放不下就截成允許的行數並補「…」。"""
+    max_lines = _BODY_LINES_WITH_STAT if has_stat else _BODY_LINES_NO_STAT
+    return fit_lines(text, max_width=_INNER_W, sizes=_BODY_SIZES, max_lines=max_lines)
+
+
+def _fit_one_line(text: str, size: int) -> tuple[str, int]:
+    """標籤/大數字:單行,放不下先縮字級、到底還放不下補「…」。"""
+    lines, fitted = fit_lines(text, max_width=_INNER_W, sizes=(size,), max_lines=1)
+    return "".join(lines), fitted
 
 
 def reveal_times(ctx: RenderContext) -> tuple[float, float]:
@@ -64,17 +64,19 @@ def reveal_times(ctx: RenderContext) -> tuple[float, float]:
 
 def _panel_events(panel: Panel, top: int, start: float, end: float) -> list[str]:
     bg_hex, label_hex = _TONES[panel.tone]
+    label, label_size = _fit_one_line(panel.label, _LABEL_FS)
+    lines, size = panel_text_layout(panel.text, has_stat=bool(panel.stat))
     events = [
         shape_event(start, end, _X, top, rounded_rect(_W, _H, _RADIUS), ass_color(bg_hex)),
-        text_event(start, end, _X + _INSET, top + 36, panel.label, size=_LABEL_FS,
+        text_event(start, end, _X + _INSET, top + 36, label, size=label_size,
                    color=ass_color(label_hex)),
+        text_event(start, end, _X + _INSET, top + 110, "\\N".join(lines), size=size,
+                   color=ass_color(WHITE_HEX)),
     ]
-    lines, size = panel_text_layout(panel.text, has_stat=bool(panel.stat))
-    events.append(text_event(start, end, _X + _INSET, top + 110, "\\N".join(lines), size=size,
-                             color=ass_color(_TEXT_HEX)))
     if panel.stat:
-        events.append(text_event(start, end, _X + _INSET, top + _H - 24, panel.stat,
-                                 size=_STAT_FS, color=ass_color(GOLD_HEX), align=1))
+        stat, stat_size = _fit_one_line(panel.stat, _STAT_FS)
+        events.append(text_event(start, end, _X + _INSET, top + _H - 24, stat,
+                                 size=stat_size, color=ass_color(GOLD_HEX), align=1))
     return events
 
 

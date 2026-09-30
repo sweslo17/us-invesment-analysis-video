@@ -24,6 +24,7 @@ from pmb.video.segments.base import (
 from pmb.video.segments.dialogue import bubble_layout, speakable_lines
 from pmb.video.segments.registry import renderer_for
 from pmb.video.segments.split import panel_text_layout, reveal_times
+from pmb.video.textfit import FLOOR_SIZE, fit_lines, line_px, wrap_px
 
 
 def test_ellipsis_ends_a_sentence_and_marks_a_beat():
@@ -156,8 +157,10 @@ def test_bubble_layout_shrinks_then_truncates_long_text():
     assert len(lines) == 2 and fs == 60  # 多一個字就換行,但還不用縮字級
     lines, fs = bubble_layout("這一句真的" + "超級" * 12 + "長,長到兩行都裝不下喔")
     assert fs == 48 and len(lines) == 2  # 60px 要 3 行 → 改 48px 收成 2 行
+    lines, fs = bubble_layout("字" * 50)
+    assert fs == 40 and len(lines) == 2 and not lines[1].endswith("…")  # 48px 要 3 行 → 續縮放得下
     lines, fs = bubble_layout("字" * 80)
-    assert fs == 48 and len(lines) == 2 and lines[1].endswith("…")  # 再長就截斷
+    assert fs == FLOOR_SIZE and len(lines) == 2 and lines[1].endswith("…")  # 縮到底還放不下才截斷
     assert bubble_layout("十月升息\n不急。")[0] == ["十月升息 不急。"]  # 內文換行不影響斷行與框高
 
 
@@ -266,30 +269,87 @@ def test_panel_text_layout_fits_or_shrinks():
     lines, size = panel_text_layout("債市完全沒在聽而且還很生氣", has_stat=True)
     assert size == 80 and len(lines) <= 2
     lines, size = panel_text_layout("字" * 40, has_stat=True)
-    assert len(lines) <= 2
+    assert len(lines) <= 2 and lines[-1].endswith("…")  # 有大數字只留 1 行,縮到底才截斷補「…」
+    assert len(panel_text_layout("字" * 40, has_stat=False)[0]) == 2
 
 
-def test_split_panels_stay_in_safe_zone_and_text_clears_stat(tmp_path):
-    """兩格都落在安全區(右緣 <= 910、下緣 <= 1520);下格最壞情況(80px 兩行內文 + 100px 大數字)
-    內文底緣離大數字頂緣仍有空隙,文字與數字不重疊。"""
+def test_fit_lines_fits_shrinks_then_truncates_with_ellipsis():
+    kw = {"max_width": 750, "sizes": (96, 80)}
+    assert fit_lines("短句", max_lines=1, **kw) == (["短句"], 96)  # 放得下就用最大字級
+    assert fit_lines("字" * 13, max_lines=1, **kw) == (["字" * 13], 80)  # 96px 放不下 → 第二字級
+    assert fit_lines("字" * 14, max_lines=1, **kw) == (["字" * 14], 72)  # 列表字級不夠 → 每次縮 4px
+    lines, size = fit_lines("字" * 200, max_lines=2, **kw)
+    assert size == FLOOR_SIZE and len(lines) == 2 and lines[-1].endswith("…")  # 縮到底才截斷
+    assert not lines[0].endswith("…")
+
+
+def test_fit_lines_normalises_whitespace_and_newlines():
+    lines, _ = fit_lines(" 十月升息\n\n不急。\t對吧  ", max_width=750, sizes=(60,), max_lines=2)
+    assert lines == ["十月升息 不急。 對吧"]
+    assert fit_lines("", max_width=750, sizes=(60,), max_lines=2) == ([], 60)
+
+
+@pytest.mark.parametrize("text", [
+    "x" * 40, "W" * 60, "A" * 30, "1234567890" * 5, "字" * 200, "a b c " * 30, "5.26%" * 12,
+    "VIX 與 10 年期殖利率同步飆升到 2026 年新高點", "好,壞。" * 30, "{花括號}" * 20,
+])
+@pytest.mark.parametrize(("max_width", "sizes", "max_lines"), [
+    (750, (96, 80), 1), (750, (96, 80), 2), (756, (60, 48), 2), (200, (48,), 1),
+])
+def test_fit_lines_every_line_fits_the_width(text, max_width, sizes, max_lines):
+    lines, size = fit_lines(text, max_width=max_width, sizes=sizes, max_lines=max_lines)
+    assert 1 <= len(lines) <= max_lines and size >= FLOOR_SIZE
+    assert all(line_px(ln, size) <= max_width for ln in lines)
+    assert all("\n" not in ln and ln == ln.strip() for ln in lines)
+
+
+def test_line_px_measures_braces_as_the_fullwidth_glyphs_text_event_renders():
+    assert line_px("{}", 60) == line_px("｛｝", 60)
+
+
+def test_wrap_px_keeps_number_runs_whole_unless_a_run_alone_overflows():
+    assert wrap_px("收盤在7747點", 60, 200) == ["收盤在", "7747點"]  # 放不下就整串移到下一行
+    lines = wrap_px("x" * 40, 60, 400)  # 單一英數串自己就超寬才硬切
+    assert len(lines) > 1 and "".join(lines) == "x" * 40
+    assert all(line_px(ln, 60) <= 400 for ln in lines)
+
+
+def _text_extents(ass: str):
+    """(錨點 x, 錨點 y, 字級, 是否底部對齊, 斷行清單) 依事件順序;只取 free 樣式的文字事件。"""
+    out = []
+    for ln in ass.splitlines():
+        if not ln.startswith("Dialogue:") or ",free," not in ln or "\\p1" in ln:
+            continue
+        x, y = (int(v) for v in re.search(r"\\move\(-?\d+,-?\d+,(-?\d+),(-?\d+),", ln).groups())
+        size = int(re.search(r"\\fs(\d+)", ln).group(1))
+        out.append((x, y, size, "\\an1" in ln, ln.split("}", 1)[1].split("\\N")))
+    return out
+
+
+@pytest.mark.parametrize(("top", "bottom", "stat", "label"), [
+    ("Fed說不急", "債市沒在聽", "5.26%", "壞消息"),
+    ("x" * 40, "A" * 30, "5.26%", "壞消息"),  # 不可斷的長英數串
+    ("Fed說不急", "債市沒在聽", "一二三四五六七八九十一二", "壞消息"),  # 12 個全形字的大數字
+    ("Fed說不急\n再說一次\n第三行\n第四行", "債\n市\n沒\n在\n聽", "5.26%", "壞消息"),  # 含換行
+    ("字" * 60, "字" * 60, "W" * 20, "壞" * 40),  # 全部過長:縮字級後截斷
+])
+def test_split_text_never_leaves_its_panel(top, bottom, stat, label, tmp_path):
+    """逐個文字事件:估計右緣(錨點 x + line_px)<= 890、行數在允許範圍、文字不超出所屬格子,
+    下格內文不壓到大數字。事件順序 = 上格 [標籤, 內文] + 下格 [標籤, 內文, 大數字]。"""
     takes = [Take("好。", "a.mp3", 1.0, []), Take("壞。", "b.mp3", 1.0, [])]
     seg = SplitSegment(vo="好。壞。",
-                       top={"label": "好消息", "text": "字" * 40, "tone": "good"},
-                       bottom={"label": "壞消息", "text": "債市完全沒在聽而且還很生氣",
-                               "stat": "5.26%", "tone": "bad"})
+                       top={"label": "好消息", "text": top, "tone": "good"},
+                       bottom={"label": label, "text": bottom, "stat": stat, "tone": "bad"})
     ass = renderer_for("split").render(seg, _ctx(takes, work_dir=tmp_path)).ass
     boxes, _ = _events(ass)
-    assert len(boxes) == 2
-    for x, y, w, h in boxes:
-        assert x + w <= 910 and y + h <= 1520
-    text_bottom = stat_top = None
-    for ln in ass.splitlines():
-        if ",free," not in ln or "\\p1" in ln:
-            continue
-        y = int(re.search(r"\\move\(-?\d+,-?\d+,-?\d+,(-?\d+),", ln).group(1))
-        if "\\fs80" in ln and y > boxes[1][1]:  # 下格內文:頂緣 y + 行數 × 字級(libass 行距 = 字級)
-            text_bottom = y + (ln.count("\\N") + 1) * 80
-        elif "\\fs100" in ln:  # 大數字:底緣對齊(\an1),頂緣 = y - 字級
-            stat_top = y - 100
-    assert text_bottom is not None and stat_top is not None
-    assert stat_top - text_bottom >= 40
+    events = _text_extents(ass)
+    assert len(boxes) == 2 and len(events) == 5
+    panels = [boxes[0]] * 2 + [boxes[1]] * 3
+    for (x, y, size, bottom_anchored, lines), allowed, (bx, by, bw, bh) in zip(
+            events, [1, 2, 1, 1, 1], panels, strict=True):
+        assert 1 <= len(lines) <= allowed
+        assert x >= bx and x + max(line_px(ln, size) for ln in lines) <= bx + bw <= 890
+        bottom_edge = y if bottom_anchored else y + len(lines) * size
+        assert by <= y and bottom_edge <= by + bh
+    (_, body_y, body_size, _, body_lines), (_, stat_y, stat_size, _, _) = events[3], events[4]
+    assert stat_y - stat_size - (body_y + len(body_lines) * body_size) >= 40

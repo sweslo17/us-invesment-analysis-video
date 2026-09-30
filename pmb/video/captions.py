@@ -91,7 +91,7 @@ def build_srt(cues: list[tuple[str, float, float]]) -> str:
     return "\n".join(blocks)
 
 
-_BREAK_AFTER = "，、,。!?!?;；:：…)）」』】"
+BREAK_AFTER = "，、,。!?!?;；:：…)）」』】"
 
 
 def char_units(ch: str) -> float:
@@ -121,7 +121,7 @@ def wrap_lines(text: str, max_units: int = MAX_UNITS) -> list[str]:
         width += char_units(ch)
         nxt = text[i + 1] if i + 1 < len(text) else ""
         in_run = _is_ascii_alnum(ch) and (_is_ascii_alnum(nxt) or nxt in ".%")
-        if (ch in _BREAK_AFTER and width >= max_units * 0.55) or (
+        if (ch in BREAK_AFTER and width >= max_units * 0.55) or (
             width >= max_units and not in_run
         ):
             lines.append("".join(cur))
