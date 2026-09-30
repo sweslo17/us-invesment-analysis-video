@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 
 from pmb.schemas.script import DialogueSegment
-from pmb.video.ass import ass_color, rounded_rect
+from pmb.video.ass import ass_color, rounded_rect, text_event
 from pmb.video.captions import is_beat, split_sentences, strip_beat
 from pmb.video.segments.base import (
     BEAT_GAP,
@@ -147,12 +147,39 @@ def test_unspeakable_line_is_dropped_consistently():
 
 
 def test_bubble_layout_shrinks_then_truncates_long_text():
+    # 容量依 PingFang TC 實測校準:60px 一行約 17 個全形字、48px 約 22 個
     lines, fs = bubble_layout("短句")
     assert lines == ["短句"] and fs == 60
-    lines, fs = bubble_layout("這一句真的超級超級超級超級超級超級長,長到兩行都裝不下喔")
-    assert fs == 48 and len(lines) == 2
-    lines, fs = bubble_layout("字" * 60)
-    assert len(lines) == 2 and lines[1].endswith("…")
+    assert bubble_layout("字" * 17) == (["字" * 17], 60)  # 剛好一行
+    lines, fs = bubble_layout("字" * 18)
+    assert len(lines) == 2 and fs == 60  # 多一個字就換行,但還不用縮字級
+    lines, fs = bubble_layout("這一句真的" + "超級" * 12 + "長,長到兩行都裝不下喔")
+    assert fs == 48 and len(lines) == 2  # 60px 要 3 行 → 改 48px 收成 2 行
+    lines, fs = bubble_layout("字" * 80)
+    assert fs == 48 and len(lines) == 2 and lines[1].endswith("…")  # 再長就截斷
+    assert bubble_layout("十月升息\n不急。")[0] == ["十月升息 不急。"]  # 內文換行不影響斷行與框高
+
+
+def _events(ass: str):
+    """(泡泡框 [(x, y, w, h)], 角色名頂緣 y 清單);座標取 ``\\move`` 的終點、框尺寸取繪圖路徑。"""
+    boxes, label_tops = [], []
+    for ln in ass.splitlines():
+        if not ln.startswith("Dialogue:") or ",free," not in ln:
+            continue
+        x, y = (int(v) for v in re.search(r"\\move\(-?\d+,-?\d+,(-?\d+),(-?\d+),", ln).groups())
+        if "\\p1" in ln:
+            nums = [int(n) for n in re.findall(r"-?\d+", re.search(r"\}(m [^{]+)\{", ln).group(1))]
+            boxes.append((x, y, max(nums[0::2]), max(nums[1::2])))
+        elif "\\fs40" in ln:
+            label_tops.append(y)
+    return boxes, label_tops
+
+
+def _render_ass(seg, tmp_path):
+    renderer = renderer_for("dialogue")
+    takes = [Take(u.text, f"{i}.mp3", 1.0, [], GAP, False)
+             for i, u in enumerate(renderer.utterances(seg))]
+    return renderer.render(seg, _ctx(takes, work_dir=tmp_path)).ass
 
 
 def test_dialogue_shapes_stay_inside_safe_zone(tmp_path):
@@ -164,14 +191,47 @@ def test_dialogue_shapes_stay_inside_safe_zone(tmp_path):
         {"speaker": "Fed", "voice": "a", "text": "字" * 60},
         {"speaker": "債市", "voice": "b", "text": "VIX 一路衝上 2026 點"},
     ])
-    takes = [Take(u.text, f"{i}.mp3", 1.0, [], GAP, False)
-             for i, u in enumerate(renderer_for("dialogue").utterances(seg))]
-    ass = renderer_for("dialogue").render(seg, _ctx(takes, work_dir=tmp_path)).ass
-    shapes = [ln for ln in ass.splitlines() if "\\p1" in ln]
-    assert len(shapes) == 4
-    for ln in shapes:
-        x, y = (int(v) for v in re.search(r"\\move\(\d+,\d+,(\d+),(\d+),", ln).groups())
-        path = re.search(r"\}(m [^{]+)\{", ln).group(1)
-        nums = [int(n) for n in re.findall(r"-?\d+", path)]
-        width, height = max(nums[0::2]), max(nums[1::2])
-        assert x + width <= 910 and y + height <= 1520
+    boxes, _ = _events(_render_ass(seg, tmp_path))
+    assert len(boxes) == 4
+    for x, y, w, h in boxes:
+        assert x + w <= 910 and y + h <= 1520
+
+
+def test_two_line_bubbles_leave_room_for_the_next_label(tmp_path):
+    """libass 行距 = 字級:四個兩行 60px 泡泡交錯排,每個泡泡底緣離下一槽角色名頂緣 >= 10px。"""
+    texts = ["十月升息不急,但債市完全不買單,而且覺得自己被大家當成冤大頭。",
+             "你說不急就不急,債市的帳本上,我手上的部位可不是這麼說的喔。",
+             "那我問你,殖利率都創新高了,你還敢說不急嗎?給個痛快話。",
+             "敢啊,鴿派的話我可以一天講三遍,債市愛不愛聽我都完全不管啦。"]
+    for text in texts:
+        lines, fs = bubble_layout(text)
+        assert fs == 60 and len(lines) == 2 and all(13 <= len(ln) <= 16 for ln in lines), text
+    seg = _dialogue(lines=[
+        {"speaker": "Fed" if k % 2 == 0 else "債市", "voice": "ab"[k % 2], "text": t}
+        for k, t in enumerate(texts)
+    ])
+    boxes, label_tops = _events(_render_ass(seg, tmp_path))
+    assert len(boxes) == len(label_tops) == 4
+    for (_, y, _, h), next_label in zip(boxes, label_tops[1:], strict=False):
+        assert next_label - (y + h) >= 10
+
+
+@pytest.mark.parametrize("run", ["1234567890" * 4, "x" * 40, "W" * 40, "VIX" + "9" * 37])
+def test_unbreakable_ascii_run_never_leaves_the_bubble_column(run, tmp_path):
+    """wrap_lines 不會從中間切英數串;泡泡要縮字級(下限 36)到放得進,A/B 兩側框都在 70..870。"""
+    lines, fs = bubble_layout(run)
+    assert 36 <= fs <= 60 and len(lines) <= 2
+    seg = _dialogue(lines=[
+        {"speaker": "Fed", "voice": "a", "text": run},
+        {"speaker": "債市", "voice": "b", "text": run},
+    ])
+    boxes, _ = _events(_render_ass(seg, tmp_path))
+    assert len(boxes) == 2
+    for x, _, w, _ in boxes:
+        assert 70 <= x and x + w <= 870
+
+
+def test_text_event_escapes_override_braces_and_raw_newlines():
+    ev = text_event(0, 1, 10, 20, "a{b}c\nd\\Ne", size=40, color="&H000000&")
+    assert ev.split("}", 1)[1] == "a｛b｝c\\Nd\\Ne"  # 花括號全形化、真換行變 \N、既有的 \N 不動
+    assert "\n" not in ev
