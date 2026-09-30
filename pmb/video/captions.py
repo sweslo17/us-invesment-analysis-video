@@ -14,8 +14,10 @@ MAX_UNITS = 13  # 字幕每行寬度上限(中文 1、英數 0.55);13×64px 塞�
 MAX_LINES = 2  # 字幕每頁最多行數(保證不蓋圖)
 
 
-# 句尾標點不含 ASCII 句點「.」,否則 3.8% 這類小數會被誤切
-_SENT_RE = re.compile(r"[^。!?！?;;；\n]+[。!?！?;;；]?")
+# 句尾標點不含 ASCII 句點「.」,否則 3.8% 這類小數會被誤切。「……」(或「⋯⋯」)也算句末:
+# 冷面反差的 punchline 前停一拍(見 is_beat)。
+_SENT_RE = re.compile(r"[^。!?！?;;；\n…⋯]+(?:[…⋯]+[。!?！?;;；」』)）]*|[。!?！?;;；])?")
+_BEAT_RE = re.compile(r"[…⋯]+[。!?！?;;；」』)）]*$")
 
 
 def has_speakable(text: str) -> bool:
@@ -25,6 +27,16 @@ def has_speakable(text: str) -> bool:
     2026-07-30 就因此讓整支影片合成失敗,故一律先過濾。
     """
     return any(ch.isalnum() for ch in text)
+
+
+def is_beat(sentence: str) -> bool:
+    """這句以「……」收尾 → 念完要停一拍(punchline 前的空檔)。"""
+    return bool(_BEAT_RE.search(sentence.strip()))
+
+
+def strip_beat(text: str) -> str:
+    """送 TTS 前拿掉刪節號(停頓由合成端的句間空白負責;字幕保留)。"""
+    return text.replace("…", "").replace("⋯", "")
 
 
 def split_sentences(text: str) -> list[str]:

@@ -101,13 +101,13 @@ def test_segment_timeline_accumulates_actual_durations():
 
 
 def _take(text: str, duration: float = 2.0):
-    from pmb.video.assemble import _Take
+    from pmb.video.segments.base import Take
 
-    return _Take(text, "x.mp3", duration, [])
+    return Take(text, "x.mp3", duration, [])
 
 
 def test_build_card_ass_animates_headline_pop_in_with_tag():
-    from pmb.video.assemble import build_card_ass
+    from pmb.video.segments.card import build_card_ass
 
     ass = build_card_ass("鷹鴿吵不完\n今天非農裁判", tag="盤前快報", duration=3.0, font="F")
     assert "Style: card" in ass and "Style: kicker" in ass
@@ -117,14 +117,14 @@ def test_build_card_ass_animates_headline_pop_in_with_tag():
 
 
 def test_build_card_ass_without_tag_has_no_kicker_event():
-    from pmb.video.assemble import build_card_ass
+    from pmb.video.segments.card import build_card_ass
 
     ass = build_card_ass("只有大標", tag=None, duration=2.0, font="F")
     assert ass.count("Dialogue:") == 1
 
 
 def test_segment_ass_draws_stat_callout_when_given():
-    from pmb.video.assemble import build_segment_ass
+    from pmb.video.segments.chart import build_segment_ass
 
     ass = build_segment_ass(
         [_take("標普漲1.06%。")], 3.0, title="昨收", font="F",
@@ -135,14 +135,14 @@ def test_segment_ass_draws_stat_callout_when_given():
 
 
 def test_segment_ass_without_stat_has_no_stat_events():
-    from pmb.video.assemble import build_segment_ass
+    from pmb.video.segments.chart import build_segment_ass
 
     ass = build_segment_ass([_take("一句。")], 3.0, title=None, font="F")
     assert ass.count("Dialogue:") == 1  # 只有字幕
 
 
 def test_segment_ass_badge_and_cta_positions():
-    from pmb.video.assemble import build_segment_ass
+    from pmb.video.segments.chart import build_segment_ass
 
     ass = build_segment_ass(
         [_take("一句。", 6.0)], 6.35, title=None, font="F",
@@ -198,7 +198,7 @@ def test_assemble_video_wires_card_ass_stat_badge_and_cta(tmp_path):
     work = tmp_path / "work"
     out = assemble_video(
         script, snap, tmp_path / "out.mp4",
-        synth_fn=lambda vo, path, planned: silent_synth(vo, path, duration=1.0),
+        synth_fn=lambda text, path, planned, voice: silent_synth(text, path, duration=1.0),
         work_dir=work, font="PingFang TC", channel_name="美股早發車", master_audio=False,
     )
     assert out.exists() and out.stat().st_size > 0

@@ -3,8 +3,10 @@
 import pytest
 
 from pmb.tts.edge import WordBoundary
-from pmb.video.assemble import _audio_graph, _fit_box, _Take, build_segment_ass
+from pmb.video.assemble import _audio_graph, _fit_box
 from pmb.video.captions import build_caption_pages
+from pmb.video.segments.base import Take as _Take
+from pmb.video.segments.chart import build_segment_ass
 
 
 def _units(s: str) -> float:
@@ -97,3 +99,10 @@ def test_audio_graph_three_takes_interleaves_two_gaps():
     g = _audio_graph(3, 10.0)
     assert "asplit=2[g0][g1]" in g
     assert "concat=n=5:v=0:a=1" in g
+
+
+def test_audio_graph_mixed_gaps_lead_in_and_sfx():
+    g = _audio_graph(2, 5.0, gaps=[0.5], lead_in=0.15, sfx_input=3)
+    assert "d=0.150[lead]" in g and "d=0.500[g0]" in g
+    assert "concat=n=4:v=0:a=1" in g  # lead + a0 + g0 + a1
+    assert "[3:a]" in g and "amix=inputs=2" in g

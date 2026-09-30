@@ -67,6 +67,9 @@ class Settings(BaseSettings):
     tts_rate: str = "+40%"
     tts_voice: str = "zh-TW-HsiaoChenNeural"
     tts_pitch: str = "+0Hz"
+    # 對話框的兩個角色聲線(a=男聲、b=女聲);旁白仍是 tts_voice。rate/pitch 三者共用
+    tts_voice_a: str = "zh-TW-YunJheNeural"
+    tts_voice_b: str = "zh-TW-HsiaoYuNeural"
 
     # BGM:資料夾內放 royalty-free 音檔(mp3/m4a/wav…)按日輪播;
     # 資料夾空/不存在時,程序化合成低調 pad(零版權疑慮)。音量壓在 VO 下,另有 ducking。

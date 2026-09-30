@@ -9,7 +9,8 @@
 頻道列蓋住、右側約 170px 是按讚欄,字幕、大數字 callout、CTA 一律放在安全區內。
 最終串接後過音訊母帶鏈(BGM ducking + loudnorm),見 ``finalize_master``。
 配音以可注入的 ``synth_fn`` 提供。
-斷句/字幕在 ``video.captions``、版面與 ASS 元件在 ``video.ass``。
+斷句/字幕在 ``video.captions``、版面與 ASS 元件在 ``video.ass``,段型各自的畫面與句子計畫
+在 ``video.segments``(registry)。
 """
 
 from __future__ import annotations
@@ -20,42 +21,31 @@ import struct
 import subprocess
 from collections.abc import Callable
 from pathlib import Path
-from typing import NamedTuple
 
 from loguru import logger
 
-from pmb.charts.cards import accent_for, render_card_background
 from pmb.charts.select import render_chart
-from pmb.schemas.script import Script
+from pmb.schemas.script import Script, VoiceKey
 from pmb.schemas.snapshot import Snapshot
-from pmb.tts.edge import SynthResult, WordBoundary, probe_duration
+from pmb.tts.edge import SynthResult, probe_duration
 from pmb.video.ass import (
-    ASS_TEMPLATE,
     BG_HEX,
-    CARD_CENTER_Y,
-    CARD_LINE_H,
-    CARD_MAX_UNITS,
     CHART_BAND_TOP,
     CHART_BOX_H,
     CHART_BOX_W,
-    FADE_TAG,
     GOLD_HEX,
     HEIGHT,
-    KICKER_GAP,
-    POP_IN,
     WIDTH,
-    ass_time,
-    common_events,
-    full_event,
 )
-from pmb.video.captions import build_caption_pages, split_sentences
+from pmb.video.captions import has_speakable
+from pmb.video.segments.base import GAP, RenderContext, Take, segment_duration, take_starts
+from pmb.video.segments.registry import renderer_for
 
-# synth_fn(text, out_path, planned_duration) -> SynthResult
-SynthFn = Callable[[str, Path, float], SynthResult]
+# synth_fn(text, out_path, planned_duration, voice) -> SynthResult;voice 是 narrator / a / b
+SynthFn = Callable[[str, Path, float, VoiceKey], SynthResult]
+_SEC_PER_CHAR = 0.18  # 估長(dry-run 靜音配音長度用;實際段長一律以實測為準)
 
 _FPS = 25
-_GAP = 0.18  # 句間呼吸(秒)
-_TAIL = 0.35  # 段尾停頓(秒)
 _FADE_IN = 0.20  # 段首自畫布色淡入
 _FADE_OUT = 0.60  # 全片收尾淡出(烤在最後一段)
 _ZOOM_AMOUNT = 0.08  # Ken Burns 段內總推進幅度
@@ -65,75 +55,8 @@ _PROGRESS_H = 10  # 底部進度條高(px)
 _SHORTS_CAP = 180.0  # YouTube Shorts 長度上限(超過會被當一般影片)
 
 
-class _Take(NamedTuple):
-    """一句配音的實測結果(供段級串接與字幕對時)。"""
-
-    text: str
-    audio: str  # work_dir 內檔名
-    duration: float  # 實測秒數(probe)
-    words: list[WordBoundary]
-
-
-
-def build_card_ass(
-    headline: str,
-    *,
-    tag: str | None,
-    duration: float,
-    font: str,
-    badge: str | None = None,
-    cta: str | None = None,
-) -> str:
-    """組字卡用的 .ass:大標 pop-in(置中)+ 選配 kicker 小標(上方)+ 角標/CTA。
-
-    字卡底圖只有漸層色(``cards.render_card_background``),文字全走這裡,才能動。
-    """
-    from pmb.charts.cards import wrap_card_text
-
-    lines = wrap_card_text(headline, max_units=CARD_MAX_UNITS)
-    top = CARD_CENTER_Y - len(lines) * CARD_LINE_H // 2
-    pos = f"{{\\an5\\pos(540,{CARD_CENTER_Y})}}"
-    events: list[str] = [full_event("card", duration, pos + POP_IN + "\\N".join(lines))]
-    if tag:
-        kicker_pos = f"{{\\an5\\pos(540,{top - KICKER_GAP})}}"
-        events.append(full_event("kicker", duration, kicker_pos + FADE_TAG + tag))
-    events += common_events(duration, badge=badge, cta=cta)
-    return ASS_TEMPLATE.format(font=font, events="\n".join(events))
-
-
-def build_segment_ass(
-    takes: list[_Take],
-    seg_duration: float,
-    *,
-    title: str | None,
-    font: str,
-    stat: str | None = None,
-    stat_label: str | None = None,
-    badge: str | None = None,
-    cta: str | None = None,
-) -> str:
-    """組圖表段用的 .ass:逐頁卡拉OK字幕(含句間偏移)+ 頂部標題 + 大數字 callout + 角標/CTA。
-
-    callout(``stat``/``stat_label``)疊在圖表下方的留白處,是手機上一眼能抓到的重點數字;
-    沒給就不畫,舊 script 相容。
-    """
-    events: list[str] = []
-    if title:
-        events.append(full_event("title", seg_duration, FADE_TAG + title))
-    if stat:
-        if stat_label:
-            events.append(full_event("statlabel", seg_duration, FADE_TAG + stat_label))
-        events.append(full_event("stat", seg_duration, POP_IN + stat))
-    events += common_events(seg_duration, badge=badge, cta=cta)
-    offset = 0.0
-    for take in takes:
-        for page in build_caption_pages(take.text, take.words, take.duration):
-            start = ass_time(offset + page.start)
-            end = ass_time(offset + page.end)
-            text = "".join(f"{{\\k{cs}}}{chunk}" for chunk, cs in page.karaoke)
-            events.append(f"Dialogue: 0,{start},{end},sub,,0,0,0,,{text}")
-        offset += take.duration + _GAP
-    return ASS_TEMPLATE.format(font=font, events="\n".join(events))
+def _planned_seconds(text: str) -> float:
+    return max(0.6, len(text) * _SEC_PER_CHAR)
 
 
 def segment_timeline(durations: list[float]) -> tuple[list[float], float]:
@@ -171,31 +94,56 @@ def _run_ffmpeg(args: list[str], cwd: Path) -> None:
         raise RuntimeError(f"ffmpeg 失敗(rc={proc.returncode})")
 
 
-def _audio_graph(n_takes: int, seg_duration: float) -> str:
-    """句音串接子圖:takes 為輸入 1..n,句間插呼吸、段尾 pad 到段長,輸出 [a]。"""
+def _audio_graph(
+    n_takes: int,
+    seg_duration: float,
+    *,
+    gaps: list[float] | None = None,
+    lead_in: float = 0.0,
+    sfx_input: int | None = None,
+) -> str:
+    """句音串接子圖:takes 為輸入 1..n,段首可留 ``lead_in`` 靜音、句間插各自的停頓、
+    段尾 pad 到段長;``sfx_input`` 給了就把該輸入的音效從段首疊上。輸出 [a]。"""
+    gaps = list(gaps) if gaps is not None else [GAP] * max(n_takes - 1, 0)
     parts: list[str] = []
     for i in range(n_takes):
         parts.append(
             f"[{i + 1}:a]aresample=44100,aformat=sample_fmts=fltp:channel_layouts=mono[a{i}]"
         )
-    if n_takes == 1:
-        chain = "[a0]"
-    else:
+    items: list[str] = []
+    if lead_in > 0:
+        parts.append(f"anullsrc=r=44100:cl=mono:d={lead_in:.3f}[lead]")
+        items.append("[lead]")
+    gap_labels: list[str] = []
+    if n_takes > 1:
         n_gaps = n_takes - 1
-        gap_labels = [f"[g{i}]" for i in range(n_gaps)]
-        if n_gaps == 1:
-            parts.append(f"anullsrc=r=44100:cl=mono:d={_GAP}[g0]")
+        if len(set(gaps)) == 1:  # 停頓一樣長:一個靜音源 asplit(舊行為)
+            gap_labels = [f"[g{i}]" for i in range(n_gaps)]
+            if n_gaps == 1:
+                parts.append(f"anullsrc=r=44100:cl=mono:d={gaps[0]:.3f}[g0]")
+            else:
+                parts.append(f"anullsrc=r=44100:cl=mono:d={gaps[0]:.3f}[gsrc]")
+                parts.append(f"[gsrc]asplit={n_gaps}{''.join(gap_labels)}")
         else:
-            parts.append(f"anullsrc=r=44100:cl=mono:d={_GAP}[gsrc]")
-            parts.append(f"[gsrc]asplit={n_gaps}{''.join(gap_labels)}")
-        interleaved: list[str] = []
-        for i in range(n_takes):
-            interleaved.append(f"[a{i}]")
-            if i < n_gaps:
-                interleaved.append(gap_labels[i])
-        parts.append(f"{''.join(interleaved)}concat=n={2 * n_takes - 1}:v=0:a=1[acat]")
+            for i, gap in enumerate(gaps):
+                parts.append(f"anullsrc=r=44100:cl=mono:d={gap:.3f}[g{i}]")
+                gap_labels.append(f"[g{i}]")
+    for i in range(n_takes):
+        items.append(f"[a{i}]")
+        if i < len(gap_labels):
+            items.append(gap_labels[i])
+    if len(items) == 1:
+        chain = items[0]
+    else:
+        parts.append(f"{''.join(items)}concat=n={len(items)}:v=0:a=1[acat]")
         chain = "[acat]"
-    parts.append(f"{chain}apad=whole_dur={seg_duration:.3f}[a]")
+    out = "[a]" if sfx_input is None else "[vo]"
+    parts.append(f"{chain}apad=whole_dur={seg_duration:.3f}{out}")
+    if sfx_input is not None:
+        parts.append(
+            f"[{sfx_input}:a]aresample=44100,aformat=sample_fmts=fltp:channel_layouts=mono[sfx]"
+        )
+        parts.append("[vo][sfx]amix=inputs=2:duration=first:dropout_transition=0:normalize=0[a]")
     return ";".join(parts)
 
 
@@ -203,7 +151,7 @@ def _render_segment_clip(
     *,
     image: str,
     is_card: bool,
-    takes: list[_Take],
+    takes: list[Take],
     seg_duration: float,
     ass_name: str | None,
     global_offset: float,
@@ -211,6 +159,8 @@ def _render_segment_clip(
     is_last: bool,
     out: str,
     work_dir: Path,
+    lead_in: float = 0.0,
+    sfx: str | None = None,
 ) -> None:
     """單段 clip:畫布 + (圖表縮排/全屏卡)Ken Burns + 字幕 + 進度條 + 淡入(末段加淡出)。"""
     frames = max(1, math.ceil(seg_duration * _FPS))
@@ -267,11 +217,18 @@ def _render_segment_clip(
         out_st = max(seg_duration - _FADE_OUT, 0)
         fade += f",fade=t=out:st={out_st:.3f}:d={_FADE_OUT}:color=0x{BG_HEX}"
     chain.append(f"{fade}[v]")
-    chain.append(_audio_graph(len(takes), seg_duration))
+    chain.append(
+        _audio_graph(
+            len(takes), seg_duration, gaps=[t.gap_after for t in takes[:-1]], lead_in=lead_in,
+            sfx_input=len(takes) + 1 if sfx else None,
+        )
+    )
 
     args = ["ffmpeg", "-y", "-loop", "1", "-i", image]
     for take in takes:
         args += ["-i", take.audio]
+    if sfx:
+        args += ["-i", sfx]
     args += [
         "-filter_complex", ";".join(chain),
         "-map", "[v]", "-map", "[a]",
@@ -386,29 +343,33 @@ def assemble_video(
 
     chart_paths = {spec.id: render_chart(spec, snapshot, work_dir).name for spec in script.charts}
 
-    # Pass A:逐句配音 + 實測長度 → 段長與全片時間軸(進度條/收尾要用)
-    seg_takes: list[list[_Take]] = []
+    # Pass A:各段的句子計畫 → 逐句配音 + 實測長度 → 段長與全片時間軸(進度條/收尾要用)
+    units = list(enumerate(script.segments))
+    seg_takes: list[list[Take]] = []
     seg_durations: list[float] = []
-    usable: list[int] = []  # 有可配音內容的段索引(其餘跳過,不讓一段壞掉整支片)
-    for i, seg in enumerate(script.segments):
-        sentences = split_sentences(seg.vo)
-        if not sentences:
-            # 整段沒有可發音內容(講稿異常):跳過該段而不是讓 TTS 回空音檔炸掉全片
-            logger.warning("segment {} 無可發音內容,跳過:{!r}", i, seg.vo[:40])
+    usable: list[int] = []  # 有可配音內容的 unit 索引(其餘跳過,不讓一段壞掉整支片)
+    for u, (i, seg) in enumerate(units):
+        renderer = renderer_for(seg.kind)
+        plan = [utt for utt in renderer.utterances(seg) if has_speakable(utt.tts_text)]
+        if not plan:
+            logger.warning("segment {}({})無可發音內容,跳過", i, seg.kind)
             seg_takes.append([])
             seg_durations.append(0.0)
             continue
-        usable.append(i)
-        planned_each = seg.duration / max(len(sentences), 1)
-        takes: list[_Take] = []
-        for j, sentence in enumerate(sentences):
-            audio_name = f"s{i}_{j}.mp3"
-            result = synth_fn(sentence, work_dir / audio_name, planned_each)
+        usable.append(u)
+        takes: list[Take] = []
+        for j, utt in enumerate(plan):
+            audio_name = f"s{u}_{j}.mp3"
+            result = synth_fn(
+                utt.tts_text, work_dir / audio_name, _planned_seconds(utt.tts_text), utt.voice
+            )
             measured = probe_duration(work_dir / audio_name)
-            takes.append(_Take(sentence, audio_name, measured, result.words))
+            takes.append(
+                Take(utt.text, audio_name, measured, result.words, utt.gap_after, utt.caption)
+            )
         seg_takes.append(takes)
         seg_durations.append(
-            sum(t.duration for t in takes) + _GAP * (len(takes) - 1) + _TAIL
+            segment_duration(takes, lead_in=renderer.lead_in, min_duration=renderer.min_duration)
         )
 
     starts, total = segment_timeline(seg_durations)
@@ -419,57 +380,39 @@ def assemble_video(
             _SHORTS_CAP,
         )
 
-    # Pass B:逐段渲染 clip。圖表段:字幕 + 標題 + stat callout;字卡段:漸層底 + ASS 大字
-    # pop-in。每段都疊品牌·日期角標;片尾 CTA 只放在最後一段且該段是字卡(圖表段底部有
-    # 字幕,再疊 CTA 會打架)。
+    # Pass B:逐段渲染 clip。畫面(底圖 + .ass)由各段型 renderer 產出;每段都疊品牌·日期
+    # 角標,片尾 CTA 只放在最後一段且該段是字卡(圖表段底部有字幕,再疊 CTA 會打架)。
     d = snapshot.session_date
     badge = f"{channel_name} · {d.month}/{d.day}"
     cta_text = f"明天盤前見 · 追蹤 {channel_name}"
-    last_idx = usable[-1] if usable else len(script.segments) - 1
+    last_u = usable[-1] if usable else len(units) - 1
     clip_names: list[str] = []
-    for i, seg in enumerate(script.segments):
-        takes = seg_takes[i]
+    for u, (i, seg) in enumerate(units):
+        takes = seg_takes[u]
         if not takes:
             continue  # Pass A 判定無可配音內容,已跳過
-        if seg.kind not in ("chart", "card"):
-            raise ValueError(f"段型「{seg.kind}」尚未支援合成")
-        is_last = i == last_idx
-        cta = cta_text if (is_last and seg.kind == "card") else None
-        if seg.kind == "card":
-            card_name = f"card{i}.png"
-            render_card_background(str(work_dir / card_name), accent=accent_for(i))
-            image, is_card, ass_name = card_name, True, f"card{i}.ass"
-            (work_dir / ass_name).write_text(
-                build_card_ass(
-                    seg.headline, tag=seg.tag, duration=seg_durations[i], font=font,
-                    badge=badge, cta=cta,
-                ),
-                encoding="utf-8",
-            )
-        else:
-            image, is_card, ass_name = chart_paths[seg.chart_id], False, f"seg{i}.ass"
-            (work_dir / ass_name).write_text(
-                build_segment_ass(
-                    takes, seg_durations[i], title=seg.title, font=font,
-                    stat=seg.stat, stat_label=seg.stat_label, badge=badge, cta=cta,
-                ),
-                encoding="utf-8",
-            )
-        clip_name = f"clip{i}.mp4"
+        renderer = renderer_for(seg.kind)
+        is_last = u == last_u
+        ctx = RenderContext(
+            index=i, duration=seg_durations[u], takes=takes,
+            starts=take_starts(takes, renderer.lead_in), font=font, work_dir=work_dir,
+            badge=badge, cta=cta_text if (is_last and seg.kind == "card") else None,
+            chart_paths=chart_paths,
+        )
+        visual = renderer.render(seg, ctx)
+        ass_name = f"{visual.stem}{i}.ass"
+        (work_dir / ass_name).write_text(visual.ass, encoding="utf-8")
+        clip_name = f"clip{u}.mp4"
         _render_segment_clip(
-            image=image,
-            is_card=is_card,
-            takes=takes,
-            seg_duration=seg_durations[i],
-            ass_name=ass_name,
-            global_offset=starts[i],
-            global_total=total,
-            is_last=is_last,
-            out=clip_name,
-            work_dir=work_dir,
+            image=visual.image, is_card=visual.is_card, takes=takes,
+            seg_duration=seg_durations[u], ass_name=ass_name, global_offset=starts[u],
+            global_total=total, is_last=is_last, out=clip_name, work_dir=work_dir,
+            lead_in=renderer.lead_in, sfx=visual.sfx,
         )
         clip_names.append(clip_name)
-        logger.info("segment {}/{} 完成({:.1f}s)", i + 1, len(script.segments), seg_durations[i])
+        logger.info(
+            "segment {}/{}({})完成({:.1f}s)", u + 1, len(units), seg.kind, seg_durations[u]
+        )
 
     listing = work_dir / "clips.txt"
     listing.write_text("".join(f"file '{name}'\n" for name in clip_names), encoding="utf-8")

@@ -295,11 +295,16 @@ def cmd_assemble(args: argparse.Namespace) -> int:
 
     if args.dry_run:
         logger.info("dry-run:用靜音配音合成,不打 edge-tts;跳過 BGM/響度母帶")
-        synth_fn = lambda vo, path, planned: silent_synth(vo, path, duration=planned)  # noqa: E731
+        synth_fn = lambda text, path, planned, voice: silent_synth(  # noqa: E731
+            text, path, duration=planned
+        )
     else:
-        rate, voice, pitch = settings.tts_rate, settings.tts_voice, settings.tts_pitch
-        synth_fn = lambda vo, path, planned: edge_synthesize(  # noqa: E731
-            vo, path, voice=voice, rate=rate, pitch=pitch
+        rate, pitch = settings.tts_rate, settings.tts_pitch
+        voices = {
+            "narrator": settings.tts_voice, "a": settings.tts_voice_a, "b": settings.tts_voice_b,
+        }
+        synth_fn = lambda text, path, planned, voice: edge_synthesize(  # noqa: E731
+            text, path, voice=voices[voice], rate=rate, pitch=pitch
         )
 
     out_path = settings.artifacts_dir / f"video_{target}.mp4"
