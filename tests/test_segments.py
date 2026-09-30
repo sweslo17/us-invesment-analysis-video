@@ -530,8 +530,12 @@ def test_bignum_text_never_leaves_the_safe_column(value, label, context, tmp_pat
 
 
 def test_row_times_follow_sentences_or_spread_evenly():
+    """有對應句的列在該句起點;剩下的列平均分布在最後一句起點之後的段落裡(規格 §3.6)。"""
     assert row_times(2, [0.0, 2.2, 4.0], 6.0) == [0.0, 2.2]
     assert row_times(3, [0.0], 6.0) == pytest.approx([0.0, 2.0, 4.0])
+    assert row_times(3, [0.0, 2.18], 6.0) == pytest.approx([0.0, 2.18, 2.18 + 3.82 / 2])
+    assert row_times(3, [0.0, 1.0], 4.0) == pytest.approx([0.0, 1.0, 2.5])
+    assert row_times(2, [], 6.0) == pytest.approx([0.0, 3.0])  # 沒有句子:整段平均
 
 
 def test_recap_render_rows_marks_and_default_title(tmp_path):
@@ -547,8 +551,8 @@ def test_recap_render_rows_marks_and_default_title(tmp_path):
     assert visual.stem == "recap" and "昨天說要看的" in ass
     assert "威廉斯怎麼說" in ass and "沒守住5.26%" in ass and "12年新低" in ass
     assert ass.count("\\p1") == 3 + 2  # 三個 mark + 兩條分隔線
-    # 2 句 < 3 列 → 三列平均分布在 6 秒段內:0 / 2 / 4 秒
-    assert "Dialogue: 1,0:00:02.00" in ass and "Dialogue: 1,0:00:04.00" in ass
+    # 2 句 < 3 列 → 前兩列在兩句起點(0 / 2.18 秒),第三列在第二句起點到段尾的中點(4.09 秒)
+    assert "Dialogue: 1,0:00:02.18" in ass and "Dialogue: 1,0:00:04.09" in ass
 
 
 def test_recap_rows_follow_sentence_starts_when_enough_sentences(tmp_path):

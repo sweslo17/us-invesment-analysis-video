@@ -50,10 +50,16 @@ _MARK_HEX = {"yes": "#97C459", "no": "#F09595", "mixed": "#FAC775"}
 
 
 def row_times(n_rows: int, starts: list[float], duration: float) -> list[float]:
-    """第 k 列在第 k 句起點;句數不夠就所有列平均分布在段內。"""
-    if len(starts) >= n_rows:
-        return list(starts[:n_rows])
-    return [duration * k / n_rows for k in range(n_rows)]
+    """第 k 列在第 k 句起點;句數不夠時,沒有對應句的 m 列平均分布在最後一句起點到段尾之間
+    (``last + (duration - last) * j / (m + 1)``,j = 1..m)。完全沒有句子就整段平均分布。"""
+    if not starts:
+        return [duration * k / n_rows for k in range(n_rows)]
+    matched = list(starts[:n_rows])
+    remaining = n_rows - len(matched)
+    last = matched[-1]
+    return matched + [
+        last + (duration - last) * j / (remaining + 1) for j in range(1, remaining + 1)
+    ]
 
 
 def result_layout(text: str) -> tuple[list[str], int]:
