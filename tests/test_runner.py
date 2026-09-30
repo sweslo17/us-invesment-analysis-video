@@ -163,7 +163,10 @@ def test_research_prompt_describes_v4_kinds_persona_and_guardrails():
     text = Path("prompts/daily_research.md").read_text(encoding="utf-8")
     for kw in ("`dialogue`", "`split`", "`bignum`", "`recap`", "script.gags", "頻道人設",
                "梗的護欄", "不可以是真實人物", "上車", "……", "pmb validate-research",
-               "不知道有沒有說過"):
+               "不知道有沒有說過", "查不到出處就不寫這句比較", "查不到就不寫這個梗",
+               "也別跟昨天的 kicker 一樣", "驗證器會檢查重複並要你重寫"):
         assert kw in text, kw
+    assert "驗證器會擋重複" not in text  # 軟規則不要寫成硬擋
+    assert "對照的事實要查證" not in text  # 已收緊為出處要求
     assert "6–7 段:開場 hook 卡 → 3–4 個圖表段" not in text  # 寫死的骨架已拿掉
     assert "片尾對句卡的旁白以「以上非投資建議,明天盤前見」收尾" not in text  # 改由系統接

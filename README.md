@@ -100,7 +100,7 @@ poetry run pmb publish                  # 只寫 publish manifest,不上傳(需 
 
 ## 影片段型(v4)
 
-講稿 `segments[].kind` 有六種積木,排列組合由當天新聞決定(不套固定骨架),反重複驗證器會擋與近幾天雷同的序列:
+講稿 `segments[].kind` 有六種積木,排列組合由當天新聞決定(不套固定骨架),反重複驗證器會檢查與近幾天雷同的序列並要求重寫:
 
 - `chart`:圖表段,綁 `chart_id`,疊 `stat` 大數字;數字是一支片的核心,至少 2 段。
 - `card`:字卡,開場 hook、名詞小教室(有合適術語才放)、片尾名人金句。
@@ -111,7 +111,7 @@ poetry run pmb publish                  # 只寫 publish manifest,不上傳(需 
 
 `script.gags` 記錄當天用到的梗(至少 2 個),供之後幾天避免重複。hook 後系統自動插入約 1 秒的開場口號轉場(`SLOGAN_INTRO`、`STING_ENABLE`),結尾自動接收尾口號(`SLOGAN_OUTRO`),講稿不用寫。
 
-研究 agent 寫完產物後用 `poetry run pmb validate-research --date YYYY-MM-DD` 自檢:schema、字數預算、反重複、欄位字數上限、畫面數字與旁白一致,全過才算交件。設計細節見 [`docs/superpowers/specs/2026-09-30-video-variety-humor-design.md`](docs/superpowers/specs/2026-09-30-video-variety-humor-design.md)。
+研究 agent 寫完產物後用 `poetry run pmb validate-research --date YYYY-MM-DD` 自檢:schema、字數預算、反重複、欄位字數上限、畫面數字與旁白一致;多數規則是軟性的,runner 會帶著錯誤重試,但最後一次嘗試後若只剩軟性錯誤仍會交件。設計細節見 [`docs/superpowers/specs/2026-09-30-video-variety-humor-design.md`](docs/superpowers/specs/2026-09-30-video-variety-humor-design.md)。
 
 ## 開發進度
 
