@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from pmb.schemas.script import BignumSegment, DialogueSegment, SplitSegment
+from pmb.schemas.script import BignumSegment, DialogueSegment, RecapSegment, SplitSegment
 from pmb.video.ass import ass_color, rounded_rect, text_event
 from pmb.video.captions import is_beat, split_sentences, strip_beat
 from pmb.video.segments.base import (
@@ -23,6 +23,7 @@ from pmb.video.segments.base import (
 )
 from pmb.video.segments.bignum import count_up_frames, parse_number, value_font_size
 from pmb.video.segments.dialogue import bubble_layout, speakable_lines
+from pmb.video.segments.recap import result_layout, row_times
 from pmb.video.segments.registry import renderer_for
 from pmb.video.segments.split import panel_text_layout, reveal_times
 from pmb.video.textfit import FLOOR_SIZE, fit_lines, line_px, wrap_px
@@ -469,3 +470,75 @@ def test_bignum_text_never_leaves_the_safe_column(value, label, context, tmp_pat
     assert len(sizes) == 1  # 數字跳動時字級不變
     assert "{" not in "".join(ln.split("}", 1)[1] for ln in ass.splitlines()
                               if ",free," in ln)  # 文字內沒有會開關 override 的花括號
+
+
+def test_row_times_follow_sentences_or_spread_evenly():
+    assert row_times(2, [0.0, 2.2, 4.0], 6.0) == [0.0, 2.2]
+    assert row_times(3, [0.0], 6.0) == pytest.approx([0.0, 2.0, 4.0])
+
+
+def test_recap_render_rows_marks_and_default_title(tmp_path):
+    seg = RecapSegment(vo="昨天說看威廉斯。結果十年期沒守住5.2%。", rows=[
+        {"ask": "威廉斯怎麼說", "result": "十月不急", "mark": "yes"},
+        {"ask": "10年期守不守5.2%", "result": "沒守住5.26%", "mark": "no"},
+        {"ask": "消費者信心", "result": "12年新低", "mark": "mixed"},
+    ])
+    takes = [Take("昨天說看威廉斯。", "a.mp3", 2.0, []),
+             Take("結果十年期沒守住5.2%。", "b.mp3", 2.0, [])]
+    visual = renderer_for("recap").render(seg, _ctx(takes, duration=6.0, work_dir=tmp_path))
+    ass = visual.ass
+    assert visual.stem == "recap" and "昨天說要看的" in ass
+    assert "威廉斯怎麼說" in ass and "沒守住5.26%" in ass and "12年新低" in ass
+    assert ass.count("\\p1") >= 3 + 2  # 三個 mark + 兩條分隔線
+    # 2 句 < 3 列 → 三列平均分布在 6 秒段內:0 / 2 / 4 秒
+    assert "Dialogue: 1,0:00:02.00" in ass and "Dialogue: 1,0:00:04.00" in ass
+
+
+def test_recap_rows_follow_sentence_starts_when_enough_sentences(tmp_path):
+    seg = RecapSegment(vo="一。二。", rows=[
+        {"ask": "甲", "result": "乙", "mark": "yes"}, {"ask": "丙", "result": "丁", "mark": "no"}])
+    takes = [Take("一。", "a.mp3", 2.0, []), Take("二。", "b.mp3", 1.0, [])]
+    ass = renderer_for("recap").render(seg, _ctx(takes, duration=4.0, work_dir=tmp_path)).ass
+    assert "Dialogue: 1,0:00:02.18" in ass  # 第二列在第二句起點
+
+
+_RECAP_RESULT_MAX_W = 730  # 結果欄 x=160 → 右緣 890,避開右側按讚欄
+
+
+def test_result_layout_shrinks_long_results():
+    assert result_layout("十月不急") == (["十月不急"], 72)
+    too_long = "這個結果寫得太長太長太長了吧" * 2 + "啊啊"  # 30 字:72px 兩行裝不下
+    lines, size = result_layout(too_long)
+    assert size == 60 and len(lines) == 2
+    assert all(line_px(ln, size) <= _RECAP_RESULT_MAX_W for ln in lines)
+    lines, size = result_layout("字" * 200)  # 縮到底還放不下:截成兩行並補「…」
+    assert len(lines) == 2 and lines[-1].endswith("…") and size >= FLOOR_SIZE
+    assert all(line_px(ln, size) <= _RECAP_RESULT_MAX_W for ln in lines)
+
+
+def test_result_layout_keeps_a_one_line_result_at_full_size():
+    text = "字" * 14  # 14 個全形字:72px 剛好一行放得下(14 × 72 × 0.713 < 730)
+    assert result_layout(text) == ([text], 72)
+
+
+def test_recap_text_never_leaves_its_row_or_the_safe_column(tmp_path):
+    """三列都塞滿 30 字的 ask、40 字的 result:每個文字事件估計右緣(錨點 x + line_px)<= 890,
+    ask 一行、result 最多兩行,且每列內文底緣不壓到下一列頂緣(列距 250px)。"""
+    rows = [{"ask": f"問{k}" + "問" * 28, "result": f"答{k}" + "答" * 38, "mark": mark}
+            for k, mark in enumerate(("yes", "no", "mixed"))]
+    seg = RecapSegment(vo="一。二。三。", rows=rows)
+    takes = [Take("一。", "a.mp3", 1.0, []), Take("二。", "b.mp3", 1.0, []),
+             Take("三。", "c.mp3", 1.0, [])]
+    ass = renderer_for("recap").render(seg, _ctx(takes, duration=4.0, work_dir=tmp_path)).ass
+    events = _text_extents(ass)
+    assert len(events) == 6  # 每列 ask + result
+    tops = [330, 580, 830]
+    for k, top in enumerate(tops):
+        (ax, ay, a_size, _, a_lines), (rx, ry, r_size, _, r_lines) = events[2 * k: 2 * k + 2]
+        assert len(a_lines) == 1 and 1 <= len(r_lines) <= 2
+        assert ay == top and ry == top + 56
+        assert ax + line_px(a_lines[0], a_size) <= 890
+        assert rx + max(line_px(ln, r_size) for ln in r_lines) <= 890
+        assert ay + a_size <= ry  # ask 底緣不壓到 result 頂緣
+        next_top = tops[k + 1] if k + 1 < len(tops) else top + 250
+        assert ry + len(r_lines) * r_size <= next_top
