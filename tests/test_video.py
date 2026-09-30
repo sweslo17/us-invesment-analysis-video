@@ -221,3 +221,147 @@ def test_wrap_caption_never_splits_a_number_across_lines():
         for a, b in zip(lines, lines[1:], strict=False):
             split_run = a[-1].isascii() and a[-1].isalnum() and b[0].isascii() and b[0].isalnum()
             assert not split_run, f"max_units={max_units} 在數字中間斷行:{lines}"
+
+
+def _sting_snapshot():
+    import datetime as dt
+
+    from pmb.schemas.snapshot import LeverageMath, Snapshot
+
+    return Snapshot(
+        session_date=dt.date(2026, 9, 30),
+        generated_at=dt.datetime(2026, 9, 30, 12, 0, tzinfo=dt.UTC),
+        leverage_math=[LeverageMath(market="S&P 500", realized_vol=0.165, vol_target_leverage=0.91,
+                                    drag_1x=0.0136, drag_2x=0.0545, drag_3x=0.1226)],
+    )
+
+
+def test_assemble_inserts_sting_after_hook_and_appends_outro(tmp_path):
+    from pmb.schemas.script import Script
+    from pmb.tts.edge import silent_synth
+    from pmb.video.assemble import assemble_video
+
+    snap = _sting_snapshot()
+    script = Script.model_validate({
+        "segments": [
+            {"vo": "開場。", "headline": "債市暴走", "tag": "債市日"},
+            {"vo": "圖表。", "chart_id": "lev", "stat": "1", "stat_label": "x"},
+            {"vo": "金句。", "headline": "金句\n對句", "tag": "巴菲特 不知道有沒有說過"},
+        ],
+        "charts": [{"id": "lev", "module": "leverage_decay", "params": {}}],
+    })
+    spoken: list[tuple[str, str]] = []
+
+    def synth(text, path, planned, voice):
+        spoken.append((text, voice))
+        return silent_synth(text, path, duration=0.5)
+
+    work = tmp_path / "work"
+    out = assemble_video(script, snap, tmp_path / "o.mp4", synth_fn=synth, work_dir=work,
+                         font="PingFang TC", master_audio=False,
+                         slogan_intro="美股早發車,發車!",
+                         slogan_outro="以上非投資建議,明天盤前見。")
+    assert out.exists()
+    texts = [t for t, _ in spoken]
+    assert texts.index("美股早發車,發車!") == 1  # hook 之後
+    assert texts[-1] == "以上非投資建議,明天盤前見。"
+    assert (work / "sting0.ass").exists()
+    clips = (work / "clips.txt").read_text().splitlines()
+    assert len(clips) == 4
+
+
+def test_assemble_without_slogans_adds_nothing(tmp_path):
+    """沒給 slogan_intro / slogan_outro:不插口號轉場、不多念收尾口號(舊行為不變)。"""
+    from pmb.schemas.script import Script
+    from pmb.tts.edge import silent_synth
+    from pmb.video.assemble import assemble_video
+
+    script = Script.model_validate({
+        "segments": [{"vo": "開場。", "headline": "標題", "tag": "k"},
+                     {"vo": "收尾。", "headline": "結語", "tag": "k"}],
+        "charts": [],
+    })
+    spoken: list[str] = []
+
+    def synth(text, path, planned, voice):
+        spoken.append(text)
+        return silent_synth(text, path, duration=0.5)
+
+    work = tmp_path / "work"
+    assemble_video(script, _sting_snapshot(), tmp_path / "o.mp4", synth_fn=synth, work_dir=work,
+                   font="PingFang TC", master_audio=False)
+    assert spoken == ["開場。", "收尾。"]
+    assert not (work / "sting0.ass").exists()
+    assert len((work / "clips.txt").read_text().splitlines()) == 2
+
+
+def test_assemble_appends_outro_to_last_segment_that_has_speech(tmp_path):
+    """最後一段沒有可念內容被跳過時,收尾口號接在「最後一個有句子計畫的段」,不被吃掉。"""
+    from pmb.schemas.script import Script
+    from pmb.tts.edge import silent_synth
+    from pmb.video.assemble import assemble_video
+
+    script = Script.model_validate({
+        "segments": [{"vo": "開場。", "headline": "標題", "tag": "k"},
+                     {"vo": "結論。", "headline": "結語", "tag": "k"},
+                     {"vo": "……", "headline": "空", "tag": "k"}],
+        "charts": [],
+    })
+    spoken: list[str] = []
+
+    def synth(text, path, planned, voice):
+        spoken.append(text)
+        return silent_synth(text, path, duration=0.5)
+
+    work = tmp_path / "work"
+    assemble_video(script, _sting_snapshot(), tmp_path / "o.mp4", synth_fn=synth, work_dir=work,
+                   font="PingFang TC", master_audio=False, slogan_intro="美股早發車,發車!",
+                   slogan_outro="以上非投資建議,明天盤前見。")
+    assert spoken == ["開場。", "美股早發車,發車!", "結論。", "以上非投資建議,明天盤前見。"]
+
+
+def test_sting_tts_failure_is_skipped_not_fatal(tmp_path):
+    from pmb.schemas.script import Script
+    from pmb.tts.edge import silent_synth
+    from pmb.video.assemble import assemble_video
+
+    snap = _sting_snapshot()
+    script = Script.model_validate({
+        "segments": [{"vo": "開場。", "headline": "標題", "tag": "k"},
+                     {"vo": "圖表。", "chart_id": "lev"}],
+        "charts": [{"id": "lev", "module": "leverage_decay", "params": {}}],
+    })
+
+    def synth(text, path, planned, voice):
+        if text.startswith("美股早發車"):
+            raise RuntimeError("edge-tts 掛了")
+        return silent_synth(text, path, duration=0.5)
+
+    work = tmp_path / "work"
+    out = assemble_video(script, snap, tmp_path / "o.mp4", synth_fn=synth, work_dir=work,
+                         font="PingFang TC", master_audio=False, slogan_intro="美股早發車,發車!")
+    assert out.exists()
+    assert not (work / "sting0.ass").exists()
+    assert len((work / "clips.txt").read_text().splitlines()) == 2
+
+
+def test_non_optional_segment_tts_failure_still_raises(tmp_path):
+    """只有系統插入的口號轉場可以配音失敗後略過;腳本裡的段配音失敗照舊讓整支片失敗。"""
+    from pmb.schemas.script import Script
+    from pmb.tts.edge import silent_synth
+    from pmb.video.assemble import assemble_video
+
+    script = Script.model_validate({
+        "segments": [{"vo": "開場。", "headline": "標題", "tag": "k"},
+                     {"vo": "壞掉。", "headline": "結語", "tag": "k"}],
+        "charts": [],
+    })
+
+    def synth(text, path, planned, voice):
+        if text == "壞掉。":
+            raise RuntimeError("edge-tts 掛了")
+        return silent_synth(text, path, duration=0.5)
+
+    with pytest.raises(RuntimeError, match="edge-tts"):
+        assemble_video(script, _sting_snapshot(), tmp_path / "o.mp4", synth_fn=synth,
+                       work_dir=tmp_path / "work", font="PingFang TC", master_audio=False)

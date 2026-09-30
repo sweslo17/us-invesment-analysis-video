@@ -311,6 +311,12 @@ def cmd_assemble(args: argparse.Namespace) -> int:
     work_dir = settings.artifacts_dir / f"video_{target}_work"
     work_dir.mkdir(parents=True, exist_ok=True)
     bgm_path = None if args.dry_run else _resolve_bgm(settings, target, work_dir)
+    slogan_intro = settings.slogan_intro if settings.sting_enable else None
+    sting_sfx = None
+    if slogan_intro and not args.dry_run:
+        from pmb.audio.sfx import resolve_sting_sfx
+
+        sting_sfx = resolve_sting_sfx(settings.sfx_dir, work_dir)
     assemble_video(
         script,
         snapshot,
@@ -322,6 +328,9 @@ def cmd_assemble(args: argparse.Namespace) -> int:
         bgm_path=bgm_path,
         bgm_gain_db=settings.bgm_gain_db,
         master_audio=not args.dry_run,
+        slogan_intro=slogan_intro,
+        slogan_outro=settings.slogan_outro,
+        sting_sfx=sting_sfx,
     )
 
     duration = probe_duration(out_path)

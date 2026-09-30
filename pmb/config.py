@@ -81,9 +81,11 @@ class Settings(BaseSettings):
     # 頻道品牌
     channel_name: str = "美股早發車"
 
-    # 短影片開頭 / 結尾 slogan
-    slogan_intro: str = "30 秒看懂今天美股盤前"
-    slogan_outro: str = "每天盤前見,記得追蹤;非投資建議"
+    # 短影片開頭 / 結尾 slogan(v4:開場口號轉場 + 收尾口號,由合成端自動插入)
+    slogan_intro: str = "美股早發車,發車!"
+    slogan_outro: str = "以上非投資建議,明天盤前見。"
+    sting_enable: bool = True  # 關掉就不插開場口號轉場
+    sfx_dir: Path = Path("assets/sfx")  # 放 sting.wav/mp3/m4a 可蓋過程序化音效
 
     # 影片字幕 CJK 字型:雲端 Linux 預設 Noto(setup 裝 fonts-noto-cjk);
     # 本機 macOS 在 .env 設 VIDEO_FONT=PingFang TC

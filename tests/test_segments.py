@@ -26,6 +26,7 @@ from pmb.video.segments.dialogue import bubble_layout, speakable_lines
 from pmb.video.segments.recap import _ask_layout, result_layout, row_times
 from pmb.video.segments.registry import renderer_for
 from pmb.video.segments.split import _fit_one_line, panel_text_layout, reveal_times
+from pmb.video.segments.sting import StingSegment
 from pmb.video.textfit import FLOOR_SIZE, fit_lines, line_px, wrap_px
 
 
@@ -571,3 +572,56 @@ def test_recap_result_with_punctuation_stays_one_line_at_full_size():
 def test_split_one_line_fit_keeps_size_when_punctuated_text_fits():
     text = "一二三四五六七八，九"
     assert _fit_one_line(text, 100) == (text, 100)
+
+
+def test_sting_has_lead_in_min_duration_and_no_caption(tmp_path):
+    renderer = renderer_for("sting")
+    seg = StingSegment(text="美股早發車,發車!", channel="美股早發車", sfx="/abs/sting.wav")
+    utts = renderer.utterances(seg)
+    assert len(utts) == 1 and utts[0].caption is False
+    takes = [Take("美股早發車,發車!", "s.mp3", 0.5, [], GAP, False)]
+    assert segment_duration(takes, lead_in=renderer.lead_in,
+                            min_duration=renderer.min_duration) == pytest.approx(1.2)
+    visual = renderer.render(seg, _ctx(takes, duration=1.2, work_dir=tmp_path,
+                                       lead_in=renderer.lead_in))
+    assert visual.sfx == "/abs/sting.wav" and visual.stem == "sting"
+    assert "美股早發車" in visual.ass and ",sub," not in visual.ass
+
+
+def test_sting_is_optional_so_tts_failure_can_skip_it():
+    assert renderer_for("sting").optional is True
+    assert renderer_for("card").optional is False
+
+
+def _sting_text_events(ass: str) -> list[tuple[int, int, str]]:
+    """(錨點 x, 字級, 純文字) 依事件順序;只取 free 樣式、非繪圖的文字事件(wordmark、slogan)。"""
+    out = []
+    for ln in ass.splitlines():
+        if not ln.startswith("Dialogue:") or ",free," not in ln or "\\p1" in ln:
+            continue
+        x = int(re.search(r"\\(?:pos|move)\((-?\d+),", ln).group(1))
+        size = int(re.search(r"\\fs(\d+)", ln).group(1))
+        out.append((x, size, re.sub(r"\{[^}]*\}", "", ln.split(",", 9)[9])))
+    return out
+
+
+@pytest.mark.parametrize(("slogan", "channel"), [
+    ("美股早發車,發車!", "美股早發車"),
+    ("字" * 30, "頻" * 12),  # 30 字口號:縮字級後單行放得下
+    ("字" * 60, "頻" * 40),  # 縮到下限還放不下:補「…」截成單行
+    ("Ab{cd}" * 6, "Channel{X}"),  # 花括號不可開關 override、不可破壞置中
+])
+def test_sting_slogan_and_wordmark_stay_centered_inside_safe_width(slogan, channel, tmp_path):
+    takes = [Take(slogan, "s.mp3", 0.5, [], GAP, False)]
+    seg = StingSegment(text=slogan, channel=channel)
+    ass = renderer_for("sting").render(seg, _ctx(takes, duration=1.2, work_dir=tmp_path,
+                                                 lead_in=0.15)).ass
+    events = _sting_text_events(ass)
+    assert len(events) == 2  # wordmark + slogan,各一行(沒有 \\N)
+    for x, size, text in events:
+        assert x == 540 and "\\N" not in text and size >= FLOOR_SIZE
+        half = line_px(text, size) / 2
+        assert 170 <= 540 - half and 540 + half <= 910
+    assert "{cd}" not in ass  # 花括號已轉全形
+    (_, wordmark_size, _), (_, slogan_size, _) = events
+    assert wordmark_size <= 120 and slogan_size <= 84  # 字級只會縮不會放大

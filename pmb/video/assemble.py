@@ -25,7 +25,7 @@ from pathlib import Path
 from loguru import logger
 
 from pmb.charts.select import render_chart
-from pmb.schemas.script import Script, VoiceKey
+from pmb.schemas.script import Script, Segment, VoiceKey
 from pmb.schemas.snapshot import Snapshot
 from pmb.tts.edge import SynthResult, probe_duration
 from pmb.video.ass import (
@@ -38,8 +38,17 @@ from pmb.video.ass import (
     WIDTH,
 )
 from pmb.video.captions import has_speakable
-from pmb.video.segments.base import GAP, RenderContext, Take, segment_duration, take_starts
+from pmb.video.segments.base import (
+    GAP,
+    RenderContext,
+    Take,
+    Utterance,
+    append_outro,
+    segment_duration,
+    take_starts,
+)
 from pmb.video.segments.registry import renderer_for
+from pmb.video.segments.sting import StingSegment
 
 # synth_fn(text, out_path, planned_duration, voice) -> SynthResult;voice 是 narrator / a / b
 SynthFn = Callable[[str, Path, float, VoiceKey], SynthResult]
@@ -323,6 +332,54 @@ def finalize_master(
     _run_ffmpeg(args, cwd=work_dir)
 
 
+def _insert_sting(
+    units: list[tuple[int, Segment | StingSegment]],
+    slogan: str,
+    channel: str,
+    sfx: str | Path | None,
+) -> None:
+    """在 hook(第一段)之後插入開場口號轉場;索引用 0,只影響 ``sting0.ass`` 檔名。
+    音效路徑先轉絕對:ffmpeg 以 work_dir 為 cwd 執行。"""
+    sfx_path = str(Path(sfx).resolve()) if sfx else None
+    units.insert(1, (0, StingSegment(text=slogan, channel=channel, sfx=sfx_path)))
+
+
+def _plan_units(
+    units: list[tuple[int, Segment | StingSegment]], slogan_outro: str | None
+) -> list[list[Utterance]]:
+    """各 unit 的句子計畫(只留可發音的句子);收尾口號接在「最後一個有計畫的腳本段」。
+
+    系統插入的 sting 不算腳本段,收尾口號不會接到它後面。"""
+    plans = [
+        [utt for utt in renderer_for(seg.kind).utterances(seg) if has_speakable(utt.tts_text)]
+        for _, seg in units
+    ]
+    last_script = next(
+        (u for u in range(len(units) - 1, -1, -1) if plans[u] and units[u][1].kind != "sting"),
+        None,
+    )
+    if last_script is not None:
+        plans[last_script] = append_outro(plans[last_script], slogan_outro)
+    return plans
+
+
+def _synthesize_takes(
+    plan: list[Utterance], u: int, work_dir: Path, synth_fn: SynthFn
+) -> list[Take]:
+    """逐句配音並量測實際長度;音檔命名 ``s{unit}_{句序}.mp3``。"""
+    takes: list[Take] = []
+    for j, utt in enumerate(plan):
+        audio_name = f"s{u}_{j}.mp3"
+        result = synth_fn(
+            utt.tts_text, work_dir / audio_name, _planned_seconds(utt.tts_text), utt.voice
+        )
+        measured = probe_duration(work_dir / audio_name)
+        takes.append(
+            Take(utt.text, audio_name, measured, result.words, utt.gap_after, utt.caption)
+        )
+    return takes
+
+
 def assemble_video(
     script: Script,
     snapshot: Snapshot,
@@ -335,8 +392,14 @@ def assemble_video(
     bgm_path: str | Path | None = None,
     bgm_gain_db: float = -20.0,
     master_audio: bool = True,
+    slogan_intro: str | None = None,
+    slogan_outro: str | None = None,
+    sting_sfx: str | Path | None = None,
 ) -> Path:
-    """合成直式短影片並回傳 mp4 路徑。段級渲染 + 卡拉OK字幕 + 動態;詳見模組 docstring。"""
+    """合成直式短影片並回傳 mp4 路徑。段級渲染 + 卡拉OK字幕 + 動態;詳見模組 docstring。
+
+    ``slogan_intro`` 給了就在 hook 後插口號轉場(``sting_sfx`` 為其音效);``slogan_outro``
+    接在最後一段(模型已寫同義句就不重複)。口號轉場配音失敗只略過該段,影片照出。"""
     out_path = Path(out_path).resolve()
     work_dir = Path(work_dir)
     work_dir.mkdir(parents=True, exist_ok=True)
@@ -344,13 +407,16 @@ def assemble_video(
     chart_paths = {spec.id: render_chart(spec, snapshot, work_dir).name for spec in script.charts}
 
     # Pass A:各段的句子計畫 → 逐句配音 + 實測長度 → 段長與全片時間軸(進度條/收尾要用)
-    units = list(enumerate(script.segments))
+    units: list[tuple[int, Segment | StingSegment]] = list(enumerate(script.segments))
+    if slogan_intro and units:
+        _insert_sting(units, slogan_intro, channel_name, sting_sfx)
+    plans = _plan_units(units, slogan_outro)
     seg_takes: list[list[Take]] = []
     seg_durations: list[float] = []
     usable: list[int] = []  # 有可配音內容的 unit 索引(其餘跳過,不讓一段壞掉整支片)
     for u, (i, seg) in enumerate(units):
         renderer = renderer_for(seg.kind)
-        plan = [utt for utt in renderer.utterances(seg) if has_speakable(utt.tts_text)]
+        plan = plans[u]
         if not plan:
             logger.warning(
                 "segment {}({})無可發音內容,跳過:{!r}", i, seg.kind, seg.spoken_text[:40]
@@ -358,17 +424,16 @@ def assemble_video(
             seg_takes.append([])
             seg_durations.append(0.0)
             continue
+        try:
+            takes = _synthesize_takes(plan, u, work_dir, synth_fn)
+        except Exception as exc:  # noqa: BLE001
+            if not renderer.optional:
+                raise
+            logger.warning("{} 配音失敗,略過該段(影片照出):{}", seg.kind, exc)
+            seg_takes.append([])
+            seg_durations.append(0.0)
+            continue
         usable.append(u)
-        takes: list[Take] = []
-        for j, utt in enumerate(plan):
-            audio_name = f"s{u}_{j}.mp3"
-            result = synth_fn(
-                utt.tts_text, work_dir / audio_name, _planned_seconds(utt.tts_text), utt.voice
-            )
-            measured = probe_duration(work_dir / audio_name)
-            takes.append(
-                Take(utt.text, audio_name, measured, result.words, utt.gap_after, utt.caption)
-            )
         seg_takes.append(takes)
         seg_durations.append(
             segment_duration(takes, lead_in=renderer.lead_in, min_duration=renderer.min_duration)

@@ -9,6 +9,7 @@ from pmb.video.segments.chart import ChartRenderer
 from pmb.video.segments.dialogue import DialogueRenderer
 from pmb.video.segments.recap import RecapRenderer
 from pmb.video.segments.split import SplitRenderer
+from pmb.video.segments.sting import StingRenderer
 
 _RENDERERS: dict[str, SegmentRenderer] = {
     "chart": ChartRenderer(),
@@ -17,6 +18,7 @@ _RENDERERS: dict[str, SegmentRenderer] = {
     "split": SplitRenderer(),
     "bignum": BignumRenderer(),
     "recap": RecapRenderer(),
+    "sting": StingRenderer(),
 }
 
 
