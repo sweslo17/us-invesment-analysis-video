@@ -98,6 +98,21 @@ poetry run pmb publish                  # 只寫 publish manifest,不上傳(需 
 
 **休市**:不帶 `--date` 會自動 skip;`pmb next-session` 看下次啟動日。
 
+## 影片段型(v4)
+
+講稿 `segments[].kind` 有六種積木,排列組合由當天新聞決定(不套固定骨架),反重複驗證器會擋與近幾天雷同的序列:
+
+- `chart`:圖表段,綁 `chart_id`,疊 `stat` 大數字;數字是一支片的核心,至少 2 段。
+- `card`:字卡,開場 hook、名詞小教室(有合適術語才放)、片尾名人金句。
+- `dialogue`:對話框,機構/市場擬人(Fed、債市、VIX…)用兩個聲線(`TTS_VOICE_A/B`)逐句彈出,鄉民梗主場。
+- `split`:好壞消息上下兩格,冷面反差梗主場。
+- `bignum`:全屏大數字,從 0 跳到定值,當天某個數字本身就是新聞時用。
+- `recap`:對帳,昨天說要看的事逐列打勾。
+
+`script.gags` 記錄當天用到的梗(至少 2 個),供之後幾天避免重複。hook 後系統自動插入約 1 秒的開場口號轉場(`SLOGAN_INTRO`、`STING_ENABLE`),結尾自動接收尾口號(`SLOGAN_OUTRO`),講稿不用寫。
+
+研究 agent 寫完產物後用 `poetry run pmb validate-research --date YYYY-MM-DD` 自檢:schema、字數預算、反重複、欄位字數上限、畫面數字與旁白一致,全過才算交件。設計細節見 [`docs/superpowers/specs/2026-09-30-video-variety-humor-design.md`](docs/superpowers/specs/2026-09-30-video-variety-humor-design.md)。
+
 ## 開發進度
 
 - [x] Phase 0 — 資料層(FRED + yfinance + 衍生指標 + 快照)
