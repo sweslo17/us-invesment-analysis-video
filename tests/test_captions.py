@@ -1,10 +1,12 @@
 """段級字幕邏輯測試:分頁、卡拉OK對時、word boundary 對齊與後備(不跑 ffmpeg)。"""
 
+import random
+
 import pytest
 
 from pmb.tts.edge import WordBoundary
 from pmb.video.assemble import _audio_graph, _fit_box
-from pmb.video.captions import build_caption_pages
+from pmb.video.captions import MAX_LINES, NO_LINE_START, build_caption_pages, wrap_lines
 from pmb.video.segments.base import Take as _Take
 from pmb.video.segments.chart import build_segment_ass
 
@@ -106,3 +108,55 @@ def test_audio_graph_mixed_gaps_lead_in_and_sfx():
     assert "d=0.150[lead]" in g and "d=0.500[g0]" in g
     assert "concat=n=4:v=0:a=1" in g  # lead + a0 + g0 + a1
     assert "[3:a]" in g and "amix=inputs=2" in g
+
+
+@pytest.mark.parametrize(
+    ("text", "run"),
+    [
+        ("美國十年期公債殖利率來到5.26%附近。", "5.26%"),
+        ("標普五百期貨盤前一路衝到7,670點。", "7,670"),
+        ("那斯達克期貨漲到了23,456.78點。", "23,456.78"),
+    ],
+)
+def test_wrap_lines_never_splits_decimal_or_thousands_separator(text, run):
+    """「5.」/「26%」、「7,」/「670點」:小數點與千分位逗號前後都是數字時不可斷行。"""
+    lines = wrap_lines(text)
+    assert "".join(lines) == text
+    assert any(run in line for line in lines), lines
+
+
+@pytest.mark.parametrize(
+    "text", ["市場在等的那個數字，結果大家都在等……然後呢", "結果聯準會主席講了一小時……什麼都沒說。"]
+)
+def test_wrap_lines_keeps_ellipsis_pair_together(text):
+    """「……」是一個停頓記號,不可拆成「…」/「…」兩行。"""
+    lines = wrap_lines(text)
+    assert "".join(lines) == text
+    assert any("……" in line for line in lines), lines
+
+
+def test_wrap_lines_never_leaves_orphan_full_stop_line():
+    """26 個中文字 + 「。」:句號黏回上一行,不會自己成一頁字幕。"""
+    text = "一二三四五六七八九十一二三四五六七八九十一二三四五六。"
+    lines = wrap_lines(text)
+    assert lines == ["一二三四五六七八九十一二三", "四五六七八九十一二三四五六。"]
+    pages = build_caption_pages(text, [], 4.0)
+    assert len(pages) == 1 and pages[0].text.count("\\N") == MAX_LINES - 1
+
+
+def test_wrap_lines_property_no_closer_starts_a_line_and_no_split_runs():
+    """隨機字串:行串接 == 原文;第 2 行起不以禁則字元開頭;不從英數串或數字的 ./, 中間斷。"""
+    rng = random.Random(20261001)
+    alphabet = list("一二三四五六七八九十市場美股") + list("0123456789") + list("ABCxyz")
+    alphabet += list(".,%…。，、」）!?： ")
+    for _ in range(3000):
+        text = "".join(rng.choice(alphabet) for _ in range(rng.randint(1, 60)))
+        for max_units in (6, 9, 13):
+            lines = wrap_lines(text, max_units)
+            assert "".join(lines) == text
+            for a, b in zip(lines, lines[1:], strict=False):
+                assert b[0] not in NO_LINE_START, (text, lines)
+                assert not (a[-1].isascii() and a[-1].isalnum() and b[0].isascii()
+                            and b[0].isalnum()), (text, lines)
+                assert not (a[-1] in ".," and len(a) > 1 and a[-2].isdigit()
+                            and b[0].isdigit()), (text, lines)

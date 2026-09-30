@@ -92,6 +92,9 @@ def build_srt(cues: list[tuple[str, float, float]]) -> str:
 
 
 BREAK_AFTER = "，、,。!?!?;；:：…)）」』】"
+# 行首禁則:這些字元不可出現在第 2 行起的行首(標點、刪節號、右括號/引號、百分比、空白)。
+# 字幕與 textfit 的像素斷行共用這一份,規則只寫一次。
+NO_LINE_START = frozenset("，、,。.!?！？;；:：…⋯)）」』】% ")
 
 
 def char_units(ch: str) -> float:
@@ -107,11 +110,24 @@ def _is_ascii_alnum(ch: str) -> bool:
     return ch.isascii() and ch.isalnum()
 
 
+def _glued(prev: str, ch: str, nxt: str) -> bool:
+    """``ch`` 與下一個字 ``nxt`` 之間不可斷行:下一個字是行首禁則字元、同一個英數串、
+    或 ``ch`` 是夾在兩個數字之間的小數點/千分位逗號(5.26%、7,670)。"""
+    if not nxt:
+        return False
+    return (
+        nxt in NO_LINE_START
+        or (_is_ascii_alnum(ch) and _is_ascii_alnum(nxt))
+        or (ch in ".," and prev.isdigit() and nxt.isdigit())
+    )
+
+
 def wrap_lines(text: str, max_units: int = MAX_UNITS) -> list[str]:
     """依寬度切行(中文算 1、英數算 0.55),優先在標點後斷行。行串接 == 原文。
 
-    數字/英文的連續串(7747、1.06%、VIX)不從中間切:寬度到了但下一個字仍是同一串,
-    就多塞幾個字把串講完再斷(略超寬,總比「收7 / 747點」好讀)。
+    數字/英文的連續串(7747、1.06%、5.26%、7,670、VIX)不從中間切,行首也不放標點、
+    「…」、右括號/引號(不會拆開「……」、不會剩一個「。」自成一頁):寬度到了但與下一個字
+    黏著(見 ``_glued``),就多塞幾個字再斷(略超寬,總比「收7 / 747點」好讀)。
     """
     lines: list[str] = []
     cur: list[str] = []
@@ -119,11 +135,11 @@ def wrap_lines(text: str, max_units: int = MAX_UNITS) -> list[str]:
     for i, ch in enumerate(text):
         cur.append(ch)
         width += char_units(ch)
+        prev = text[i - 1] if i else ""
         nxt = text[i + 1] if i + 1 < len(text) else ""
-        in_run = _is_ascii_alnum(ch) and (_is_ascii_alnum(nxt) or nxt in ".%")
-        if (ch in BREAK_AFTER and width >= max_units * 0.55) or (
-            width >= max_units and not in_run
-        ):
+        if _glued(prev, ch, nxt):
+            continue
+        if (ch in BREAK_AFTER and width >= max_units * 0.55) or width >= max_units:
             lines.append("".join(cur))
             cur = []
             width = 0.0
