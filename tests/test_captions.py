@@ -3,13 +3,8 @@
 import pytest
 
 from pmb.tts.edge import WordBoundary
-from pmb.video.assemble import (
-    _audio_graph,
-    _fit_box,
-    _Take,
-    build_caption_pages,
-    build_segment_ass,
-)
+from pmb.video.assemble import _audio_graph, _fit_box, _Take, build_segment_ass
+from pmb.video.captions import build_caption_pages
 
 
 def _units(s: str) -> float:

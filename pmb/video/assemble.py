@@ -9,13 +9,13 @@
 頻道列蓋住、右側約 170px 是按讚欄,字幕、大數字 callout、CTA 一律放在安全區內。
 最終串接後過音訊母帶鏈(BGM ducking + loudnorm),見 ``finalize_master``。
 配音以可注入的 ``synth_fn`` 提供。
+斷句/字幕在 ``video.captions``、版面與 ASS 元件在 ``video.ass``。
 """
 
 from __future__ import annotations
 
 import json
 import math
-import re
 import struct
 import subprocess
 from collections.abc import Callable
@@ -29,35 +29,30 @@ from pmb.charts.select import render_chart
 from pmb.schemas.script import Script
 from pmb.schemas.snapshot import Snapshot
 from pmb.tts.edge import SynthResult, WordBoundary, probe_duration
+from pmb.video.ass import (
+    ASS_TEMPLATE,
+    BG_HEX,
+    CARD_CENTER_Y,
+    CARD_LINE_H,
+    CARD_MAX_UNITS,
+    CHART_BAND_TOP,
+    CHART_BOX_H,
+    CHART_BOX_W,
+    FADE_TAG,
+    GOLD_HEX,
+    HEIGHT,
+    KICKER_GAP,
+    POP_IN,
+    WIDTH,
+    ass_time,
+    common_events,
+    full_event,
+)
+from pmb.video.captions import build_caption_pages, split_sentences
 
 # synth_fn(text, out_path, planned_duration) -> SynthResult
 SynthFn = Callable[[str, Path, float], SynthResult]
 
-# 直式短影片畫布(9:16)
-_WIDTH, _HEIGHT = 1080, 1920
-_BG_HEX = "0D1B2A"  # 與 charts.library._CANVAS 一致
-_GOLD_HEX = "FFD166"  # 品牌金(標題/進度條/字幕掃色)
-
-# Shorts 播放器 UI 遮蔽區(實機量測的保守值):底部標題/頻道/描述列、右側按讚/留言/分享欄。
-# 所有文字都不得落進去,否則觀眾在 app 裡根本看不到。
-_BOTTOM_UI = 400
-_RIGHT_UI = 170
-# 版面(由上而下,單位 px):角標(品牌·日期)→ 主題標題 → 圖表 → 大數字 callout → 字幕 → UI 遮蔽區
-_BADGE_TOP = 100
-_TITLE_TOP = 150  # 標題 92px,約到 245
-_CHART_BAND_TOP = 270
-_CHART_BOX_W = 1040
-_CHART_BOX_H = 850  # 框底 = 270+850 = 1120,下方留給 callout
-_STAT_LABEL_TOP = 1122  # 48px
-_STAT_TOP = 1172  # 132px,約到 1340;字幕頂緣約 1365
-_SUB_MARGIN_V = _BOTTOM_UI  # 字幕底緣 = 1520;兩行 64px 頂緣約 1365,不蓋 callout
-_CTA_MARGIN_V = 430
-# 字卡:大標以「可見區」(0 ~ 1920-_BOTTOM_UI)的中心偏上為錨點置中;kicker 緊貼大標上方
-_CARD_CENTER_Y = 820
-_CARD_FONT = 136
-_CARD_LINE_H = int(_CARD_FONT * 1.25)
-_CARD_MAX_UNITS = (_WIDTH - 2 * 60) / _CARD_FONT  # 每行寬度 ≈7 字(中文 1 單位 = 一個字寬)
-_KICKER_GAP = 96  # kicker 基線到大標頂緣的距離
 _FPS = 25
 _GAP = 0.18  # 句間呼吸(秒)
 _TAIL = 0.35  # 段尾停頓(秒)
@@ -67,295 +62,7 @@ _ZOOM_AMOUNT = 0.08  # Ken Burns 段內總推進幅度
 _SLIDE_PX = 70  # 圖表段首自下方滑入的位移
 _SLIDE_SEC = 0.40
 _PROGRESS_H = 10  # 底部進度條高(px)
-_MAX_UNITS = 13  # 字幕每行寬度上限(中文 1、英數 0.55);13×64px 塞得進左右邊界內
-_MAX_LINES = 2  # 字幕每頁最多行數(保證不蓋圖)
-_CTA_SEC = 3.0  # 片尾 CTA 出現秒數
 _SHORTS_CAP = 180.0  # YouTube Shorts 長度上限(超過會被當一般影片)
-
-
-def layout_safe_zone() -> dict[str, int]:
-    """回傳版面安全區參數,供測試/文件確認文字都避開 Shorts 播放器 UI。"""
-    return {
-        "bottom_ui": _BOTTOM_UI,
-        "right_ui": _RIGHT_UI,
-        "sub_margin_v": _SUB_MARGIN_V,
-        "sub_margin_r": _RIGHT_UI,
-    }
-
-# 用 .ass 並指定 PlayResY=1920,字級/邊界都以實際像素計。字幕在底(Alignment=2)、
-# 標題在頂(Alignment=8),都不蓋到中間的圖表。含 SecondaryColour 供卡拉OK掃色:
-# 未唸到 = Secondary(白),唸過 = Primary(金)。
-_STYLE_FORMAT = (
-    "Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, "
-    "BackColour, Bold, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV"
-)
-_EVENT_FORMAT = (
-    "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
-)
-# 顏色為 ASS 的 &HAABBGGRR。sub 的 Primary=金(唸過)、Secondary=白(未唸);
-# 版面座標全部引用上面的常數,改版面只改常數。
-_ASS_TEMPLATE = "\n".join(
-    [
-        "[Script Info]",
-        "ScriptType: v4.00+",
-        "PlayResX: 1080",
-        "PlayResY: 1920",
-        "WrapStyle: 2",
-        "ScaledBorderAndShadow: yes",
-        "",
-        "[V4+ Styles]",
-        _STYLE_FORMAT,
-        # 字幕:底部置中,避開底部 UI 與右側按讚欄
-        f"Style: sub,{{font}},64,&H0066D1FF,&H00FFFFFF,&H00201810,&H78000000,1,1,5,1,2,"
-        f"60,{_RIGHT_UI},{_SUB_MARGIN_V}",
-        # 主題標題:頂部置中
-        f"Style: title,{{font}},92,&H0066D1FF,&H00FFFFFF,&H00201810,&H00000000,1,1,3,0,8,"
-        f"40,40,{_TITLE_TOP}",
-        # 字卡大標與 kicker:位置由事件的 \\pos 決定(依行數對可見區置中),樣式只管字型
-        f"Style: card,{{font}},{_CARD_FONT},&H00FFFFFF,&H00FFFFFF,&H40000000,&H00000000,1,1,2,0,5,"
-        "80,80,0",
-        "Style: kicker,{font},52,&H0066D1FF,&H00FFFFFF,&H40000000,&H00000000,1,1,2,0,5,80,80,0",
-        # 大數字 callout:左對齊,圖表下方;右側留 UI 欄
-        f"Style: stat,{{font}},132,&H0066D1FF,&H00FFFFFF,&H00201810,&H00000000,1,1,3,0,7,"
-        f"70,{_RIGHT_UI},{_STAT_TOP}",
-        f"Style: statlabel,{{font}},48,&H00E6EDF5,&H00FFFFFF,&H00201810,&H00000000,1,1,2,0,7,"
-        f"70,{_RIGHT_UI},{_STAT_LABEL_TOP}",
-        # 品牌·日期角標:最頂,小而淡
-        f"Style: badge,{{font}},36,&H00D9C58F,&H00FFFFFF,&H00201810,&H00000000,0,1,2,0,8,"
-        f"40,40,{_BADGE_TOP}",
-        # 片尾 CTA:底部安全區內
-        f"Style: cta,{{font}},48,&H00FFFFFF,&H00FFFFFF,&H00201810,&H78000000,1,1,4,0,2,"
-        f"60,{_RIGHT_UI},{_CTA_MARGIN_V}",
-        "",
-        "[Events]",
-        _EVENT_FORMAT,
-        "{events}",
-        "",
-    ]
-)
-
-# 文字 pop-in:淡入 + 由 82% 放大到 100%(靜止字卡是滑走的主因之一)
-_POP_IN = "{\\fad(120,0)\\fscx82\\fscy82\\t(0,240,\\fscx100\\fscy100)}"
-_FADE_TAG = "{\\fad(160,0)}"
-
-# 句尾標點不含 ASCII 句點「.」,否則 3.8% 這類小數會被誤切
-_SENT_RE = re.compile(r"[^。!?！?;;；\n]+[。!?！?;;；]?")
-
-
-def has_speakable(text: str) -> bool:
-    """這段文字是否有「唸得出來」的內容(中日韓字、字母或數字)。
-
-    純標點/符號的碎片(如收尾的 ``』``)送進 edge-tts 會回 NoAudioReceived,
-    2026-07-30 就因此讓整支影片合成失敗,故一律先過濾。
-    """
-    return any(ch.isalnum() for ch in text)
-
-
-def split_sentences(text: str) -> list[str]:
-    """把旁白切成句子(保留句尾標點),供逐句配音與逐頁字幕。沒有標點則整段為一句。
-
-    刻意不把 ASCII 句點當句尾,避免 3.8%、0.53 這類小數被切斷。沒有可發音內容的
-    碎片(句尾標點後的右引號、破折號…)併回前一句,避免送空文字給 TTS。
-    """
-    parts = [m.group().strip() for m in _SENT_RE.finditer(text)]
-    merged: list[str] = []
-    for part in parts:
-        if not part:
-            continue
-        if not has_speakable(part) and merged:
-            merged[-1] += part  # 純符號碎片黏回前句(保留原文,不丟字)
-            continue
-        merged.append(part)
-    return [p for p in merged if has_speakable(p)]
-
-
-def _timestamp(seconds: float) -> str:
-    hours, rem = divmod(seconds, 3600)
-    minutes, secs = divmod(rem, 60)
-    millis = int(round((secs - int(secs)) * 1000))
-    return f"{int(hours):02d}:{int(minutes):02d}:{int(secs):02d},{millis:03d}"
-
-
-def build_srt(cues: list[tuple[str, float, float]]) -> str:
-    """把 (文字, 起點秒, 長度秒) 列表組成 SRT 字幕。"""
-    blocks = []
-    for i, (text, start, duration) in enumerate(cues, start=1):
-        blocks.append(f"{i}\n{_timestamp(start)} --> {_timestamp(start + duration)}\n{text}\n")
-    return "\n".join(blocks)
-
-
-_BREAK_AFTER = "，、,。!?!?;；:：…)）」』】"
-
-
-def _char_units(ch: str) -> float:
-    return 1.0 if not ch.isascii() else 0.55
-
-
-def _is_ascii_alnum(ch: str) -> bool:
-    return ch.isascii() and ch.isalnum()
-
-
-def _wrap_lines(text: str, max_units: int = _MAX_UNITS) -> list[str]:
-    """依寬度切行(中文算 1、英數算 0.55),優先在標點後斷行。行串接 == 原文。
-
-    數字/英文的連續串(7747、1.06%、VIX)不從中間切:寬度到了但下一個字仍是同一串,
-    就多塞幾個字把串講完再斷(略超寬,總比「收7 / 747點」好讀)。
-    """
-    lines: list[str] = []
-    cur: list[str] = []
-    width = 0.0
-    for i, ch in enumerate(text):
-        cur.append(ch)
-        width += _char_units(ch)
-        nxt = text[i + 1] if i + 1 < len(text) else ""
-        in_run = _is_ascii_alnum(ch) and (_is_ascii_alnum(nxt) or nxt in ".%")
-        if (ch in _BREAK_AFTER and width >= max_units * 0.55) or (
-            width >= max_units and not in_run
-        ):
-            lines.append("".join(cur))
-            cur = []
-            width = 0.0
-    if cur:
-        lines.append("".join(cur))
-    return lines
-
-
-def wrap_caption(text: str, max_units: int = _MAX_UNITS) -> str:
-    """把一行字幕依寬度切成多行,回傳以 ASS 換行符 ``\\N`` 連接的多行。"""
-    return "\\N".join(_wrap_lines(text, max_units))
-
-
-class CaptionPage(NamedTuple):
-    """一頁字幕:``text`` 已含 ``\\N`` 斷行;時間相對句首;karaoke 為 (顯示塊, centisec)。"""
-
-    text: str
-    start: float
-    end: float
-    karaoke: list[tuple[str, int]]
-
-
-def _char_spans_from_words(
-    sentence: str, words: list[WordBoundary]
-) -> list[tuple[float, float]] | None:
-    """用 word boundary 對齊出每個字的 (起,迄) 秒。對不上(TTS 正規化)回 None。"""
-    n = len(sentence)
-    spans: list[tuple[float, float] | None] = [None] * n
-    cursor = 0
-    for w in words:
-        token = w.text.strip()
-        if not token:
-            continue
-        idx = sentence.find(token, cursor)
-        if idx < 0:
-            return None
-        for i in range(idx, min(idx + len(token), n)):
-            spans[i] = (w.start, w.start + w.duration)
-        cursor = idx + len(token)
-    # 沒被 boundary 覆蓋的字(標點/空白):併入前一個字的時間;開頭的併入後一個
-    last: tuple[float, float] | None = None
-    for i in range(n):
-        if spans[i] is not None:
-            last = spans[i]
-        elif last is not None:
-            spans[i] = (last[1], last[1])
-    first = next((s for s in spans if s is not None), None)
-    if first is None:
-        return None
-    for i in range(n):
-        if spans[i] is None:
-            spans[i] = (first[0], first[0])
-        else:
-            break
-    return [s if s is not None else (first[0], first[0]) for s in spans]
-
-
-def _char_spans_proportional(sentence: str, duration: float) -> list[tuple[float, float]]:
-    """按字寬比例把句長攤給每個字(拿不到 word boundary 時的後備)。"""
-    weights = [_char_units(ch) for ch in sentence]
-    total_w = sum(weights) or 1.0
-    spans: list[tuple[float, float]] = []
-    acc = 0.0
-    for w in weights:
-        start = duration * acc / total_w
-        acc += w
-        spans.append((start, duration * acc / total_w))
-    return spans
-
-
-def build_caption_pages(
-    sentence: str,
-    words: list[WordBoundary],
-    duration: float,
-    *,
-    max_units: int = _MAX_UNITS,
-    max_lines: int = _MAX_LINES,
-) -> list[CaptionPage]:
-    """把一句切成逐頁字幕(每頁 ≤ ``max_lines`` 行),附逐字卡拉OK時間。
-
-    頁的起訖時間來自 word boundary(拿不到就按字寬比例),頁與頁相接不留黑洞;
-    最後一頁停留到句尾。
-    """
-    if not sentence:
-        return []
-    spans = (_char_spans_from_words(sentence, words) if words else None) or (
-        _char_spans_proportional(sentence, duration)
-    )
-    lines = _wrap_lines(sentence, max_units)
-    page_line_groups = [lines[i : i + max_lines] for i in range(0, len(lines), max_lines)]
-
-    pages: list[CaptionPage] = []
-    char_pos = 0
-    boundaries: list[tuple[int, int, set[int]]] = []  # (起字, 迄字, 行斷點集合)
-    for group in page_line_groups:
-        start_pos = char_pos
-        breaks: set[int] = set()
-        for j, line in enumerate(group):
-            char_pos += len(line)
-            if j < len(group) - 1:
-                breaks.add(char_pos - 1)  # 此字之後插入 \N
-        boundaries.append((start_pos, char_pos, breaks))
-
-    for k, (lo, hi, breaks) in enumerate(boundaries):
-        page_start = spans[lo][0]
-        page_end = duration if k == len(boundaries) - 1 else spans[boundaries[k + 1][0]][0]
-        # 卡拉OK塊:同時間片的連續字合成一塊,塊長順延到下一塊起點(吞掉字間空隙)
-        chunks: list[tuple[str, float, float]] = []  # (text, start, end)
-        for i in range(lo, hi):
-            ch, (s, e) = sentence[i], spans[i]
-            if chunks and chunks[-1][1] == s and chunks[-1][2] == e:
-                chunks[-1] = (chunks[-1][0] + ch, s, e)
-            else:
-                chunks.append((ch, s, e))
-            if i in breaks:
-                text, s0, e0 = chunks[-1]
-                chunks[-1] = (text + "\\N", s0, e0)
-        karaoke: list[tuple[str, int]] = []
-        for j, (text, s, e) in enumerate(chunks):
-            until = chunks[j + 1][1] if j < len(chunks) - 1 else page_end
-            cs = max(1, round((max(until, e) - s) * 100))
-            karaoke.append((text, cs))
-        page_text = "".join(t for t, _, _ in chunks)
-        pages.append(CaptionPage(page_text, page_start, page_end, karaoke))
-    return pages
-
-
-def _ass_time(seconds: float) -> str:
-    cs = int(round(seconds * 100))
-    h, cs = divmod(cs, 360000)
-    m, cs = divmod(cs, 6000)
-    s, cs = divmod(cs, 100)
-    return f"{h}:{m:02d}:{s:02d}.{cs:02d}"
-
-
-def build_ass(
-    sentence: str, duration: float, *, title: str | None = None, font: str = "Noto Sans CJK TC"
-) -> str:
-    """組單句用的 .ass(底部字幕 + 選配頂部標題,皆全長顯示)。段級請用 build_segment_ass。"""
-    end = _ass_time(duration)
-    events = [f"Dialogue: 0,0:00:00.00,{end},sub,,0,0,0,,{wrap_caption(sentence)}"]
-    if title:
-        events.append(f"Dialogue: 0,0:00:00.00,{end},title,,0,0,0,,{title}")
-    return _ASS_TEMPLATE.format(font=font, events="\n".join(events))
 
 
 class _Take(NamedTuple):
@@ -366,25 +73,6 @@ class _Take(NamedTuple):
     duration: float  # 實測秒數(probe)
     words: list[WordBoundary]
 
-
-def _full_event(style: str, seg_duration: float, text: str) -> str:
-    return f"Dialogue: 0,0:00:00.00,{_ass_time(seg_duration)},{style},,0,0,0,,{text}"
-
-
-def _common_events(
-    seg_duration: float, *, badge: str | None, cta: str | None
-) -> list[str]:
-    """所有段共用的疊層:品牌·日期角標(全段)+ 片尾 CTA(最後 ``_CTA_SEC`` 秒)。"""
-    events: list[str] = []
-    if badge:
-        events.append(_full_event("badge", seg_duration, badge))
-    if cta:
-        start = max(seg_duration - _CTA_SEC, 0.0)
-        events.append(
-            f"Dialogue: 0,{_ass_time(start)},{_ass_time(seg_duration)},cta,,0,0,0,,"
-            f"{_FADE_TAG}{cta}"
-        )
-    return events
 
 
 def build_card_ass(
@@ -402,15 +90,15 @@ def build_card_ass(
     """
     from pmb.charts.cards import wrap_card_text
 
-    lines = wrap_card_text(headline, max_units=_CARD_MAX_UNITS)
-    top = _CARD_CENTER_Y - len(lines) * _CARD_LINE_H // 2
-    pos = f"{{\\an5\\pos(540,{_CARD_CENTER_Y})}}"
-    events: list[str] = [_full_event("card", duration, pos + _POP_IN + "\\N".join(lines))]
+    lines = wrap_card_text(headline, max_units=CARD_MAX_UNITS)
+    top = CARD_CENTER_Y - len(lines) * CARD_LINE_H // 2
+    pos = f"{{\\an5\\pos(540,{CARD_CENTER_Y})}}"
+    events: list[str] = [full_event("card", duration, pos + POP_IN + "\\N".join(lines))]
     if tag:
-        kicker_pos = f"{{\\an5\\pos(540,{top - _KICKER_GAP})}}"
-        events.append(_full_event("kicker", duration, kicker_pos + _FADE_TAG + tag))
-    events += _common_events(duration, badge=badge, cta=cta)
-    return _ASS_TEMPLATE.format(font=font, events="\n".join(events))
+        kicker_pos = f"{{\\an5\\pos(540,{top - KICKER_GAP})}}"
+        events.append(full_event("kicker", duration, kicker_pos + FADE_TAG + tag))
+    events += common_events(duration, badge=badge, cta=cta)
+    return ASS_TEMPLATE.format(font=font, events="\n".join(events))
 
 
 def build_segment_ass(
@@ -431,21 +119,21 @@ def build_segment_ass(
     """
     events: list[str] = []
     if title:
-        events.append(_full_event("title", seg_duration, _FADE_TAG + title))
+        events.append(full_event("title", seg_duration, FADE_TAG + title))
     if stat:
         if stat_label:
-            events.append(_full_event("statlabel", seg_duration, _FADE_TAG + stat_label))
-        events.append(_full_event("stat", seg_duration, _POP_IN + stat))
-    events += _common_events(seg_duration, badge=badge, cta=cta)
+            events.append(full_event("statlabel", seg_duration, FADE_TAG + stat_label))
+        events.append(full_event("stat", seg_duration, POP_IN + stat))
+    events += common_events(seg_duration, badge=badge, cta=cta)
     offset = 0.0
     for take in takes:
         for page in build_caption_pages(take.text, take.words, take.duration):
-            start = _ass_time(offset + page.start)
-            end = _ass_time(offset + page.end)
+            start = ass_time(offset + page.start)
+            end = ass_time(offset + page.end)
             text = "".join(f"{{\\k{cs}}}{chunk}" for chunk, cs in page.karaoke)
             events.append(f"Dialogue: 0,{start},{end},sub,,0,0,0,,{text}")
         offset += take.duration + _GAP
-    return _ASS_TEMPLATE.format(font=font, events="\n".join(events))
+    return ASS_TEMPLATE.format(font=font, events="\n".join(events))
 
 
 def segment_timeline(durations: list[float]) -> tuple[list[float], float]:
@@ -529,26 +217,26 @@ def _render_segment_clip(
     img_w, img_h = _png_size(work_dir / image)
     if is_card:
         # 全屏卡:標準 Ken Burns(邊緣裁進來沒關係,卡片留白極大)
-        out_w, out_h = _WIDTH, _HEIGHT
+        out_w, out_h = WIDTH, HEIGHT
         ox, oy = 0, 0
         prep = f"[0:v]scale={out_w * 2}:{out_h * 2}:flags=lanczos"
     else:
         # 圖表:縮小一階塞進框,再用畫布同色 padding 墊回;zoompan 只推進 padding,
         # 圖上貼邊的字(數值標註/時間軸文字)永遠不會被裁掉
-        inner_w = int(_CHART_BOX_W / (1 + _ZOOM_AMOUNT))
-        inner_h = int(_CHART_BOX_H / (1 + _ZOOM_AMOUNT))
+        inner_w = int(CHART_BOX_W / (1 + _ZOOM_AMOUNT))
+        inner_h = int(CHART_BOX_H / (1 + _ZOOM_AMOUNT))
         fit_w, fit_h = _fit_box(img_w, img_h, inner_w, inner_h)
         out_w = int(fit_w * (1 + _ZOOM_AMOUNT)) // 2 * 2
         out_h = int(fit_h * (1 + _ZOOM_AMOUNT)) // 2 * 2
-        ox = (_WIDTH - out_w) // 2
-        oy = _CHART_BAND_TOP + (_CHART_BOX_H - out_h) // 2
+        ox = (WIDTH - out_w) // 2
+        oy = CHART_BAND_TOP + (CHART_BOX_H - out_h) // 2
         prep = (
             f"[0:v]scale={fit_w * 2}:{fit_h * 2}:flags=lanczos,"
-            f"pad={out_w * 2}:{out_h * 2}:(ow-iw)/2:(oh-ih)/2:color=0x{_BG_HEX}"
+            f"pad={out_w * 2}:{out_h * 2}:(ow-iw)/2:(oh-ih)/2:color=0x{BG_HEX}"
         )
 
     chain: list[str] = [
-        f"color=c=0x{_BG_HEX}:s={_WIDTH}x{_HEIGHT}:r={_FPS}:d={seg_duration:.3f}[bg]",
+        f"color=c=0x{BG_HEX}:s={WIDTH}x{HEIGHT}:r={_FPS}:d={seg_duration:.3f}[bg]",
         # 先放大 2 倍再 zoompan,消除整數座標取樣的抖動;緩推 {_ZOOM_AMOUNT:.0%}
         (
             f"{prep},"
@@ -567,17 +255,17 @@ def _render_segment_clip(
         chain.append(f"{label}subtitles={ass_name}[v1]")
         label = "[v1]"
     chain.append(
-        f"color=c=0x{_GOLD_HEX}:s={_WIDTH}x{_PROGRESS_H}:r={_FPS}:d={seg_duration:.3f}[pb]"
+        f"color=c=0x{GOLD_HEX}:s={WIDTH}x{_PROGRESS_H}:r={_FPS}:d={seg_duration:.3f}[pb]"
     )
     chain.append(
         f"{label}[pb]overlay="
         f"x='-w+w*min(1,({global_offset:.3f}+t)/{max(global_total, 0.001):.3f})':"
-        f"y={_HEIGHT - _PROGRESS_H}[v2]"
+        f"y={HEIGHT - _PROGRESS_H}[v2]"
     )
-    fade = f"[v2]fade=t=in:st=0:d={_FADE_IN}:color=0x{_BG_HEX}"
+    fade = f"[v2]fade=t=in:st=0:d={_FADE_IN}:color=0x{BG_HEX}"
     if is_last:
         out_st = max(seg_duration - _FADE_OUT, 0)
-        fade += f",fade=t=out:st={out_st:.3f}:d={_FADE_OUT}:color=0x{_BG_HEX}"
+        fade += f",fade=t=out:st={out_st:.3f}:d={_FADE_OUT}:color=0x{BG_HEX}"
     chain.append(f"{fade}[v]")
     chain.append(_audio_graph(len(takes), seg_duration))
 

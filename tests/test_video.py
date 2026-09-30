@@ -2,14 +2,9 @@
 
 import pytest
 
-from pmb.video.assemble import (
-    build_ass,
-    build_srt,
-    has_speakable,
-    segment_timeline,
-    split_sentences,
-    wrap_caption,
-)
+from pmb.video.ass import build_ass
+from pmb.video.assemble import segment_timeline
+from pmb.video.captions import build_srt, has_speakable, split_sentences, wrap_caption
 
 
 def test_build_srt_formats_cues_with_ms():
@@ -164,7 +159,7 @@ def test_layout_keeps_text_out_of_shorts_ui_overlay():
 
     字幕與 callout 都不能落在那兩塊,否則觀眾根本看不到字。
     """
-    from pmb.video.assemble import layout_safe_zone
+    from pmb.video.ass import layout_safe_zone
 
     zone = layout_safe_zone()
     assert zone["bottom_ui"] >= 400 and zone["right_ui"] >= 160
