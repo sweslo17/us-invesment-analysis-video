@@ -1,0 +1,25 @@
+{
+  "segments": [
+    {"kind": "card", "vo": "殖利率又創新高,Fed卻說不急。", "headline": "Fed說不急\n債市說我急", "tag": "對決日"},
+    {"kind": "dialogue", "title": "Fed vs 債市", "lines": [
+      {"speaker": "Fed", "voice": "a", "text": "十月升息,不急。"},
+      {"speaker": "債市", "voice": "b", "text": "你不急,我急。"},
+      {"speaker": "Fed", "voice": "a", "text": "……蛤?"}
+    ], "vo": "意思是長天期利率自己往上衝。"},
+    {"kind": "chart", "vo": "10年期公債殖利率今天來到5.26%,續創2007年以來新高。", "chart_id": "rates", "title": "殖利率照樣衝", "stat": "5.26%", "stat_label": "10年期殖利率"},
+    {"kind": "split", "vo": "好消息是Fed說十月不急……壞消息是債市完全沒在聽,5.26%。", "top": {"label": "好消息", "text": "Fed說不急", "tone": "good"}, "bottom": {"label": "壞消息", "text": "債市沒在聽", "stat": "5.26%", "tone": "bad"}},
+    {"kind": "bignum", "vo": "十年期5.26%,上次這麼高,iPhone才剛出第一代。", "value": "5.26%", "label": "10年期殖利率", "context": "2007年以來最高"},
+    {"kind": "recap", "vo": "昨天說看威廉斯,他說十月不急。十年期沒守住5.2%,來到5.26%。消費者信心12年新低。", "rows": [
+      {"ask": "威廉斯怎麼說", "result": "十月不急", "mark": "yes"},
+      {"ask": "10年期守不守5.2%", "result": "沒守住5.26%", "mark": "no"},
+      {"ask": "消費者信心", "result": "12年新低", "mark": "mixed"}
+    ]},
+    {"kind": "chart", "vo": "標普上一交易日跌0.17%,期貨續小跌。", "chart_id": "lev", "title": "槓桿更貴了", "stat": "-0.17%", "stat_label": "標普昨收"},
+    {"kind": "card", "vo": "官員嘴巴放鴿,長天期公債利率卻硬得很。", "headline": "官員嘴巴放鴿\n公債硬得很", "tag": "蒙格 不知道有沒有說過"}
+  ],
+  "charts": [
+    {"id": "rates", "module": "leverage_decay", "params": {}},
+    {"id": "lev", "module": "leverage_decay", "params": {}}
+  ],
+  "gags": ["Fed 不急 vs 債市我急的對話體", "上次這麼高 iPhone 才剛出第一代"]
+}

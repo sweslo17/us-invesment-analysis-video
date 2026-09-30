@@ -365,3 +365,41 @@ def test_non_optional_segment_tts_failure_still_raises(tmp_path):
     with pytest.raises(RuntimeError, match="edge-tts"):
         assemble_video(script, _sting_snapshot(), tmp_path / "o.mp4", synth_fn=synth,
                        work_dir=tmp_path / "work", font="PingFang TC", master_audio=False)
+
+
+def test_assemble_all_kinds_smoke(tmp_path):
+    """整合(靜音 TTS + ffmpeg):六種段型 + 口號轉場 + 收尾口號一起合成不炸,產物齊全。"""
+    import datetime as dt
+    from pathlib import Path
+
+    from pmb.research.variety import soft_script_errors
+    from pmb.schemas.script import Script
+    from pmb.schemas.snapshot import LeverageMath, Snapshot
+    from pmb.tts.edge import silent_synth
+    from pmb.video.assemble import assemble_video
+
+    fixture = Path(__file__).parent / "fixtures" / "script_all_kinds.json"
+    script = Script.model_validate_json(fixture.read_text(encoding="utf-8"))
+    assert soft_script_errors(script, []) == []  # fixture 本身就是合規範例
+    snap = Snapshot(
+        session_date=dt.date(2026, 9, 30),
+        generated_at=dt.datetime(2026, 9, 30, 12, 0, tzinfo=dt.UTC),
+        leverage_math=[LeverageMath(market="S&P 500", realized_vol=0.165, vol_target_leverage=0.91,
+                                    drag_1x=0.0136, drag_2x=0.0545, drag_3x=0.1226)],
+    )
+    voices: list[str] = []
+
+    def synth(text, path, planned, voice):
+        voices.append(voice)
+        return silent_synth(text, path, duration=0.6)
+
+    work = tmp_path / "work"
+    out = assemble_video(script, snap, tmp_path / "all.mp4", synth_fn=synth, work_dir=work,
+                         font="PingFang TC", master_audio=False,
+                         slogan_intro="美股早發車,發車!",
+                         slogan_outro="以上非投資建議,明天盤前見。")
+    assert out.exists() and out.stat().st_size > 0
+    for name in ("card0.ass", "sting0.ass", "dialogue1.ass", "seg2.ass", "split3.ass",
+                 "bignum4.ass", "recap5.ass", "seg6.ass", "card7.ass"):
+        assert (work / name).exists(), name
+    assert {"a", "b", "narrator"} <= set(voices)
