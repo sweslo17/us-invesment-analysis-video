@@ -5,10 +5,12 @@ from __future__ import annotations
 from pmb.video.segments.base import SegmentRenderer
 from pmb.video.segments.card import CardRenderer
 from pmb.video.segments.chart import ChartRenderer
+from pmb.video.segments.dialogue import DialogueRenderer
 
 _RENDERERS: dict[str, SegmentRenderer] = {
     "chart": ChartRenderer(),
     "card": CardRenderer(),
+    "dialogue": DialogueRenderer(),
 }
 
 

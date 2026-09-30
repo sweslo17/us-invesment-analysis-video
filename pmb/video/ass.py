@@ -89,6 +89,8 @@ ASS_TEMPLATE = "\n".join(
         # 片尾 CTA:底部安全區內
         f"Style: cta,{{font}},48,&H00FFFFFF,&H00FFFFFF,&H00201810,&H78000000,1,1,4,0,2,"
         f"60,{RIGHT_UI},{CTA_MARGIN_V}",
+        # 自由定位:新段型的色塊/圖示/文字都用它,位置與字級由事件的 override 決定
+        "Style: free,{font},60,&H00FFFFFF,&H00FFFFFF,&H00201810,&H00000000,1,1,0,0,7,0,0,0",
         "",
         "[Events]",
         _EVENT_FORMAT,
@@ -139,3 +141,54 @@ def build_ass(
     if title:
         events.append(f"Dialogue: 0,0:00:00.00,{end},title,,0,0,0,,{title}")
     return ASS_TEMPLATE.format(font=font, events="\n".join(events))
+
+
+def ass_color(hex_rgb: str) -> str:
+    """``#RRGGBB`` → ASS 的 ``&HBBGGRR&``。"""
+    h = hex_rgb.lstrip("#").upper()
+    return f"&H{h[4:6]}{h[2:4]}{h[0:2]}&"
+
+
+def rounded_rect(w: int, h: int, r: int) -> str:
+    """圓角矩形的 ASS 繪圖路徑(左上為原點)。"""
+    r = max(0, min(r, w // 2, h // 2))
+    return (
+        f"m {r} 0 l {w - r} 0 b {w} 0 {w} 0 {w} {r} l {w} {h - r} b {w} {h} {w} {h} {w - r} {h} "
+        f"l {r} {h} b 0 {h} 0 {h} 0 {h - r} l 0 {r} b 0 0 0 0 {r} 0"
+    )
+
+
+def polygon(points: list[tuple[float, float]], size: float) -> str:
+    """0–1 正規化座標的多邊形 → 邊長 ``size`` 的 ASS 繪圖路徑(✓/✗ 圖示用)。"""
+    pts = [(round(x * size), round(y * size)) for x, y in points]
+    (x0, y0), rest = pts[0], pts[1:]
+    return f"m {x0} {y0} l " + " ".join(f"{x} {y}" for x, y in rest)
+
+
+def _slide_in(x: int, y: int, move_px: int) -> str:
+    return f"\\move({x},{y + move_px},{x},{y},0,160)\\fad(120,0)"
+
+
+def shape_event(
+    start: float, end: float, x: int, y: int, path: str, color: str, *, move_px: int = 24
+) -> str:
+    """色塊/圖示事件(layer 0,在文字下面):從下方滑入 + 淡入。"""
+    tags = f"{{\\an7{_slide_in(x, y, move_px)}\\bord0\\shad0\\1c{color}\\p1}}"
+    return f"Dialogue: 0,{ass_time(start)},{ass_time(end)},free,,0,0,0,,{tags}{path}{{\\p0}}"
+
+
+def text_event(
+    start: float,
+    end: float,
+    x: int,
+    y: int,
+    text: str,
+    *,
+    size: int,
+    color: str,
+    align: int = 7,
+    move_px: int = 24,
+) -> str:
+    """文字事件(layer 1,蓋在色塊上):``align`` 是 ASS 數字鍵盤對齊(7 左上、9 右上、5 置中)。"""
+    tags = f"{{\\an{align}{_slide_in(x, y, move_px)}\\fs{size}\\1c{color}\\bord0\\shad0}}"
+    return f"Dialogue: 1,{ass_time(start)},{ass_time(end)},free,,0,0,0,,{tags}{text}"
