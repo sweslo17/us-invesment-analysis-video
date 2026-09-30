@@ -22,7 +22,7 @@ from pmb.video.segments.base import (
     canvas_background,
     caption_events,
 )
-from pmb.video.textfit import fit_lines, wrap_px
+from pmb.video.textfit import fit_lines, line_px
 
 _X = 60
 _W = 830  # 右緣 890,避開右側按讚欄
@@ -51,9 +51,9 @@ def panel_text_layout(text: str, *, has_stat: bool) -> tuple[list[str], int]:
     if not has_stat:
         return fit_lines(text, max_width=_INNER_W, sizes=_BODY_SIZES, max_lines=_BODY_MAX_LINES)
     large, small = _BODY_SIZES
-    one_line = wrap_px(" ".join(text.split()), large, _INNER_W)
-    if len(one_line) <= 1:
-        return one_line, large
+    flat = " ".join(text.split())
+    if line_px(flat, large) <= _INNER_W:  # 量整段寬度,不走 wrap_px 的標點斷行偏好
+        return ([flat] if flat else []), large
     return fit_lines(text, max_width=_INNER_W, sizes=(small,), max_lines=_BODY_MAX_LINES)
 
 

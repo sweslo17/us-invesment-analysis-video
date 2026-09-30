@@ -1,5 +1,6 @@
 """段型 renderer 共用機制測試:句子計畫、停頓、時間軸、registry(不跑 ffmpeg)。"""
 
+import random
 import re
 from pathlib import Path
 
@@ -7,7 +8,7 @@ import pytest
 
 from pmb.schemas.script import BignumSegment, DialogueSegment, RecapSegment, SplitSegment
 from pmb.video.ass import ass_color, rounded_rect, text_event
-from pmb.video.captions import is_beat, split_sentences, strip_beat
+from pmb.video.captions import NO_LINE_START, is_beat, split_sentences, strip_beat
 from pmb.video.segments.base import (
     BEAT_GAP,
     GAP,
@@ -337,6 +338,50 @@ def test_wrap_px_keeps_number_runs_whole_unless_a_run_alone_overflows():
     assert all(line_px(ln, 60) <= 400 for ln in lines)
 
 
+def test_fit_lines_never_starts_a_line_with_a_closer():
+    """「。」放不下就把前一個字一起帶到下一行,不讓句號自己成一行(寬度保證照舊)。"""
+    lines, size = fit_lines("一二三四五六七八九十。", max_width=750, sizes=(96, 80), max_lines=2)
+    assert (lines, size) == (["一二三四五六七八九", "十。"], 96)
+    assert all(line_px(ln, size) <= 750 for ln in lines)
+
+
+def test_bubble_keeps_trailing_ellipsis_with_its_word():
+    """泡泡 17 字 +「……」:「……」不可自成一行,連前一個字一起換行。"""
+    text = "一二三四五六七八九十一二三四五六七……"
+    lines, size = bubble_layout(text)
+    assert size == 60 and "".join(lines) == text
+    assert lines[-1] == "七……"
+    assert all(line_px(ln, size) <= 756 for ln in lines)
+
+
+def _random_wrap_text(rng: random.Random) -> str:
+    """中文字、短數字串、1–2 個行首禁則字元交錯;數字串與禁則字元都不連著出現,
+    所以一定有字詞可以帶著禁則字元換行。"""
+    parts: list[str] = []
+    prev = "cjk"
+    for _ in range(rng.randint(1, 30)):
+        kinds = ["cjk"] * 14 + ["num"] * 3 * (prev != "num") + ["closer"] * 3 * (prev != "closer")
+        prev = rng.choice(kinds)
+        if prev == "cjk":
+            parts.append(rng.choice("一二三四五六七八九十市場美股債"))
+        elif prev == "num":
+            parts.append(str(rng.randint(0, 9999)))
+        else:
+            parts.append("".join(rng.choice("。，、…」）!?%") for _ in range(rng.randint(1, 2))))
+    return "".join(parts)
+
+
+def test_wrap_px_property_widths_hold_and_no_closer_starts_a_line():
+    rng = random.Random(20261001)
+    for _ in range(2000):
+        text = _random_wrap_text(rng)
+        for size, max_width in ((96, 750), (60, 756), (72, 730), (48, 400)):
+            lines = wrap_px(text, size, max_width)
+            assert "".join(lines) == text
+            assert all(line_px(ln, size) <= max_width for ln in lines), (text, lines)
+            assert all(ln[0] not in NO_LINE_START for ln in lines[1:]), (text, lines)
+
+
 def _text_extents(ass: str):
     """(錨點 x, 錨點 y, 字級, 是否底部對齊, 斷行清單) 依事件順序;只取 free 樣式的文字事件。"""
     out = []
@@ -567,6 +612,13 @@ def test_recap_result_with_punctuation_stays_one_line_at_full_size():
     text = "殖利率破5.26%，創一年新高"
     assert line_px(text, 72) <= _RECAP_RESULT_MAX_W
     assert result_layout(text) == ([text], 72)
+
+
+def test_panel_with_stat_keeps_96px_when_punctuated_text_fits_one_line():
+    """有大數字的格子:整段 96px 一行放得下就用 96px,不因逗號斷行偏好誤降到 80px。"""
+    text = "一二三四五六，七八"
+    assert line_px(text, 96) <= 750
+    assert panel_text_layout(text, has_stat=True) == ([text], 96)
 
 
 def test_split_one_line_fit_keeps_size_when_punctuated_text_fits():

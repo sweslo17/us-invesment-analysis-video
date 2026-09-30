@@ -10,7 +10,7 @@ import re
 
 from loguru import logger
 
-from pmb.video.captions import BREAK_AFTER
+from pmb.video.captions import BREAK_AFTER, NO_LINE_START
 
 # 中日韓全形字在 libass 裡的實際字寬 = 字級 × 0.713。實測:PingFang TC、Bold、fs=60,
 # 15 個「測」與 5 個「測」的墨跡寬差 / 10 = 42.8px;libass 的 \fs 是行高,不是 em,所以不是 1.0。
@@ -54,33 +54,70 @@ def _fit_prefix(text: str, size: int, max_width: float) -> str:
     return text[:k]
 
 
+def _is_closer(tok: str) -> bool:
+    """行首禁則字詞(標點、「…」、右括號/引號、%);空白另行處理(行首空白直接丟掉)。"""
+    return bool(tok) and not tok.isspace() and tok[0] in NO_LINE_START
+
+
+def _carry_down(cur: list[str], tok: str, size: int, max_width: float) -> list[str]:
+    """``tok`` 是行首禁則字詞、當行又放不下它時,從當行尾巴取下要一起換行的字詞。
+
+    往回取到第一個不是禁則字詞的字詞為止(「十」+「。」、「七」+「……」);取完當行會變空、
+    或帶下去的字詞加上 ``tok`` 仍超寬,就不帶(回空清單,``tok`` 只好自己開新行)。
+    """
+    k = len(cur) - 1
+    while k > 0 and (_is_closer(cur[k]) or cur[k].isspace()):
+        k -= 1
+    # cur[k] 是要帶下去的字詞(連同它後面的禁則字詞/空白);帶走後當行不能變空
+    if k <= 0 or not "".join(cur[:k]).strip():
+        return []
+    carry = cur[k:]
+    if line_px("".join(carry) + tok, size) > max_width:
+        return []
+    del cur[k:]
+    return carry
+
+
 def wrap_px(text: str, size: int, max_width: float) -> list[str]:
     """依像素寬度斷行,每行(去尾端空白後)都不超過 ``max_width``。
 
     沿用 ``captions.wrap_lines`` 的偏好:行寬過半後遇標點就斷;英數串不從中間切,
-    放不進當行就整串移到下一行,只有單一串自己就超寬時才硬切。行首不留空白。
+    放不進當行就整串移到下一行,只有單一串自己就超寬時才硬切。行首不留空白,也不放
+    行首禁則字元(``captions.NO_LINE_START``):「。」「……」放不下就把前一個字詞一起帶下去,
+    標點斷行偏好遇到下一個是禁則字詞也先不斷。
     """
     lines: list[str] = []
-    cur = ""
-    for tok in _TOKEN_RE.findall(text):
+    cur: list[str] = []  # 當行的字詞
+
+    def flush() -> None:
+        line = "".join(cur).rstrip()
+        if line.strip():
+            lines.append(line)
+        cur.clear()
+
+    tokens = _TOKEN_RE.findall(text)
+    for i, tok in enumerate(tokens):
         if not cur and tok.isspace():
             continue
-        if line_px((cur + tok).rstrip(), size) > max_width:
-            if cur.strip():
-                lines.append(cur.rstrip())
-            cur = ""
+        if line_px(("".join(cur) + tok).rstrip(), size) > max_width:
+            carry = _carry_down(cur, tok, size, max_width) if _is_closer(tok) else []
+            flush()
+            cur.extend(carry)
             if tok.isspace():
                 continue
             while len(tok) > 1 and line_px(tok, size) > max_width:
                 head = _fit_prefix(tok, size, max_width)
                 lines.append(head)
                 tok = tok[len(head) :]
-        cur += tok
-        if tok[-1] in BREAK_AFTER and line_px(cur, size) >= max_width * _BREAK_PREFERENCE:
-            lines.append(cur.rstrip())
-            cur = ""
-    if cur.strip():
-        lines.append(cur.rstrip())
+        cur.append(tok)
+        nxt = tokens[i + 1] if i + 1 < len(tokens) else ""
+        if (
+            tok[-1] in BREAK_AFTER
+            and not _is_closer(nxt)
+            and line_px("".join(cur), size) >= max_width * _BREAK_PREFERENCE
+        ):
+            flush()
+    flush()
     return lines
 
 
