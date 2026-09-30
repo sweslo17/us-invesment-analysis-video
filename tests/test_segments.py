@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from pmb.schemas.script import DialogueSegment
+from pmb.schemas.script import DialogueSegment, SplitSegment
 from pmb.video.ass import ass_color, rounded_rect, text_event
 from pmb.video.captions import is_beat, split_sentences, strip_beat
 from pmb.video.segments.base import (
@@ -23,6 +23,7 @@ from pmb.video.segments.base import (
 )
 from pmb.video.segments.dialogue import bubble_layout, speakable_lines
 from pmb.video.segments.registry import renderer_for
+from pmb.video.segments.split import panel_text_layout, reveal_times
 
 
 def test_ellipsis_ends_a_sentence_and_marks_a_beat():
@@ -235,3 +236,60 @@ def test_text_event_escapes_override_braces_and_raw_newlines():
     ev = text_event(0, 1, 10, 20, "a{b}c\nd\\Ne", size=40, color="&H000000&")
     assert ev.split("}", 1)[1] == "a｛b｝c\\Nd\\Ne"  # 花括號全形化、真換行變 \N、既有的 \N 不動
     assert "\n" not in ev
+
+
+def _split(vo="好消息是Fed說不急。壞消息是債市沒在聽。", **kw):
+    return SplitSegment(vo=vo, top={"label": "好消息", "text": kw.get("top", "Fed說不急"),
+                                    "tone": "good"},
+                        bottom={"label": "壞消息", "text": "債市沒在聽", "stat": "5.26%",
+                                "tone": "bad"})
+
+
+def test_split_bottom_panel_appears_at_second_sentence(tmp_path):
+    takes = [Take("好消息是Fed說不急。", "a.mp3", 2.0, []),
+             Take("壞消息是債市沒在聽。", "b.mp3", 2.0, [])]
+    ctx = _ctx(takes, work_dir=tmp_path)
+    assert reveal_times(ctx) == pytest.approx((0.0, 2.18))
+    visual = renderer_for("split").render(_split(), ctx)
+    assert visual.stem == "split" and "好消息" in visual.ass and "5.26%" in visual.ass
+    assert "0:00:02.18" in visual.ass
+    assert ",sub," in visual.ass  # 旁白照常上字幕
+
+
+def test_split_single_sentence_reveals_bottom_at_half(tmp_path):
+    takes = [Take("一句話講完。", "a.mp3", 3.0, [])]
+    assert reveal_times(_ctx(takes, duration=4.0, work_dir=tmp_path)) == pytest.approx((0.0, 2.0))
+
+
+def test_panel_text_layout_fits_or_shrinks():
+    assert panel_text_layout("Fed說不急", has_stat=False) == (["Fed說不急"], 96)
+    lines, size = panel_text_layout("債市完全沒在聽而且還很生氣", has_stat=True)
+    assert size == 80 and len(lines) <= 2
+    lines, size = panel_text_layout("字" * 40, has_stat=True)
+    assert len(lines) <= 2
+
+
+def test_split_panels_stay_in_safe_zone_and_text_clears_stat(tmp_path):
+    """兩格都落在安全區(右緣 <= 910、下緣 <= 1520);下格最壞情況(80px 兩行內文 + 100px 大數字)
+    內文底緣離大數字頂緣仍有空隙,文字與數字不重疊。"""
+    takes = [Take("好。", "a.mp3", 1.0, []), Take("壞。", "b.mp3", 1.0, [])]
+    seg = SplitSegment(vo="好。壞。",
+                       top={"label": "好消息", "text": "字" * 40, "tone": "good"},
+                       bottom={"label": "壞消息", "text": "債市完全沒在聽而且還很生氣",
+                               "stat": "5.26%", "tone": "bad"})
+    ass = renderer_for("split").render(seg, _ctx(takes, work_dir=tmp_path)).ass
+    boxes, _ = _events(ass)
+    assert len(boxes) == 2
+    for x, y, w, h in boxes:
+        assert x + w <= 910 and y + h <= 1520
+    text_bottom = stat_top = None
+    for ln in ass.splitlines():
+        if ",free," not in ln or "\\p1" in ln:
+            continue
+        y = int(re.search(r"\\move\(-?\d+,-?\d+,-?\d+,(-?\d+),", ln).group(1))
+        if "\\fs80" in ln and y > boxes[1][1]:  # 下格內文:頂緣 y + 行數 × 字級(libass 行距 = 字級)
+            text_bottom = y + (ln.count("\\N") + 1) * 80
+        elif "\\fs100" in ln:  # 大數字:底緣對齊(\an1),頂緣 = y - 字級
+            stat_top = y - 100
+    assert text_bottom is not None and stat_top is not None
+    assert stat_top - text_bottom >= 40
