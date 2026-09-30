@@ -1,0 +1,114 @@
+{
+  "segments": [
+    {
+      "vo": "殖利率又創新高,Fed卻突然說不急。",
+      "chart_id": null,
+      "headline": "殖利率創新高\nFed卻不急",
+      "title": null,
+      "tag": "今日盤前",
+      "stat": null,
+      "stat_label": null,
+      "t_start": 0.0,
+      "duration": 3.42
+    },
+    {
+      "vo": "標普上一交易日收7670點,跌0.17%;消費者信心探底到12年最低,JOLTS職缺同步下滑。今天期貨續小跌,標普期貨跌0.2%,市場屏息等今天的PCE通膨數據。",
+      "chart_id": "ovc",
+      "headline": null,
+      "title": "消費探底,期貨續跌",
+      "tag": null,
+      "stat": "-0.17%",
+      "stat_label": "標普昨收",
+      "t_start": 3.42,
+      "duration": 15.39
+    },
+    {
+      "vo": "10年期公債殖利率今天來到5.26%,續創2007年以來新高;上一交易日30年期一度衝上5.62%,是2002年以來最高。借錢給人越久,越怕通膨吃掉利息,買家就要更高報酬補償。",
+      "chart_id": "rates",
+      "headline": null,
+      "title": "殖利率照樣噴新高",
+      "tag": null,
+      "stat": "5.26%",
+      "stat_label": "10年期殖利率",
+      "t_start": 18.81,
+      "duration": 16.72
+    },
+    {
+      "vo": "紐約Fed總裁威廉斯昨天鬆口,說十月升息『不急』,期貨隱含的十月升息機率一天內從七成二急降到五成一,隱含政策利率落在3.99%附近。但殖利率完全沒跟著鴿派回落。",
+      "chart_id": "fedpath",
+      "headline": null,
+      "title": "Fed突然喊不急",
+      "tag": null,
+      "stat": "3.99%",
+      "stat_label": "10月隱含利率",
+      "t_start": 35.53,
+      "duration": 15.2
+    },
+    {
+      "vo": "借你錢越久,越怕通膨,利息就要越高。",
+      "chart_id": null,
+      "headline": "期限溢酬",
+      "title": null,
+      "tag": "名詞小教室",
+      "stat": null,
+      "stat_label": null,
+      "t_start": 50.73,
+      "duration": 3.42
+    },
+    {
+      "vo": "今天美東上午8點半公布8月PCE物價指數,是Fed最愛的通膨指標;美光財報今晚盤後揭曉,關注HBM4訂單能見度。上月非農新增16.2萬人優於預期,這週五非農數據將決定十月升息機率。",
+      "chart_id": "cal",
+      "headline": null,
+      "title": "本週兩塊拼圖",
+      "tag": null,
+      "stat": "+16.2萬",
+      "stat_label": "8月非農新增",
+      "t_start": 54.15,
+      "duration": 17.1
+    },
+    {
+      "vo": "官員嘴巴放鴿,長天期公債利率卻硬得很。以上非投資建議,明天盤前見。",
+      "chart_id": null,
+      "headline": "Fed放鴿派\n公債硬得很",
+      "title": null,
+      "tag": "蒙格 不知道有沒有說過",
+      "stat": null,
+      "stat_label": null,
+      "t_start": 71.25,
+      "duration": 6.27
+    }
+  ],
+  "charts": [
+    {
+      "id": "ovc",
+      "module": "overnight_vs_close",
+      "params": {}
+    },
+    {
+      "id": "rates",
+      "module": "rates_trend",
+      "params": {}
+    },
+    {
+      "id": "fedpath",
+      "module": "fed_path",
+      "params": {}
+    },
+    {
+      "id": "cal",
+      "module": "catalyst_timeline",
+      "params": {
+        "title": "本週催化劑",
+        "events": [
+          {"date": "9/30", "label": "8月PCE物價指數", "highlight": true},
+          {"date": "9/30", "label": "美光財報(盤後)", "highlight": false},
+          {"date": "10/1", "label": "9月ISM製造業PMI", "highlight": false},
+          {"date": "10/2", "label": "9月非農就業報告", "highlight": true}
+        ]
+      }
+    }
+  ],
+  "coverage_gaps": [
+    "快照目前只有失業率一條econ_print時間序列,沒有消費者信心指數或JOLTS職缺的歷史序列可畫,今天消費信心探底到12年最低這條重點只能口述帶過,建議之後補一個消費信心/JOLTS的econ_print候選序列。"
+  ]
+}
