@@ -25,7 +25,7 @@ from pmb.orchestrator import build_review_manifest, review_summary
 from pmb.publish.report import render_report
 from pmb.publish.youtube import build_youtube_metadata, upload_video
 from pmb.research.dedup import load_previous_brief
-from pmb.research.local_runner import SHORTS_CAP_SEC
+from pmb.research.local_runner import SHORTS_CAP_SEC, validate_research_artifacts
 from pmb.research.runner import build_research_prompt, make_anthropic_caller, research_once
 from pmb.research.sample import sample_brief_json
 from pmb.research.script_builder import build_script_from_brief
@@ -659,6 +659,24 @@ def cmd_autopilot(args: argparse.Namespace) -> int:
     return autopilot.autopilot_status()
 
 
+def cmd_validate_research(args: argparse.Namespace) -> int:
+    """檢查研究產物(schema + 字數 + 反重複 + 風格);研究 agent 寫完檔後自己跑、有錯就修。"""
+    settings = get_settings()
+    explicit = dt.date.fromisoformat(args.date) if args.date else None
+    target = resolve_fetch_target(today_eastern(), explicit)
+    if target is None:
+        print("今天非 NYSE 交易日,skip。")
+        return 0
+    errors = validate_research_artifacts(settings.artifacts_dir, target)
+    if not errors:
+        print(f"全部通過({target})")
+        return 0
+    print(f"{target} 研究產物有 {len(errors)} 個問題,請修正後再跑一次:")
+    for err in errors:
+        print(f"- {err}")
+    return 1
+
+
 def cmd_research_local(args: argparse.Namespace) -> int:
     """本機研究:headless Claude Code(claude -p)跑研究 prompt → 驗證 → commit+push。
 
@@ -904,6 +922,12 @@ def build_parser() -> argparse.ArgumentParser:
     rlocal.add_argument("--date", help="指定交易日 YYYY-MM-DD")
     rlocal.add_argument("--no-push", action="store_true", help="只產出驗證,不 commit/push")
     rlocal.set_defaults(func=cmd_research_local)
+
+    vres = sub.add_parser(
+        "validate-research", help="檢查今日研究產物(schema/字數/反重複/風格),供研究 agent 自修"
+    )
+    vres.add_argument("--date", help="指定交易日 YYYY-MM-DD")
+    vres.set_defaults(func=cmd_validate_research)
 
     ap = sub.add_parser("autopilot", help="管理每日排程(macOS launchd)")
     ap.add_argument("action", choices=["install", "uninstall", "status"])

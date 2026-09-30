@@ -30,9 +30,16 @@ def _write_valid_artifacts(arts: Path) -> None:
     (arts / f"brief_{_D}.json").write_text(brief.model_dump_json(), encoding="utf-8")
     script = {
         "segments": [
-            {"vo": "測試句。", "chart_id": "c0", "t_start": 0.0, "duration": 5.0},
+            {"kind": "card", "vo": "測試開場。", "headline": "測試開場", "tag": "測試日"},
+            {"kind": "chart", "vo": "測試句一。", "chart_id": "c0"},
+            {"kind": "bignum", "vo": "數字是5.26%。", "value": "5.26%", "label": "殖利率"},
+            {"kind": "chart", "vo": "測試句二。", "chart_id": "c1"},
+            {"kind": "card", "vo": "金句。", "headline": "金句\n對句",
+             "tag": "巴菲特 不知道有沒有說過"},
         ],
-        "charts": [{"id": "c0", "module": "index_overnight_grid", "params": {}}],
+        "charts": [{"id": "c0", "module": "index_overnight_grid", "params": {}},
+                   {"id": "c1", "module": "rates_trend", "params": {}}],
+        "gags": ["測試梗一", "測試梗二"],
     }
     (arts / f"script_{_D}.json").write_text(json.dumps(script), encoding="utf-8")
     (arts / f"report_{_D}.md").write_text("# 報告\n" + "內容 " * 200, encoding="utf-8")
@@ -54,7 +61,8 @@ def test_validate_rejects_over_budget_vo_before_tts(tmp_path):
     assert any("字數" in e for e in errors), f"應擋下超標字數,實際錯誤:{errors}"
     # 錯誤訊息要含實際字數與上限,agent 重試時才知道要砍多少
     msg = next(e for e in errors if "字數" in e)
-    assert "1206" in msg or "120" in msg
+    total = sum(len(seg["vo"]) for seg in script["segments"])
+    assert str(total) in msg
     assert "上限" in msg
 
 
@@ -321,3 +329,58 @@ def test_validate_accepts_vo_at_short_form_target(tmp_path):
     script["segments"][0]["vo"] = "這是一句很長的旁白內容需要控制字數。" * 25  # 450 字
     (tmp_path / f"script_{_D}.json").write_text(json.dumps(script), encoding="utf-8")
     assert validate_research_artifacts(tmp_path, _D) == []
+
+
+def test_validate_includes_soft_variety_errors_and_can_skip_them(tmp_path):
+    _write_valid_artifacts(tmp_path)
+    script = json.loads((tmp_path / f"script_{_D}.json").read_text())
+    script["gags"] = []  # 違反 S7
+    (tmp_path / f"script_{_D}.json").write_text(json.dumps(script), encoding="utf-8")
+    assert any("gags" in e for e in validate_research_artifacts(tmp_path, _D))
+    assert validate_research_artifacts(tmp_path, _D, include_soft=False) == []
+
+
+def test_validate_compares_against_yesterday_script(tmp_path):
+    _write_valid_artifacts(tmp_path)
+    yesterday = _D - dt.timedelta(days=1)
+    (tmp_path / f"script_{yesterday}.json").write_text(
+        (tmp_path / f"script_{_D}.json").read_text(), encoding="utf-8"
+    )
+    errors = validate_research_artifacts(tmp_path, _D)
+    assert any("段型序列" in e for e in errors)
+
+
+def test_soft_errors_retry_then_ship_anyway(tmp_path):
+    settings = _settings(tmp_path)
+    calls: list[str] = []
+
+    def no_gags(prompt: str) -> None:
+        calls.append(prompt)
+        _write_valid_artifacts(settings.artifacts_dir)
+        path = settings.artifacts_dir / f"script_{_D}.json"
+        script = json.loads(path.read_text())
+        script["gags"] = []
+        path.write_text(json.dumps(script), encoding="utf-8")
+
+    assert run_local_research(_D, settings, invoke=no_gags, max_attempts=2) is True
+    assert len(calls) == 2 and "gags" in calls[1]
+
+
+def test_prompt_includes_recent_history_block(tmp_path):
+    settings = _settings(tmp_path)
+    _write_valid_artifacts(settings.artifacts_dir)
+    yesterday = _D - dt.timedelta(days=1)
+    (settings.artifacts_dir / f"script_{yesterday}.json").write_text(
+        (settings.artifacts_dir / f"script_{_D}.json").read_text(), encoding="utf-8"
+    )
+    (settings.artifacts_dir / f"script_{_D}.json").unlink()
+    calls: list[str] = []
+
+    def fake_invoke(prompt: str) -> None:
+        calls.append(prompt)
+        _write_valid_artifacts(settings.artifacts_dir)
+
+    run_local_research(_D, settings, invoke=fake_invoke)
+    assert "最近 1 個交易日的影片" in calls[0]
+    assert str(yesterday) in calls[0]
+    assert "pmb validate-research" in calls[0]

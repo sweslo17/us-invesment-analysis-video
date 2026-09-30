@@ -22,6 +22,12 @@ from pydantic import ValidationError
 from pmb.research.dedup import load_previous_brief
 from pmb.research.runner import build_research_prompt
 from pmb.research.thesis import load_thesis
+from pmb.research.variety import (
+    LESSON_LOOKBACK,
+    load_recent_scripts,
+    soft_script_errors,
+    summarize_recent,
+)
 from pmb.schemas.brief import Brief
 from pmb.schemas.script import Script
 from pmb.schemas.snapshot import Snapshot
@@ -152,15 +158,16 @@ def invoke_headless_claude(
 
 
 def validate_research_artifacts(
-    artifacts_dir: Path, target: dt.date, *, include_budget: bool = True
+    artifacts_dir: Path, target: dt.date, *, include_soft: bool = True
 ) -> list[str]:
     """驗證研究產物,回傳錯誤清單(空 = 通過)。
 
     檢查:brief/script 過 schema、report 非空、**講稿字數在預算內**(超標會讓成片
-    超過 Shorts 上限,必須在配音前擋下並讓 agent 重寫)。
+    超過 Shorts 上限,必須在配音前擋下並讓 agent 重寫)、以及與最近幾天比對的
+    反重複與風格軟規則(``variety.soft_script_errors``)。
 
-    ``include_budget=False`` 只回「硬錯」(缺檔/schema 壞),用來區分「不能出片」與
-    「字數超標但仍可出片(只是失去 Shorts 資格)」。
+    ``include_soft=False`` 只回「硬錯」(缺檔/schema 壞),用來區分「不能出片」與
+    「軟規則沒過但仍可出片」(字數超標只是失去 Shorts 資格,反重複/風格只是變化不足)。
     """
     errors: list[str] = []
     brief_path = artifacts_dir / f"brief_{target}.json"
@@ -177,8 +184,10 @@ def validate_research_artifacts(
                 script = parsed
         except (ValidationError, ValueError) as exc:
             errors.append(f"{path.name} 未過 schema:{str(exc)[:600]}")
-    if script is not None and include_budget:
+    if script is not None and include_soft:
         errors.extend(check_vo_budget(script))
+        recent = load_recent_scripts(artifacts_dir, target, LESSON_LOOKBACK)
+        errors.extend(soft_script_errors(script, recent))
     if not report_path.exists() or len(report_path.read_text(encoding="utf-8")) < 200:
         errors.append(f"缺 {report_path.name} 或內容過短")
     return errors
@@ -190,7 +199,7 @@ def check_vo_budget(script: Script) -> list[str]:
     成片長度 ≈ 總字數 × ``SEC_PER_CHAR``(實測校準:866字→145s、916→156、908→155、
     1203→197,穩定在 0.17 秒/字)。字數是配音前唯一可控的槓桿,故在此強制。
     """
-    total = sum(len(seg.vo) for seg in script.segments)
+    total = sum(len(seg.spoken_text) for seg in script.segments)
     if total <= MAX_VO_CHARS:
         return []
     est = total * SEC_PER_CHAR
@@ -245,8 +254,10 @@ def run_local_research(
     thesis = load_thesis(settings.state_dir / "thesis.json")
     previous_brief = load_previous_brief(settings.artifacts_dir, target)
     template = settings.prompt_path.read_text(encoding="utf-8")
+    recent = load_recent_scripts(settings.artifacts_dir, target, LESSON_LOOKBACK)
     base_prompt = build_research_prompt(
-        snapshot, thesis, template, previous_brief, output_mode="files"
+        snapshot, thesis, template, previous_brief, output_mode="files",
+        recent_summary=summarize_recent(recent),
     )
 
     last_errors: list[str] = []
@@ -295,14 +306,15 @@ def run_local_research(
             "本機研究第 {}/{} 次驗證失敗:{}", attempt, max_attempts, "; ".join(last_errors)
         )
 
-    # 重試用盡:若只剩「字數超標」這類軟錯(產物本身合法),寧可出非 Shorts 的長片,
-    # 也不要整天沒影片;硬錯(缺檔/schema 壞)才真的放棄。
-    hard_errors = validate_research_artifacts(settings.artifacts_dir, target, include_budget=False)
+    # 重試用盡:只剩軟錯(字數超標、反重複、風格)時產物本身合法,寧可照樣出片也不要整天
+    # 沒影片;硬錯(缺檔/schema 壞)才真的放棄。
+    hard_errors = validate_research_artifacts(settings.artifacts_dir, target, include_soft=False)
     if not hard_errors:
         logger.warning(
-            "字數仍超標但產物合法,以「超長片」繼續({})——成片會超過 {:.0f}s、"
-            "失去 Shorts 資格,發布前請自行斟酌",
+            "軟規則仍未全過但產物合法,照樣出片({}):{}(若是字數超標,成片可能超過 {:.0f}s、"
+            "失去 Shorts 資格)",
             target,
+            "; ".join(last_errors),
             SHORTS_CAP_SEC,
         )
         return True

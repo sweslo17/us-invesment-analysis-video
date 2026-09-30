@@ -35,6 +35,7 @@ def build_research_prompt(
     previous_brief: Brief | None = None,
     *,
     output_mode: str = "json",
+    recent_summary: str | None = None,
 ) -> str:
     """把研究 prompt 模板 + 真實數據快照 + thesis(+ 昨日 brief)組成完整 prompt。
 
@@ -68,6 +69,8 @@ def build_research_prompt(
     if previous_brief is not None:
         parts.append("\n=== 昨日 brief(短期去重 / 中長期 open threads 參考)===")
         parts.append(previous_brief.model_dump_json(indent=2))
+    if recent_summary:
+        parts.append(recent_summary)
     if output_mode == "files":
         date = snapshot.session_date.isoformat()
         parts.append(
@@ -78,7 +81,9 @@ def build_research_prompt(
             "(每段 chart_id 對得上 charts[].id;模組限 charts/select.py 的固定清單)\n"
             f"- artifacts/report_{date}.md — 面向一般讀者的長文\n"
             "- 有重大且夠確認的變化才保守更新 state/thesis.json;否則不動\n"
-            "寫完用 pmb/schemas 驗證(載入 Brief / Script 做 model_validate_json),不過就修正重寫。\n"
+            f"寫完**務必執行** `poetry run pmb validate-research --date {date}`"
+            "(schema、字數、反重複、欄位字數、數字一致都會檢查),有任何一條錯誤就修正檔案再跑,"
+            "直到印出「全部通過」。\n"
             "不要執行 pmb assemble 或 pmb publish(那是後續本機步驟)。"
         )
     else:

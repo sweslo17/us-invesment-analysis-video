@@ -1,7 +1,9 @@
 """CLI 純邏輯測試:fetch 目標日解析(休市 skip)、快照文字輸出、一鍵作業前置守衛。"""
 
 import datetime as dt
+import types
 
+from pmb import cli
 from pmb.cli import format_snapshot, resolve_fetch_target, today_blockers
 from pmb.schemas.snapshot import Quote, RegimeMetrics, Snapshot
 
@@ -96,3 +98,10 @@ def test_cover_spec_takes_bignum_value_when_it_comes_first():
         "charts": [{"id": "c", "module": "leverage_decay", "params": {}}],
     })
     assert cover_spec(script)["stat"] == "5.26%"
+
+
+def test_validate_research_command_reports_errors_and_rc(tmp_path, monkeypatch, capsys):
+    monkeypatch.setattr(cli, "get_settings", lambda: types.SimpleNamespace(artifacts_dir=tmp_path))
+    rc = cli.main(["validate-research", "--date", "2026-07-10"])
+    out = capsys.readouterr().out
+    assert rc == 1 and "缺 brief_2026-07-10.json" in out
