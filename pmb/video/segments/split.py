@@ -22,7 +22,7 @@ from pmb.video.segments.base import (
     canvas_background,
     caption_events,
 )
-from pmb.video.textfit import fit_lines, line_px
+from pmb.video.textfit import fit_lines, fit_one_line, line_px
 
 _X = 60
 _W = 830  # 右緣 890,避開右側按讚欄
@@ -57,12 +57,6 @@ def panel_text_layout(text: str, *, has_stat: bool) -> tuple[list[str], int]:
     return fit_lines(text, max_width=_INNER_W, sizes=(small,), max_lines=_BODY_MAX_LINES)
 
 
-def _fit_one_line(text: str, size: int) -> tuple[str, int]:
-    """標籤/大數字:單行,放不下先縮字級、到底還放不下補「…」。"""
-    lines, fitted = fit_lines(text, max_width=_INNER_W, sizes=(size,), max_lines=1)
-    return "".join(lines), fitted
-
-
 def reveal_times(ctx: RenderContext) -> tuple[float, float]:
     """上格段首;下格在第 2 句起點,只有 1 句就在段長一半。"""
     bottom = ctx.starts[1] if len(ctx.starts) >= 2 else ctx.duration * 0.5
@@ -71,7 +65,7 @@ def reveal_times(ctx: RenderContext) -> tuple[float, float]:
 
 def _panel_events(panel: Panel, top: int, start: float, end: float) -> list[str]:
     bg_hex, label_hex = _TONES[panel.tone]
-    label, label_size = _fit_one_line(panel.label, _LABEL_FS)
+    label, label_size = fit_one_line(panel.label, _LABEL_FS, _INNER_W)
     lines, size = panel_text_layout(panel.text, has_stat=bool(panel.stat))
     events = [
         shape_event(start, end, _X, top, rounded_rect(_W, _H, _RADIUS), ass_color(bg_hex)),
@@ -81,7 +75,7 @@ def _panel_events(panel: Panel, top: int, start: float, end: float) -> list[str]
                    color=ass_color(WHITE_HEX)),
     ]
     if panel.stat:
-        stat, stat_size = _fit_one_line(panel.stat, _STAT_FS)
+        stat, stat_size = fit_one_line(panel.stat, _STAT_FS, _INNER_W)
         events.append(text_event(start, end, _X + _INSET, top + _H - 24, stat,
                                  size=stat_size, color=ass_color(GOLD_HEX), align=1))
     return events

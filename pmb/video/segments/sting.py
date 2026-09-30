@@ -12,13 +12,13 @@ from pydantic import BaseModel
 
 from pmb.video.ass import (
     ASS_TEMPLATE,
+    CENTER_X,
+    CENTERED_TEXT_MAX_W,
     GOLD_HEX,
     POP_IN,
     WHITE_HEX,
     ass_color,
-    ass_time,
     common_events,
-    escape_text,
     text_event,
 )
 from pmb.video.segments.base import (
@@ -28,14 +28,12 @@ from pmb.video.segments.base import (
     Visual,
     canvas_background,
 )
-from pmb.video.textfit import fit_lines
+from pmb.video.textfit import fit_one_line
 
-_CENTER_X = 540
 _WORDMARK_Y = 760
 _SLOGAN_Y = 920
 _WORDMARK_FS = 120
 _SLOGAN_FS = 84
-_TEXT_MAX_W = 740  # 置中 540 ± 370:右緣 910,不碰按讚欄
 
 
 class StingSegment(BaseModel):
@@ -50,22 +48,11 @@ class StingSegment(BaseModel):
         return self.text
 
 
-def _fit_one_line(text: str, size: int) -> tuple[str, int]:
-    """(要顯示的單行文字, 字級):放不下先縮字級,縮到底還放不下才補「…」。"""
-    lines, fitted = fit_lines(text, max_width=_TEXT_MAX_W, sizes=(size,), max_lines=1)
-    return "".join(lines), fitted
-
-
 def _wordmark_event(end: float, channel: str) -> str:
-    """頻道字樣:金色大字置中,pop-in(layer 1,蓋在畫布上)。"""
-    text, size = _fit_one_line(channel, _WORDMARK_FS)
-    tags = (
-        f"{{\\an5\\pos({_CENTER_X},{_WORDMARK_Y})\\fs{size}\\1c{ass_color(GOLD_HEX)}"
-        "\\bord0\\shad0}"
-    )
-    return (
-        f"Dialogue: 1,0:00:00.00,{ass_time(end)},free,,0,0,0,,{tags}{POP_IN}{escape_text(text)}"
-    )
+    """頻道字樣:金色大字置中,原地 pop-in(layer 1,蓋在畫布上)。"""
+    text, size = fit_one_line(channel, _WORDMARK_FS, CENTERED_TEXT_MAX_W)
+    return text_event(0.0, end, CENTER_X, _WORDMARK_Y, text, size=size,
+                      color=ass_color(GOLD_HEX), align=5, move_px=None, effect=POP_IN)
 
 
 class StingRenderer(SegmentRenderer):
@@ -77,10 +64,10 @@ class StingRenderer(SegmentRenderer):
         return [Utterance(seg.text, caption=False)]
 
     def render(self, seg: StingSegment, ctx: RenderContext) -> Visual:
-        slogan, slogan_size = _fit_one_line(seg.text, _SLOGAN_FS)
+        slogan, slogan_size = fit_one_line(seg.text, _SLOGAN_FS, CENTERED_TEXT_MAX_W)
         events = [
             _wordmark_event(ctx.duration, seg.channel),
-            text_event(ctx.starts[0], ctx.duration, _CENTER_X, _SLOGAN_Y, slogan,
+            text_event(ctx.starts[0], ctx.duration, CENTER_X, _SLOGAN_Y, slogan,
                        size=slogan_size, color=ass_color(WHITE_HEX), align=5),
         ]
         events += common_events(ctx.duration, badge=ctx.badge, cta=None)

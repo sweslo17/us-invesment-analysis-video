@@ -33,6 +33,7 @@ from pmb.video.ass import (
     CHART_BAND_TOP,
     CHART_BOX_H,
     CHART_BOX_W,
+    FPS,
     GOLD_HEX,
     HEIGHT,
     WIDTH,
@@ -54,7 +55,6 @@ from pmb.video.segments.sting import StingSegment
 SynthFn = Callable[[str, Path, float, VoiceKey], SynthResult]
 _SEC_PER_CHAR = 0.18  # 估長(dry-run 靜音配音長度用;實際段長一律以實測為準)
 
-_FPS = 25
 _FADE_IN = 0.20  # 段首自畫布色淡入
 _FADE_OUT = 0.60  # 全片收尾淡出(烤在最後一段)
 _ZOOM_AMOUNT = 0.08  # Ken Burns 段內總推進幅度
@@ -172,7 +172,7 @@ def _render_segment_clip(
     sfx: str | None = None,
 ) -> None:
     """單段 clip:畫布 + (圖表縮排/全屏卡)Ken Burns + 字幕 + 進度條 + 淡入(末段加淡出)。"""
-    frames = max(1, math.ceil(seg_duration * _FPS))
+    frames = max(1, math.ceil(seg_duration * FPS))
     img_w, img_h = _png_size(work_dir / image)
     if is_card:
         # 全屏卡:標準 Ken Burns(邊緣裁進來沒關係,卡片留白極大)
@@ -195,12 +195,12 @@ def _render_segment_clip(
         )
 
     chain: list[str] = [
-        f"color=c=0x{BG_HEX}:s={WIDTH}x{HEIGHT}:r={_FPS}:d={seg_duration:.3f}[bg]",
+        f"color=c=0x{BG_HEX}:s={WIDTH}x{HEIGHT}:r={FPS}:d={seg_duration:.3f}[bg]",
         # 先放大 2 倍再 zoompan,消除整數座標取樣的抖動;緩推 {_ZOOM_AMOUNT:.0%}
         (
             f"{prep},"
             f"zoompan=z='1+{_ZOOM_AMOUNT}*on/{frames}':"
-            f"x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=1:s={out_w}x{out_h}:fps={_FPS}[ken]"
+            f"x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=1:s={out_w}x{out_h}:fps={FPS}[ken]"
         ),
         # 圖表段首自下方滑入 {_SLIDE_PX}px(二次緩出);字卡底圖不滑,文字本身有 pop-in
         (
@@ -214,7 +214,7 @@ def _render_segment_clip(
         chain.append(f"{label}subtitles={ass_name}[v1]")
         label = "[v1]"
     chain.append(
-        f"color=c=0x{GOLD_HEX}:s={WIDTH}x{_PROGRESS_H}:r={_FPS}:d={seg_duration:.3f}[pb]"
+        f"color=c=0x{GOLD_HEX}:s={WIDTH}x{_PROGRESS_H}:r={FPS}:d={seg_duration:.3f}[pb]"
     )
     chain.append(
         f"{label}[pb]overlay="
@@ -241,7 +241,7 @@ def _render_segment_clip(
     args += [
         "-filter_complex", ";".join(chain),
         "-map", "[v]", "-map", "[a]",
-        "-t", f"{seg_duration:.3f}", "-r", str(_FPS),
+        "-t", f"{seg_duration:.3f}", "-r", str(FPS),
         "-c:v", "libx264", "-preset", "medium", "-crf", "19", "-pix_fmt", "yuv420p",
         "-c:a", "aac", "-b:a", "160k", "-ar", "44100",
         out,

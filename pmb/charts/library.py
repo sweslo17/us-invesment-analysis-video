@@ -30,7 +30,7 @@ from pmb.schemas.snapshot import (  # noqa: E402
 )
 
 # 深色主題:圖底色 = 影片畫布色,合成後圖「長在畫面上」而非白色貼紙
-_CANVAS = "#0D1B2A"  # 與 video/assemble 的 _BG 一致
+_CANVAS = "#0D1B2A"  # 與 video.ass.BG_HEX 一致
 _PANEL = "#13253C"  # 繪圖區稍亮一階,提供圖面邊界
 _FG = "#E6EDF5"  # 主要文字
 _MUTED = "#9AA8BC"  # 次要文字/註記

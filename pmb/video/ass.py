@@ -12,9 +12,11 @@ from pmb.video.captions import wrap_caption
 
 # 直式短影片畫布(9:16)
 WIDTH, HEIGHT = 1080, 1920
-BG_HEX = "0D1B2A"  # 與 charts.library._CANVAS 一致
+FPS = 25  # 全片影格率(ffmpeg 輸出與逐幀 ASS 動畫共用)
+BG_HEX = "0D1B2A"  # 畫布色,與 charts.library._CANVAS 一致
 GOLD_HEX = "FFD166"  # 品牌金(標題/進度條/字幕掃色)
 WHITE_HEX = "FFFFFF"  # 色塊上的內文白
+MUTED_HEX = "8FA3B8"  # 次要文字的灰藍(大數字的 label、對帳的 ask)
 
 # Shorts 播放器 UI 遮蔽區(實機量測的保守值):底部標題/頻道/描述列、右側按讚/留言/分享欄。
 # 所有文字都不得落進去,否則觀眾在 app 裡根本看不到。
@@ -37,6 +39,9 @@ CARD_LINE_H = int(CARD_FONT * 1.25)
 CARD_MAX_UNITS = (WIDTH - 2 * 60) / CARD_FONT  # 每行寬度 ≈7 字(中文 1 單位 = 一個字寬)
 KICKER_GAP = 96  # kicker 基線到大標頂緣的距離
 CTA_SEC = 3.0  # 片尾 CTA 出現秒數
+# 置中文字(口號轉場、全屏大數字):錨點 x=540、寬度上限 740 → 540 ± 370,右緣 910 不碰按讚欄
+CENTER_X = WIDTH // 2
+CENTERED_TEXT_MAX_W = 740
 
 
 def layout_safe_zone() -> dict[str, int]:
@@ -168,7 +173,7 @@ def polygon(points: list[tuple[float, float]], size: float) -> str:
     return f"m {x0} {y0} l " + " ".join(f"{x} {y}" for x, y in rest)
 
 
-def escape_text(text: str) -> str:
+def _escape_text(text: str) -> str:
     """ASS 文字轉義:``{``/``}`` 會開關 override 區塊,先換成全形;真換行會把 Dialogue 行切斷,
     改成 ASS 的換行 ``\\N``。呼叫端自己放的 ``\\N`` 序列不動。"""
     text = text.replace("{", "｛").replace("}", "｝")
@@ -197,9 +202,15 @@ def text_event(
     size: int,
     color: str,
     align: int = 7,
-    move_px: int = 24,
+    move_px: int | None = 24,
+    effect: str = "",
 ) -> str:
-    """文字事件(layer 1,蓋在色塊上):``align`` 是 ASS 數字鍵盤對齊(7 左上、9 右上、5 置中)。"""
-    tags = f"{{\\an{align}{_slide_in(x, y, move_px)}\\fs{size}\\1c{color}\\bord0\\shad0}}"
-    body = escape_text(text)
-    return f"Dialogue: 1,{ass_time(start)},{ass_time(end)},free,,0,0,0,,{tags}{body}"
+    """文字事件(layer 1,蓋在色塊上):``align`` 是 ASS 數字鍵盤對齊(7 左上、9 右上、5 置中)。
+
+    預設從下方滑入 ``move_px`` + 淡入;``move_px=None`` 是靜態定位(``\\pos``,不滑不淡,
+    逐幀換字的大數字用)。``effect`` 是接在定位後的額外 override 區塊(如 ``POP_IN``)。
+    文字一律經 ``_escape_text`` 轉義。"""
+    place = f"\\pos({x},{y})" if move_px is None else _slide_in(x, y, move_px)
+    tags = f"{{\\an{align}{place}\\fs{size}\\1c{color}\\bord0\\shad0}}"
+    body = _escape_text(text)
+    return f"Dialogue: 1,{ass_time(start)},{ass_time(end)},free,,0,0,0,,{tags}{effect}{body}"

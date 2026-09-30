@@ -159,3 +159,10 @@ def fit_lines(
     lines = wrap_px(text, size, max_width)[:max_lines]
     lines[-1] = shorten(lines[-1], size, max_width)
     return lines, size
+
+
+def fit_one_line(text: str, size: int, max_width: int) -> tuple[str, int]:
+    """單行文字(標籤、大數字、口號…):回 (要顯示的文字, 字級)。放不下先縮字級,縮到底
+    還放不下才截斷補「…」(規則同 ``fit_lines``,``max_lines=1``)。"""
+    lines, fitted = fit_lines(text, max_width=max_width, sizes=(size,), max_lines=1)
+    return "".join(lines), fitted

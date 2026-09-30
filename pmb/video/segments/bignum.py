@@ -15,12 +15,14 @@ from loguru import logger
 from pmb.schemas.script import BignumSegment
 from pmb.video.ass import (
     ASS_TEMPLATE,
+    CENTER_X,
+    CENTERED_TEXT_MAX_W,
+    FPS,
     GOLD_HEX,
+    MUTED_HEX,
     WHITE_HEX,
     ass_color,
-    ass_time,
     common_events,
-    escape_text,
     text_event,
 )
 from pmb.video.segments.base import (
@@ -30,21 +32,17 @@ from pmb.video.segments.base import (
     canvas_background,
     caption_events,
 )
-from pmb.video.textfit import FLOOR_SIZE, fit_lines, line_px, shorten
+from pmb.video.textfit import FLOOR_SIZE, fit_lines, fit_one_line, line_px, shorten
 
-_CENTER_X = 540
 _LABEL_Y = 560
 _VALUE_Y = 820
 _CONTEXT_Y = 1060
 _LABEL_FS = 52
 _VALUE_FS = 260  # 大數字字級上限,寬值再往下縮
-_TEXT_MAX_W = 740  # 置中 540 ± 370:右緣 910,不碰按讚欄
 _CONTEXT_FS = 60
 _CONTEXT_MAX_LINES = 2
 _COUNT_START = 0.2
 _COUNT_DUR = 0.6
-_FPS = 25
-_LABEL_HEX = "#8FA3B8"
 _NUM_RE = re.compile(r"^(?P<prefix>\D*?)(?P<num>\d[\d,]*(?:\.\d+)?)(?P<suffix>.*)$")
 
 
@@ -79,7 +77,7 @@ def count_up_frames(
     *,
     start: float = _COUNT_START,
     dur: float = _COUNT_DUR,
-    fps: int = _FPS,
+    fps: int = FPS,
 ) -> list[tuple[float, float, str]]:
     """逐幀 (起, 迄, 文字):0 → 目標值(ease-out),最後一幀停到段尾顯示原字串。
 
@@ -107,8 +105,8 @@ def count_up_frames(
 def value_font_size(value: str) -> int:
     """大數字字級:整串以 ``line_px`` 量,取 <= 260 且寬度 <= 740px 的最大字級(下限 36)。"""
     unit_px = line_px(value, 1)
-    size = _VALUE_FS if unit_px <= 0 else min(_VALUE_FS, int(_TEXT_MAX_W / unit_px))
-    while size > FLOOR_SIZE and line_px(value, size) > _TEXT_MAX_W:
+    size = _VALUE_FS if unit_px <= 0 else min(_VALUE_FS, int(CENTERED_TEXT_MAX_W / unit_px))
+    while size > FLOOR_SIZE and line_px(value, size) > CENTERED_TEXT_MAX_W:
         size -= 1  # 浮點誤差的保險:確保真的放得進
     return max(size, FLOOR_SIZE)
 
@@ -116,43 +114,33 @@ def value_font_size(value: str) -> int:
 def _fit_value(value: str) -> tuple[str, int]:
     """(要顯示的大數字, 字級):縮到 36 還放不下才硬截斷補「…」。"""
     size = value_font_size(value)
-    if line_px(value, size) > _TEXT_MAX_W:
+    if line_px(value, size) > CENTERED_TEXT_MAX_W:
         logger.warning("大數字「{}」過長,截斷顯示", value)
-        value = shorten(value, size, _TEXT_MAX_W)
+        value = shorten(value, size, CENTERED_TEXT_MAX_W)
     return value, size
-
-
-def _fit_label(label: str) -> tuple[str, int]:
-    """label:單行,放不下先縮字級、到底還放不下補「…」。"""
-    lines, size = fit_lines(label, max_width=_TEXT_MAX_W, sizes=(_LABEL_FS,), max_lines=1)
-    return "".join(lines), size
 
 
 def _value_event(t0: float, t1: float, text: str, size: int) -> str:
     """大數字的一幀:固定在中央、不滑入不淡入(逐幀換字,動畫會在每幀重播)。"""
-    tags = (
-        f"{{\\an5\\pos({_CENTER_X},{_VALUE_Y})\\fs{size}\\1c{ass_color(GOLD_HEX)}\\bord0\\shad0}}"
-    )
-    return (
-        f"Dialogue: 1,{ass_time(t0)},{ass_time(t1)},free,,0,0,0,,{tags}{escape_text(text)}"
-    )
+    return text_event(t0, t1, CENTER_X, _VALUE_Y, text, size=size, color=ass_color(GOLD_HEX),
+                      align=5, move_px=None)
 
 
 class BignumRenderer(SegmentRenderer):
     def render(self, seg: BignumSegment, ctx: RenderContext) -> Visual:
         end = ctx.duration
         events = common_events(end, badge=ctx.badge, cta=ctx.cta)
-        label, label_size = _fit_label(seg.label)
-        events.append(text_event(0.0, end, _CENTER_X, _LABEL_Y, label, size=label_size,
-                                 color=ass_color(_LABEL_HEX), align=5))
+        label, label_size = fit_one_line(seg.label, _LABEL_FS, CENTERED_TEXT_MAX_W)
+        events.append(text_event(0.0, end, CENTER_X, _LABEL_Y, label, size=label_size,
+                                 color=ass_color(MUTED_HEX), align=5))
         value, value_size = _fit_value(seg.value)
         events += [
             _value_event(t0, t1, text, value_size) for t0, t1, text in count_up_frames(value, end)
         ]
         if seg.context:
-            lines, size = fit_lines(seg.context, max_width=_TEXT_MAX_W, sizes=(_CONTEXT_FS,),
-                                    max_lines=_CONTEXT_MAX_LINES)
-            events.append(text_event(0.0, end, _CENTER_X, _CONTEXT_Y, "\\N".join(lines),
+            lines, size = fit_lines(seg.context, max_width=CENTERED_TEXT_MAX_W,
+                                    sizes=(_CONTEXT_FS,), max_lines=_CONTEXT_MAX_LINES)
+            events.append(text_event(0.0, end, CENTER_X, _CONTEXT_Y, "\\N".join(lines),
                                      size=size, color=ass_color(WHITE_HEX), align=5))
         events += caption_events(ctx.takes, ctx.starts)
         ass = ASS_TEMPLATE.format(font=ctx.font, events="\n".join(events))

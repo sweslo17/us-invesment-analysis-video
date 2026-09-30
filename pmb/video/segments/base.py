@@ -16,13 +16,12 @@ from typing import Any, NamedTuple
 from pmb.charts.cards import render_card_background
 from pmb.schemas.script import VoiceKey
 from pmb.tts.edge import WordBoundary
-from pmb.video.ass import ass_time
+from pmb.video.ass import BG_HEX, ass_time
 from pmb.video.captions import build_caption_pages, is_beat, split_sentences, strip_beat
 
 GAP = 0.18  # 句間呼吸(秒)
 BEAT_GAP = 0.5  # 「……」後停一拍:冷面反差的 punchline 前
 TAIL = 0.35  # 段尾停頓(秒)
-CANVAS_HEX = "#0D1B2A"  # 與 charts.library._CANVAS 一致
 
 
 class Utterance(NamedTuple):
@@ -141,5 +140,5 @@ def canvas_background(work_dir: Path) -> str:
     """新段型共用的畫布色底圖(一支片只畫一次)。"""
     name = "canvas_bg.png"
     if not (work_dir / name).exists():
-        render_card_background(str(work_dir / name), accent=CANVAS_HEX)
+        render_card_background(str(work_dir / name), accent=f"#{BG_HEX}")
     return name

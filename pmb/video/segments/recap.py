@@ -10,6 +10,7 @@ from pmb.schemas.script import RecapRow, RecapSegment
 from pmb.video.ass import (
     ASS_TEMPLATE,
     FADE_TAG,
+    MUTED_HEX,
     WHITE_HEX,
     ass_color,
     common_events,
@@ -26,7 +27,7 @@ from pmb.video.segments.base import (
     canvas_background,
     caption_events,
 )
-from pmb.video.textfit import fit_lines
+from pmb.video.textfit import fit_lines, fit_one_line
 
 _DEFAULT_TITLE = "昨天說要看的"
 _ROW_TOPS = (330, 580, 830)  # 列距 250px
@@ -40,7 +41,6 @@ _RESULT_SIZES = (72, 60)
 _RESULT_MAX_LINES = 2
 _RESULT_MAX_W = _RIGHT_EDGE - _RESULT_X
 _SEP_W = 770
-_ASK_HEX = "#8FA3B8"
 _SEP_HEX = "#2A4058"
 # ✓:一條折線(左下短撇 + 右上長撇);✗:十字形的 12 點多邊形,都是 0–1 正規化座標
 _CHECK = [(0.0, 0.55), (0.38, 0.92), (1.0, 0.18), (0.86, 0.05), (0.38, 0.66), (0.13, 0.42)]
@@ -63,12 +63,6 @@ def result_layout(text: str) -> tuple[list[str], int]:
     )
 
 
-def _ask_layout(text: str) -> tuple[str, int]:
-    """昨天說要看的事:單行,放不下先縮字級、到底還放不下補「…」。"""
-    lines, size = fit_lines(text, max_width=_ASK_MAX_W, sizes=(_ASK_FS,), max_lines=1)
-    return "".join(lines), size
-
-
 def _mark_event(mark: str, start: float, end: float, x: int, y: int) -> str:
     color = ass_color(_MARK_HEX[mark])
     if mark == "yes":
@@ -82,10 +76,10 @@ def _mark_event(mark: str, start: float, end: float, x: int, y: int) -> str:
 
 
 def _row_events(row: RecapRow, top: int, start: float, end: float, last: bool) -> list[str]:
-    ask, ask_size = _ask_layout(row.ask)
+    ask, ask_size = fit_one_line(row.ask, _ASK_FS, _ASK_MAX_W)  # 單行
     lines, size = result_layout(row.result)
     events = [
-        text_event(start, end, _X, top, ask, size=ask_size, color=ass_color(_ASK_HEX)),
+        text_event(start, end, _X, top, ask, size=ask_size, color=ass_color(MUTED_HEX)),
         _mark_event(row.mark, start, end, _X, top + 62),
         text_event(start, end, _RESULT_X, top + 56, "\\N".join(lines), size=size,
                    color=ass_color(WHITE_HEX)),

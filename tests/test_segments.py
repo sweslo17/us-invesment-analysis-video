@@ -7,7 +7,7 @@ from pathlib import Path
 import pytest
 
 from pmb.schemas.script import BignumSegment, DialogueSegment, RecapSegment, SplitSegment
-from pmb.video.ass import ass_color, rounded_rect, text_event
+from pmb.video.ass import POP_IN, ass_color, rounded_rect, text_event
 from pmb.video.captions import NO_LINE_START, is_beat, split_sentences, strip_beat
 from pmb.video.segments.base import (
     BEAT_GAP,
@@ -24,11 +24,11 @@ from pmb.video.segments.base import (
 )
 from pmb.video.segments.bignum import count_up_frames, parse_number, value_font_size
 from pmb.video.segments.dialogue import bubble_layout, speakable_lines
-from pmb.video.segments.recap import _ask_layout, result_layout, row_times
+from pmb.video.segments.recap import result_layout, row_times
 from pmb.video.segments.registry import renderer_for
-from pmb.video.segments.split import _fit_one_line, panel_text_layout, reveal_times
+from pmb.video.segments.split import panel_text_layout, reveal_times
 from pmb.video.segments.sting import StingSegment
-from pmb.video.textfit import FLOOR_SIZE, fit_lines, line_px, wrap_px
+from pmb.video.textfit import FLOOR_SIZE, fit_lines, fit_one_line, line_px, wrap_px
 
 
 def test_ellipsis_ends_a_sentence_and_marks_a_beat():
@@ -604,8 +604,8 @@ def test_recap_text_never_leaves_its_row_or_the_safe_column(tmp_path):
 
 def test_recap_ask_with_punctuation_stays_one_line_without_ellipsis():
     ask = "十年期殖利率會不會守住百分之五點二，還是失守？"
-    assert line_px(ask, 44) < 820  # 整句放得下
-    assert _ask_layout(ask) == (ask, 44)
+    assert line_px(ask, 44) < 820  # 整句放得下(ask 欄 x=70 → 右緣 890)
+    assert fit_one_line(ask, 44, 820) == (ask, 44)
 
 
 def test_recap_result_with_punctuation_stays_one_line_at_full_size():
@@ -623,7 +623,23 @@ def test_panel_with_stat_keeps_96px_when_punctuated_text_fits_one_line():
 
 def test_split_one_line_fit_keeps_size_when_punctuated_text_fits():
     text = "一二三四五六七八，九"
-    assert _fit_one_line(text, 100) == (text, 100)
+    assert fit_one_line(text, 100, 750) == (text, 100)
+
+
+def test_fit_one_line_shrinks_then_truncates():
+    assert fit_one_line("字" * 13, 96, 750) == ("字" * 13, 80)  # 96px 放不下 → 縮字級
+    text, size = fit_one_line("字" * 60, 96, 750)
+    assert size == FLOOR_SIZE and text.endswith("…") and line_px(text, size) <= 750
+
+
+def test_static_text_event_uses_pos_without_slide_or_fade_and_escapes():
+    ev = text_event(0.2, 0.24, 540, 820, "{5.26%}", size=200, color="&H66D1FF&", align=5,
+                    move_px=None)
+    assert "\\pos(540,820)" in ev and "\\move" not in ev and "\\fad" not in ev
+    assert ev.endswith("｛5.26%｝") and ev.startswith("Dialogue: 1,0:00:00.20,0:00:00.24,free,")
+    popped = text_event(0.0, 1.0, 540, 760, "美股早發車", size=120, color="&H66D1FF&", align=5,
+                        move_px=None, effect=POP_IN)
+    assert popped.endswith(POP_IN + "美股早發車")
 
 
 def test_sting_has_lead_in_min_duration_and_no_caption(tmp_path):
