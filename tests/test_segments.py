@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from pmb.schemas.script import DialogueSegment, SplitSegment
+from pmb.schemas.script import BignumSegment, DialogueSegment, SplitSegment
 from pmb.video.ass import ass_color, rounded_rect, text_event
 from pmb.video.captions import is_beat, split_sentences, strip_beat
 from pmb.video.segments.base import (
@@ -21,6 +21,7 @@ from pmb.video.segments.base import (
     segment_duration,
     take_starts,
 )
+from pmb.video.segments.bignum import count_up_frames, parse_number, value_font_size
 from pmb.video.segments.dialogue import bubble_layout, speakable_lines
 from pmb.video.segments.registry import renderer_for
 from pmb.video.segments.split import panel_text_layout, reveal_times
@@ -363,3 +364,108 @@ def test_split_text_never_leaves_its_panel(top, bottom, stat, label, tmp_path):
         assert by <= y and bottom_edge <= by + bh
     (_, body_y, body_size, _, body_lines), (_, stat_y, stat_size, _, _) = events[3], events[4]
     assert stat_y - stat_size - (body_y + len(body_lines) * body_size) >= 40
+
+
+def test_parse_number_handles_common_formats():
+    assert parse_number("5.26%")[:3] == ("", 5.26, "%")
+    assert parse_number("-0.27%")[:3] == ("-", 0.27, "%")
+    p = parse_number("7,670點")
+    assert (p.number, p.suffix, p.commas, p.decimals) == (7670.0, "點", True, 0)
+    assert parse_number("+16.2萬")[:3] == ("+", 16.2, "萬")
+    assert parse_number("約5%")[:3] == ("約", 5.0, "%")
+    assert parse_number("N/A") is None
+
+
+def test_count_up_frames_end_exactly_on_value_and_keep_format():
+    frames = count_up_frames("7,670點", 5.0)
+    assert frames[0] == (0.0, 0.2, "0點")
+    assert frames[-1] == (pytest.approx(0.8), 5.0, "7,670點")
+    assert all("," in text or text == "0點" or float(text[:-1].replace(",", "")) < 1000
+               for _, _, text in frames[1:-1])
+    texts = [t for _, _, t in count_up_frames("5.26%", 5.0)]
+    assert all(t.endswith("%") and len(t.split(".")[1]) == 3 for t in texts)  # 兩位小數 + %
+
+
+def test_count_up_falls_back_to_static_and_handles_short_segments():
+    assert count_up_frames("N/A", 3.0) == [(0.0, 3.0, "N/A")]
+    frames = count_up_frames("5.26%", 0.5)
+    assert frames[-1] == (pytest.approx(0.48), 0.5, "5.26%")  # 段比動畫短:最後一幀硬停在定值
+    assert all(t0 < t1 <= 0.5 for t0, t1, _ in frames)
+
+
+@pytest.mark.parametrize("seg_end", [0.05, 0.2, 0.3, 0.8, 0.81, 2.0])
+def test_count_up_frames_invariants_for_any_segment_length(seg_end):
+    """最後一幀一定是原字串、每幀 t0 < t1、不超過段尾、幀與幀首尾相接。"""
+    frames = count_up_frames("7,670點", seg_end)
+    assert frames[-1][2] == "7,670點" and frames[-1][1] == pytest.approx(seg_end)
+    assert all(t0 < t1 <= seg_end + 1e-9 for t0, t1, _ in frames)
+    assert all(a[1] == pytest.approx(b[0]) for a, b in zip(frames, frames[1:], strict=False))
+
+
+def test_value_font_size_shrinks_for_wide_values():
+    assert value_font_size("5.26%") == 260
+    assert value_font_size("+16.2萬億美元") < 260
+
+
+def test_value_font_size_uses_the_shared_width_model():
+    """用 textfit.line_px 量整串:不論長短都 <= 740px;再長就縮到 36 為止。"""
+    for value in ["5.26%", "7,670點", "+16.2萬億美元", "+123,456,789.12萬億美元", "W" * 12]:
+        size = value_font_size(value)
+        assert FLOOR_SIZE <= size <= 260 and line_px(value, size) <= 740
+        assert size == 260 or line_px(value, size + 1) > 740  # 是「最大」的合格字級
+    assert value_font_size("字" * 200) == FLOOR_SIZE
+
+
+def test_bignum_render_has_label_context_and_frames(tmp_path):
+    seg = BignumSegment(vo="十年期5.26%。", value="5.26%", label="10年期殖利率",
+                        context="2007年以來最高")
+    takes = [Take("十年期5.26%。", "a.mp3", 2.0, [])]
+    visual = renderer_for("bignum").render(seg, _ctx(takes, duration=3.0, work_dir=tmp_path))
+    assert visual.stem == "bignum" and visual.is_card
+    assert "10年期殖利率" in visual.ass and "2007年以來最高" in visual.ass
+    assert visual.ass.count("5.26%") >= 2 and ",sub," in visual.ass
+    assert "\\1c&H66D1FF&" in visual.ass  # 大數字用品牌金(ASS 為 BGR)
+
+
+def _bignum_extents(ass: str):
+    """(種類, 錨點 x, 字級, 斷行清單) 依事件順序;大數字幀用 \\pos、label/context 用 \\move。"""
+    out = []
+    for ln in ass.splitlines():
+        if not ln.startswith("Dialogue:") or ",free," not in ln:
+            continue
+        size = int(re.search(r"\\fs(\d+)", ln).group(1))
+        assert "\\an5" in ln  # 全部置中錨點:左右緣 = x ± line_px / 2
+        if "\\pos(" in ln:
+            kind, x = "value", int(re.search(r"\\pos\((\d+),", ln).group(1))
+        else:
+            x = int(re.search(r"\\move\((\d+),", ln).group(1))
+            y = int(re.search(r"\\move\(\d+,\d+,\d+,(\d+),", ln).group(1))
+            kind = "label" if y < 700 else "context"
+        out.append((kind, x, size, ln.split("}", 1)[1].split("\\N")))
+    return out
+
+
+@pytest.mark.parametrize(("value", "label", "context"), [
+    ("5.26%", "10年期殖利率", "2007年以來最高"),
+    ("+123,456,789.12萬億美元", "字" * 30, "這句脈絡真的很長" * 5),  # 30 字 label、40 字 context
+    ("W" * 30, "L" * 40, "x" * 80),  # 不可斷的長英數串
+    ("字" * 60, "標籤" * 30, "脈絡" * 40),  # 全部過長:縮字級後截斷
+    ("{5}%", "標{籤}\n兩行", "脈絡\n換行{}"),  # 花括號與換行不破壞事件
+])
+def test_bignum_text_never_leaves_the_safe_column(value, label, context, tmp_path):
+    """逐個文字事件(label / 每一幀大數字 / context):置中後估計左緣 >= 0、右緣 <= 910(按讚欄之外),
+    行數在允許範圍(label 1、大數字 1、context <= 2)。"""
+    seg = BignumSegment(vo="講大數字。", value=value, label=label, context=context)
+    takes = [Take("講大數字。", "a.mp3", 2.0, [])]
+    ass = renderer_for("bignum").render(seg, _ctx(takes, duration=3.0, work_dir=tmp_path)).ass
+    events = _bignum_extents(ass)
+    assert {k for k, *_ in events} == {"label", "value", "context"}
+    allowed = {"label": 1, "value": 1, "context": 2}
+    for kind, x, size, lines in events:
+        assert x == 540 and 1 <= len(lines) <= allowed[kind] and size >= FLOOR_SIZE
+        half = max(line_px(ln, size) for ln in lines) / 2
+        assert x - half >= 0 and x + half <= 910, (kind, lines, size)
+    sizes = {size for kind, _, size, _ in events if kind == "value"}
+    assert len(sizes) == 1  # 數字跳動時字級不變
+    assert "{" not in "".join(ln.split("}", 1)[1] for ln in ass.splitlines()
+                              if ",free," in ln)  # 文字內沒有會開關 override 的花括號

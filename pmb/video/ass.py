@@ -168,7 +168,7 @@ def polygon(points: list[tuple[float, float]], size: float) -> str:
     return f"m {x0} {y0} l " + " ".join(f"{x} {y}" for x, y in rest)
 
 
-def _escape_text(text: str) -> str:
+def escape_text(text: str) -> str:
     """ASS 文字轉義:``{``/``}`` 會開關 override 區塊,先換成全形;真換行會把 Dialogue 行切斷,
     改成 ASS 的換行 ``\\N``。呼叫端自己放的 ``\\N`` 序列不動。"""
     text = text.replace("{", "｛").replace("}", "｝")
@@ -201,5 +201,5 @@ def text_event(
 ) -> str:
     """文字事件(layer 1,蓋在色塊上):``align`` 是 ASS 數字鍵盤對齊(7 左上、9 右上、5 置中)。"""
     tags = f"{{\\an{align}{_slide_in(x, y, move_px)}\\fs{size}\\1c{color}\\bord0\\shad0}}"
-    body = _escape_text(text)
+    body = escape_text(text)
     return f"Dialogue: 1,{ass_time(start)},{ass_time(end)},free,,0,0,0,,{tags}{body}"
