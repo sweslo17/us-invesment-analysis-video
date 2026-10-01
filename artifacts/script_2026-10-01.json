@@ -1,0 +1,106 @@
+{
+  "segments": [
+    {
+      "vo": "美光財報炸裂,殖利率卻衝上新高。",
+      "chart_id": null,
+      "headline": "財報炸裂\n利率照飆",
+      "title": null,
+      "tag": "PMI日",
+      "stat": null,
+      "stat_label": null,
+      "t_start": 0.0,
+      "duration": 2.88
+    },
+    {
+      "vo": "標普上一交易日收7651點,跌0.25%,寫下九月最差單月;道瓊跌0.86%最慘,那斯達克靠美光報喜逆勢收紅0.24%。今天期貨卻不漲反跌,顯示利多還沒轉成買盤。",
+      "chart_id": "ovc",
+      "headline": null,
+      "title": "財報亮眼,大盤無感",
+      "tag": null,
+      "stat": "-0.25%",
+      "stat_label": "標普昨收",
+      "t_start": 2.88,
+      "duration": 14.58
+    },
+    {
+      "vo": "日經隔夜大漲3.13%創多月新高,南韓KOSPI漲1.95%,三星、SK海力士靠美光的HBM4訂單消息同步反彈;軟銀也因OpenAI傳募資衝上1.4兆美元估值跟著大漲。亞洲先替美光這份財報買單了。",
+      "chart_id": "asia",
+      "headline": null,
+      "title": "美光外溢,亞股狂飆",
+      "tag": null,
+      "stat": "+3.13%",
+      "stat_label": "日經隔夜",
+      "t_start": 17.46,
+      "duration": 17.64
+    },
+    {
+      "vo": "10年期公債殖利率今天來到5.29%,直逼2002年以來高點;紐約Fed總裁威廉斯才剛說十月升息不急,升息機率也真的跌破五成,但長天期利率完全沒回頭,反而續創新高。借錢給人越久,越怕通膨,跟Fed鴿不鴿派關係不大。",
+      "chart_id": "rates",
+      "headline": null,
+      "title": "鴿派喊話,利率不甩",
+      "tag": null,
+      "stat": "5.29%",
+      "stat_label": "10年期殖利率",
+      "t_start": 35.1,
+      "duration": 19.26
+    },
+    {
+      "vo": "PMI破50是擴張,跌破50是萎縮。",
+      "chart_id": null,
+      "headline": "PMI",
+      "title": null,
+      "tag": "名詞小教室",
+      "stat": null,
+      "stat_label": null,
+      "t_start": 54.36,
+      "duration": 3.24
+    },
+    {
+      "vo": "期貨隱含十月政策利率落在3.97%附近,十二月進一步上看4.19%,方向還是偏緊;今天稍晚ISM製造業PMI出爐,週五非農照常公布,沒有受停擺干擾,是接下來確認利率路徑的兩塊拼圖。",
+      "chart_id": "fedpath",
+      "headline": null,
+      "title": "十月退燒,十二月未定",
+      "tag": null,
+      "stat": "4.19%",
+      "stat_label": "12月隱含利率",
+      "t_start": 57.6,
+      "duration": 16.2
+    },
+    {
+      "vo": "數據喊著要降溫,利率完全沒在聽。以上非投資建議,明天盤前見。",
+      "chart_id": null,
+      "headline": "數據喊降溫\n利率沒在聽",
+      "title": null,
+      "tag": "巴菲特  不知道有沒有說過",
+      "stat": null,
+      "stat_label": null,
+      "t_start": 73.8,
+      "duration": 5.4
+    }
+  ],
+  "charts": [
+    {
+      "id": "ovc",
+      "module": "overnight_vs_close",
+      "params": {}
+    },
+    {
+      "id": "asia",
+      "module": "global_equity_overnight",
+      "params": {}
+    },
+    {
+      "id": "rates",
+      "module": "rates_trend",
+      "params": {}
+    },
+    {
+      "id": "fedpath",
+      "module": "fed_path",
+      "params": {}
+    }
+  ],
+  "coverage_gaps": [
+    "快照目前沒有PCE物價指數的歷史序列可畫,只能口述8月核心PCE降到3.0%這個重點,建議之後補一個PCE/核心PCE的econ_print候選序列。"
+  ]
+}

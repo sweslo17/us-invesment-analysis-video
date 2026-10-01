@@ -1,0 +1,135 @@
+{
+  "date": "2026-10-01",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7651.5400390625,
+      "overnight_pct": -0.2516016621061076,
+      "drivers": [
+        "標普500上一交易日(9/30,週三)收7651.54點,跌0.25%,寫下九月最差單月收官;同一天公布的8月PCE物價指數意外降溫(年增3.4%、核心3.0%,雙雙優於預期),但股市仍未能止跌。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 26861.060546875,
+      "overnight_pct": 0.2370349834523956,
+      "drivers": [
+        "那斯達克逆勢收紅0.24%,是四大指數中唯一上漲的,市場提前為美光盤後財報卡位。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 50906.05078125,
+      "overnight_pct": -0.8644009937113792,
+      "drivers": [
+        "道瓊收50906.05點,跌0.86%,是四大指數中跌幅最深的。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 2796.860107421875,
+      "overnight_pct": -0.3939529865190352,
+      "drivers": [
+        "羅素兩千收2796.86點,跌0.39%,對利率敏感的中小型股持續承壓。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普500的已實現波動度目前中性,用波動目標的思路反推,三倍槓桿抱一整年,波動耗損就會啃掉一大截複利,這跟隔夜領先多少無關。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克這陣子的波動仍是四大指數裡最高,合理槓桿倍數因此被壓到最低,硬開三倍長期持有,磨損最重。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊波動相對溫和,合理槓桿倍數略高於標普,但三倍槓桿長期持有一樣會被波動耗損慢慢磨掉獲利。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千對利率消息的反應向來比較激烈,波動偏高讓合理槓桿倍數被壓低,三倍槓桿長期持有代價依然可觀。"
+    }
+  ],
+  "regime": {
+    "vol": "normal",
+    "rates": "rising",
+    "stock_bond_corr": "positive",
+    "breadth": "narrow"
+  },
+  "items": [
+    {
+      "headline": "美光財報破紀錄,2027年HBM4訂單已鎖價",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "美光公布創紀錄的542.3億美元單季營收,遠超市場預期的510.7億美元,且已完成2027財年絕大多數HBM4出貨量的簽約、價格優於去年;對一般投資人來說,這代表記憶體這波AI需求的能見度繼續往後延伸,但股價反應克制,顯示利多多半已被市場提前消化。",
+      "sources": [
+        {"url": "https://www.globenewswire.com/news-release/2026/09/30/3372366/14450/en/micron-technology-inc-reports-record-fiscal-fourth-quarter-and-full-year-2026-results.html", "ts": null},
+        {"url": "https://www.benzinga.com/news/26/09/62095451/transcript-micron-technology-q4-2026-earnings-conference-call", "ts": null}
+      ]
+    },
+    {
+      "headline": "PCE降溫沒能救股市,九月寫下最差單月",
+      "horizon": "LT",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "8月PCE物價年增降到3.4%、核心降到3.0%,雙雙優於預期,理論上是股市的利多,但標普500上一交易日仍收跌,九月寫下近期最差單月;對一般投資人來說,這再次印證市場現在更在意利率本身走向,而不是單一通膨數字的好壞。",
+      "sources": [
+        {"url": "https://www.cnbc.com/2026/09/30/feds-preferred-gauge-showed-core-inflation-at-3point0percent-in-august-much-lighter-than-expected.html", "ts": null}
+      ]
+    },
+    {
+      "headline": "10年期殖利率衝上2002年來新高,鴿派發言完全擋不住",
+      "horizon": "LT",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "10年期公債殖利率今天來到5.29%附近,逼近盤中觸及的高點、是2002年以來最高;同一時間紐約Fed總裁才剛說十月升息不急,顯示推升長天期利率的力量已經不只是Fed升不升息這麼簡單。對一般投資人來說,房貸、車貸、信用卡利率都跟著這條線走,值得持續關注。",
+      "sources": [
+        {"url": "https://www.cnbc.com/2026/10/01/us-treasury-bond-yield.html", "ts": null},
+        {"url": "https://invezz.com/ng/news/2026/09/30/us-10-year-treasury-yield-hits-24-year-high-above-530percent/", "ts": null}
+      ]
+    },
+    {
+      "headline": "美光財報外溢亞股,日經、南韓同步大漲",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "日經隔夜大漲3.13%、南韓KOSPI漲1.95%,三星電子、SK海力士靠美光財報的HBM4利多同步反彈,軟銀也因OpenAI傳募資300億美元、估值衝上1.4兆美元同步走高;對一般投資人來說,這顯示亞洲供應鏈股市對美光這份財報的信心,比美股本土反應更直接。",
+      "sources": [
+        {"url": "https://invezz.com/en-ae/news/2026/10/01/heres-why-the-nikkei-225-index-is-soaring-today-oct-1/", "ts": null},
+        {"url": "https://en.sedaily.com/finance/2026/10/01/chip-stocks-rebound-on-micron-results-as-kospi-retakes-6900", "ts": null}
+      ]
+    },
+    {
+      "headline": "美伊談判傳出停滯,川普否認解凍資產傳聞",
+      "horizon": "MT",
+      "vs_thesis": "challenges",
+      "materiality": 3,
+      "confidence": "developing",
+      "audience_value": "美伊在紐約的磋商原本傳出氣氛轉正面,但最新消息顯示談判停滯,川普公開否認考慮以解除制裁、釋出凍結資金換取伊朗核武承諾的報導;對一般投資人來說,這代表地緣風險溢價短期內不會真的解除,油價也因此由前幾天的樂觀回落轉為小幅下跌。",
+      "sources": [
+        {"url": "https://apacnewsnetwork.com/2026/10/crude-oil-prices-slip-us-iran-talks/", "ts": null},
+        {"url": "https://hdfcsky.com/news/brent-crude-oil-price-today-october-1-2026-brent-crude-falls-0-7percent-to-97-3-wti-down-0-9percent-as-us-iran-talks-gulf-supply-in-focus", "ts": null}
+      ]
+    }
+  ],
+  "catalysts": [
+    "今天(10/1,週四)美東上午10點:9月ISM製造業PMI公布,市場預期54.8(前值54.6),價格分項預期續升。",
+    "今天稍晚:多位Fed官員可能針對PCE與PMI數據表態,市場持續評估十月升息機率(已跌破五成,十二月仍是多數情境)。",
+    "本週五(10/2):9月非農就業報告如期公布,今年度續撥款協議已於9月初簽署、延至12/11,不受停擺干擾。",
+    "持續觀察:美伊談判僵局後續、美光財報外溢亞股的漲勢能否延續、10年期殖利率能否守穩5.3%下方。"
+  ],
+  "thesis_delta": {
+    "changed": true,
+    "summary": "上一交易日(9/30)美股收黑,標普500收7651.54點,跌0.25%,是九月最差單月收官;道瓊跌0.86%最深,那斯達克逆勢收紅0.24%。同一天稍早公布的8月PCE物價指數卻意外降溫——年增3.4%(前值3.7%)、核心年增3.0%(前值3.3%),雙雙優於預期,理論上該是鴿派好消息,但10年期公債殖利率完全沒有回應,今天續創2002年以來新高、來到5.29%附近,顯示長天期利率脫鉤Fed政策路徑的期限溢酬故事持續惡化。美光盤後公布破紀錄財報——營收542.3億美元遠超市場預期的510.7億美元,且已鎖定2027財年絕大多數HBM4出貨量、價格優於去年,記憶體超級循環的訂單能見度再添一筆實績,但美股本土股價反應克制(盤前僅漲0.37%),反而是隔夜日經、南韓KOSPI靠三星、SK海力士與軟銀大漲搶先替這份財報買單。地緣風險線出現新變數:美伊紐約磋商傳出停滯,川普否認考慮對伊朗解除制裁換取核武承諾的報導,原本轉正面的樂觀氣氛被澆了一盆冷水。紐約Fed總裁威廉斯的鴿派表態持續發酵,期貨隱含十月升息機率跌破五成,但官員與市場都傾向十二月仍有一次升息,今天稍晚的ISM製造業PMI與週五如期公布的非農就業報告(續撥款協議已延至12/11,不受停擺影響),會是接下來驗證這個路徑的下一步。",
+    "horizon": "LT"
+  },
+  "lead_horizon": "LT",
+  "title_hook": "美光財報炸裂,殖利率照樣衝上2002年新高"
+}
