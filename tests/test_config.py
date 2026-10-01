@@ -27,7 +27,7 @@ def test_ensure_dirs_creates_artifacts_and_state(tmp_path):
 
 
 def test_slogan_defaults_use_fullwidth_punctuation(monkeypatch):
-    # 開場口號轉場與收尾口號會上畫面、進 TTS:預設值本身就要是全形標點
+    # 開場口號轉場與收尾口號會上畫面、進 TTS：預設值本身就要是全形標點
     monkeypatch.delenv("SLOGAN_INTRO", raising=False)
     monkeypatch.delenv("SLOGAN_OUTRO", raising=False)
     settings = Settings(_env_file=None)

@@ -412,7 +412,7 @@ def _render_cover(target, settings) -> Path | None:
     spec = cover_spec(script)
     if spec is None:
         return None
-    spec = zh_punct_obj(spec)  # 封面是公開圖片:大標與小標的半形標點在出口轉全形
+    spec = zh_punct_obj(spec)  # 封面是公開圖片：大標與小標的半形標點在出口轉全形
     cover = settings.artifacts_dir / f"cover_{target}.png"
     render_headline_card(
         str(cover),

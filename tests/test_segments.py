@@ -837,7 +837,7 @@ def test_canvas_background_is_a_flat_canvas_colour_png_made_once(tmp_path):
 
 
 def test_split_sentences_treats_fullwidth_question_and_exclamation_as_sentence_ends():
-    """研究端統一輸出全形標點後，「？」「！」要跟半形的 ? ! 一樣切句、一樣算收尾。"""
+    """研究端統一輸出全形標點後，「？」「！」要跟半形的問號、驚嘆號一樣切句、一樣算收尾。"""
     assert split_sentences("會漲嗎？然後呢。") == ["會漲嗎？", "然後呢。"]
     assert split_sentences("會漲嗎?然後呢。") == ["會漲嗎?", "然後呢。"]
     assert split_sentences("漲翻了！下一句；再一句。") == ["漲翻了！", "下一句；", "再一句。"]

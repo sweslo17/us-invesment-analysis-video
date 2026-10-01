@@ -447,8 +447,8 @@ def test_broken_crashing_retry_restores_last_shippable_attempt(tmp_path):
     assert len(calls) == 2
     restored = {p: p.read_bytes() for p in _outputs(settings)}
     thesis = settings.state_dir / "thesis.json"
-    assert restored[thesis] == first[thesis]  # thesis 不在標點正規化範圍,位元組一模一樣
-    for path in _outputs(settings)[:3]:  # brief/script/report:還原後的內容 = 第 1 次 + 全形標點
+    assert restored[thesis] == first[thesis]  # thesis 不在標點正規化範圍，位元組一模一樣
+    for path in _outputs(settings)[:3]:  # brief/script/report：還原後的內容 = 第 1 次 + 全形標點
         if path.suffix == ".json":
             assert json.loads(restored[path]) == zh_punct_obj(json.loads(first[path]))
         else:
@@ -492,13 +492,14 @@ def test_fallback_warning_names_rate_limit_when_nothing_ran(tmp_path):
     assert "軟規則仍未全過" not in final
 
 
-# --- 全形標點正規化(研究產物源頭) ---------------------------------------------------
-# 模型照 prompt 的寫法產出半形 , : ; ! ? ( ),公開的字幕、標題、報告看起來就不一致。
-# 研究一收工(可出片的每條路徑)就把當日 brief/script/report 就地正規化。
+# --- 全形標點正規化（研究產物源頭）---------------------------------------------------
+# 模型照 prompt 的寫法產出半形的逗號、冒號、分號、驚嘆號、問號與括號，
+# 公開的字幕、標題、報告看起來就不一致。
+# 研究一收工（可出片的每條路徑）就把當日 brief/script/report 就地正規化。
 
 
 def _write_halfwidth_artifacts(settings, *, soft_only: bool = False) -> None:
-    """合法產物,文字是模型慣用的半形標點(含不該被動的千分位、時間、網址、行內碼)。"""
+    """合法產物，文字是模型慣用的半形標點（含不該被動的千分位、時間、網址、行內碼）。"""
     arts = settings.artifacts_dir
     _write_valid_artifacts(arts)
     script_path = arts / f"script_{_D}.json"
@@ -506,7 +507,7 @@ def _write_halfwidth_artifacts(settings, *, soft_only: bool = False) -> None:
     script["segments"][0]["vo"] = "測試開場,先看重點:標普收7,670點(昨收),美東8:30公布!"
     script["segments"][0]["headline"] = "測試開場,看這裡"
     if soft_only:
-        script["gags"] = []  # 軟錯(S7):可出片但規則沒全過
+        script["gags"] = []  # 軟錯（S7）：可出片但規則沒全過
     script_path.write_text(json.dumps(script), encoding="utf-8")
     (arts / f"report_{_D}.md").write_text(
         "# 報告\n\n標普收紅,VIX 回落;詳見 [來源](https://x.com/a,b) 與 `pmb run, x`。\n"
@@ -568,7 +569,7 @@ def test_restored_shippable_outputs_are_normalized(tmp_path):
 
 
 def test_normalization_failure_restores_originals_and_still_ships(tmp_path, monkeypatch):
-    """正規化後硬驗證不過(理論上不可能):還原原始位元組、記 WARNING,這一天照樣出片。"""
+    """正規化後硬驗證不過（理論上不可能）：還原原始位元組、記 WARNING，這一天照樣出片。"""
     settings = _settings(tmp_path)
     _write_halfwidth_artifacts(settings)
     originals = {p: p.read_bytes() for p in _outputs(settings) if p.exists()}
@@ -592,7 +593,7 @@ def test_normalize_research_outputs_rewrites_json_and_markdown(tmp_path):
     script_path = settings.artifacts_dir / f"script_{_D}.json"
     text = script_path.read_text(encoding="utf-8")
     assert text == json.dumps(json.loads(text), ensure_ascii=False, indent=2) + "\n"
-    assert "測試開場" in text  # ensure_ascii=False:中文不轉成 \uXXXX
+    assert "測試開場" in text  # ensure_ascii=False：中文不轉成 \uXXXX
 
 
 def test_normalize_research_outputs_is_idempotent(tmp_path):
@@ -605,7 +606,7 @@ def test_normalize_research_outputs_is_idempotent(tmp_path):
 
 
 def test_normalize_research_outputs_leaves_unreadable_files_alone(tmp_path):
-    """缺檔或 JSON 壞掉:回 False、不動任何檔(交給驗證去報錯,不在這裡丟例外)。"""
+    """缺檔或 JSON 壞掉：回 False、不動任何檔（交給驗證去報錯，不在這裡丟例外）。"""
     settings = _settings(tmp_path)
     _write_halfwidth_artifacts(settings)
     (settings.artifacts_dir / f"brief_{_D}.json").write_text("{broken", encoding="utf-8")

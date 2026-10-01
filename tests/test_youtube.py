@@ -56,7 +56,7 @@ def test_title_uses_title_hook_when_present():
 
 
 def test_metadata_normalizes_halfwidth_punctuation_in_title_and_description():
-    """標題與描述是公開文字:研究端寫了半形標點也要在出口轉成全形;後綴與數字維持原樣。"""
+    """標題與描述是公開文字：研究端寫了半形標點也要在出口轉成全形；後綴與數字維持原樣。"""
     brief = _brief()
     brief.title_hook = "今晚 Micron 財報,AI 多頭要當場交卷!"
     brief.items[0].headline = "Fed 轉鷹,殖利率 (10Y) 創高"
@@ -73,7 +73,7 @@ def test_metadata_normalizes_halfwidth_punctuation_in_title_and_description():
 
 
 def test_fixed_description_strings_are_fullwidth_at_the_source(monkeypatch):
-    """免責與追蹤 CTA 的固定文字本身就用全形(不靠出口的正規化兜底)。"""
+    """免責與追蹤 CTA 的固定文字本身就用全形（不靠出口的正規化兜底）。"""
     monkeypatch.setattr(youtube, "zh_punct", lambda text: text)
     _title, description, _tags = build_youtube_metadata(_brief(), channel_name="美股早發車")
     assert "本影片為市場資訊與風險教育，非投資建議。" in description

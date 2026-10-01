@@ -514,7 +514,7 @@ def test_assemble_all_kinds_smoke(tmp_path):
 
 
 def _ass_texts(work) -> list[str]:
-    """work 目錄下所有 .ass 的 Dialogue 文字(去掉 {…} 覆寫標籤與 \\N 換行)。"""
+    """work 目錄下所有 .ass 的 Dialogue 文字（去掉 {…} 覆寫標籤與 \\N 換行）。"""
     texts: list[str] = []
     for path in sorted(work.glob("*.ass")):
         for line in path.read_text(encoding="utf-8").splitlines():
@@ -526,7 +526,7 @@ def _ass_texts(work) -> list[str]:
 
 @_NEEDS_FFMPEG
 def test_assemble_normalizes_halfwidth_punct_in_captions_cards_and_tts(tmp_path):
-    """模型寫半形標點(或舊 script 照樣餵進來)時,字幕、字卡、大數字與送進 TTS 的字都是全形。"""
+    """模型寫半形標點（或舊 script 照樣餵進來）時，字幕、字卡、大數字與送進 TTS 的字都是全形。"""
     snap = _sting_snapshot()
     script = Script.model_validate({
         "segments": [
@@ -555,13 +555,13 @@ def test_assemble_normalizes_halfwidth_punct_in_captions_cards_and_tts(tmp_path)
     assert "債市暴走，Fed不急" in joined and "今日盤前：速報" in joined
     assert "標普（昨收）" in joined and "小跌0.17%，量縮" in joined
     assert "7,670" in joined and "8:30" in joined  # 千分位與時間維持半形
-    leftovers = re.sub(r"(?<=\d)[,:](?=\d)", "", joined)  # 數字間的 , : 本來就該是半形
+    leftovers = re.sub(r"(?<=\d)[,:](?=\d)", "", joined)  # 數字之間的逗號與冒號本來就該是半形
     assert not re.search(r"[,:;!?()]", leftovers), leftovers
 
 
 @_NEEDS_FFMPEG
 def test_assemble_normalizes_slogans_from_settings(tmp_path):
-    """口號來自 .env 時可能還是半形:開場口號轉場與收尾口號也走同一套正規化。"""
+    """口號來自 .env 時可能還是半形：開場口號轉場與收尾口號也走同一套正規化。"""
     script = Script.model_validate({
         "segments": [{"vo": "開場。", "headline": "標題", "tag": "k"},
                      {"vo": "結論。", "headline": "結語", "tag": "k"}],

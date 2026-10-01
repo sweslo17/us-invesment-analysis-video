@@ -313,7 +313,7 @@ def test_overnight_vs_close_negative_label_anchors_right_of_zero():
 
 
 def _drawn_strings(tree: ast.AST):
-    """library.py 裡所有非 docstring 的字串(f-string 以 NUL 占位插值,整串一起看)。"""
+    """library.py 裡所有非 docstring 的字串（f-string 以 NUL 占位插值，整串一起看）。"""
     docstrings = {
         id(node.body[0].value)
         for node in ast.walk(tree)
@@ -339,9 +339,10 @@ def _drawn_strings(tree: ast.AST):
 
 
 def test_chart_library_labels_use_fullwidth_punctuation():
-    """畫進圖裡的中文(軸標、圖例、標註)不留半形 ,:;!?(),也不能讓 zh_punct 還有東西可轉。
+    """畫進圖裡的中文（軸標、圖例、標註）不能有半形的逗號、冒號、分號、驚嘆號、問號與括號，
+    也不能讓 zh_punct 還有東西可轉。
 
-    只看含漢字的字串:斷行用的標點集合(``_WRAP_BREAK`` 等)刻意兩種寬度都收,不在此限。
+    只看含漢字的字串：斷行用的標點集合（``_WRAP_BREAK`` 等）刻意兩種寬度都收，不在此限。
     """
     source = Path(__file__).resolve().parents[1] / "pmb" / "charts" / "library.py"
     offenders = [

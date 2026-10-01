@@ -1,7 +1,7 @@
-"""中文標點正規化測試:半形 ``,:;!?()`` 在中文語境轉全形,數字、網址、程式碼與英文維持原樣。
+"""中文標點正規化測試：半形 ``,:;!?()`` 在中文語境轉全形，數字、網址、程式碼與英文維持原樣。
 
-最後一組是對真實 9 月產物(``artifacts/script_*`` / ``brief_*`` / ``report_*``,唯讀)的性質檢查:
-正規化後千分位、時間與網址不變,且受保護範圍之外不再有貼著中文的半形標點。
+最後一組是對真實 9 月產物（``artifacts/script_*`` / ``brief_*`` / ``report_*``，唯讀）的性質檢查：
+正規化後千分位、時間與網址不變，且受保護範圍之外不再有貼著中文的半形標點。
 """
 
 import json
@@ -36,7 +36,7 @@ def test_basic_conversions(raw, expected):
     assert zh_punct(raw) == expected
 
 
-# --- 數字:千分位逗號、時間冒號、小數點、百分號維持半形 ----------------------------
+# --- 數字：千分位逗號、時間冒號、小數點、百分號維持半形 ----------------------------
 
 
 @pytest.mark.parametrize(
@@ -57,7 +57,7 @@ def test_digits_keep_half_width(raw, expected):
     assert zh_punct(raw) == expected
 
 
-# --- 英文語境:不是中文就不動 -------------------------------------------------------
+# --- 英文語境：不是中文就不動 -------------------------------------------------------
 
 
 @pytest.mark.parametrize(
@@ -94,7 +94,7 @@ def test_mixed_context_converts_when_either_side_is_cjk(raw, expected):
     assert zh_punct(raw) == expected
 
 
-# --- 括號:成對才轉,碰到中文才轉 ----------------------------------------------------
+# --- 括號：成對才轉，碰到中文才轉 ----------------------------------------------------
 
 
 @pytest.mark.parametrize(
@@ -105,8 +105,8 @@ def test_mixed_context_converts_when_either_side_is_cjk(raw, expected):
         ("(輝達)", "（輝達）"),  # 括號內首尾是中文
         ("(NVDA) 輝達", "（NVDA）輝達"),  # 括號右側緊鄰中文
         ("輝達 (NVDA)", "輝達（NVDA）"),  # 括號左側緊鄰中文
-        ("(a) text (b) 中", "(a) text（b）中"),  # 各自判斷,不連坐
-        ("標普(S&P 500(SPX))", "標普（S&P 500（SPX））"),  # 巢狀:兩輪收斂
+        ("(a) text (b) 中", "(a) text（b）中"),  # 各自判斷，不連坐
+        ("標普(S&P 500(SPX))", "標普（S&P 500（SPX））"),  # 巢狀：兩輪收斂
     ],
 )
 def test_parens_pair_converts_only_when_touching_cjk(raw, expected):
@@ -123,7 +123,7 @@ def test_parens_pairing_does_not_cross_newlines():
     assert zh_punct(text) == text
 
 
-# --- 空白:只清掉緊鄰「被轉換標點」的半形空格 -----------------------------------------
+# --- 空白：只清掉緊鄰「被轉換標點」的半形空格 -----------------------------------------
 
 
 @pytest.mark.parametrize(
@@ -136,14 +136,14 @@ def test_parens_pairing_does_not_cross_newlines():
         ("10Y 殖利率 走高", "10Y 殖利率 走高"),
         ("Fed vs 債市", "Fed vs 債市"),
         ("Fed , ECB", "Fed , ECB"),  # 沒轉換就不動空白
-        ("收紅，  標普", "收紅，  標普"),  # 本來就是全形:不碰
+        ("收紅，  標普", "收紅，  標普"),  # 本來就是全形：不碰
     ],
 )
 def test_space_removed_only_next_to_converted_marks(raw, expected):
     assert zh_punct(raw) == expected
 
 
-# --- 受保護範圍:網址、Markdown 連結目標、行內碼、程式碼區塊 ----------------------------
+# --- 受保護範圍：網址、Markdown 連結目標、行內碼、程式碼區塊 ----------------------------
 
 
 def test_urls_are_untouched():
@@ -251,7 +251,7 @@ def test_obj_returns_other_types_unchanged():
     assert zh_punct_obj(42) == 42
     assert zh_punct_obj(2.5) == 2.5
     pair = ("a,中", "b")
-    assert zh_punct_obj(pair) is pair  # tuple 不遞迴(規格只處理 dict/list/str)
+    assert zh_punct_obj(pair) is pair  # tuple 不遞迴（規格只處理 dict/list/str）
     assert zh_punct_obj("a,中") == "a，中"
 
 
@@ -281,7 +281,7 @@ def test_model_roundtrips_through_validation():
     assert script.segments[0].vo == "開場,先看重點!"  # 原物件不變
 
 
-# --- 性質檢查:真實 9 月產物(唯讀) --------------------------------------------------
+# --- 性質檢查：真實 9 月產物（唯讀）--------------------------------------------------
 
 _ARTIFACTS = Path(__file__).resolve().parent.parent / "artifacts"
 _SEPT_FILES = sorted(
@@ -304,7 +304,7 @@ def _is_cjk(ch: str) -> bool:
 
 
 def _nearest(text: str, i: int, step: int) -> str:
-    """往 ``step`` 方向找第一個非空白字元(不跨行);沒有回空字串。"""
+    """往 ``step`` 方向找第一個非空白字元（不跨行）；沒有回空字串。"""
     j = i + step
     while 0 <= j < len(text) and text[j] in " \t":
         j += step
@@ -312,7 +312,7 @@ def _nearest(text: str, i: int, step: int) -> str:
 
 
 def half_width_violations(text: str) -> Counter:
-    """受保護範圍(網址)之外,仍貼著中文的半形 ``,:;!?`` 與成對 ``()``,依標點計數。"""
+    """受保護範圍（網址）之外，仍貼著中文的半形 ``,:;!?`` 與成對 ``()``，依標點計數。"""
     text = _URL_RE.sub("\x00", text)
     found: Counter = Counter()
     for m in re.finditer(r"[,:;!?]", text):
@@ -346,7 +346,7 @@ def _string_values(obj):
 
 
 def _before_after(path: Path) -> list[tuple[str, str]]:
-    """(正規化前, 正規化後) 的文字配對;JSON 逐字串值處理,Markdown 整份處理。"""
+    """（正規化前，正規化後）的文字配對；JSON 逐字串值處理，Markdown 整份處理。"""
     if path.suffix == ".json":
         return [(s, zh_punct(s)) for s in _string_values(json.loads(path.read_text("utf-8")))]
     text = path.read_text("utf-8")

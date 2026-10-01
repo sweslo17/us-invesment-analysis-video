@@ -149,7 +149,7 @@ def test_voice_map_maps_narrator_and_both_roles_to_their_settings():
 
 
 def test_render_cover_normalizes_halfwidth_punctuation(tmp_path, monkeypatch):
-    """封面是公開圖片:大標與小標的半形標點在出口轉全形,大數字維持原樣。"""
+    """封面是公開圖片：大標與小標的半形標點在出口轉全形，大數字維持原樣。"""
     arts = tmp_path / "artifacts"
     arts.mkdir()
     script = {
