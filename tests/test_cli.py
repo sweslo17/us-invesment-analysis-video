@@ -1,6 +1,7 @@
 """CLI 純邏輯測試:fetch 目標日解析(休市 skip)、快照文字輸出、一鍵作業前置守衛。"""
 
 import datetime as dt
+import json
 import types
 
 from pmb import cli
@@ -145,3 +146,29 @@ def test_voice_map_maps_narrator_and_both_roles_to_their_settings():
     assert voices == {"narrator": "zh-TW-HsiaoChenNeural", "a": "zh-TW-YunJheNeural",
                       "b": "zh-TW-HsiaoYuNeural"}
     assert set(voices) == set(get_args(VoiceKey))
+
+
+def test_render_cover_normalizes_halfwidth_punctuation(tmp_path, monkeypatch):
+    """封面是公開圖片:大標與小標的半形標點在出口轉全形,大數字維持原樣。"""
+    arts = tmp_path / "artifacts"
+    arts.mkdir()
+    script = {
+        "segments": [
+            {"vo": "開場。", "headline": "債市暴走,Fed不急", "tag": "今日盤前:速報"},
+            {"vo": "圖。", "chart_id": "c", "stat": "7,670", "stat_label": "標普(昨收)"},
+        ],
+        "charts": [{"id": "c", "module": "leverage_decay", "params": {}}],
+    }
+    (arts / "script_2026-09-30.json").write_text(json.dumps(script), encoding="utf-8")
+    captured: dict = {}
+
+    def fake_render(out, headline, **kwargs):
+        captured.update(out=out, headline=headline, **kwargs)
+
+    monkeypatch.setattr("pmb.charts.cards.render_headline_card", fake_render)
+    settings = types.SimpleNamespace(artifacts_dir=arts, channel_name="美股早發車")
+    cover = cli._render_cover(dt.date(2026, 9, 30), settings)
+    assert cover == arts / "cover_2026-09-30.png"
+    assert captured["headline"] == "債市暴走，Fed不急"
+    assert captured["tag"] == "今日盤前：速報"
+    assert captured["stat"] == "7,670"

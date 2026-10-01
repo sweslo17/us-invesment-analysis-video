@@ -1,12 +1,15 @@
 """影片合成測試:SRT 字幕格式、斷行、時間軸累積等純邏輯,以及用靜音配音實跑 ffmpeg 的
 整合測試(``_NEEDS_FFMPEG``,沒裝 ffmpeg/ffprobe 就跳過)。"""
 
+import re
 import shutil
 
 import pytest
 
+from pmb.schemas.script import Script
+from pmb.tts.edge import silent_synth
 from pmb.video.ass import build_ass
-from pmb.video.assemble import segment_timeline
+from pmb.video.assemble import assemble_video, segment_timeline
 from pmb.video.captions import build_srt, has_speakable, split_sentences, wrap_caption
 
 _NEEDS_FFMPEG = pytest.mark.skipif(
@@ -269,12 +272,12 @@ def test_assemble_inserts_sting_after_hook_and_appends_outro(tmp_path):
     work = tmp_path / "work"
     out = assemble_video(script, snap, tmp_path / "o.mp4", synth_fn=synth, work_dir=work,
                          font="PingFang TC", master_audio=False,
-                         slogan_intro="美股早發車,發車!",
-                         slogan_outro="以上非投資建議,明天盤前見。")
+                         slogan_intro="美股早發車，發車！",
+                         slogan_outro="以上非投資建議，明天盤前見。")
     assert out.exists()
     texts = [t for t, _ in spoken]
-    assert texts.index("美股早發車,發車!") == 1  # hook 之後
-    assert texts[-1] == "以上非投資建議,明天盤前見。"
+    assert texts.index("美股早發車，發車！") == 1  # hook 之後
+    assert texts[-1] == "以上非投資建議，明天盤前見。"
     assert (work / "sting0.ass").exists()
     clips = (work / "clips.txt").read_text().splitlines()
     assert len(clips) == 4
@@ -327,9 +330,9 @@ def test_assemble_appends_outro_to_last_segment_that_has_speech(tmp_path):
 
     work = tmp_path / "work"
     assemble_video(script, _sting_snapshot(), tmp_path / "o.mp4", synth_fn=synth, work_dir=work,
-                   font="PingFang TC", master_audio=False, slogan_intro="美股早發車,發車!",
-                   slogan_outro="以上非投資建議,明天盤前見。")
-    assert spoken == ["開場。", "美股早發車,發車!", "結論。", "以上非投資建議,明天盤前見。"]
+                   font="PingFang TC", master_audio=False, slogan_intro="美股早發車，發車！",
+                   slogan_outro="以上非投資建議，明天盤前見。")
+    assert spoken == ["開場。", "美股早發車，發車！", "結論。", "以上非投資建議，明天盤前見。"]
 
 
 @_NEEDS_FFMPEG
@@ -352,7 +355,7 @@ def test_sting_tts_failure_is_skipped_not_fatal(tmp_path):
 
     work = tmp_path / "work"
     out = assemble_video(script, snap, tmp_path / "o.mp4", synth_fn=synth, work_dir=work,
-                         font="PingFang TC", master_audio=False, slogan_intro="美股早發車,發車!")
+                         font="PingFang TC", master_audio=False, slogan_intro="美股早發車，發車！")
     assert out.exists()
     assert not (work / "sting0.ass").exists()
     assert len((work / "clips.txt").read_text().splitlines()) == 2
@@ -389,7 +392,7 @@ def test_undecodable_sting_sfx_retries_without_sfx_and_ships(tmp_path, monkeypat
         _two_segment_script(), _sting_snapshot(), tmp_path / "o.mp4",
         synth_fn=lambda text, path, planned, voice: silent_synth(text, path, duration=0.5),
         work_dir=work, font="PingFang TC", master_audio=False,
-        slogan_intro="美股早發車,發車!", sting_sfx=junk,
+        slogan_intro="美股早發車，發車！", sting_sfx=junk,
     )
     assert out.exists() and out.stat().st_size > 0
     sting_calls = [sfx for name, sfx in calls if name == "clip1.mp4"]
@@ -417,7 +420,7 @@ def test_sting_clip_render_failure_is_skipped_and_timeline_closes_gap(tmp_path, 
     out = asm.assemble_video(
         _two_segment_script(), _sting_snapshot(), tmp_path / "o.mp4",
         synth_fn=lambda text, path, planned, voice: silent_synth(text, path, duration=0.5),
-        work_dir=work, font="PingFang TC", master_audio=False, slogan_intro="美股早發車,發車!",
+        work_dir=work, font="PingFang TC", master_audio=False, slogan_intro="美股早發車，發車！",
     )
     assert out.exists()
     assert (work / "clips.txt").read_text().splitlines() == ["file 'clip0.mp4'", "file 'clip2.mp4'"]
@@ -501,10 +504,76 @@ def test_assemble_all_kinds_smoke(tmp_path):
     work = tmp_path / "work"
     out = assemble_video(script, snap, tmp_path / "all.mp4", synth_fn=synth, work_dir=work,
                          font="PingFang TC", master_audio=False,
-                         slogan_intro="美股早發車,發車!",
-                         slogan_outro="以上非投資建議,明天盤前見。")
+                         slogan_intro="美股早發車，發車！",
+                         slogan_outro="以上非投資建議，明天盤前見。")
     assert out.exists() and out.stat().st_size > 0
     for name in ("card0.ass", "sting0.ass", "dialogue1.ass", "seg2.ass", "split3.ass",
                  "bignum4.ass", "recap5.ass", "seg6.ass", "card7.ass"):
         assert (work / name).exists(), name
     assert {"a", "b", "narrator"} <= set(voices)
+
+
+def _ass_texts(work) -> list[str]:
+    """work 目錄下所有 .ass 的 Dialogue 文字(去掉 {…} 覆寫標籤與 \\N 換行)。"""
+    texts: list[str] = []
+    for path in sorted(work.glob("*.ass")):
+        for line in path.read_text(encoding="utf-8").splitlines():
+            if line.startswith("Dialogue:"):
+                text = re.sub(r"\{[^}]*\}", "", line.split(",", 9)[9])
+                texts.append(text.replace("\\N", ""))
+    return texts
+
+
+@_NEEDS_FFMPEG
+def test_assemble_normalizes_halfwidth_punct_in_captions_cards_and_tts(tmp_path):
+    """模型寫半形標點(或舊 script 照樣餵進來)時,字幕、字卡、大數字與送進 TTS 的字都是全形。"""
+    snap = _sting_snapshot()
+    script = Script.model_validate({
+        "segments": [
+            {"vo": "殖利率創新高,Fed卻說不急!", "headline": "債市暴走,Fed不急",
+             "tag": "今日盤前:速報"},
+            {"kind": "bignum", "vo": "標普收7,670點(昨收),美東8:30公布。", "value": "7,670",
+             "label": "標普(昨收)", "context": "小跌0.17%,量縮"},
+            {"vo": "結論:先觀望。", "headline": "結語,收工", "tag": "k"},
+        ],
+        "charts": [],
+    })
+    spoken: list[str] = []
+
+    def synth(text, path, planned, voice):
+        spoken.append(text)
+        return silent_synth(text, path, duration=0.5)
+
+    work = tmp_path / "work"
+    assemble_video(script, snap, tmp_path / "o.mp4", synth_fn=synth, work_dir=work,
+                   font="PingFang TC", master_audio=False)
+    assert "殖利率創新高，Fed卻說不急！" in spoken
+    assert "標普收7,670點（昨收），美東8:30公布。" in spoken
+    assert "結論：先觀望。" in spoken
+
+    joined = "".join(_ass_texts(work))
+    assert "債市暴走，Fed不急" in joined and "今日盤前：速報" in joined
+    assert "標普（昨收）" in joined and "小跌0.17%，量縮" in joined
+    assert "7,670" in joined and "8:30" in joined  # 千分位與時間維持半形
+    leftovers = re.sub(r"(?<=\d)[,:](?=\d)", "", joined)  # 數字間的 , : 本來就該是半形
+    assert not re.search(r"[,:;!?()]", leftovers), leftovers
+
+
+@_NEEDS_FFMPEG
+def test_assemble_normalizes_slogans_from_settings(tmp_path):
+    """口號來自 .env 時可能還是半形:開場口號轉場與收尾口號也走同一套正規化。"""
+    script = Script.model_validate({
+        "segments": [{"vo": "開場。", "headline": "標題", "tag": "k"},
+                     {"vo": "結論。", "headline": "結語", "tag": "k"}],
+        "charts": [],
+    })
+    spoken: list[str] = []
+
+    def synth(text, path, planned, voice):
+        spoken.append(text)
+        return silent_synth(text, path, duration=0.5)
+
+    assemble_video(script, _sting_snapshot(), tmp_path / "o.mp4", synth_fn=synth,
+                   work_dir=tmp_path / "work", font="PingFang TC", master_audio=False,
+                   slogan_intro="美股早發車,發車!", slogan_outro="以上非投資建議,明天盤前見。")
+    assert spoken == ["開場。", "美股早發車，發車！", "結論。", "以上非投資建議，明天盤前見。"]

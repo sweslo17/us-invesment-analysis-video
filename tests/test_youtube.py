@@ -1,6 +1,7 @@
 """YouTube 上傳測試:metadata 帶免責、dry-run 只寫 manifest 不上傳(人工 gate)。"""
 
 import json
+import re
 
 from pmb.publish.youtube import build_youtube_metadata, upload_video
 from pmb.schemas.brief import Brief
@@ -45,11 +46,28 @@ def test_metadata_has_date_lead_and_disclaimer():
 def test_title_uses_title_hook_when_present():
     # 有 title_hook 時,標題用研究端寫的前瞻鉤子(而非最高 materiality 的回顧型 headline)
     brief = _brief()
-    brief.title_hook = "今晚 Micron 財報,AI 多頭要當場交卷"
+    brief.title_hook = "今晚 Micron 財報，AI 多頭要當場交卷"
     title, description, _tags = build_youtube_metadata(brief, channel_name="美股早發車")
-    assert title.startswith("今晚 Micron 財報,AI 多頭要當場交卷｜")
+    assert title.startswith("今晚 Micron 財報，AI 多頭要當場交卷｜")
     assert "6/18 美股盤前 #shorts" in title  # 日期 / 後綴仍自動接上
     assert "Fed 轉鷹" in description  # 描述仍以最高 materiality 的 item 為主
+
+
+def test_metadata_normalizes_halfwidth_punctuation_in_title_and_description():
+    """標題與描述是公開文字:研究端寫了半形標點也要在出口轉成全形;後綴與數字維持原樣。"""
+    brief = _brief()
+    brief.title_hook = "今晚 Micron 財報,AI 多頭要當場交卷!"
+    brief.items[0].headline = "Fed 轉鷹,殖利率 (10Y) 創高"
+    brief.items[0].audience_value = "利率往哪走:牽動所有資產定價;影響每個人。"
+    brief.catalysts = ["20:30 公布 CPI(核心)", "盤後 NVIDIA 財報, 市場關注指引"]
+    title, description, _tags = build_youtube_metadata(brief, channel_name="美股早發車")
+    assert title == "今晚 Micron 財報，AI 多頭要當場交卷！｜6/18 美股盤前 #shorts"
+    assert "Fed 轉鷹，殖利率（10Y）創高。利率往哪走：牽動所有資產定價；影響每個人。" in description
+    assert "・20:30 公布 CPI（核心）" in description  # 時間的冒號維持半形
+    assert "・盤後 NVIDIA 財報，市場關注指引" in description
+    assert "數字來自公開資料（FRED / yfinance）" in description
+    assert "每天盤前更新，訂閱不錯過 —— 美股早發車" in description
+    assert not re.search(r"[\u3400-\u9fff][,;!?]|[,;!?][\u3400-\u9fff]", description)
 
 
 def test_title_falls_back_to_materiality_lead_without_hook():

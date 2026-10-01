@@ -12,6 +12,7 @@ from pathlib import Path
 from loguru import logger
 
 from pmb.schemas.brief import Brief
+from pmb.textnorm import zh_punct
 
 _DISCLAIMER = (
     "本影片為市場資訊與風險教育,非投資建議。數字來自公開資料(FRED / yfinance),"
@@ -42,7 +43,7 @@ def build_youtube_metadata(
     # 標題優先用研究端寫的 title_hook(當天最強、最即時的鉤子);沒有才退回最高 materiality 的
     # item headline——後者常是「昨天…」這類回顧型,對當天滑到的觀眾像舊聞、CTR 偏低。
     title_lead = (brief.title_hook or "").strip() or headline
-    title = f"{title_lead}｜{d.month}/{d.day} 美股盤前 #shorts"
+    title = zh_punct(f"{title_lead}｜{d.month}/{d.day} 美股盤前 #shorts")
 
     parts = [f"{headline}。{body}"]
     if items:
@@ -52,7 +53,7 @@ def build_youtube_metadata(
     parts.append(f"⚠️ {_DISCLAIMER}")
     parts.append(f"🔔 每天盤前更新,訂閱不錯過 —— {channel_name}")
     parts.append("#美股 #美股盤前 #投資理財 #理財 #財經 #shorts")
-    description = "\n\n".join(parts)
+    description = zh_punct("\n\n".join(parts))
 
     # tags:頻道名 + 基礎關鍵字,去重 + 控總長(YouTube tags 上限約 500 字元)
     tags: list[str] = []

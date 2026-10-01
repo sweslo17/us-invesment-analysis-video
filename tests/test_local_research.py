@@ -9,14 +9,17 @@ from types import SimpleNamespace
 
 from loguru import logger
 
+from pmb.research import local_runner
 from pmb.research.local_runner import (
     RateLimitedError,
+    normalize_research_outputs,
     run_local_research,
     validate_research_artifacts,
 )
 from pmb.research.sample import sample_brief_json
 from pmb.schemas.brief import Brief
 from pmb.schemas.snapshot import Snapshot
+from pmb.textnorm import zh_punct, zh_punct_obj
 
 _D = dt.date(2026, 7, 10)
 
@@ -442,7 +445,14 @@ def test_broken_crashing_retry_restores_last_shippable_attempt(tmp_path):
     with _warnings() as warned:
         assert run_local_research(_D, settings, invoke=invoke, max_attempts=2)
     assert len(calls) == 2
-    assert {p: p.read_bytes() for p in _outputs(settings)} == first
+    restored = {p: p.read_bytes() for p in _outputs(settings)}
+    thesis = settings.state_dir / "thesis.json"
+    assert restored[thesis] == first[thesis]  # thesis 不在標點正規化範圍,位元組一模一樣
+    for path in _outputs(settings)[:3]:  # brief/script/report:還原後的內容 = 第 1 次 + 全形標點
+        if path.suffix == ".json":
+            assert json.loads(restored[path]) == zh_punct_obj(json.loads(first[path]))
+        else:
+            assert restored[path].decode("utf-8") == zh_punct(first[path].decode("utf-8"))
     assert validate_research_artifacts(settings.artifacts_dir, _D, include_soft=False) == []
     assert any("還原" in m for m in warned)
 
@@ -480,3 +490,127 @@ def test_fallback_warning_names_rate_limit_when_nothing_ran(tmp_path):
     final = warned[-1]
     assert "額度上限" in final and "照樣出片" in final
     assert "軟規則仍未全過" not in final
+
+
+# --- 全形標點正規化(研究產物源頭) ---------------------------------------------------
+# 模型照 prompt 的寫法產出半形 , : ; ! ? ( ),公開的字幕、標題、報告看起來就不一致。
+# 研究一收工(可出片的每條路徑)就把當日 brief/script/report 就地正規化。
+
+
+def _write_halfwidth_artifacts(settings, *, soft_only: bool = False) -> None:
+    """合法產物,文字是模型慣用的半形標點(含不該被動的千分位、時間、網址、行內碼)。"""
+    arts = settings.artifacts_dir
+    _write_valid_artifacts(arts)
+    script_path = arts / f"script_{_D}.json"
+    script = json.loads(script_path.read_text())
+    script["segments"][0]["vo"] = "測試開場,先看重點:標普收7,670點(昨收),美東8:30公布!"
+    script["segments"][0]["headline"] = "測試開場,看這裡"
+    if soft_only:
+        script["gags"] = []  # 軟錯(S7):可出片但規則沒全過
+    script_path.write_text(json.dumps(script), encoding="utf-8")
+    (arts / f"report_{_D}.md").write_text(
+        "# 報告\n\n標普收紅,VIX 回落;詳見 [來源](https://x.com/a,b) 與 `pmb run, x`。\n"
+        + "內容 " * 200,
+        encoding="utf-8",
+    )
+
+
+def _assert_fullwidth_outputs(settings) -> None:
+    arts = settings.artifacts_dir
+    script = json.loads((arts / f"script_{_D}.json").read_text(encoding="utf-8"))
+    expected_vo = "測試開場，先看重點：標普收7,670點（昨收），美東8:30公布！"
+    assert script["segments"][0]["vo"] == expected_vo
+    assert script["segments"][0]["headline"] == "測試開場，看這裡"
+    brief = json.loads((arts / f"brief_{_D}.json").read_text(encoding="utf-8"))
+    assert brief["items"][0]["headline"] == "（dry-run 範例）隔夜美股小幅走高，缺乏單一主導敘事"
+    report = (arts / f"report_{_D}.md").read_text(encoding="utf-8")
+    assert "標普收紅，VIX 回落；詳見 [來源](https://x.com/a,b) 與 `pmb run, x`。" in report
+    assert validate_research_artifacts(arts, _D, include_soft=False) == []
+
+
+def test_run_local_research_normalizes_outputs_to_fullwidth(tmp_path):
+    settings = _settings(tmp_path)
+
+    def invoke(prompt: str) -> None:
+        _write_halfwidth_artifacts(settings)
+
+    assert run_local_research(_D, settings, invoke=invoke) is True
+    _assert_fullwidth_outputs(settings)
+    assert validate_research_artifacts(settings.artifacts_dir, _D) == []  # 軟規則也照樣過
+
+
+def test_soft_only_ship_also_normalizes(tmp_path):
+    """重試用盡只剩軟錯、降級出片的路徑也要正規化。"""
+    settings = _settings(tmp_path)
+
+    def invoke(prompt: str) -> None:
+        _write_halfwidth_artifacts(settings, soft_only=True)
+
+    assert run_local_research(_D, settings, invoke=invoke, max_attempts=1) is True
+    _assert_fullwidth_outputs(settings)
+
+
+def test_restored_shippable_outputs_are_normalized(tmp_path):
+    """最後一次把產物寫壞 → 還原第 1 次可出片的產物 → 還原後的產物也要正規化。"""
+    settings = _settings(tmp_path)
+    calls: list[str] = []
+
+    def invoke(prompt: str) -> None:
+        calls.append(prompt)
+        if len(calls) == 1:
+            _write_halfwidth_artifacts(settings, soft_only=True)
+            return
+        (settings.artifacts_dir / f"script_{_D}.json").write_text('{"segments": [', "utf-8")
+        raise subprocess.TimeoutExpired("claude", 2100)
+
+    assert run_local_research(_D, settings, invoke=invoke, max_attempts=2) is True
+    _assert_fullwidth_outputs(settings)
+
+
+def test_normalization_failure_restores_originals_and_still_ships(tmp_path, monkeypatch):
+    """正規化後硬驗證不過(理論上不可能):還原原始位元組、記 WARNING,這一天照樣出片。"""
+    settings = _settings(tmp_path)
+    _write_halfwidth_artifacts(settings)
+    originals = {p: p.read_bytes() for p in _outputs(settings) if p.exists()}
+
+    def fake_validate(arts, target, *, include_soft=True):
+        return [] if include_soft else ["forced failure"]  # 只有正規化後的硬驗證失敗
+
+    monkeypatch.setattr(local_runner, "validate_research_artifacts", fake_validate)
+    with _warnings() as warned:
+        assert run_local_research(_D, settings, invoke=lambda p: None) is True
+    assert {p: p.read_bytes() for p in originals} == originals
+    assert any("正規化" in m and "還原" in m for m in warned)
+
+
+def test_normalize_research_outputs_rewrites_json_and_markdown(tmp_path):
+    settings = _settings(tmp_path)
+    _write_halfwidth_artifacts(settings)
+
+    assert normalize_research_outputs(settings.artifacts_dir, _D) is True
+    _assert_fullwidth_outputs(settings)
+    script_path = settings.artifacts_dir / f"script_{_D}.json"
+    text = script_path.read_text(encoding="utf-8")
+    assert text == json.dumps(json.loads(text), ensure_ascii=False, indent=2) + "\n"
+    assert "測試開場" in text  # ensure_ascii=False:中文不轉成 \uXXXX
+
+
+def test_normalize_research_outputs_is_idempotent(tmp_path):
+    settings = _settings(tmp_path)
+    _write_halfwidth_artifacts(settings)
+    assert normalize_research_outputs(settings.artifacts_dir, _D) is True
+    first = {p: p.read_bytes() for p in _outputs(settings) if p.exists()}
+    assert normalize_research_outputs(settings.artifacts_dir, _D) is True
+    assert {p: p.read_bytes() for p in first} == first
+
+
+def test_normalize_research_outputs_leaves_unreadable_files_alone(tmp_path):
+    """缺檔或 JSON 壞掉:回 False、不動任何檔(交給驗證去報錯,不在這裡丟例外)。"""
+    settings = _settings(tmp_path)
+    _write_halfwidth_artifacts(settings)
+    (settings.artifacts_dir / f"brief_{_D}.json").write_text("{broken", encoding="utf-8")
+    before = {p: p.read_bytes() for p in _outputs(settings) if p.exists()}
+    with _warnings() as warned:
+        assert normalize_research_outputs(settings.artifacts_dir, _D) is False
+    assert {p: p.read_bytes() for p in before} == before
+    assert warned

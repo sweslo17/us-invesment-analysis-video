@@ -38,6 +38,7 @@ from pmb.schemas.brief import Brief
 from pmb.schemas.chart import ChartSpec
 from pmb.schemas.script import Script, VoiceKey
 from pmb.schemas.snapshot import Quote, Snapshot
+from pmb.textnorm import zh_punct_obj
 from pmb.tts.edge import edge_synthesize, probe_duration, silent_synth
 from pmb.video.assemble import assemble_video
 
@@ -411,6 +412,7 @@ def _render_cover(target, settings) -> Path | None:
     spec = cover_spec(script)
     if spec is None:
         return None
+    spec = zh_punct_obj(spec)  # 封面是公開圖片:大標與小標的半形標點在出口轉全形
     cover = settings.artifacts_dir / f"cover_{target}.png"
     render_headline_card(
         str(cover),

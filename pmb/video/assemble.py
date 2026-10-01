@@ -27,6 +27,7 @@ from loguru import logger
 from pmb.charts.select import render_chart
 from pmb.schemas.script import Script, Segment, VoiceKey
 from pmb.schemas.snapshot import Snapshot
+from pmb.textnorm import zh_punct, zh_punct_model
 from pmb.tts.edge import SynthResult, probe_duration
 from pmb.video.ass import (
     BG_HEX,
@@ -417,6 +418,12 @@ def assemble_video(
     out_path = Path(out_path).resolve()
     work_dir = Path(work_dir)
     work_dir.mkdir(parents=True, exist_ok=True)
+
+    # 公開出口的最後防線:字幕、畫面上所有字與送進 TTS 的字一次轉成全形標點
+    # (研究端已轉過,這裡兜住舊 script、雲端與手動餵進來的半形文字,以及 .env 的半形口號)
+    script = zh_punct_model(script)
+    slogan_intro = zh_punct(slogan_intro) if slogan_intro else slogan_intro
+    slogan_outro = zh_punct(slogan_outro) if slogan_outro else slogan_outro
 
     chart_paths = {spec.id: render_chart(spec, snapshot, work_dir).name for spec in script.charts}
 

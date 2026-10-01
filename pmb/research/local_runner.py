@@ -8,6 +8,7 @@ web search,研究產物直接寫進 artifacts/;寫完由這裡以 pydantic 驗�
 from __future__ import annotations
 
 import datetime as dt
+import json
 import os
 import re
 import subprocess
@@ -31,6 +32,7 @@ from pmb.research.variety import (
 from pmb.schemas.brief import Brief
 from pmb.schemas.script import Script
 from pmb.schemas.snapshot import Snapshot
+from pmb.textnorm import zh_punct, zh_punct_obj
 
 # invoke(prompt) -> None:把 prompt 丟給 agent 執行,產物以「寫檔」為副作用(可注入供測試)
 InvokeFn = Callable[[str], None]
@@ -248,6 +250,47 @@ def _restore_outputs(snapshot: _OutputSnapshot) -> None:
             path.write_bytes(data)
 
 
+def normalize_research_outputs(artifacts_dir: Path, target: dt.date) -> bool:
+    """把當日 brief／script／report 的中文標點就地正規化成全形；成功回 True。
+
+    模型照 prompt 的寫法產出半形標點，公開的字幕、標題、報告就會中英標點混用，所以在研究
+    收工、產物要被 commit 之前統一轉一次（規則見 ``pmb.textnorm``）。JSON 逐字串值處理、
+    以 ``indent=2`` 寫回；Markdown 整份處理。
+
+    轉完重跑硬驗證；理論上不會失敗，萬一失敗（或檔案讀寫出錯）就還原原始位元組並記
+    WARNING、回 False——這時產物仍是先前已通過驗證的版本，呼叫端照樣出片，絕不丟掉一天。
+    """
+    paths = [
+        artifacts_dir / f"brief_{target}.json",
+        artifacts_dir / f"script_{target}.json",
+        artifacts_dir / f"report_{target}.md",
+    ]
+    originals: _OutputSnapshot = {}
+    try:
+        for path in paths:
+            if path.exists():
+                originals[path] = path.read_bytes()
+        for path, raw in originals.items():
+            text = raw.decode("utf-8")
+            if path.suffix == ".json":
+                text = json.dumps(zh_punct_obj(json.loads(text)), ensure_ascii=False, indent=2)
+                text += "\n"
+            else:
+                text = zh_punct(text)
+            path.write_text(text, encoding="utf-8")
+        errors = validate_research_artifacts(artifacts_dir, target, include_soft=False)
+    except (OSError, ValueError) as exc:  # 含 JSONDecodeError、UnicodeDecodeError
+        errors = [f"{type(exc).__name__}:{exc}"]
+    if errors:
+        _restore_outputs(originals)
+        logger.warning(
+            "中文標點正規化後驗證失敗，已還原原始產物（照樣出片）：{}", "; ".join(errors)
+        )
+        return False
+    logger.info("中文標點已正規化為全形（{}）", target)
+    return True
+
+
 def build_local_research_prompt(target: dt.date, settings) -> str:
     """本機研究(files 模式)的完整 prompt:模板 + 快照 + thesis + 昨日 brief + 最近幾天回顧塊。
 
@@ -354,6 +397,7 @@ def run_local_research(
             last_errors = validate_research_artifacts(settings.artifacts_dir, target)
             if not last_errors:
                 logger.info("本機研究完成並通過驗證({})", target)
+                normalize_research_outputs(settings.artifacts_dir, target)
                 return True
             logger.warning(
                 "本機研究第 {}/{} 次驗證失敗:{}", attempt, max_attempts, "; ".join(last_errors)
@@ -396,4 +440,5 @@ def _ship_if_no_hard_errors(
     if any(e.startswith("講稿字數超標") for e in soft_errors):
         notes.append(f"字數超標,成片可能超過 {SHORTS_CAP_SEC:.0f}s、失去 Shorts 資格")
     logger.warning("產物合法,照樣出片({}):{}", target, ";".join(notes))
+    normalize_research_outputs(arts, target)
     return True
