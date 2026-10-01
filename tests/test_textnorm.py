@@ -1,7 +1,7 @@
 """中文標點正規化測試：半形 ``,:;!?()`` 在中文語境轉全形，數字、網址、程式碼與英文維持原樣。
 
 最後一組是對真實 9 月產物（``artifacts/script_*`` / ``brief_*`` / ``report_*``，唯讀）的性質檢查：
-正規化後千分位、時間與網址不變，且受保護範圍之外不再有貼著中文的半形標點。
+正規化後千分位、時間與網址不變，且受保護範圍之外不再有仍在中文語境的半形標點。
 """
 
 import json
@@ -94,6 +94,66 @@ def test_mixed_context_converts_when_either_side_is_cjk(raw, expected):
     assert zh_punct(raw) == expected
 
 
+# --- 穿透一個英數 token：標點夾在數字／英文之間，整句仍是中文 -------------------------------
+
+
+@pytest.mark.parametrize(
+    ("raw", "expected"),
+    [
+        ("九月升息機率彈到66%,10年期殖利率再創新高", "九月升息機率彈到66%，10年期殖利率再創新高"),
+        ("那斯達克漲0.56%,AI股全面回落", "那斯達克漲0.56%，AI股全面回落"),
+        ("9/17:FOMC九月利率決策會議", "9/17：FOMC九月利率決策會議"),
+        ("對 Fed, ECB 與 BoJ 都是壓力", "對 Fed，ECB 與 BoJ 都是壓力"),
+        ("- **9 月 3 日**:8 月 ISM 非製造業", "- **9 月 3 日**：8 月 ISM 非製造業"),
+        ("美東上午 9:05,Fed 理事巴爾公開發言", "美東上午 9:05，Fed 理事巴爾公開發言"),
+        ("升息一碼至3.75%–4%,12票全數通過", "升息一碼至3.75%–4%，12票全數通過"),
+        ("大漲3%!AI股噴出", "大漲3%！AI股噴出"),
+        ("收紅2.1%;Fed九月升息機率同步新高", "收紅2.1%；Fed九月升息機率同步新高"),
+        ("是Fed放鴿?10年期殖利率不理", "是Fed放鴿？10年期殖利率不理"),
+        ("美股收紅 +1.2% , VIX 回落", "美股收紅 +1.2%，VIX 回落"),
+        ("**重點**:別追高", "**重點**：別追高"),
+        ("U.S. 10Y: 5.29% 創高", "U.S. 10Y：5.29% 創高"),
+    ],
+)
+def test_marks_between_alphanumeric_tokens_convert_when_the_token_borders_cjk(raw, expected):
+    assert zh_punct(raw) == expected
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "S&P 500, Nasdaq 100",
+        "S&P 500, Nasdaq 100; Dow: 3.5%",
+        "Up 3%, down 2%",
+        "Fed, ECB, BoJ",
+        "**Fed**: hold",
+        "10Y: 4.2%, 2Y: 3.9%!",
+        "Hello, world? Yes!",
+        "對 S&P 500, Nasdaq 100 與 Dow",  # 每邊只穿透一個 token，再往外不算
+    ],
+)
+def test_alphanumeric_only_context_is_untouched(text):
+    assert zh_punct(text) == text
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "標普收 7,670 點",
+        "美東 8:30 公布",
+        "20:30:00 開盤",
+        "比例 1:1 的 AI 題材",
+    ],
+)
+def test_digit_digit_marks_survive_the_look_through(text):
+    assert zh_punct(text) == text
+
+
+def test_second_colon_of_a_clock_time_followed_by_a_digit_stays():
+    # 夾在兩個數字之間就保留（規格如此），即使它其實是標籤冒號
+    assert zh_punct("美東上午8:30:8月PCE物價指數") == "美東上午8:30:8月PCE物價指數"
+
+
 # --- 括號：成對才轉，碰到中文才轉 ----------------------------------------------------
 
 
@@ -107,6 +167,8 @@ def test_mixed_context_converts_when_either_side_is_cjk(raw, expected):
         ("輝達 (NVDA)", "輝達（NVDA）"),  # 括號左側緊鄰中文
         ("(a) text (b) 中", "(a) text（b）中"),  # 各自判斷，不連坐
         ("標普(S&P 500(SPX))", "標普（S&P 500（SPX））"),  # 巢狀：兩輪收斂
+        # 括號轉全形後，括號內的逗號也進入中文語境
+        ("Fed政策(LT,confirmed)", "Fed政策（LT，confirmed）"),
     ],
 )
 def test_parens_pair_converts_only_when_touching_cjk(raw, expected):
@@ -208,6 +270,9 @@ _IDEMPOTENCE_SAMPLES = [
     "第一行\\N第二行,結尾\n```\nx, 中: y\n```\n完,",
     "7,670 點,8:30 公布(美東)",
     "Fed, ECB (歐洲央行) : 觀望 ? 不一定 !",
+    "九月升息機率彈到66%,10年期殖利率再創新高;對 Fed, ECB 與 BoJ 都是壓力",
+    "- **9 月 3 日**:8 月 ISM 非製造業\n**Fed政策(LT,confirmed)**:9/16 FOMC",
+    "S&P 500, Nasdaq 100; 美東 9:05,Fed 理事 8:30:8月PCE",
 ]
 
 
@@ -311,15 +376,26 @@ def _nearest(text: str, i: int, step: int) -> str:
     return text[j] if 0 <= j < len(text) else ""
 
 
+_CJK = "[\u3400-\u9fff\u3001-\u303f\uff00-\uffef\u2026\u22ef]"
+_TOKEN = r"(?:[A-Za-z0-9%.$+\-/&'*_]|(?<=\d)[,:](?=\d))+"
+_LEFT_CHINESE = re.compile(rf"{_CJK}[ \t]*(?:{_TOKEN}[ \t]*)?$")
+_RIGHT_CHINESE = re.compile(rf"[ \t]*(?:{_TOKEN}[ \t]*)?{_CJK}")
+
+
+def _in_chinese_context(text: str, i: int) -> bool:
+    """標點前後最近的非空白字元是中文，或隔著一個英數 token（連同空白）後是中文。"""
+    return bool(_LEFT_CHINESE.search(text[:i]) or _RIGHT_CHINESE.match(text, i + 1))
+
+
 def half_width_violations(text: str) -> Counter:
-    """受保護範圍（網址）之外，仍貼著中文的半形 ``,:;!?`` 與成對 ``()``，依標點計數。"""
+    """受保護範圍（網址）之外，仍在中文語境的半形 ``,:;!?`` 與成對 ``()``，依標點計數。"""
     text = _URL_RE.sub("\x00", text)
     found: Counter = Counter()
     for m in re.finditer(r"[,:;!?]", text):
         i, ch = m.start(), m.group()
         if ch in ",:" and text[i - 1 : i].isdigit() and text[i + 1 : i + 2].isdigit():
             continue
-        if _is_cjk(_nearest(text, i, -1)) or _is_cjk(_nearest(text, i, 1)):
+        if _in_chinese_context(text, i):
             found[ch] += 1
     for m in _PAIR_RE.finditer(text):
         inner = m.group(1).strip()

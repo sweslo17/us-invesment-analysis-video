@@ -5,8 +5,10 @@
 
 規則：
 
-- ``,`` ``:`` ``;`` ``!`` ``?``：緊鄰（略過空白）的前一個或後一個字元屬於中文語境才轉。
-  數字之間的 ``,`` ``:``（``7,670``、``8:30``）維持半形。
+- ``,`` ``:`` ``;`` ``!`` ``?``：緊鄰（略過空白）的前一個或後一個字元屬於中文語境才轉；
+  緊鄰的是英數 token（``66%``、``FOMC``、``**``…）就穿透這一個 token（連同空白）再看下一個
+  字元，是中文也算，所以 ``66%,10年期`` 與 ``對 Fed, ECB 與 BoJ`` 都會轉，``S&P 500, Nasdaq``
+  不會。數字之間的 ``,`` ``:``（``7,670``、``8:30``）維持半形。
 - ``(`` ``)``：先配對，成對的括號碰到中文（外側左右、內側首尾）才整對轉，否則整對不動；
   沒配到對的不動。巢狀括號反覆套用到不再變化為止。
 - 被轉成全形的標點，緊鄰的半形空格一併清掉；其他空白不動。
@@ -26,6 +28,7 @@ from pydantic import BaseModel
 _MARKS = {",": "，", ":": "：", ";": "；", "!": "！", "?": "？"}
 _CANDIDATES = re.compile(r"[,:;!?()]")
 _SPACES = " \t"
+_TOKEN_PUNCT = ".%$+-/&'*_"
 
 # 受保護範圍：依序為程式碼區塊、行內碼、Markdown 連結目標、網址。
 # 網址到空白、中日文字元或角括號為止；結尾的標點屬於句子，不算網址的一部分。
@@ -52,11 +55,15 @@ def _is_cjk(ch: str) -> bool:
     )
 
 
-def _nearest(text: str, i: int, step: int) -> str:
-    """從 ``i`` 往 ``step`` 方向找第一個非空白字元（不跨行）；沒有就回空字串。"""
-    j = i + step
+def _skip_spaces(text: str, j: int, step: int) -> int:
     while 0 <= j < len(text) and text[j] in _SPACES:
         j += step
+    return j
+
+
+def _nearest(text: str, i: int, step: int) -> str:
+    """從 ``i`` 往 ``step`` 方向找第一個非空白字元（不跨行）；沒有就回空字串。"""
+    j = _skip_spaces(text, i + step, step)
     return text[j] if 0 <= j < len(text) else ""
 
 
@@ -65,10 +72,35 @@ def _between_digits(text: str, i: int) -> bool:
     return before.isascii() and before.isdigit() and after.isascii() and after.isdigit()
 
 
+def _is_token_char(text: str, j: int) -> bool:
+    """英數 token 的字元：ASCII 英數、``%.$+-/&'``、Markdown 強調的 ``*`` ``_``，
+    以及夾在數字之間的 ``,`` ``:``（``7,670``、``9:05`` 是同一個 token）。"""
+    ch = text[j]
+    if ch.isascii() and ch.isalnum() or ch in _TOKEN_PUNCT:
+        return True
+    return ch in ",:" and _between_digits(text, j)
+
+
+def _side_is_chinese(text: str, i: int, step: int) -> bool:
+    """``i`` 處標點的某一側是否屬中文語境：最近的非空白字元是中文，或它是英數 token 的一部分，
+    且穿透這整個 token（再略過空白）之後的下一個字元是中文。每側只穿透一個 token。"""
+    j = _skip_spaces(text, i + step, step)
+    if not 0 <= j < len(text):
+        return False
+    if _is_cjk(text[j]):
+        return True
+    if not _is_token_char(text, j):
+        return False
+    while 0 <= j < len(text) and _is_token_char(text, j):
+        j += step
+    j = _skip_spaces(text, j, step)
+    return 0 <= j < len(text) and _is_cjk(text[j])
+
+
 def _mark_in_chinese_context(text: str, i: int) -> bool:
     if text[i] in ",:" and _between_digits(text, i):
         return False
-    return _is_cjk(_nearest(text, i, -1)) or _is_cjk(_nearest(text, i, 1))
+    return _side_is_chinese(text, i, -1) or _side_is_chinese(text, i, 1)
 
 
 def _pair_touches_cjk(text: str, opening: int, closing: int) -> bool:
