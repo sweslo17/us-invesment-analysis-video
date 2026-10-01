@@ -23,3 +23,9 @@ def test_preserves_couplet_newline():
     lines = wrap_card_text("退潮的時候\n才知道誰沒穿褲子", max_units=9)
     assert "退潮的時候" in lines[0]
     assert any("沒穿褲子" in line for line in lines)
+
+
+def test_breaks_after_fullwidth_question_and_exclamation_marks():
+    assert wrap_card_text("對！聯準會今天轉鷹了讓市場嚇一跳", max_units=9)[0] == "對！"
+    assert wrap_card_text("對？聯準會今天轉鷹了讓市場嚇一跳", max_units=9)[0] == "對？"
+    assert wrap_card_text("對!聯準會今天轉鷹了讓市場嚇一跳", max_units=9)[0] == "對!"  # 半形不變

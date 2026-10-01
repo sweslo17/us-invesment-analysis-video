@@ -18,7 +18,13 @@ from pmb.video.ass import (
     rounded_rect,
     text_event,
 )
-from pmb.video.captions import NO_LINE_START, is_beat, split_sentences, strip_beat
+from pmb.video.captions import (
+    BREAK_AFTER,
+    NO_LINE_START,
+    is_beat,
+    split_sentences,
+    strip_beat,
+)
 from pmb.video.segments.base import (
     BEAT_GAP,
     GAP,
@@ -828,3 +834,21 @@ def test_canvas_background_is_a_flat_canvas_colour_png_made_once(tmp_path):
     assert (np.rint(img[:, :, :3] * 255).astype(int) == expected).all()
     mtime = (tmp_path / name).stat().st_mtime_ns
     assert canvas_background(tmp_path) == name and (tmp_path / name).stat().st_mtime_ns == mtime
+
+
+def test_split_sentences_treats_fullwidth_question_and_exclamation_as_sentence_ends():
+    """研究端統一輸出全形標點後，「？」「！」要跟半形的 ? ! 一樣切句、一樣算收尾。"""
+    assert split_sentences("會漲嗎？然後呢。") == ["會漲嗎？", "然後呢。"]
+    assert split_sentences("會漲嗎?然後呢。") == ["會漲嗎?", "然後呢。"]
+    assert split_sentences("漲翻了！下一句；再一句。") == ["漲翻了！", "下一句；", "再一句。"]
+    assert split_sentences("真的假的？！然後呢") == ["真的假的？！", "然後呢"]
+
+
+def test_is_beat_accepts_fullwidth_closers_after_the_ellipsis():
+    assert is_beat("真的嗎……？") and is_beat("先別急⋯⋯！") and is_beat("先別急……）")
+    assert not is_beat("真的嗎？")
+
+
+def test_caption_break_candidates_include_fullwidth_question_and_exclamation():
+    assert "？" in BREAK_AFTER and "！" in BREAK_AFTER
+    assert "?" in BREAK_AFTER and "!" in BREAK_AFTER  # 半形仍然保留

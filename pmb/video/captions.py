@@ -17,8 +17,8 @@ MAX_LINES = 2  # 字幕每頁最多行數(保證不蓋圖)
 
 # 句尾標點不含 ASCII 句點「.」,否則 3.8% 這類小數會被誤切。「……」(或「⋯⋯」)也算句末:
 # 冷面反差的 punchline 前停一拍(見 is_beat)。
-_SENT_RE = re.compile(r"[^。!?！?;;；\n…⋯]+(?:[…⋯]+[。!?！?;;；」』)）]*|[。!?！?;;；])?")
-_BEAT_RE = re.compile(r"[…⋯]+[。!?！?;;；」』)）]*$")
+_SENT_RE = re.compile(r"[^。!?！？;;；\n…⋯]+(?:[…⋯]+[。!?！？;;；」』)）]*|[。!?！？;;；])?")
+_BEAT_RE = re.compile(r"[…⋯]+[。!?！？;;；」』)）]*$")
 
 
 def has_speakable(text: str) -> bool:
@@ -91,7 +91,7 @@ def build_srt(cues: list[tuple[str, float, float]]) -> str:
     return "\n".join(blocks)
 
 
-BREAK_AFTER = "，、,。!?!?;；:：…)）」』】"
+BREAK_AFTER = "，、,。!?！？;；:：…)）」』】"
 # 行首禁則:這些字元不可出現在第 2 行起的行首(標點、刪節號、右括號/引號、百分比、空白)。
 # 字幕與 textfit 的像素斷行共用這一份,規則只寫一次。
 NO_LINE_START = frozenset("，、,。.!?！？;；:：…⋯)）」』】% ")

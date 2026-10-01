@@ -34,7 +34,7 @@ def accent_for(index: int) -> str:
     return _ACCENTS[index % len(_ACCENTS)]
 
 
-_CARD_BREAK = "，、,。!?!?;;；…)）」』】"
+_CARD_BREAK = "，、,。!?！？;;；…)）」』】"
 
 
 def _seg_width(s: str) -> float:
