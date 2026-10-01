@@ -401,6 +401,15 @@ def test_line_px_measures_braces_as_the_fullwidth_glyphs_text_event_renders():
     assert line_px("{}", 60) == line_px("｛｝", 60)
 
 
+def test_wrap_px_keeps_clock_times_whole():
+    for text in ("美東時間今天上午8:30公布", "收盤在美東下午4:00:00之後"):
+        for max_width in range(250, 520, 30):  # 時間字串自己放得下的寬度
+            lines = wrap_px(text, 60, max_width)
+            assert "".join(lines) == text
+            clock = "8:30" if "8:30" in text else "4:00:00"
+            assert any(clock in line for line in lines), (max_width, lines)
+
+
 def test_wrap_px_keeps_number_runs_whole_unless_a_run_alone_overflows():
     assert wrap_px("收盤在7747點", 60, 200) == ["收盤在", "7747點"]  # 放不下就整串移到下一行
     lines = wrap_px("x" * 40, 60, 400)  # 單一英數串自己就超寬才硬切

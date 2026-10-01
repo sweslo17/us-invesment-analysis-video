@@ -116,10 +116,12 @@ def test_audio_graph_mixed_gaps_lead_in_and_sfx():
         ("美國十年期公債殖利率來到5.26%附近。", "5.26%"),
         ("標普五百期貨盤前一路衝到7,670點。", "7,670"),
         ("那斯達克期貨漲到了23,456.78點。", "23,456.78"),
+        ("美東時間今天上午8:30公布。", "8:30"),
+        ("美東時間今天上午十點多，下午2:00:15收盤。", "2:00:15"),
     ],
 )
 def test_wrap_lines_never_splits_decimal_or_thousands_separator(text, run):
-    """「5.」/「26%」、「7,」/「670點」:小數點與千分位逗號前後都是數字時不可斷行。"""
+    """「5.」/「26%」、「7,」/「670點」、「8:」/「30」:小數點、千分位逗號與時間冒號前後都是數字時不可斷行。"""
     lines = wrap_lines(text)
     assert "".join(lines) == text
     assert any(run in line for line in lines), lines

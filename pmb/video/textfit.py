@@ -25,7 +25,9 @@ SIZE_STEP = 4
 ELLIPSIS = "…"
 _BREAK_PREFERENCE = 0.55  # 行寬超過這個比例,遇到標點就先斷行(不硬塞到滿)
 # 斷行單位:連續的英數/小數/百分比(7747、1.06%、VIX)算一個字詞,盡量不從中間切;其餘一個字一單位
-_TOKEN_RE = re.compile(r"[+\-$]?[A-Za-z0-9]+(?:[.,][A-Za-z0-9]+)*%?|\s|.", re.DOTALL)
+_TOKEN_RE = re.compile(
+    r"[+\-$]?[A-Za-z0-9]+(?:[.,][A-Za-z0-9]+|(?<=[0-9]):[0-9]+)*%?|\s|.", re.DOTALL
+)
 
 
 def glyph_units(ch: str) -> float:

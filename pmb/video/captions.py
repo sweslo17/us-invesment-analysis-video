@@ -112,13 +112,13 @@ def _is_ascii_alnum(ch: str) -> bool:
 
 def _glued(prev: str, ch: str, nxt: str) -> bool:
     """``ch`` 與下一個字 ``nxt`` 之間不可斷行:下一個字是行首禁則字元、同一個英數串、
-    或 ``ch`` 是夾在兩個數字之間的小數點/千分位逗號(5.26%、7,670)。"""
+    或 ``ch`` 是夾在兩個數字之間的小數點/千分位逗號/時間冒號(5.26%、7,670、8:30)。"""
     if not nxt:
         return False
     return (
         nxt in NO_LINE_START
         or (_is_ascii_alnum(ch) and _is_ascii_alnum(nxt))
-        or (ch in ".," and prev.isdigit() and nxt.isdigit())
+        or (ch in ".,:" and prev.isdigit() and nxt.isdigit())
     )
 
 

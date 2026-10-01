@@ -28,6 +28,7 @@ from pmb.schemas.snapshot import (  # noqa: E402
     SectorReturn,
     YieldPoint,
 )
+from pmb.textnorm import zh_punct  # noqa: E402
 
 # 深色主題:圖底色 = 影片畫布色,合成後圖「長在畫面上」而非白色貼紙
 _CANVAS = "#0D1B2A"  # 與 video.ass.BG_HEX 一致
@@ -287,7 +288,7 @@ def render_econ_print(
             ha="right",
         )
     ax.set_xlabel("近期期數")
-    ax.set_ylabel(label)
+    ax.set_ylabel(zh_punct(label))  # 標籤來自資料層（如 `失業率 (%)`），畫的時候才正規化
     ax.grid(True, alpha=0.3)
     return _finalize(fig, out_path)
 

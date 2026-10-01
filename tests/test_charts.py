@@ -9,6 +9,7 @@ from typing import get_args
 import pytest
 from pydantic import ValidationError
 
+from pmb.charts import library as chart_library
 from pmb.charts.library import (
     render_breadth,
     render_catalyst_timeline,
@@ -284,6 +285,20 @@ def test_render_econ_print_writes_png(tmp_path):
     out = tmp_path / "econ.png"
     render_econ_print(out, _snapshot().econ_series, {})
     assert out.exists() and out.stat().st_size > 0
+
+
+def test_render_econ_print_draws_the_series_label_with_fullwidth_parens(tmp_path, monkeypatch):
+    """資料層的標籤（`失業率 (%)`）是資料不是字面常數，畫的時候才正規化。"""
+    ylabels: list[str] = []
+    real_finalize = chart_library._finalize
+
+    def spy(fig, out_path):
+        ylabels.append(fig.axes[0].get_ylabel())
+        return real_finalize(fig, out_path)
+
+    monkeypatch.setattr(chart_library, "_finalize", spy)
+    render_econ_print(tmp_path / "econ.png", _snapshot().econ_series, {})
+    assert ylabels == ["失業率（%）"]
 
 
 # --- 選圖 dispatch ---
