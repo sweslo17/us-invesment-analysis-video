@@ -8,7 +8,16 @@ import pytest
 from matplotlib.image import imread
 
 from pmb.schemas.script import BignumSegment, DialogueSegment, RecapSegment, SplitSegment
-from pmb.video.ass import BG_HEX, POP_IN, ass_color, rounded_rect, text_event
+from pmb.video.ass import (
+    BG_HEX,
+    CONTENT_BOTTOM,
+    CONTENT_TOP,
+    POP_IN,
+    ass_color,
+    center_block_top,
+    rounded_rect,
+    text_event,
+)
 from pmb.video.captions import NO_LINE_START, is_beat, split_sentences, strip_beat
 from pmb.video.segments.base import (
     BEAT_GAP,
@@ -25,8 +34,8 @@ from pmb.video.segments.base import (
     take_starts,
 )
 from pmb.video.segments.bignum import count_up_frames, parse_number, value_font_size
-from pmb.video.segments.dialogue import bubble_layout, speakable_lines
-from pmb.video.segments.recap import result_layout, row_times
+from pmb.video.segments.dialogue import bubble_layout, bubble_tops, speakable_lines
+from pmb.video.segments.recap import result_layout, row_times, row_tops
 from pmb.video.segments.registry import renderer_for
 from pmb.video.segments.split import panel_text_layout, reveal_times
 from pmb.video.segments.sting import StingSegment
@@ -201,10 +210,11 @@ def test_dialogue_shapes_stay_inside_safe_zone(tmp_path):
         {"speaker": "Fed", "voice": "a", "text": "字" * 60},
         {"speaker": "債市", "voice": "b", "text": "VIX 一路衝上 2026 點"},
     ])
-    boxes, _ = _events(_render_ass(seg, tmp_path))
+    boxes, label_tops = _events(_render_ass(seg, tmp_path))
     assert len(boxes) == 4
     for x, y, w, h in boxes:
         assert x + w <= 910 and y + h <= 1520
+    assert min(label_tops) >= CONTENT_TOP and max(y + h for _, y, _, h in boxes) <= CONTENT_BOTTOM
 
 
 def test_two_line_bubbles_leave_room_for_the_next_label(tmp_path):
@@ -224,6 +234,58 @@ def test_two_line_bubbles_leave_room_for_the_next_label(tmp_path):
     assert len(boxes) == len(label_tops) == 4
     for (_, y, _, h), next_label in zip(boxes, label_tops[1:], strict=False):
         assert next_label - (y + h) >= 10
+
+
+def test_center_block_top_centres_in_the_content_band_and_never_rises_above_it():
+    assert (CONTENT_TOP, CONTENT_BOTTOM) == (270, 1320)  # 標題(約 150–245)之下、字幕(約 1365)之上
+    assert center_block_top(1050) == CONTENT_TOP  # 剛好填滿
+    assert center_block_top(150) == CONTENT_TOP + 450  # 上下各留 450
+    assert center_block_top(2000) == CONTENT_TOP  # 比內容帶還高:貼著上緣,不往上蓋標題
+
+
+@pytest.mark.parametrize("heights", [
+    [104], [164], [104, 104], [104, 164], [164, 164], [104, 104, 164], [164, 164, 164],
+    [104, 164, 104, 164], [164, 164, 164, 164], [104, 104, 104, 104],
+])
+def test_bubble_tops_centre_one_to_four_bubbles_in_the_content_band(heights):
+    """槽距固定 230px;整塊(第一個角色名頂緣 → 最後一個泡泡底緣)在內容帶上下等距置中。
+    泡泡高 = 行數 × 字級 + 44:一行 60px = 104、兩行 60px = 164。"""
+    tops = bubble_tops(heights)
+    assert len(tops) == len(heights)
+    assert all(b - a == 230 for a, b in zip(tops, tops[1:], strict=False))
+    bottom = tops[-1] + 52 + heights[-1]  # 角色名頂緣到泡泡頂緣 52px
+    assert CONTENT_TOP <= tops[0] and bottom <= CONTENT_BOTTOM
+    assert abs((tops[0] - CONTENT_TOP) - (CONTENT_BOTTOM - bottom)) <= 1  # 上下留白相等(整數取整)
+    for top, height, next_top in zip(tops, heights, tops[1:], strict=False):
+        assert top + 52 + height < next_top  # 泡泡底緣不碰下一個角色名
+
+
+def test_bubble_tops_examples_and_empty():
+    assert bubble_tops([]) == []
+    assert bubble_tops([104]) == [270 + (1050 - (52 + 104)) // 2]  # 單一泡泡落在內容帶正中
+    assert bubble_tops([104, 104]) == [602, 832]
+
+
+@pytest.mark.parametrize("n", [2, 3, 4])
+def test_few_bubbles_are_vertically_centred_when_rendered(n, tmp_path):
+    """彩排 9/30 的問題:2 個泡泡全擠在畫面上半。現在整塊以內容帶中線(y=795)為中心。"""
+    seg = _dialogue(lines=[{"speaker": "Fed" if k % 2 == 0 else "債市", "voice": "ab"[k % 2],
+                            "text": f"第{k}句,債市不買單。"} for k in range(n)])
+    boxes, label_tops = _events(_render_ass(seg, tmp_path))
+    assert len(boxes) == len(label_tops) == n
+    assert abs((label_tops[0] + boxes[-1][1] + boxes[-1][3]) / 2 - 795) <= 1
+
+
+def test_centring_counts_only_the_bubbles_actually_drawn(tmp_path):
+    """被剔除的「……?」不畫,版面也不替它留位置:3 句剩 2 個泡泡,照 2 個泡泡置中。"""
+    seg = _dialogue(lines=[
+        {"speaker": "Fed", "voice": "a", "text": "……?"},
+        {"speaker": "債市", "voice": "b", "text": "我急。"},
+        {"speaker": "Fed", "voice": "a", "text": "蛤。"},
+    ])
+    boxes, label_tops = _events(_render_ass(seg, tmp_path))
+    assert len(boxes) == 2
+    assert label_tops == bubble_tops([boxes[0][3], boxes[1][3]])
 
 
 @pytest.mark.parametrize("run", ["1234567890" * 4, "x" * 40, "W" * 40, "VIX" + "9" * 37])
@@ -587,7 +649,7 @@ def test_result_layout_keeps_a_one_line_result_at_full_size():
 
 def test_recap_text_never_leaves_its_row_or_the_safe_column(tmp_path):
     """三列都塞滿 30 字的 ask、40 字的 result:每個文字事件估計右緣(錨點 x + line_px)<= 890,
-    ask 一行、result 最多兩行,且每列內文底緣不壓到下一列頂緣(列距 250px)。"""
+    ask 一行、result 最多兩行,列距 250px、整塊都在內容帶裡,每列內文底緣不壓到下一列頂緣。"""
     rows = [{"ask": f"問{k}" + "問" * 28, "result": f"答{k}" + "答" * 38, "mark": mark}
             for k, mark in enumerate(("yes", "no", "mixed"))]
     seg = RecapSegment(vo="一。二。三。", rows=rows)
@@ -596,7 +658,8 @@ def test_recap_text_never_leaves_its_row_or_the_safe_column(tmp_path):
     ass = renderer_for("recap").render(seg, _ctx(takes, duration=4.0, work_dir=tmp_path)).ass
     events = _text_extents(ass)
     assert len(events) == 6  # 每列 ask + result
-    tops = [330, 580, 830]
+    tops = [events[2 * k][1] for k in range(3)]
+    assert all(b - a == 250 for a, b in zip(tops, tops[1:], strict=False))
     for k, top in enumerate(tops):
         (ax, ay, a_size, _, a_lines), (rx, ry, r_size, _, r_lines) = events[2 * k: 2 * k + 2]
         assert len(a_lines) == 1 and 1 <= len(r_lines) <= 2
@@ -606,6 +669,60 @@ def test_recap_text_never_leaves_its_row_or_the_safe_column(tmp_path):
         assert ay + a_size <= ry  # ask 底緣不壓到 result 頂緣
         next_top = tops[k + 1] if k + 1 < len(tops) else top + 250
         assert ry + len(r_lines) * r_size <= next_top
+    last_bottom = events[-1][1] + len(events[-1][4]) * events[-1][2]
+    assert tops[0] >= CONTENT_TOP and last_bottom <= CONTENT_BOTTOM
+
+
+@pytest.mark.parametrize("extents", [
+    [128], [176], [200], [128, 128], [128, 176], [200, 200], [128, 128, 128], [128, 176, 200],
+    [200, 200, 200],
+])
+def test_row_tops_centre_one_to_three_rows_in_the_content_band(extents):
+    """列距固定 250px;整塊(第一列頂緣 → 最後一列真實下緣)在內容帶上下等距置中。
+    列的真實下緣 = 結果文字(行數 × 字級,從列頂 +56 起)與 ✓/✗ 圖示(+62 起、64px)取最低。"""
+    tops = row_tops(extents)
+    assert len(tops) == len(extents)
+    assert all(b - a == 250 for a, b in zip(tops, tops[1:], strict=False))
+    bottom = tops[-1] + extents[-1]
+    assert CONTENT_TOP <= tops[0] and bottom <= CONTENT_BOTTOM
+    assert abs((tops[0] - CONTENT_TOP) - (CONTENT_BOTTOM - bottom)) <= 1
+    for top, extent in zip(tops, extents, strict=True):
+        assert top + extent < top + 210  # 內文不壓到自己列尾的分隔線(列頂 +210)
+
+
+def test_row_tops_examples_and_empty():
+    assert row_tops([]) == []
+    assert row_tops([128]) == [270 + (1050 - 128) // 2]  # 單列落在內容帶正中
+    assert row_tops([128, 128, 128]) == [481, 731, 981]
+
+
+def _shape_ys(ass: str) -> list[int]:
+    """所有色塊/圖示事件(``\\p1``)的終點 y,依事件順序。"""
+    return [int(re.search(r"\\move\(-?\d+,-?\d+,-?\d+,(-?\d+),", ln).group(1))
+            for ln in ass.splitlines()
+            if ln.startswith("Dialogue:") and ",free," in ln and "\\p1" in ln]
+
+
+@pytest.mark.parametrize("n", [1, 2, 3])
+def test_few_recap_rows_are_vertically_centred_when_rendered(n, tmp_path):
+    """彩排 9/30 的問題:1 列對帳貼在畫面上半、下面一大片空。整塊改以內容帶中線(y=795)為中心,
+    分隔線(列頂 +210)與 ✓/✗ 圖示(列頂 +62)跟著各自的列移動。"""
+    marks = ("yes", "no", "mixed")
+    rows = [{"ask": f"問{k}", "result": f"答{k}", "mark": marks[k]} for k in range(n)]
+    seg = RecapSegment(vo="一。二。三。", rows=rows)
+    takes = [Take(t, f"{k}.mp3", 1.0, []) for k, t in enumerate(("一。", "二。", "三。")[:n])]
+    ass = renderer_for("recap").render(seg, _ctx(takes, duration=4.0, work_dir=tmp_path)).ass
+    events = _text_extents(ass)
+    tops = [events[2 * k][1] for k in range(n)]
+    last_ask, last_result = events[-2], events[-1]
+    bottom = max(last_result[1] + len(last_result[4]) * last_result[2], tops[-1] + 62 + 64)
+    assert abs((tops[0] + bottom) / 2 - 795) <= 1
+    # 橫槓(mixed)比 ✓/✗ 矮,在 64px 圖示格內垂直置中,多下移 25px
+    mark_dy = [62 + (25 if mark == "mixed" else 0) for mark in marks[:n]]
+    expected_shapes = [top + dy for top, dy in zip(tops, mark_dy, strict=True)]
+    expected_shapes += [top + 210 for top in tops[:-1]]
+    assert sorted(_shape_ys(ass)) == sorted(expected_shapes)
+    assert last_ask[1] == tops[-1]
 
 
 def test_recap_ask_with_punctuation_stays_one_line_without_ellipsis():

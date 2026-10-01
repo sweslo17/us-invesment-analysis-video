@@ -32,6 +32,10 @@ STAT_LABEL_TOP = 1122  # 48px
 STAT_TOP = 1172  # 132px,約到 1340;字幕頂緣約 1365
 SUB_MARGIN_V = BOTTOM_UI  # 字幕底緣 = 1520;兩行 64px 頂緣約 1365,不蓋 callout
 CTA_MARGIN_V = 430
+# 內容帶:對話泡泡、對帳列這類「少量就該置中」的版面共用。上緣 = 圖表帶上緣(標題約 150–245
+# 之下),下緣 1320 在字幕頂緣(約 1365)之上;帶內任何東西都落在底部 UI 遮蔽區(1520)之上。
+CONTENT_TOP = CHART_BAND_TOP
+CONTENT_BOTTOM = 1320
 # 字卡:大標以「可見區」(0 ~ 1920-BOTTOM_UI)的中心偏上為錨點置中;kicker 緊貼大標上方
 CARD_CENTER_Y = 820
 CARD_FONT = 136
@@ -42,6 +46,12 @@ CTA_SEC = 3.0  # 片尾 CTA 出現秒數
 # 置中文字(口號轉場、全屏大數字):錨點 x=540、寬度上限 740 → 540 ± 370,右緣 910 不碰按讚欄
 CENTER_X = WIDTH // 2
 CENTERED_TEXT_MAX_W = 740
+
+
+def center_block_top(block_height: int) -> int:
+    """高 ``block_height`` 的區塊在內容帶(``CONTENT_TOP``..``CONTENT_BOTTOM``)內上下置中,
+    回傳區塊頂緣。區塊比內容帶還高就貼著上緣(寧可往下溢出,也不往上蓋標題)。"""
+    return CONTENT_TOP + max(0, (CONTENT_BOTTOM - CONTENT_TOP - block_height) // 2)
 
 
 def layout_safe_zone() -> dict[str, int]:

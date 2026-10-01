@@ -6,6 +6,8 @@
 
 from __future__ import annotations
 
+from typing import NamedTuple
+
 from pmb.schemas.script import RecapRow, RecapSegment
 from pmb.video.ass import (
     ASS_TEMPLATE,
@@ -13,6 +15,7 @@ from pmb.video.ass import (
     MUTED_HEX,
     WHITE_HEX,
     ass_color,
+    center_block_top,
     common_events,
     full_event,
     polygon,
@@ -30,11 +33,14 @@ from pmb.video.segments.base import (
 from pmb.video.textfit import fit_lines, fit_one_line
 
 _DEFAULT_TITLE = "昨天說要看的"
-_ROW_TOPS = (330, 580, 830)  # 列距 250px
+_ROW_PITCH = 250  # 相鄰兩列頂緣的間距
 _RIGHT_EDGE = 890  # 避開右側按讚欄
 _X = 70
 _RESULT_X = 160
 _MARK = 64
+_MARK_DY = 62  # ✓/✗ 圖示頂緣到列頂
+_RESULT_DY = 56  # 結果文字頂緣到列頂(ask 在列頂)
+_SEP_DY = 210  # 分隔線到列頂
 _ASK_FS = 44
 _ASK_MAX_W = _RIGHT_EDGE - _X
 _RESULT_SIZES = (72, 60)
@@ -81,17 +87,51 @@ def _mark_event(mark: str, start: float, end: float, x: int, y: int) -> str:
     return shape_event(start, end, x, y, path, color)
 
 
-def _row_events(row: RecapRow, top: int, start: float, end: float, last: bool) -> list[str]:
+class _RowLayout(NamedTuple):
+    """一列的版面:ask 單行 + 結果斷行,都已套好字級(``textfit`` 縮字/截斷之後)。"""
+
+    row: RecapRow
+    ask: str
+    ask_size: int
+    lines: list[str]
+    size: int
+
+    @property
+    def extent(self) -> int:
+        """內容從列頂算起的真實下緣:結果文字(行數 × 字級)與 ✓/✗ 圖示取最低者。"""
+        return max(_RESULT_DY + len(self.lines) * self.size, _MARK_DY + _MARK, self.ask_size)
+
+
+def _row_layout(row: RecapRow) -> _RowLayout:
     ask, ask_size = fit_one_line(row.ask, _ASK_FS, _ASK_MAX_W)  # 單行
     lines, size = result_layout(row.result)
+    return _RowLayout(row, ask, ask_size, lines, size)
+
+
+def row_tops(extents: list[int]) -> list[int]:
+    """各列頂緣 y。列距固定 ``_ROW_PITCH``,整塊(第一列頂緣 → 最後一列真實下緣)在內容帶裡
+    上下置中:列少就落在畫面中間,不再貼著標題。``extents`` 是各列內容的實際高度。
+
+    置中後頂緣不會高過 ``CONTENT_TOP``(270,標題底緣約 245 已淨空);最多 3 列時整塊不超過
+    700px,置中的頂緣至少在 445,所以不需要另外把首列壓在 330 以下。
+    """
+    if not extents:
+        return []
+    top = center_block_top((len(extents) - 1) * _ROW_PITCH + extents[-1])
+    return [top + k * _ROW_PITCH for k in range(len(extents))]
+
+
+def _row_events(layout: _RowLayout, top: int, start: float, end: float, last: bool) -> list[str]:
+    row = layout.row
     events = [
-        text_event(start, end, _X, top, ask, size=ask_size, color=ass_color(MUTED_HEX)),
-        _mark_event(row.mark, start, end, _X, top + 62),
-        text_event(start, end, _RESULT_X, top + 56, "\\N".join(lines), size=size,
-                   color=ass_color(WHITE_HEX)),
+        text_event(start, end, _X, top, layout.ask, size=layout.ask_size,
+                   color=ass_color(MUTED_HEX)),
+        _mark_event(row.mark, start, end, _X, top + _MARK_DY),
+        text_event(start, end, _RESULT_X, top + _RESULT_DY, "\\N".join(layout.lines),
+                   size=layout.size, color=ass_color(WHITE_HEX)),
     ]
     if not last:
-        events.append(shape_event(start, end, _X, top + 210, rounded_rect(_SEP_W, 2, 1),
+        events.append(shape_event(start, end, _X, top + _SEP_DY, rounded_rect(_SEP_W, 2, 1),
                                   ass_color(_SEP_HEX)))
     return events
 
@@ -101,8 +141,10 @@ class RecapRenderer(SegmentRenderer):
         events = [full_event("title", ctx.duration, FADE_TAG + (seg.title or _DEFAULT_TITLE))]
         events += common_events(ctx.duration, badge=ctx.badge, cta=ctx.cta)
         times = row_times(len(seg.rows), ctx.starts, ctx.duration)
-        for k, (row, start) in enumerate(zip(seg.rows, times, strict=True)):
-            events += _row_events(row, _ROW_TOPS[k], start, ctx.duration, k == len(seg.rows) - 1)
+        layouts = [_row_layout(row) for row in seg.rows]
+        tops = row_tops([layout.extent for layout in layouts])
+        for k, (layout, top, start) in enumerate(zip(layouts, tops, times, strict=True)):
+            events += _row_events(layout, top, start, ctx.duration, k == len(layouts) - 1)
         events += caption_events(ctx.takes, ctx.starts)
         ass = ASS_TEMPLATE.format(font=ctx.font, events="\n".join(events))
         return Visual(canvas_background(ctx.work_dir), True, ass, "recap")

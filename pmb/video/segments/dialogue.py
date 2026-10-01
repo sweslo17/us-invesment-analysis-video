@@ -6,12 +6,15 @@
 
 from __future__ import annotations
 
+from typing import NamedTuple
+
 from pmb.schemas.script import DialogueLine, DialogueSegment
 from pmb.video.ass import (
     ASS_TEMPLATE,
     FADE_TAG,
     WHITE_HEX,
     ass_color,
+    center_block_top,
     common_events,
     full_event,
     rounded_rect,
@@ -32,7 +35,8 @@ from pmb.video.segments.base import (
 )
 from pmb.video.textfit import fit_lines, line_px
 
-_SLOT_TOPS = (300, 530, 760, 990)  # 4 個固定槽位的頂緣(每槽約 230px)
+_SLOT_PITCH = 230  # 相鄰兩個泡泡的間距(角色名頂緣到下一個角色名頂緣)
+_MAX_BUBBLES = 4
 _LABEL_FS = 40
 _LABEL_GAP = 52  # 角色名頂緣到泡泡頂緣
 _SIZES = (60, 48)  # 內文字級:先大字,超過 2 行改小字;再長由 fit_lines 續縮、截斷
@@ -60,18 +64,46 @@ def bubble_layout(text: str) -> tuple[list[str], int]:
     return fit_lines(text, max_width=_MAX_INNER, sizes=_SIZES, max_lines=_MAX_LINES)
 
 
+def bubble_tops(heights: list[int]) -> list[int]:
+    """各泡泡的角色名頂緣 y(泡泡框頂緣 = 這個值 + ``_LABEL_GAP``)。
+
+    相鄰泡泡維持固定的 ``_SLOT_PITCH``,整塊(第一個角色名頂緣 → 最後一個泡泡的真實底緣)
+    在內容帶裡上下置中:泡泡少就落在畫面中間,不再全擠在上半。``heights`` 是各泡泡框的實際高度。
+    """
+    if not heights:
+        return []
+    block = (len(heights) - 1) * _SLOT_PITCH + _LABEL_GAP + heights[-1]
+    top = center_block_top(block)
+    return [top + k * _SLOT_PITCH for k in range(len(heights))]
+
+
+class _Bubble(NamedTuple):
+    """一個泡泡的版面:內文斷行、字級與框的寬高(libass 行距 = 字級,文字在框內上下置中)。"""
+
+    line: DialogueLine
+    lines: list[str]
+    size: int
+    w: int
+    h: int
+
+
+def _bubble(line: DialogueLine) -> _Bubble:
+    lines, size = bubble_layout(line.text)
+    w = int(max(line_px(t, size) for t in lines)) + 2 * _PAD
+    return _Bubble(line, lines, size, w, len(lines) * size + 2 * _PAD)
+
+
 def build_dialogue_ass(seg: DialogueSegment, ctx: RenderContext) -> str:
     """逐句泡泡:角色名 + 圓角框 + 內文,三個事件都從該句配音起點開始顯示到段尾。"""
     events: list[str] = []
     if seg.title:
         events.append(full_event("title", ctx.duration, FADE_TAG + seg.title))
     events += common_events(ctx.duration, badge=ctx.badge, cta=ctx.cta)
-    for k, line in enumerate(speakable_lines(seg)[: len(_SLOT_TOPS)]):
+    bubbles = [_bubble(line) for line in speakable_lines(seg)[:_MAX_BUBBLES]]
+    tops = bubble_tops([b.h for b in bubbles])
+    for k, (bubble, top) in enumerate(zip(bubbles, tops, strict=True)):
+        line, lines, size, w, h = bubble
         start = ctx.starts[k]
-        top = _SLOT_TOPS[k]
-        lines, size = bubble_layout(line.text)
-        w = int(max(line_px(t, size) for t in lines)) + 2 * _PAD
-        h = len(lines) * size + 2 * _PAD  # libass 行距 = 字級,文字在框內上下置中
         x = _LEFT_X if line.voice == "a" else _RIGHT_EDGE - w
         bubble_hex, label_hex = _COLORS[line.voice]
         label_x, label_align = (x, 7) if line.voice == "a" else (x + w, 9)
