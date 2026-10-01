@@ -615,3 +615,32 @@ def test_normalize_research_outputs_leaves_unreadable_files_alone(tmp_path):
         assert normalize_research_outputs(settings.artifacts_dir, _D) is False
     assert {p: p.read_bytes() for p in before} == before
     assert warned
+
+
+def test_normalization_exception_restores_all_three_files(tmp_path, monkeypatch):
+    """brief、script 改寫之後才在 report 出錯（任何例外，不只 OSError／ValueError）→ 三份全還原。"""
+    settings = _settings(tmp_path)
+    _write_halfwidth_artifacts(settings)
+    originals = {p: p.read_bytes() for p in _outputs(settings)[:3]}
+
+    def boom(text):
+        raise IndexError("injected")
+
+    monkeypatch.setattr(local_runner, "zh_punct", boom)  # Markdown 報告最後處理
+    with _warnings() as warned:
+        assert normalize_research_outputs(settings.artifacts_dir, _D) is False
+    assert {p: p.read_bytes() for p in originals} == originals
+    assert any("正規化" in m and "還原" in m for m in warned)
+
+
+def test_run_local_research_still_ships_when_normalization_raises(tmp_path, monkeypatch):
+    settings = _settings(tmp_path)
+    _write_halfwidth_artifacts(settings)
+    originals = {p: p.read_bytes() for p in _outputs(settings)[:3]}
+
+    def boom(text):
+        raise IndexError("injected")
+
+    monkeypatch.setattr(local_runner, "zh_punct", boom)
+    assert run_local_research(_D, settings, invoke=lambda p: None) is True
+    assert {p: p.read_bytes() for p in originals} == originals

@@ -257,8 +257,9 @@ def normalize_research_outputs(artifacts_dir: Path, target: dt.date) -> bool:
     收工、產物要被 commit 之前統一轉一次（規則見 ``pmb.textnorm``）。JSON 逐字串值處理、
     以 ``indent=2`` 寫回；Markdown 整份處理。
 
-    轉完重跑硬驗證；理論上不會失敗，萬一失敗（或檔案讀寫出錯）就還原原始位元組並記
-    WARNING、回 False——這時產物仍是先前已通過驗證的版本，呼叫端照樣出片，絕不丟掉一天。
+    轉完重跑硬驗證；理論上不會失敗，萬一失敗（或過程中發生任何例外）就把三份都還原成原始
+    位元組並記 WARNING、回 False——這時產物仍是先前已通過驗證的版本，呼叫端照樣出片，
+    絕不丟掉一天。
     """
     paths = [
         artifacts_dir / f"brief_{target}.json",
@@ -279,7 +280,7 @@ def normalize_research_outputs(artifacts_dir: Path, target: dt.date) -> bool:
                 text = zh_punct(text)
             path.write_text(text, encoding="utf-8")
         errors = validate_research_artifacts(artifacts_dir, target, include_soft=False)
-    except (OSError, ValueError) as exc:  # 含 JSONDecodeError、UnicodeDecodeError
+    except Exception as exc:  # noqa: BLE001 — 任何錯誤都要還原三份產物，絕不丟掉一天
         errors = [f"{type(exc).__name__}:{exc}"]
     if errors:
         _restore_outputs(originals)

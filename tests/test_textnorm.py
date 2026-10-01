@@ -7,11 +7,14 @@
 import json
 import random
 import re
+import time
 from collections import Counter
 from pathlib import Path
 
 import pytest
+from loguru import logger
 
+from pmb import textnorm
 from pmb.schemas.script import Script
 from pmb.textnorm import zh_punct, zh_punct_model, zh_punct_obj
 
@@ -226,6 +229,122 @@ def test_space_removed_only_next_to_converted_marks(raw, expected):
     assert zh_punct(raw) == expected
 
 
+@pytest.mark.parametrize(
+    ("raw", "expected"),
+    [
+        ("- (輝達) 財報", "- （輝達）財報"),
+        ("* (輝達) 財報", "* （輝達）財報"),
+        ("+ (輝達) 財報", "+ （輝達）財報"),
+        ("## (重點) 今日", "## （重點）今日"),
+        ("###### (重點) 今日", "###### （重點）今日"),
+        ("1. (注意) 財報", "1. （注意）財報"),
+        ("1) (注意) 財報", "1) （注意）財報"),
+        ("> (引述) Fed 說", "> （引述）Fed 說"),
+        ("> - (引述) Fed 說", "> - （引述）Fed 說"),
+        ("  - (輝達) 財報", "  - （輝達）財報"),  # 縮排的子清單
+        ("    (輝達) 財報", "    （輝達）財報"),  # 行首縮排本身不是被轉換標點的空白
+        ("- 標普 (S&P 500) 收紅", "- 標普（S&P 500）收紅"),  # 標記後面的內容照常清空白
+        ("好 (輝達) 財報", "好（輝達）財報"),
+        ("第一行\n- (輝達) 財報\n第三行", "第一行\n- （輝達）財報\n第三行"),
+    ],
+)
+def test_space_after_a_markdown_block_marker_is_kept(raw, expected):
+    assert zh_punct(raw) == expected
+
+
+@pytest.mark.parametrize(
+    ("raw", "expected"),
+    [
+        ("標普收紅,  \n下一行", "標普收紅，  \n下一行"),  # Markdown 硬換行
+        ("標普收紅, \n下一行", "標普收紅， \n下一行"),
+        ("標普收紅,  \r\n下一行", "標普收紅，  \r\n下一行"),
+        ("標普收紅,  ", "標普收紅，  "),  # 文末
+        ("好 ,  \n壞", "好，  \n壞"),  # 標點左邊的空白照樣清掉，只留行尾
+        ("標普收紅, 下一句  \n", "標普收紅，下一句  \n"),
+    ],
+)
+def test_trailing_spaces_before_end_of_line_are_kept(raw, expected):
+    assert zh_punct(raw) == expected
+
+
+def test_a_failing_helper_makes_zh_punct_return_its_input(monkeypatch):
+    """出口與研究源頭都靠 zh_punct：任何內部錯誤都不能讓一天的流程炸掉。"""
+
+    def boom(text):
+        raise IndexError("injected")
+
+    monkeypatch.setattr(textnorm, "_convert_once", boom)
+    messages: list[str] = []
+    handler = logger.add(lambda m: messages.append(m.record["message"]), level="WARNING")
+    try:
+        assert zh_punct("收紅,標普(S&P 500)") == "收紅,標普(S&P 500)"
+        assert zh_punct_obj({"a": ["收紅,標普"]}) == {"a": ["收紅,標普"]}
+    finally:
+        logger.remove(handler)
+    assert messages and "zh_punct" in messages[0]
+
+
+def test_zh_punct_returns_the_original_even_if_a_later_pass_fails(monkeypatch):
+    real = textnorm._convert_once
+    calls = []
+
+    def flaky(text):
+        calls.append(text)
+        if len(calls) == 2:
+            raise IndexError("second pass fails")
+        return real(text)
+
+    monkeypatch.setattr(textnorm, "_convert_once", flaky)
+    assert zh_punct("對 Fed, ECB, BoJ, BoE 與日銀") == "對 Fed, ECB, BoJ, BoE 與日銀"
+
+
+def test_zh_punct_model_returns_the_original_when_revalidation_fails(monkeypatch):
+    script = Script.model_validate({
+        "segments": [{"kind": "card", "vo": "開場,先看重點。", "headline": "標題,x", "tag": "k"}],
+        "charts": [],
+    })
+    monkeypatch.setattr(textnorm, "zh_punct_obj", lambda obj: {"segments": "壞掉"})
+    assert zh_punct_model(script) is script
+
+
+# --- 連鎖轉換與輪數上限 ------------------------------------------------------------
+
+
+def test_a_comma_list_converts_all_commas_once_the_last_one_borders_chinese():
+    """最後一個逗號貼著中文才轉；前面的逗號隨後貼著全形逗號，一個接一個跟著轉（中文排版本來就如此）。"""
+    raw = "對 Fed, ECB, BoJ, BoE, SNB 與日銀都在看"
+    assert zh_punct(raw) == "對 Fed，ECB，BoJ，BoE，SNB 與日銀都在看"
+    assert zh_punct("Fed, ECB, BoJ, BoE, SNB") == "Fed, ECB, BoJ, BoE, SNB"  # 沒有中文就一個都不轉
+
+
+def test_conversion_passes_are_capped_so_a_pathological_chain_stays_fast(monkeypatch):
+    real = textnorm._convert_once
+    passes: list[int] = []
+
+    def counting(text):
+        passes.append(1)
+        return real(text)
+
+    monkeypatch.setattr(textnorm, "_convert_once", counting)
+    chain = ",".join(["1"] * 1000) + "中"  # 約 2KB；每輪只多轉一個逗號
+    started = time.perf_counter()
+    out = zh_punct(chain)
+    elapsed = time.perf_counter() - started
+    assert len(passes) == textnorm._MAX_PASSES
+    assert elapsed < 1.0, elapsed  # 實測遠低於 0.2 秒，留寬鬆空間給慢機器
+    assert out.endswith("，1中") and out.count("，") == textnorm._MAX_PASSES
+
+
+def test_real_text_converges_well_within_the_pass_cap(monkeypatch):
+    real = textnorm._convert_once
+    passes: list[int] = []
+    monkeypatch.setattr(
+        textnorm, "_convert_once", lambda text: (passes.append(1), real(text))[1]
+    )
+    zh_punct("對 Fed, ECB, BoJ, BoE, SNB 與日銀都在看(含 S&P 500, Nasdaq 100)")
+    assert len(passes) <= 4  # 含最後確認沒有變化的那一輪；上限 6 輪遠遠用不到
+
+
 # --- 受保護範圍：網址、Markdown 連結目標、行內碼、程式碼區塊 ----------------------------
 
 
@@ -294,6 +413,8 @@ _IDEMPOTENCE_SAMPLES = [
     "九月升息機率彈到66%,10年期殖利率再創新高;對 Fed, ECB 與 BoJ 都是壓力",
     "- **9 月 3 日**:8 月 ISM 非製造業\n**Fed政策(LT,confirmed)**:9/16 FOMC",
     "S&P 500, Nasdaq 100; 美東 9:05,Fed 理事 8:30:8月PCE",
+    "- (輝達) 財報\n## (重點) 今日\n1. (注意) 財報\n> (引述) Fed 說,  \n標普收紅,  ",
+    "對 Fed, ECB, BoJ, BoE, SNB 與日銀都在看",
 ]
 
 

@@ -14,11 +14,18 @@
   其餘（``8:30:8月PCE``、``16.10,10年期``）照上面的一般規則判斷。
 - ``(`` ``)``：先配對，成對的括號碰到中文（外側左右、內側首尾）才整對轉，否則整對不動；
   沒配到對的不動。巢狀括號反覆套用到不再變化為止。
-- 被轉成全形的標點，緊鄰的半形空格一併清掉；其他空白不動。
+- 被轉成全形的標點，緊鄰的半形空格一併清掉；其他空白不動。Markdown 的區塊標記（``- ``、
+  ``1. ``、``## ``、``> ``）後面的空格與行首縮排不清，行尾的空格（含硬換行的兩個空格）也不清。
 - 網址、Markdown 連結目標、行內碼、程式碼區塊不碰。
 - 其他字元（``.`` ``%`` 引號、換行、``\\N``、本來就是全形的標點）一律不動。
 
-``zh_punct`` 是冪等的：已正規化的文字再套一次不會變。
+連鎖轉換：``對 Fed, ECB, BoJ 與日銀`` 最後一個逗號貼著中文先轉，前面的逗號隨後貼著全形
+逗號，一個接一個跟著轉（中文排版本來就如此）。每輪只往外多推一格，所以最多套用
+``_MAX_PASSES`` 輪：真實文字 2–3 輪就收斂，輪數上限只是替病態輸入（上千個逗號串成一條）
+擋住計算量暴增；超過上限的連鎖不會轉完，此時再套一次才會繼續（不再冪等）。
+
+``zh_punct`` 不會丟例外：任何內部錯誤都記 WARNING 並原樣回傳輸入，所以對外出口不會因為
+標點正規化讓一天的流程中斷。
 """
 
 from __future__ import annotations
@@ -26,6 +33,7 @@ from __future__ import annotations
 import re
 from typing import Any
 
+from loguru import logger
 from pydantic import BaseModel
 
 _MARKS = {",": "，", ":": "：", ";": "；", "!": "！", "?": "？"}
@@ -35,6 +43,11 @@ _TOKEN_PUNCT = ".%$+-/&'*_"
 _THOUSANDS = re.compile(r"[0-9]{3}(?![0-9])")  # 逗號後剛好三位數
 _CLOCK = re.compile(r"[0-9]{2}(?![0-9])")  # 冒號後剛好兩位數
 _DIGITS = re.compile(r"[0-9]+")
+_MAX_PASSES = 6  # 連鎖轉換最多套用幾輪，見模組說明
+# 行首的 Markdown 區塊標記（可疊：``> - ``）：清單、編號、引用、標題
+_BLOCK_MARKER = re.compile(
+    r"[ \t]*(?:(?:[-*+>]|[0-9]+[.)])[ \t]*)*(?:[-*+>]|[0-9]+[.)])|[ \t]*#{1,6}"
+)
 
 # 受保護範圍：依序為程式碼區塊、行內碼、Markdown 連結目標、網址。
 # 網址到空白、中日文字元或角括號為止；結尾的標點屬於句子，不算網址的一部分。
@@ -164,20 +177,50 @@ def _convert_once(text: str) -> str:
     dropped: set[int] = set()
     for i in converted:
         for step in (-1, 1):
-            j = i + step
-            while 0 <= j < len(text) and text[j] == " " and not protected[j]:
-                dropped.add(j)
-                j += step
+            dropped.update(_spaces_to_drop(text, protected, i, step))
     return "".join(converted.get(i, ch) for i, ch in enumerate(text) if i not in dropped)
 
 
+def _spaces_to_drop(text: str, protected: bytearray, i: int, step: int) -> list[int]:
+    """被轉換的標點（``i``）某一側緊鄰的半形空格位置。
+
+    不清的兩種：行首縮排或 Markdown 區塊標記後面的空格（``- (輝達)``），以及行尾的空格
+    （Markdown 硬換行要靠行尾兩個空格）。
+    """
+    run: list[int] = []
+    j = i + step
+    while 0 <= j < len(text) and text[j] == " " and not protected[j]:
+        run.append(j)
+        j += step
+    if not run:
+        return []
+    if step < 0:
+        line_start = text.rfind("\n", 0, run[-1]) + 1
+        before = text[line_start : run[-1]].rstrip(" \t")
+        if not before.strip() or _BLOCK_MARKER.fullmatch(before):
+            return []
+    elif j >= len(text) or text[j] in "\r\n":
+        return []
+    return run
+
+
 def zh_punct(text: str) -> str:
-    """把中文語境裡的半形標點轉成全形，規則見模組說明。重複套用到穩定，所以冪等。"""
-    while True:
-        converted = _convert_once(text)
-        if converted == text:
-            return text
-        text = converted
+    """把中文語境裡的半形標點轉成全形，規則見模組說明。
+
+    重複套用到穩定（最多 ``_MAX_PASSES`` 輪），所以一般文字冪等。任何內部錯誤都記 WARNING
+    並原樣回傳輸入。
+    """
+    try:
+        current = text
+        for _ in range(_MAX_PASSES):
+            converted = _convert_once(current)
+            if converted == current:
+                break
+            current = converted
+        return current
+    except Exception as exc:  # noqa: BLE001 — 標點正規化絕不能讓一天的流程中斷
+        logger.warning("zh_punct 內部錯誤，原文照出：{}：{}", type(exc).__name__, exc)
+        return text
 
 
 def zh_punct_obj(obj: Any) -> Any:
@@ -192,5 +235,12 @@ def zh_punct_obj(obj: Any) -> Any:
 
 
 def zh_punct_model[T: BaseModel](model: T) -> T:
-    """回傳字串欄位都已正規化的新 pydantic 物件（過一次 schema 驗證，原物件不變）。"""
-    return type(model).model_validate(zh_punct_obj(model.model_dump()))
+    """回傳字串欄位都已正規化的新 pydantic 物件（過一次 schema 驗證，原物件不變）。
+
+    重新驗證失敗等任何錯誤都記 WARNING 並回傳原物件。
+    """
+    try:
+        return type(model).model_validate(zh_punct_obj(model.model_dump()))
+    except Exception as exc:  # noqa: BLE001 — 同 zh_punct：對外出口不能因此中斷
+        logger.warning("zh_punct_model 內部錯誤，原物件照出：{}：{}", type(exc).__name__, exc)
+        return model
