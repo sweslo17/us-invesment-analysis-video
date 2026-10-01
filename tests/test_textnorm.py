@@ -140,18 +140,39 @@ def test_alphanumeric_only_context_is_untouched(text):
     "text",
     [
         "標普收 7,670 點",
+        "市值 1,234,567 美元",
         "美東 8:30 公布",
+        "美東上午9:05公布",
         "20:30:00 開盤",
         "比例 1:1 的 AI 題材",
+        "比例1:1。",
+        "比例 1:1",
     ],
 )
-def test_digit_digit_marks_survive_the_look_through(text):
+def test_thousands_clock_and_ratio_marks_stay_half_width(text):
     assert zh_punct(text) == text
 
 
-def test_second_colon_of_a_clock_time_followed_by_a_digit_stays():
-    # 夾在兩個數字之間就保留（規格如此），即使它其實是標籤冒號
-    assert zh_punct("美東上午8:30:8月PCE物價指數") == "美東上午8:30:8月PCE物價指數"
+@pytest.mark.parametrize(
+    ("raw", "expected"),
+    [
+        # 時間後面接標籤冒號：8:30 是時間，第二個冒號是標籤
+        ("美東上午8:30:8月PCE物價指數", "美東上午8:30：8月PCE物價指數"),
+        ("美東上午10:00:8月JOLTS職缺數據", "美東上午10:00：8月JOLTS職缺數據"),
+        # 日期：事件
+        ("9/3:8月ISM非製造業", "9/3：8月ISM非製造業"),
+        # 逗號夾在數字之間但不是千分位
+        ("今天美東上午 8:45,8 月 ISM 服務業", "今天美東上午 8:45，8 月 ISM 服務業"),
+        ("VIX來到16.10,10年期公債殖利率", "VIX來到16.10，10年期公債殖利率"),
+        ("升息機率1,2345點", "升息機率1，2345點"),  # 後面不是剛好三位數，不是千分位
+        ("勝率 3:2,穩了", "勝率 3:2，穩了"),  # 比例的冒號維持半形，後面的逗號照一般規則轉
+        # 比例的右邊緊接漢字 → 是標籤冒號
+        ("比例3:8月再說", "比例3：8月再說"),
+        ("16:9畫面比例", "16：9畫面比例"),
+    ],
+)
+def test_other_digit_digit_marks_follow_the_chinese_context_rule(raw, expected):
+    assert zh_punct(raw) == expected
 
 
 # --- 括號：成對才轉，碰到中文才轉 ----------------------------------------------------
@@ -377,7 +398,12 @@ def _nearest(text: str, i: int, step: int) -> str:
 
 
 _CJK = "[\u3400-\u9fff\u3001-\u303f\uff00-\uffef\u2026\u22ef]"
-_TOKEN = r"(?:[A-Za-z0-9%.$+\-/&'*_]|(?<=\d)[,:](?=\d))+"
+_THOUSANDS = r"(?<=\d),(?=\d{3}(?!\d))"
+_CLOCK = r"(?<=\d):(?=\d{2}(?!\d))"
+_RATIO = r"(?<=\d):(?=\d+(?![\d\u3400-\u9fff]))"
+_KEPT_DIGIT_MARK = rf"(?:{_THOUSANDS}|{_CLOCK}|{_RATIO})"
+_KEPT_RE = re.compile(_KEPT_DIGIT_MARK)
+_TOKEN = rf"(?:[A-Za-z0-9%.$+\-/&'*_]|{_KEPT_DIGIT_MARK})+"
 _LEFT_CHINESE = re.compile(rf"{_CJK}[ \t]*(?:{_TOKEN}[ \t]*)?$")
 _RIGHT_CHINESE = re.compile(rf"[ \t]*(?:{_TOKEN}[ \t]*)?{_CJK}")
 
@@ -393,7 +419,7 @@ def half_width_violations(text: str) -> Counter:
     found: Counter = Counter()
     for m in re.finditer(r"[,:;!?]", text):
         i, ch = m.start(), m.group()
-        if ch in ",:" and text[i - 1 : i].isdigit() and text[i + 1 : i + 2].isdigit():
+        if ch in ",:" and _KEPT_RE.match(text, i):  # 千分位、時間、比例維持半形
             continue
         if _in_chinese_context(text, i):
             found[ch] += 1

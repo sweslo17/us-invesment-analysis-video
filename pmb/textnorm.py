@@ -8,7 +8,10 @@
 - ``,`` ``:`` ``;`` ``!`` ``?``：緊鄰（略過空白）的前一個或後一個字元屬於中文語境才轉；
   緊鄰的是英數 token（``66%``、``FOMC``、``**``…）就穿透這一個 token（連同空白）再看下一個
   字元，是中文也算，所以 ``66%,10年期`` 與 ``對 Fed, ECB 與 BoJ`` 都會轉，``S&P 500, Nasdaq``
-  不會。數字之間的 ``,`` ``:``（``7,670``、``8:30``）維持半形。
+  不會。
+- 夾在數字之間的 ``,`` ``:`` 只有這三種維持半形：千分位（``7,670``）、時間（``8:30``、
+  ``20:30:00``）、比例（``1:1``；右邊的數字緊接漢字就是標籤冒號，如 ``3:8月``）。
+  其餘（``8:30:8月PCE``、``16.10,10年期``）照上面的一般規則判斷。
 - ``(`` ``)``：先配對，成對的括號碰到中文（外側左右、內側首尾）才整對轉，否則整對不動；
   沒配到對的不動。巢狀括號反覆套用到不再變化為止。
 - 被轉成全形的標點，緊鄰的半形空格一併清掉；其他空白不動。
@@ -29,6 +32,9 @@ _MARKS = {",": "，", ":": "：", ";": "；", "!": "！", "?": "？"}
 _CANDIDATES = re.compile(r"[,:;!?()]")
 _SPACES = " \t"
 _TOKEN_PUNCT = ".%$+-/&'*_"
+_THOUSANDS = re.compile(r"[0-9]{3}(?![0-9])")  # 逗號後剛好三位數
+_CLOCK = re.compile(r"[0-9]{2}(?![0-9])")  # 冒號後剛好兩位數
+_DIGITS = re.compile(r"[0-9]+")
 
 # 受保護範圍：依序為程式碼區塊、行內碼、Markdown 連結目標、網址。
 # 網址到空白、中日文字元或角括號為止；結尾的標點屬於句子，不算網址的一部分。
@@ -72,13 +78,26 @@ def _between_digits(text: str, i: int) -> bool:
     return before.isascii() and before.isdigit() and after.isascii() and after.isdigit()
 
 
+def _keeps_half_width(text: str, i: int) -> bool:
+    """``i`` 處夾在數字之間的 ``,`` ``:`` 是否屬於維持半形的三種：千分位、時間、比例。"""
+    if not _between_digits(text, i):
+        return False
+    if text[i] == ",":
+        return _THOUSANDS.match(text, i + 1) is not None
+    if _CLOCK.match(text, i + 1):
+        return True
+    ratio = _DIGITS.match(text, i + 1)
+    after = text[ratio.end() : ratio.end() + 1] if ratio else ""
+    return not ("\u3400" <= after <= "\u9fff")  # 右邊的數字緊接漢字：標籤冒號，不是比例
+
+
 def _is_token_char(text: str, j: int) -> bool:
     """英數 token 的字元：ASCII 英數、``%.$+-/&'``、Markdown 強調的 ``*`` ``_``，
-    以及夾在數字之間的 ``,`` ``:``（``7,670``、``9:05`` 是同一個 token）。"""
+    以及維持半形的千分位、時間、比例標點（``7,670``、``9:05`` 是同一個 token）。"""
     ch = text[j]
     if ch.isascii() and ch.isalnum() or ch in _TOKEN_PUNCT:
         return True
-    return ch in ",:" and _between_digits(text, j)
+    return ch in ",:" and _keeps_half_width(text, j)
 
 
 def _side_is_chinese(text: str, i: int, step: int) -> bool:
@@ -98,7 +117,7 @@ def _side_is_chinese(text: str, i: int, step: int) -> bool:
 
 
 def _mark_in_chinese_context(text: str, i: int) -> bool:
-    if text[i] in ",:" and _between_digits(text, i):
+    if text[i] in ",:" and _keeps_half_width(text, i):
         return False
     return _side_is_chinese(text, i, -1) or _side_is_chinese(text, i, 1)
 
