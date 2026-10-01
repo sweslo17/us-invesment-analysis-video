@@ -10,8 +10,8 @@ from pmb.schemas.brief import Brief
 from pmb.schemas.snapshot import Snapshot
 
 _DISCLAIMER = (
-    "本內容為市場資訊與風險教育,**非投資建議**。"
-    "數字來自公開資料(FRED / yfinance),不構成任何買賣建議。"
+    "本內容為市場資訊與風險教育，**非投資建議**。"
+    "數字來自公開資料（FRED / yfinance），不構成任何買賣建議。"
 )
 
 _HORIZON_LABEL = {"ST": "短期", "MT": "中期", "LT": "長期"}
@@ -45,23 +45,23 @@ def render_report(brief: Brief, snapshot: Snapshot | None = None) -> str:
         for idx in brief.indices:
             drivers = "、".join(idx.drivers) if idx.drivers else ""
             tail = f" — {drivers}" if drivers else ""
-            lines.append(f"- **{idx.name}**:{idx.level:,.2f}({idx.overnight_pct:+.2f}%){tail}")
+            lines.append(f"- **{idx.name}**：{idx.level:,.2f}（{idx.overnight_pct:+.2f}%）{tail}")
         lines.append("")
 
     # 市場 regime
     r = brief.regime
     lines.append("## 市場 regime")
     lines.append(
-        f"- 波動:{r.vol} ｜ 利率:{r.rates} ｜ 股債相關:{r.stock_bond_corr} ｜ 廣度:{r.breadth}"
+        f"- 波動：{r.vol} ｜ 利率：{r.rates} ｜ 股債相關：{r.stock_bond_corr} ｜ 廣度：{r.breadth}"
     )
     lines.append("")
 
     # 最適槓桿教育(全市場視角,非商品建議)
     if brief.leverage_context:
-        lines.append("## 最適槓桿教育(非投資建議)")
+        lines.append("## 最適槓桿教育（非投資建議）")
         math_by_market = {m.market: m for m in (snapshot.leverage_math if snapshot else [])}
         for ctx in brief.leverage_context:
-            lines.append(f"- **{ctx.market}**:{ctx.edu_note}")
+            lines.append(f"- **{ctx.market}**：{ctx.edu_note}")
             m = math_by_market.get(ctx.market)
             if m is not None:
                 lines.append(
@@ -88,7 +88,7 @@ def render_report(brief: Brief, snapshot: Snapshot | None = None) -> str:
 
     # 今日催化劑(盤中要看的排程事件)
     if brief.catalysts:
-        lines.append("## 今日要看(盤中催化劑)")
+        lines.append("## 今日要看（盤中催化劑）")
         for cat in brief.catalysts:
             lines.append(f"- {cat}")
         lines.append("")

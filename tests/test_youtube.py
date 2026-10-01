@@ -3,8 +3,10 @@
 import json
 import re
 
+from pmb.publish import youtube
 from pmb.publish.youtube import build_youtube_metadata, upload_video
 from pmb.schemas.brief import Brief
+from pmb.textnorm import zh_punct
 
 
 def _brief() -> Brief:
@@ -68,6 +70,16 @@ def test_metadata_normalizes_halfwidth_punctuation_in_title_and_description():
     assert "數字來自公開資料（FRED / yfinance）" in description
     assert "每天盤前更新，訂閱不錯過 —— 美股早發車" in description
     assert not re.search(r"[\u3400-\u9fff][,;!?]|[,;!?][\u3400-\u9fff]", description)
+
+
+def test_fixed_description_strings_are_fullwidth_at_the_source(monkeypatch):
+    """免責與追蹤 CTA 的固定文字本身就用全形(不靠出口的正規化兜底)。"""
+    monkeypatch.setattr(youtube, "zh_punct", lambda text: text)
+    _title, description, _tags = build_youtube_metadata(_brief(), channel_name="美股早發車")
+    assert "本影片為市場資訊與風險教育，非投資建議。" in description
+    assert "數字來自公開資料（FRED / yfinance），不構成任何買賣建議。" in description
+    assert "🔔 每天盤前更新，訂閱不錯過 —— 美股早發車" in description
+    assert zh_punct(youtube._DISCLAIMER) == youtube._DISCLAIMER
 
 
 def test_title_falls_back_to_materiality_lead_without_hook():

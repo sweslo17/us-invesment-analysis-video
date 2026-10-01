@@ -87,3 +87,15 @@ def test_report_lists_today_catalysts():
     md = render_report(_brief())
     assert "今日要看" in md
     assert "CPI" in md
+
+
+def test_report_template_strings_use_fullwidth_punctuation():
+    """標題、免責與各區塊的固定標點(含指數行的冒號與括號)都用全形;連結語法與數字不變。"""
+    md = render_report(_brief(), _snapshot())
+    assert "數字來自公開資料（FRED / yfinance），不構成任何買賣建議。" in md
+    assert "## 最適槓桿教育（非投資建議）" in md
+    assert "## 今日要看（盤中催化劑）" in md
+    assert "- **S&P 500**：7,500.58（+1.08%） — 科技領漲" in md
+    assert "- **Nasdaq Composite**：" in md
+    assert "- 波動：low ｜ 利率：rising ｜ 股債相關：positive ｜ 廣度：mixed" in md
+    assert "[來源](https://example.com/fed)" in md

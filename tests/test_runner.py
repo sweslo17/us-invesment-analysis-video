@@ -16,6 +16,7 @@ from pmb.research.runner import (
 from pmb.research.thesis import Thesis
 from pmb.schemas.brief import Brief, BriefItem
 from pmb.schemas.snapshot import Snapshot
+from pmb.textnorm import zh_punct
 
 
 def _valid_brief_json() -> str:
@@ -171,3 +172,16 @@ def test_research_prompt_describes_v4_kinds_persona_and_guardrails():
     assert "對照的事實要查證" not in text  # 已收緊為出處要求
     assert "6–7 段:開場 hook 卡 → 3–4 個圖表段" not in text  # 寫死的骨架已拿掉
     assert "片尾對句卡的旁白以「以上非投資建議,明天盤前見」收尾" not in text  # 改由系統接
+
+
+def test_research_prompt_asks_for_fullwidth_chinese_punctuation():
+    prompt_path = Path(__file__).resolve().parents[1] / "prompts" / "daily_research.md"
+    text = prompt_path.read_text(encoding="utf-8")
+    rule = (
+        "中文標點一律用全形（，、：；！？（）「」）；數字裡的千分位逗號、小數點、"
+        "時間的冒號與英文片段維持半形。"
+    )
+    assert rule in text
+    assert zh_punct(rule) == rule  # 這句規定本身就是示範
+    bullet = next(line for line in text.splitlines() if line.startswith("- 文字自然口語/書面"))
+    assert bullet.endswith(rule)  # 接在既有的「文字自然口語…」鐵則後面

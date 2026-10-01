@@ -1,6 +1,9 @@
 """圖表模組庫測試:spec 驗證、render 產 PNG、選圖 dispatch、非法模組/參數被擋。"""
 
+import ast
 import datetime as dt
+import re
+from pathlib import Path
 from typing import get_args
 
 import pytest
@@ -34,6 +37,7 @@ from pmb.schemas.snapshot import (
     Snapshot,
     YieldPoint,
 )
+from pmb.textnorm import zh_punct
 
 
 def _snapshot() -> Snapshot:
@@ -306,3 +310,44 @@ def test_overnight_vs_close_negative_label_anchors_right_of_zero():
     assert _bar_label_anchor(1.06) == (1.06, "left")
     assert _bar_label_anchor(-0.06) == (0.0, "left")
     assert _bar_label_anchor(0.0) == (0.0, "left")
+
+
+def _drawn_strings(tree: ast.AST):
+    """library.py 裡所有非 docstring 的字串(f-string 以 NUL 占位插值,整串一起看)。"""
+    docstrings = {
+        id(node.body[0].value)
+        for node in ast.walk(tree)
+        if isinstance(node, ast.Module | ast.FunctionDef | ast.ClassDef)
+        and node.body
+        and isinstance(node.body[0], ast.Expr)
+        and isinstance(node.body[0].value, ast.Constant)
+    }
+    inside_fstring = {
+        id(part) for node in ast.walk(tree) if isinstance(node, ast.JoinedStr)
+        for part in ast.walk(node) if part is not node
+    }
+    for node in ast.walk(tree):
+        if id(node) in docstrings or id(node) in inside_fstring:
+            continue
+        if isinstance(node, ast.Constant) and isinstance(node.value, str):
+            yield node.lineno, node.value
+        elif isinstance(node, ast.JoinedStr):
+            text = "".join(
+                v.value if isinstance(v, ast.Constant) else "\x00" for v in node.values
+            )
+            yield node.lineno, text
+
+
+def test_chart_library_labels_use_fullwidth_punctuation():
+    """畫進圖裡的中文(軸標、圖例、標註)不留半形 ,:;!?(),也不能讓 zh_punct 還有東西可轉。
+
+    只看含漢字的字串:斷行用的標點集合(``_WRAP_BREAK`` 等)刻意兩種寬度都收,不在此限。
+    """
+    source = Path(__file__).resolve().parents[1] / "pmb" / "charts" / "library.py"
+    offenders = [
+        (lineno, text)
+        for lineno, text in _drawn_strings(ast.parse(source.read_text(encoding="utf-8")))
+        if re.search(r"[\u3400-\u9fff]", text)
+        and (re.search(r"[,:;!?()]", text) or zh_punct(text) != text)
+    ]
+    assert offenders == []

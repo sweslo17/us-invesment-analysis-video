@@ -15,8 +15,8 @@ from pmb.schemas.brief import Brief
 from pmb.textnorm import zh_punct
 
 _DISCLAIMER = (
-    "本影片為市場資訊與風險教育,非投資建議。數字來自公開資料(FRED / yfinance),"
-    "不構成任何買賣建議。槓桿說明為一般性的槓桿倍數風險教育,不針對任何特定商品。"
+    "本影片為市場資訊與風險教育，非投資建議。數字來自公開資料（FRED / yfinance），"
+    "不構成任何買賣建議。槓桿說明為一般性的槓桿倍數風險教育，不針對任何特定商品。"
 )
 
 # YouTube 專屬 tags 欄位(與描述裡的 hashtag 不同):SEO 關鍵字
@@ -51,7 +51,7 @@ def build_youtube_metadata(
     if brief.catalysts:
         parts.append("\n▍今天盤中要看\n" + "\n".join(f"・{c}" for c in brief.catalysts[:3]))
     parts.append(f"⚠️ {_DISCLAIMER}")
-    parts.append(f"🔔 每天盤前更新,訂閱不錯過 —— {channel_name}")
+    parts.append(f"🔔 每天盤前更新，訂閱不錯過 —— {channel_name}")
     parts.append("#美股 #美股盤前 #投資理財 #理財 #財經 #shorts")
     description = zh_punct("\n\n".join(parts))
 

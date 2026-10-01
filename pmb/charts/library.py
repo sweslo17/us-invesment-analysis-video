@@ -141,11 +141,11 @@ def render_leverage_decay(
             marker="o",
             linewidth=3,
             markersize=11,
-            label=f"{m.market}(波動 {m.realized_vol * 100:.0f}%)",
+            label=f"{m.market}（波動 {m.realized_vol * 100:.0f}%）",
         )
     ax.set_xticks(leverages)
     ax.set_xlabel("固定槓桿倍數")
-    ax.set_ylabel("年化波動耗損 (%)")
+    ax.set_ylabel("年化波動耗損（%）")
     ax.legend(loc="upper left")
     ax.grid(True, alpha=0.3)
     return _finalize(fig, out_path)
@@ -196,7 +196,7 @@ def render_yield_curve(
     for i, v in enumerate(values):
         ax.annotate(f"{v:.2f}%", (i, v), fontsize=_ANNOT, va="bottom", ha="center")
     ax.set_xlabel("到期")
-    ax.set_ylabel("殖利率 (%)")
+    ax.set_ylabel("殖利率（%）")
     ax.margins(y=0.15)
     ax.grid(True, alpha=0.3)
     return _finalize(fig, out_path)
@@ -216,7 +216,7 @@ def render_breadth(
     fig, ax = plt.subplots(figsize=_FIG)
     ax.barh(names, pcts, color=colors)
     ax.axvline(0, color=_ZERO, linewidth=1.2)
-    ax.set_xlabel("當日漲跌 (%)")
+    ax.set_xlabel("當日漲跌（%）")
     ax.margins(x=0.16)
     return _finalize(fig, out_path)
 
@@ -238,7 +238,7 @@ def render_rates_trend(
             ha="right",
         )
     ax.set_xlabel("近期交易日")
-    ax.set_ylabel("10Y 殖利率 (%)")
+    ax.set_ylabel("10Y 殖利率（%）")
     ax.grid(True, alpha=0.3)
     return _finalize(fig, out_path)
 
@@ -338,12 +338,12 @@ def render_overnight_vs_close(
     ax.axvline(0, color=_ZERO, linewidth=1.2)
     ax.set_yticks(ys)
     ax.set_yticklabels(names)
-    ax.set_xlabel("漲跌 (%)")
+    ax.set_xlabel("漲跌（%）")
     # 圖例放在圖區上方(橫排),避開長條與數值標註
     ax.legend(
         handles=[
-            Patch(facecolor=_MUTED, alpha=0.5, hatch="//", edgecolor=_FG, label="昨收(斜線)"),
-            Patch(facecolor=_MUTED, label="盤前(實心)"),
+            Patch(facecolor=_MUTED, alpha=0.5, hatch="//", edgecolor=_FG, label="昨收（斜線）"),
+            Patch(facecolor=_MUTED, label="盤前（實心）"),
         ],
         loc="lower center",
         bbox_to_anchor=(0.5, 1.0),
@@ -453,7 +453,7 @@ def render_concentration(
     # barh 由下而上;反轉讓貢獻最大者在最上方
     ax.barh(labels[::-1], values[::-1], color=colors[::-1])
     ax.axvline(0, color=_ZERO, linewidth=1.2)
-    ax.set_xlabel(f"對指數的貢獻(百分點)\n前 {len(ordered)} 大合計 {total:+.2f} 百分點")
+    ax.set_xlabel(f"對指數的貢獻（百分點）\n前 {len(ordered)} 大合計 {total:+.2f} 百分點")
     for i, v in enumerate(values[::-1]):
         ax.annotate(
             f"{v:+.3f}",
@@ -561,7 +561,7 @@ def render_global_equity_overnight(
     fig, ax = plt.subplots(figsize=_FIG)
     ax.barh(names, pcts, color=colors)
     ax.axvline(0, color=_ZERO, linewidth=1.2)
-    ax.set_xlabel("最近一盤漲跌 (%)")
+    ax.set_xlabel("最近一盤漲跌（%）")
     # 數值標在長條尖端外側、用 offset(點)留固定間隙;x 軸範圍另留非對稱留白,
     # 確保最長的負向長條(如熔斷日 -10%)的數值也不會壓到左側 y 軸國名。
     for i, p in enumerate(pcts):
@@ -624,13 +624,13 @@ def render_fed_path(
                 )
     ax.set_xticks(xs)
     ax.set_xticklabels(labels)
-    ax.set_ylabel("政策利率 (%)")
+    ax.set_ylabel("政策利率（%）")
     ax.margins(y=0.22)
     ax.grid(True, alpha=0.3)
     source_tag = (
         "Fed funds 期貨隱含"
         if fed_path.source == "futures"
-        else "Treasury 短端隱含(含期限溢價)"
+        else "Treasury 短端隱含（含期限溢價）"
     )
     ax.annotate(
         source_tag,
@@ -660,7 +660,7 @@ def render_index_overnight_grid(
     fig, ax = plt.subplots(figsize=_FIG)
     ax.barh(names[::-1], pcts[::-1], color=colors[::-1])
     ax.axvline(0, color=_ZERO, linewidth=1.2)
-    ax.set_xlabel("隔夜漲跌 (%)")
+    ax.set_xlabel("隔夜漲跌（%）")
     for i, p in enumerate(pcts[::-1]):
         ax.annotate(
             f"{p:+.2f}%",
