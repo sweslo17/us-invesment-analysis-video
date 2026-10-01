@@ -315,10 +315,11 @@ def test_rate_limit_does_not_consume_content_retry_budget(tmp_path):
 
 
 def test_validate_rejects_vo_over_short_form_budget(tmp_path):
-    """2026-09-05 改版:成片目標 65–80 秒(380–450 字),硬上限 520 字(≈88s)。
+    """成片目標 65–80 秒(330–410 字),硬上限 520 字。
 
-    2.5 分鐘的 Shorts 留不住人:8 月起觀看數掉約 4 倍。600 字(≈100s)必須被擋下,
-    錯誤訊息要帶新的目標區間,agent 重寫時才知道要砍到哪。
+    2.5 分鐘的 Shorts 留不住人:8 月起觀看數掉約 4 倍。600 字必須被擋下,錯誤訊息要帶新的
+    目標區間,agent 重寫時才知道要砍到哪。v4 起系統自動加開場/收尾口號約 6 秒,不在字數裡,
+    預估秒數要把這 6 秒算進去(fixture 共 634 字:634 × 0.18 + 6 ≈ 120s,不含則是 114s)。
     """
     _write_valid_artifacts(tmp_path)
     script = json.loads((tmp_path / f"script_{_D}.json").read_text())
@@ -328,7 +329,8 @@ def test_validate_rejects_vo_over_short_form_budget(tmp_path):
     errors = validate_research_artifacts(tmp_path, _D)
     msg = next((e for e in errors if "字數" in e), None)
     assert msg is not None, f"612 字應被擋下,實際錯誤:{errors}"
-    assert "380–450" in msg
+    assert "330–410" in msg and "380–450" not in msg
+    assert "預估成片 120 秒" in msg  # 634 × 0.18 + 6(系統口號);少算 6 秒會是 114
 
 
 def test_validate_accepts_vo_at_short_form_target(tmp_path):

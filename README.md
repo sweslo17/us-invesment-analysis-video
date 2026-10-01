@@ -109,7 +109,7 @@ poetry run pmb publish                  # 只寫 publish manifest,不上傳(需 
 - `bignum`:全屏大數字,從 0 跳到定值,當天某個數字本身就是新聞時用。
 - `recap`:對帳,昨天說要看的事逐列打勾。
 
-`script.gags` 記錄當天用到的梗(至少 2 個),供之後幾天避免重複。hook 後系統自動插入約 1 秒的開場口號轉場(`SLOGAN_INTRO`、`STING_ENABLE`),結尾自動接收尾口號(`SLOGAN_OUTRO`),講稿不用寫。
+`script.gags` 記錄當天用到的梗(至少 2 個),供之後幾天避免重複。hook 後系統自動插入約 2 秒的開場口號轉場(`SLOGAN_INTRO`、`STING_ENABLE`),結尾自動接收尾口號(`SLOGAN_OUTRO`),講稿不用寫。開場(約 2 秒)加收尾(約 3–4 秒)口號合計多約 6 秒、不在 LLM 數的字數裡(成片 ≈ 字數 × 0.18 秒 + 6 秒),所以講稿字數目標是 330–410 字(硬上限 520),成片才落在 65–80 秒。
 
 研究 agent 寫完產物後用 `poetry run pmb validate-research --date YYYY-MM-DD` 自檢:schema、字數預算、反重複、欄位字數上限、畫面數字與旁白一致;多數規則是軟性的,runner 會帶著錯誤重試,但最後一次嘗試後若只剩軟性錯誤仍會交件。設計細節見 [`docs/superpowers/specs/2026-09-30-video-variety-humor-design.md`](docs/superpowers/specs/2026-09-30-video-variety-humor-design.md)。
 

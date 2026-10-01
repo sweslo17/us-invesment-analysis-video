@@ -52,11 +52,14 @@ _RATE_LIMIT_MARKERS = (
 # 成片長度 ≈ 總字數 × SEC_PER_CHAR。長片時實測 0.17;短版段數少、每段的段尾停頓占比
 # 變高,2026-09-05 實測 391 字 → 71.9s(0.184),取 0.18。
 # 2026-09-05 改版:成片目標 65–80 秒。2.5 分鐘的 Shorts 留不住人(8 月起每支觀看數掉約
-# 4 倍),完整研究本來就在 report.md,影片只做鉤子。prompt 目標 380–450 字,硬上限 520 字
-# (≈94s)。Shorts 180s 的絕對上限仍留著當最後防線。
+# 4 倍),完整研究本來就在 report.md,影片只做鉤子。Shorts 180s 的絕對上限仍留著當最後防線。
+# 2026-10-01(v4 實機彩排):系統會自動多加約 6 秒(開場口號轉場 ≈2s 含 0.15s 前導 + 收尾口號
+# ≈3–4s),這段不在 LLM 數的字數裡。實測 422 字 → 81.8s,即成片 ≈ 字數 × 0.18 + 6,所以
+# prompt 目標下修成 330–410 字(→ 約 65–80s);硬上限 520 字不動(只管 Shorts 資格)。
 SEC_PER_CHAR = 0.18
+SYSTEM_OVERHEAD_SEC = 6.0
 SHORTS_CAP_SEC = 180.0
-TARGET_VO_CHARS = (380, 450)
+TARGET_VO_CHARS = (330, 410)
 MAX_VO_CHARS = 520
 # 研究只需要:搜尋 + 讀寫 repo 檔案 + 跑 schema 驗證;不給其他 Bash
 _ALLOWED_TOOLS = [
@@ -196,16 +199,18 @@ def validate_research_artifacts(
 def check_vo_budget(script: Script) -> list[str]:
     """檢查講稿總字數是否會讓成片超過 Shorts 上限;超標回傳可據以重寫的錯誤訊息。
 
-    成片長度 ≈ 總字數 × ``SEC_PER_CHAR``(實測校準:866字→145s、916→156、908→155、
-    1203→197,穩定在 0.17 秒/字)。字數是配音前唯一可控的槓桿,故在此強制。
+    成片長度 ≈ 總字數 × ``SEC_PER_CHAR`` + ``SYSTEM_OVERHEAD_SEC``(實測校準:866字→145s、
+    916→156、908→155、1203→197,穩定在 0.17 秒/字;v4 加上系統自動的開場/收尾口號約 6 秒,
+    422 字 → 81.8s)。字數是配音前唯一可控的槓桿,故在此強制。
     """
     total = sum(len(seg.spoken_text) for seg in script.segments)
     if total <= MAX_VO_CHARS:
         return []
-    est = total * SEC_PER_CHAR
+    est = total * SEC_PER_CHAR + SYSTEM_OVERHEAD_SEC
     lo, hi = TARGET_VO_CHARS
     return [
-        f"講稿字數超標:{total} 字(上限 {MAX_VO_CHARS} 字),預估成片 {est:.0f} 秒。"
+        f"講稿字數超標:{total} 字(上限 {MAX_VO_CHARS} 字),"
+        f"預估成片 {est:.0f} 秒(含系統自動加的開場/收尾口號約 {SYSTEM_OVERHEAD_SEC:.0f} 秒)。"
         f"這支是 Shorts,目標 65–80 秒:太長觀眾直接滑走,演算法就不再推。"
         f"請砍到 {MAX_VO_CHARS} 字以內(目標 {lo}–{hi}):刪掉次要段落、圖表段控制在 3–4 張,"
         f"每段講得更精簡,不要只是刪句尾;保留貫穿主軸與數字精準度,細節留給 report.md。"
