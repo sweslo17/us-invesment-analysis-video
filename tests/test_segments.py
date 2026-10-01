@@ -3,10 +3,12 @@
 import random
 import re
 
+import numpy as np
 import pytest
+from matplotlib.image import imread
 
 from pmb.schemas.script import BignumSegment, DialogueSegment, RecapSegment, SplitSegment
-from pmb.video.ass import POP_IN, ass_color, rounded_rect, text_event
+from pmb.video.ass import BG_HEX, POP_IN, ass_color, rounded_rect, text_event
 from pmb.video.captions import NO_LINE_START, is_beat, split_sentences, strip_beat
 from pmb.video.segments.base import (
     BEAT_GAP,
@@ -16,6 +18,7 @@ from pmb.video.segments.base import (
     Take,
     Utterance,
     append_outro,
+    canvas_background,
     caption_events,
     plan_vo,
     segment_duration,
@@ -696,3 +699,15 @@ def test_sting_slogan_and_wordmark_stay_centered_inside_safe_width(slogan, chann
     assert "{cd}" not in ass  # 花括號已轉全形
     (_, wordmark_size, _), (_, slogan_size, _) = events
     assert wordmark_size <= 120 and slogan_size <= 84  # 字級只會縮不會放大
+
+
+def test_canvas_background_is_a_flat_canvas_colour_png_made_once(tmp_path):
+    """新段型的畫布底圖是純 #0D1B2A(與圖表段的 ffmpeg 色源同色),不是漸層:
+    漸層經 Ken Burns 放大會露出色階斷層。一個工作目錄只畫一次。"""
+    name = canvas_background(tmp_path)
+    img = imread(tmp_path / name)
+    assert img.shape[:2] == (1920, 1080)
+    expected = tuple(int(BG_HEX[i : i + 2], 16) for i in (0, 2, 4))
+    assert (np.rint(img[:, :, :3] * 255).astype(int) == expected).all()
+    mtime = (tmp_path / name).stat().st_mtime_ns
+    assert canvas_background(tmp_path) == name and (tmp_path / name).stat().st_mtime_ns == mtime

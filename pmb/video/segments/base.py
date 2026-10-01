@@ -13,7 +13,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, NamedTuple
 
-from pmb.charts.cards import render_card_background
+from pmb.charts.cards import render_solid_background
 from pmb.schemas.script import VoiceKey
 from pmb.tts.edge import WordBoundary
 from pmb.video.ass import BG_HEX, ass_time
@@ -137,8 +137,11 @@ class SegmentRenderer(ABC):
 
 
 def canvas_background(work_dir: Path) -> str:
-    """新段型共用的畫布色底圖(一支片只畫一次)。"""
+    """新段型共用的畫布底圖:純色 ``BG_HEX``,與圖表段的 ffmpeg 色源同色(一支片只畫一次)。
+
+    刻意不用字卡的漸層:漸層經 Ken Burns 放大會露出一道色階斷層(2026-09-30 彩排)。
+    """
     name = "canvas_bg.png"
     if not (work_dir / name).exists():
-        render_card_background(str(work_dir / name), accent=f"#{BG_HEX}")
+        render_solid_background(str(work_dir / name), color=f"#{BG_HEX}")
     return name

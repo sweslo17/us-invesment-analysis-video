@@ -1,6 +1,7 @@
 """字卡:全屏漸層底 + (封面用)大字 PNG。
 
-影片裡的字卡分兩層:``render_card_background`` 只畫漸層底(無文字),文字由
+影片裡的字卡分兩層:``render_card_background`` 只畫漸層底(無文字;新段型的畫布底則用
+``render_solid_background`` 的純色),文字由
 ``video.assemble.build_card_ass`` 以 ASS 疊上去做 pop-in 動畫——靜止字卡是 Shorts
 滑走的主因之一。``render_headline_card`` 把文字烤進 PNG,給 YouTube 封面用(封面是
 靜態圖,可帶一個大數字 stat 抓眼球)。純文字(matplotlib 無法上色 emoji,梗靠用字)。
@@ -98,6 +99,17 @@ def render_card_background(out_path: str | Path, *, accent: str) -> str:
     fig = _new_canvas(accent)
     fig.savefig(out_path, dpi=100)
     plt.close(fig)
+    return str(out_path)
+
+
+def render_solid_background(out_path: str | Path, *, color: str) -> str:
+    """畫一張 1080×1920 的純色底圖(每個像素同色,無漸層、無文字)。
+
+    給新段型(口號/對話/對帳…)的畫布底:漸層底經 Ken Burns 緩慢放大時,8-bit 的色階
+    斷層會被拉成肉眼可見的一道橫線;純色就沒有這個問題,也與圖表段的 ffmpeg 色源同色。
+    """
+    rgb = np.rint(np.array(to_rgb(color)) * 255).astype(np.uint8)
+    plt.imsave(out_path, np.broadcast_to(rgb, (_H, _W, 3)), format="png")
     return str(out_path)
 
 
