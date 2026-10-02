@@ -182,6 +182,13 @@ class Script(BaseModel):
     def total_duration(self) -> float:
         return sum(seg.duration for seg in self.segments)
 
+    def hook(self) -> tuple[int, CardSegment] | None:
+        """開場鉤子：第一個字卡段（索引，段）；沒有字卡回 None。封面與今日主標共用。"""
+        return next(
+            ((i, seg) for i, seg in enumerate(self.segments) if isinstance(seg, CardSegment)),
+            None,
+        )
+
     @model_validator(mode="after")
     def _check_chart_bindings(self) -> Script:
         chart_ids = [c.id for c in self.charts]

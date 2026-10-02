@@ -192,3 +192,19 @@ def test_spoken_text_and_display_numbers():
     assert b.display_numbers == ["5.26%"]
     r = RecapSegment(vo="x。", rows=[{"ask": "a", "result": "沒守住5.2%", "mark": "no"}])
     assert r.display_numbers == ["沒守住5.2%"]
+
+
+def test_hook_is_the_first_card_even_when_it_is_not_at_index_zero():
+    data = _valid_script()
+    data["segments"] += [
+        {"vo": "開場。", "headline": "債市暴走", "tag": "債市日"},
+        {"vo": "收尾。", "headline": "金句\n對句"},
+    ]
+    script = Script.model_validate(data)
+    index, seg = script.hook()
+    assert index == 2
+    assert isinstance(seg, CardSegment) and seg.headline == "債市暴走"
+
+
+def test_hook_is_none_when_the_script_has_no_card():
+    assert Script.model_validate(_valid_script()).hook() is None
