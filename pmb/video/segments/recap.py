@@ -11,6 +11,7 @@ from typing import NamedTuple
 from pmb.schemas.script import RecapRow, RecapSegment
 from pmb.video.ass import (
     ASS_TEMPLATE,
+    CONTENT_TOP,
     FADE_TAG,
     MUTED_HEX,
     WHITE_HEX,
@@ -22,6 +23,7 @@ from pmb.video.ass import (
     rounded_rect,
     shape_event,
     text_event,
+    top_layout,
 )
 from pmb.video.segments.base import (
     RenderContext,
@@ -108,17 +110,18 @@ def _row_layout(row: RecapRow) -> _RowLayout:
     return _RowLayout(row, ask, ask_size, lines, size)
 
 
-def row_tops(extents: list[int]) -> list[int]:
+def row_tops(extents: list[int], top: int = CONTENT_TOP) -> list[int]:
     """各列頂緣 y。列距固定 ``_ROW_PITCH``,整塊(第一列頂緣 → 最後一列真實下緣)在內容帶裡
-    上下置中:列少就落在畫面中間,不再貼著標題。``extents`` 是各列內容的實際高度。
+    上下置中:列少就落在畫面中間,不再貼著標題。``extents`` 是各列內容的實際高度,
+    ``top`` 是內容帶上緣(有橫幅時要比橫幅底緣低)。
 
-    置中後頂緣不會高過 ``CONTENT_TOP``(270,標題底緣約 245 已淨空);最多 3 列時整塊不超過
-    700px,置中的頂緣至少在 445,所以不需要另外把首列壓在 330 以下。
+    置中後頂緣不會高過 ``top``(預設 ``CONTENT_TOP`` = 270,標題底緣約 245 已淨空);最多 3 列時
+    整塊不超過 700px,預設下置中的頂緣至少在 445,所以不需要另外把首列壓在 330 以下。
     """
     if not extents:
         return []
-    top = center_block_top((len(extents) - 1) * _ROW_PITCH + extents[-1])
-    return [top + k * _ROW_PITCH for k in range(len(extents))]
+    first = center_block_top((len(extents) - 1) * _ROW_PITCH + extents[-1], top)
+    return [first + k * _ROW_PITCH for k in range(len(extents))]
 
 
 def _row_events(layout: _RowLayout, top: int, start: float, end: float, last: bool) -> list[str]:
@@ -138,13 +141,15 @@ def _row_events(layout: _RowLayout, top: int, start: float, end: float, last: bo
 
 class RecapRenderer(SegmentRenderer):
     def render(self, seg: RecapSegment, ctx: RenderContext) -> Visual:
-        events = [full_event("title", ctx.duration, FADE_TAG + (seg.title or _DEFAULT_TITLE))]
+        layout = top_layout(ctx.banner)
+        events = [full_event(layout.title_style, ctx.duration,
+                             FADE_TAG + (seg.title or _DEFAULT_TITLE))]
         events += common_events(ctx.duration, badge=ctx.badge, cta=ctx.cta)
         times = row_times(len(seg.rows), ctx.starts, ctx.duration)
-        layouts = [_row_layout(row) for row in seg.rows]
-        tops = row_tops([layout.extent for layout in layouts])
-        for k, (layout, top, start) in enumerate(zip(layouts, tops, times, strict=True)):
-            events += _row_events(layout, top, start, ctx.duration, k == len(layouts) - 1)
+        rows = [_row_layout(row) for row in seg.rows]
+        tops = row_tops([row.extent for row in rows], layout.content_top)
+        for k, (row, top, start) in enumerate(zip(rows, tops, times, strict=True)):
+            events += _row_events(row, top, start, ctx.duration, k == len(rows) - 1)
         events += caption_events(ctx.takes, ctx.starts)
         ass = ASS_TEMPLATE.format(font=ctx.font, events="\n".join(events))
         return Visual(canvas_background(ctx.work_dir), True, ass, "recap")

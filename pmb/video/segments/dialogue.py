@@ -11,6 +11,7 @@ from typing import NamedTuple
 from pmb.schemas.script import DialogueLine, DialogueSegment
 from pmb.video.ass import (
     ASS_TEMPLATE,
+    CONTENT_TOP,
     FADE_TAG,
     WHITE_HEX,
     ass_color,
@@ -20,6 +21,7 @@ from pmb.video.ass import (
     rounded_rect,
     shape_event,
     text_event,
+    top_layout,
 )
 from pmb.video.captions import has_speakable, is_beat, strip_beat
 from pmb.video.segments.base import (
@@ -64,17 +66,18 @@ def bubble_layout(text: str) -> tuple[list[str], int]:
     return fit_lines(text, max_width=_MAX_INNER, sizes=_SIZES, max_lines=_MAX_LINES)
 
 
-def bubble_tops(heights: list[int]) -> list[int]:
+def bubble_tops(heights: list[int], top: int = CONTENT_TOP) -> list[int]:
     """各泡泡的角色名頂緣 y(泡泡框頂緣 = 這個值 + ``_LABEL_GAP``)。
 
     相鄰泡泡維持固定的 ``_SLOT_PITCH``,整塊(第一個角色名頂緣 → 最後一個泡泡的真實底緣)
-    在內容帶裡上下置中:泡泡少就落在畫面中間,不再全擠在上半。``heights`` 是各泡泡框的實際高度。
+    在內容帶裡上下置中:泡泡少就落在畫面中間,不再全擠在上半。``heights`` 是各泡泡框的實際高度,
+    ``top`` 是內容帶上緣(有橫幅時要比橫幅底緣低)。
     """
     if not heights:
         return []
     block = (len(heights) - 1) * _SLOT_PITCH + _LABEL_GAP + heights[-1]
-    top = center_block_top(block)
-    return [top + k * _SLOT_PITCH for k in range(len(heights))]
+    first = center_block_top(block, top)
+    return [first + k * _SLOT_PITCH for k in range(len(heights))]
 
 
 class _Bubble(NamedTuple):
@@ -95,12 +98,13 @@ def _bubble(line: DialogueLine) -> _Bubble:
 
 def build_dialogue_ass(seg: DialogueSegment, ctx: RenderContext) -> str:
     """逐句泡泡:角色名 + 圓角框 + 內文,三個事件都從該句配音起點開始顯示到段尾。"""
+    layout = top_layout(ctx.banner)
     events: list[str] = []
     if seg.title:
-        events.append(full_event("title", ctx.duration, FADE_TAG + seg.title))
+        events.append(full_event(layout.title_style, ctx.duration, FADE_TAG + seg.title))
     events += common_events(ctx.duration, badge=ctx.badge, cta=ctx.cta)
     bubbles = [_bubble(line) for line in speakable_lines(seg)[:_MAX_BUBBLES]]
-    tops = bubble_tops([b.h for b in bubbles])
+    tops = bubble_tops([b.h for b in bubbles], layout.content_top)
     for k, (bubble, top) in enumerate(zip(bubbles, tops, strict=True)):
         line, lines, size, w, h = bubble
         start = ctx.starts[k]

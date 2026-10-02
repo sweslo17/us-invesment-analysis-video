@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 import re
+from typing import NamedTuple
 
 from pmb.video.captions import wrap_caption
 
@@ -28,6 +29,7 @@ TITLE_TOP = 150  # 標題 92px,約到 245
 CHART_BAND_TOP = 270
 CHART_BOX_W = 1040
 CHART_BOX_H = 850  # 框底 = 270+850 = 1120,下方留給 callout
+CHART_BOX_BOTTOM = CHART_BAND_TOP + CHART_BOX_H  # 1120:有橫幅時框頂下移、框底不動
 STAT_LABEL_TOP = 1122  # 48px
 STAT_TOP = 1172  # 132px,約到 1340;字幕頂緣約 1365
 SUB_MARGIN_V = BOTTOM_UI  # 字幕底緣 = 1520;兩行 64px 頂緣約 1365,不蓋 callout
@@ -47,11 +49,47 @@ CTA_SEC = 3.0  # 片尾 CTA 出現秒數
 CENTER_X = WIDTH // 2
 CENTERED_TEXT_MAX_W = 740
 
+# 今日標題橫幅(金底深字的圓角框,疊在每個中段畫面頂端,讓任何一格被截成封面都讀得出主題)。
+# 框:x=60、y=110、寬 960、高 216(兩行 88px + 上下各 20px 內距,底緣 326);一行標題在框內置中。
+BANNER_TOP = 110
+BANNER_X = 60
+BANNER_W = 960
+BANNER_PAD = 20
+BANNER_RADIUS = 28
+BANNER_SIZES = (88, 76, 66)  # 標題字級,由大到小試
+BANNER_MAX_LINES = 2
+BANNER_H = BANNER_MAX_LINES * BANNER_SIZES[0] + 2 * BANNER_PAD  # 216:框高固定,不隨行數變
+# 有橫幅的段:段標題縮小並下移到橫幅底緣(326)之下,內容帶/圖表帶上緣也跟著下移
+BANNERED_TITLE_TOP = 344  # 標題 60px,約到 404
+BANNERED_CONTENT_TOP = 424
 
-def center_block_top(block_height: int) -> int:
-    """高 ``block_height`` 的區塊在內容帶(``CONTENT_TOP``..``CONTENT_BOTTOM``)內上下置中,
-    回傳區塊頂緣。區塊比內容帶還高就貼著上緣(寧可往下溢出,也不往上蓋標題)。"""
-    return CONTENT_TOP + max(0, (CONTENT_BOTTOM - CONTENT_TOP - block_height) // 2)
+
+class TopLayout(NamedTuple):
+    """畫面上半部的版面:段標題用的樣式、內容帶/圖表帶上緣。"""
+
+    title_style: str
+    content_top: int
+
+    @property
+    def chart_box_h(self) -> int:
+        """圖表框高:框底固定在 ``CHART_BOX_BOTTOM``,上緣下移就變矮。"""
+        return CHART_BOX_BOTTOM - self.content_top
+
+
+PLAIN_TOP = TopLayout("title", CHART_BAND_TOP)
+BANNERED_TOP = TopLayout("title_b", BANNERED_CONTENT_TOP)
+
+
+def top_layout(banner: bool) -> TopLayout:
+    """這段有橫幅就用下移的版面,否則維持原版面。"""
+    return BANNERED_TOP if banner else PLAIN_TOP
+
+
+def center_block_top(block_height: int, top: int = CONTENT_TOP) -> int:
+    """高 ``block_height`` 的區塊在內容帶(``top``..``CONTENT_BOTTOM``)內上下置中,
+    回傳區塊頂緣;``top`` 是內容帶上緣(有橫幅時是 ``BANNERED_CONTENT_TOP``)。
+    區塊比內容帶還高就貼著上緣(寧可往下溢出,也不往上蓋標題)。"""
+    return top + max(0, (CONTENT_BOTTOM - top - block_height) // 2)
 
 
 def layout_safe_zone() -> dict[str, int]:
@@ -92,6 +130,9 @@ ASS_TEMPLATE = "\n".join(
         # 主題標題:頂部置中
         f"Style: title,{{font}},92,&H0066D1FF,&H00FFFFFF,&H00201810,&H00000000,1,1,3,0,8,"
         f"40,40,{TITLE_TOP}",
+        # 有橫幅時的段標題:同 title,字級縮到 60、下移到橫幅底緣之下
+        f"Style: title_b,{{font}},60,&H0066D1FF,&H00FFFFFF,&H00201810,&H00000000,1,1,3,0,8,"
+        f"40,40,{BANNERED_TITLE_TOP}",
         # 字卡大標與 kicker:位置由事件的 \\pos 決定(依行數對可見區置中),樣式只管字型
         f"Style: card,{{font}},{CARD_FONT},&H00FFFFFF,&H00FFFFFF,&H40000000,&H00000000,1,1,2,0,5,"
         "80,80,0",
@@ -195,10 +236,12 @@ def _slide_in(x: int, y: int, move_px: int) -> str:
 
 
 def shape_event(
-    start: float, end: float, x: int, y: int, path: str, color: str, *, move_px: int = 24
+    start: float, end: float, x: int, y: int, path: str, color: str, *, move_px: int | None = 24
 ) -> str:
-    """色塊/圖示事件(layer 0,在文字下面):從下方滑入 + 淡入。"""
-    tags = f"{{\\an7{_slide_in(x, y, move_px)}\\bord0\\shad0\\1c{color}\\p1}}"
+    """色塊/圖示事件(layer 0,在文字下面):預設從下方滑入 + 淡入;``move_px=None`` 是靜態
+    定位(``\\pos``,不滑不淡,與 ``text_event`` 一致,橫幅這類常駐色塊用)。"""
+    place = f"\\pos({x},{y})" if move_px is None else _slide_in(x, y, move_px)
+    tags = f"{{\\an7{place}\\bord0\\shad0\\1c{color}\\p1}}"
     return f"Dialogue: 0,{ass_time(start)},{ass_time(end)},free,,0,0,0,,{tags}{path}{{\\p0}}"
 
 
