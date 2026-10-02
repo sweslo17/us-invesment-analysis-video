@@ -90,6 +90,8 @@ class Settings(BaseSettings):
     # 影片字幕 CJK 字型:雲端 Linux 預設 Noto(setup 裝 fonts-noto-cjk);
     # 本機 macOS 在 .env 設 VIDEO_FONT=PingFang TC
     video_font: str = "Noto Sans CJK TC"
+    # 中段畫面頂部的今日主標金條（hook 字卡的大標）；關掉回到原版面
+    video_banner: bool = True
 
     def ensure_dirs(self) -> None:
         """確保 runtime 產出目錄存在。"""

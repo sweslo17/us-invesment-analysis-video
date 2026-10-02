@@ -339,6 +339,7 @@ def cmd_assemble(args: argparse.Namespace) -> int:
         slogan_intro=slogan_intro,
         slogan_outro=settings.slogan_outro,
         sting_sfx=sting_sfx,
+        banner=settings.video_banner,
     )
 
     duration = probe_duration(out_path)

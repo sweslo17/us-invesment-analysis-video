@@ -4,8 +4,11 @@ import datetime as dt
 import json
 import types
 
+import pytest
+
 from pmb import cli
 from pmb.cli import format_snapshot, resolve_fetch_target, today_blockers
+from pmb.schemas.script import Script
 from pmb.schemas.snapshot import Quote, RegimeMetrics, Snapshot
 
 
@@ -172,3 +175,27 @@ def test_render_cover_normalizes_halfwidth_punctuation(tmp_path, monkeypatch):
     assert captured["headline"] == "債市暴走，Fed不急"
     assert captured["tag"] == "今日盤前：速報"
     assert captured["stat"] == "7,670"
+
+
+@pytest.mark.parametrize("enabled", [True, False])
+def test_cmd_assemble_passes_the_banner_setting(tmp_path, monkeypatch, enabled):
+    """VIDEO_BANNER 設定原樣帶進 assemble_video（今日主標橫幅的開關）。"""
+    day = dt.date(2026, 9, 30)
+    script = Script.model_validate({
+        "segments": [{"kind": "card", "vo": "開場。", "headline": "債市暴走", "tag": "債市日"}],
+        "charts": [],
+    })
+    snapshot = Snapshot(session_date=day, generated_at=dt.datetime(2026, 9, 30, 12, tzinfo=dt.UTC))
+    (tmp_path / f"script_{day}.json").write_text(script.model_dump_json(), encoding="utf-8")
+    (tmp_path / f"snapshot_{day}.json").write_text(snapshot.model_dump_json(), encoding="utf-8")
+    settings = types.SimpleNamespace(
+        artifacts_dir=tmp_path, ensure_dirs=lambda: None, video_font="F", channel_name="頻道",
+        bgm_gain_db=-14.0, slogan_intro="口號", slogan_outro="收尾", sting_enable=True,
+        video_banner=enabled,
+    )
+    captured: dict = {}
+    monkeypatch.setattr(cli, "get_settings", lambda: settings)
+    monkeypatch.setattr(cli, "assemble_video", lambda *args, **kwargs: captured.update(kwargs))
+    monkeypatch.setattr(cli, "probe_duration", lambda path: 1.0)
+    assert cli.main(["assemble", "--date", str(day), "--dry-run"]) == 0
+    assert captured["banner"] is enabled
