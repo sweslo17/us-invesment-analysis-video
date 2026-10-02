@@ -1,15 +1,9 @@
-"""時事標題卡渲染測試:全屏大字 PNG。"""
+"""字卡底圖與配色測試:漸層底、純色底、斷行、調色盤。"""
 
 import numpy as np
 from matplotlib.image import imread
 
-from pmb.charts.cards import accent_for, render_headline_card, render_solid_background
-
-
-def test_render_headline_card_writes_fullframe_png(tmp_path):
-    out = tmp_path / "card.png"
-    render_headline_card(out, "Fed 轉鷹,2026 恐升息", accent="#C1121F", tag="盤前快報")
-    assert out.exists() and out.stat().st_size > 0
+from pmb.charts.cards import accent_for, render_solid_background
 
 
 def test_accent_for_cycles_palette():
@@ -35,15 +29,6 @@ def test_wrap_card_text_keeps_couplet_lines_and_wraps_long_line():
     assert wrap_card_text("別人恐懼我貪婪\n我只敢等非農") == ["別人恐懼我貪婪", "我只敢等非農"]
     lines = wrap_card_text("荷姆茲海峽通行量比戰前掉了九成五,原油站上95美元")
     assert len(lines) >= 2 and "".join(lines) == "荷姆茲海峽通行量比戰前掉了九成五,原油站上95美元"
-
-
-def test_render_headline_card_accepts_stat_for_cover(tmp_path):
-    out = tmp_path / "cover.png"
-    render_headline_card(
-        out, "鷹鴿吵不完,今天非農裁判", accent="#C1121F", tag="盤前快報",
-        stat="+1.06%", brand="美股早發車",
-    )
-    assert out.exists() and out.stat().st_size > 0
 
 
 def test_render_solid_background_is_flat_fullframe(tmp_path):

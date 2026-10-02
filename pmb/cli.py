@@ -22,6 +22,7 @@ from pmb.data.fred import FredClient
 from pmb.data.snapshot import build_snapshot
 from pmb.data.yfinance import YFinanceClient
 from pmb.orchestrator import build_review_manifest, review_summary
+from pmb.publish.cover import cover_spec, render_cover
 from pmb.publish.report import render_report
 from pmb.publish.youtube import build_youtube_metadata, upload_video
 from pmb.research.dedup import load_previous_brief
@@ -38,7 +39,6 @@ from pmb.schemas.brief import Brief
 from pmb.schemas.chart import ChartSpec
 from pmb.schemas.script import Script, VoiceKey
 from pmb.schemas.snapshot import Quote, Snapshot
-from pmb.textnorm import zh_punct_obj
 from pmb.tts.edge import edge_synthesize, probe_duration, silent_synth
 from pmb.video.assemble import assemble_video
 
@@ -380,50 +380,29 @@ def cmd_run(args: argparse.Namespace) -> int:
     return 0
 
 
-def cover_spec(script) -> dict | None:
-    """決定封面內容:開場鉤子字卡的大標 + kicker,再配第一個帶大數字的段落(有就用)。
-
-    大數字依段落順序取圖表段 stat / 全屏大數字 value / 好壞消息格子的 stat;對帳結果不算。
-    封面是靜態圖,大數字是最能在頻道頁/搜尋結果抓眼球的元素。沒有字卡就回 None。
-    """
-    hook = next(((i, seg) for i, seg in enumerate(script.segments) if seg.kind == "card"), None)
-    if hook is None:
-        return None
-    idx, seg = hook
-    stat = next(
-        (
-            s.display_numbers[0]
-            for s in script.segments
-            if s.kind in ("chart", "bignum", "split") and s.display_numbers
-        ),
-        None,
-    )
-    return {"headline": seg.headline, "tag": seg.tag, "stat": stat, "accent_index": idx}
-
-
 def _render_cover(target, settings) -> Path | None:
-    """用講稿產出封面圖(鉤子大標 + 大數字 + 品牌線),回傳路徑;無講稿/無字卡則 None。"""
-    from pmb.charts.cards import accent_for, render_headline_card
-    from pmb.schemas.script import Script
+    """用講稿產出 16:9 封面圖（鉤子大標 + 大數字 + 頻道日期條），回傳路徑。
 
+    無講稿、無字卡，或渲染失敗（只記 WARNING，封面是加分項）都回 None，上傳照常進行、
+    只是不帶自訂縮圖。
+    """
     script_path = settings.artifacts_dir / f"script_{target}.json"
     if not script_path.exists():
         return None
     script = Script.model_validate_json(script_path.read_text(encoding="utf-8"))
-    spec = cover_spec(script)
+    spec = cover_spec(script, target)
     if spec is None:
         return None
-    spec = zh_punct_obj(spec)  # 封面是公開圖片：大標與小標的半形標點在出口轉全形
-    cover = settings.artifacts_dir / f"cover_{target}.png"
-    render_headline_card(
-        str(cover),
-        spec["headline"],
-        accent=accent_for(spec["accent_index"]),
-        tag=spec["tag"],
-        stat=spec["stat"],
-        brand=f"{settings.channel_name} · 每天盤前更新",
-    )
-    return cover
+    try:
+        return render_cover(
+            spec,
+            settings.artifacts_dir / f"cover_{target}.png",
+            font=settings.video_font,
+            channel=settings.channel_name,
+        )
+    except Exception as exc:  # noqa: BLE001 — 封面失敗不擋上傳
+        logger.warning("封面渲染失敗，這次不帶自訂縮圖：{}：{}", type(exc).__name__, exc)
+        return None
 
 
 def cmd_publish(args: argparse.Namespace) -> int:
