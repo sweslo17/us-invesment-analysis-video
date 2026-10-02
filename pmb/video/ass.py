@@ -113,7 +113,7 @@ _STYLE_FORMAT = (
 _EVENT_FORMAT = (
     "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
 )
-# 自由定位樣式：新段型的色塊/圖示/文字（以及 16:9 封面）都用它，位置與字級由事件的 override 決定。
+# 自由定位樣式：新段型的色塊/圖示/文字（以及直式封面）都用它，位置與字級由事件的 override 決定。
 # ``{font}`` 留給 ``ass_template`` 的產物用 ``.format`` 填字型。
 FREE_STYLE = "Style: free,{font},60,&H00FFFFFF,&H00FFFFFF,&H00201810,&H00000000,1,1,0,0,7,0,0,0"
 
@@ -121,7 +121,7 @@ FREE_STYLE = "Style: free,{font},60,&H00FFFFFF,&H00FFFFFF,&H00201810,&H00000000,
 def ass_template(width: int, height: int, styles: list[str]) -> str:
     """ASS 模板（``{font}``、``{events}`` 兩個佔位留給 ``.format``）：``PlayRes`` 取 ``width``×
     ``height``，樣式區放 ``styles``（每個元素一行 ``Style: …``）。影片 9:16 的 ``ASS_TEMPLATE``
-    與 16:9 封面的 ``cover.COVER_ASS_TEMPLATE`` 共用這個骨架，``PlayRes`` 之外的檔頭一致。"""
+    與直式封面的 ``cover.COVER_ASS_TEMPLATE`` 共用這個骨架，``PlayRes`` 之外的檔頭一致。"""
     return "\n".join(
         [
             "[Script Info]",

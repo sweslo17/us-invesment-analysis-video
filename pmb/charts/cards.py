@@ -3,7 +3,7 @@
 影片裡的字卡分兩層:``render_card_background`` 只畫漸層底(無文字;新段型的畫布底則用
 ``render_solid_background`` 的純色),文字由
 ``video.assemble.build_card_ass`` 以 ASS 疊上去做 pop-in 動畫——靜止字卡是 Shorts
-滑走的主因之一。純文字(matplotlib 無法上色 emoji,梗靠用字)。YouTube 16:9 封面不在這裡畫，
+滑走的主因之一。純文字(matplotlib 無法上色 emoji,梗靠用字)。YouTube 封面不在這裡畫，
 見 ``pmb.publish.cover``。
 """
 

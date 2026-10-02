@@ -381,7 +381,7 @@ def cmd_run(args: argparse.Namespace) -> int:
 
 
 def _render_cover(target, settings) -> Path | None:
-    """用講稿產出 16:9 封面圖（鉤子大標 + 大數字 + 頻道日期條），回傳路徑。
+    """用講稿產出直式 1080×1920 封面圖（鉤子大標 + 大數字 + 頻道日期），回傳路徑。
 
     無講稿、無字卡，或渲染失敗（只記 WARNING，封面是加分項）都回 None，上傳照常進行、
     只是不帶自訂縮圖。

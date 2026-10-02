@@ -1,10 +1,12 @@
-"""YouTube 16:9 封面（自訂縮圖）：原生 1280×720 版面，用 libass 經 ffmpeg 渲染。
+"""YouTube 封面（自訂縮圖）：直式 1080×1920 版面，用 libass 經 ffmpeg 渲染。
 
-YouTube 只把上傳的封面存成 16:9 縮圖，所以不再畫直式圖：版面直接按 1280×720 設計，文字量寬與
-斷行走 ``pmb.video.textfit``、色塊與文字事件走 ``pmb.video.ass``，和影片內的畫面同一套字型引擎。
+每支影片一張封面，直式 9:16 與影片同比例。文字量寬與斷行走 ``pmb.video.textfit``、色塊與文字事件走
+``pmb.video.ass``，和影片內的畫面同一套字型引擎。
 
-版面（px）：左邊 kicker（金）+ 大標（白，粗體，最多兩行）；右邊深藍框放大數字（標籤灰藍、數字金）；
-底部一條比底色深的條放「頻道 · 日期 盤前」。背景色是日期對應的調色盤顏色，連續兩天不同。
+版面（px，全部置中）：頂部品牌行「頻道 · 日期 盤前」；中間 kicker（金）疊在大標（白，粗體，
+最多三行）上方；有大數字時下方放深藍框（標籤灰藍、數字金），大標上移讓出位置；1500 以下是一條
+比底色深的色條，不放字，墊在手機網格疊上來的影片標題底下。所有關鍵文字底緣都在 1500 之上。
+背景色是日期對應的調色盤顏色，連續兩天不同。
 """
 
 from __future__ import annotations
@@ -34,33 +36,31 @@ from pmb.video.ass import (
 from pmb.video.assemble import _run_ffmpeg
 from pmb.video.textfit import fit_authored_lines, fit_one_line
 
-COVER_W, COVER_H = 1280, 720
+COVER_W, COVER_H = 1080, 1920
 COVER_ASS_TEMPLATE = ass_template(COVER_W, COVER_H, [FREE_STYLE])  # 封面只用 free 樣式
 COVER_ASS_NAME = "cover.ass"  # 暫存目錄內的檔名
 _SHOWN_SEC = 1.0  # 只輸出一格，事件蓋過這一格就好
 _STRIP_DARKEN = 0.55  # 底部條 = 底色逐通道 ×0.55（與 cards._gradient 的底端同比例）
 
-_MARGIN_X = 70
-# 底部條：全寬、貼底，內放「頻道 · 日期 盤前」
-_STRIP_TOP, _STRIP_H = 576, 144
-_STRIP_TEXT_Y = _STRIP_TOP + _STRIP_H // 2  # 648：條內垂直置中
-_STRIP_SIZE = 44
-_STRIP_TEXT_MAX_W = COVER_W - 2 * _MARGIN_X
-# kicker：左上
-_KICKER_SIZE, _KICKER_Y = 46, 70
-# 大標：左側垂直置中的錨點；有大數字框時要留出框的位置，所以寬度較窄
-_HEADLINE_Y = 340
-_HEADLINE_SIZES = (120, 104, 92, 80)
-_HEADLINE_MAX_LINES = 2
-_HEADLINE_W_WITH_STAT = 640  # x 70..710，離深藍框（x=820）還有餘裕
-_HEADLINE_W_FULL = COVER_W - 2 * _MARGIN_X  # 1140：x 70..1210
-# 大數字框（右側）
-_BOX_X, _BOX_Y, _BOX_W, _BOX_H, _BOX_RADIUS = 820, 130, 400, 320, 28
-_BOX_CENTER_X = _BOX_X + _BOX_W // 2  # 1020
-_BOX_TEXT_MAX_W = 340
-_LABEL_SIZE, _LABEL_Y = 44, 185
-_VALUE_SIZE = 128
-_VALUE_Y_LABELED, _VALUE_Y_BARE = 330, 290  # 沒標籤時數字移到框的中間
+_CENTER_X = COVER_W // 2  # 所有文字與深藍框都以這條中線置中
+_TEXT_MAX_W = 940  # 品牌行、kicker、大標的最大寬度：x 70..1010，左右邊距各 70
+# 底部條：全寬、貼底，不放字；手機網格把影片標題疊在縮圖底部約四分之一，這條當深色底
+_STRIP_TOP = 1500
+_STRIP_H = COVER_H - _STRIP_TOP
+# 品牌行（頂部，頂緣對齊）
+_BRAND_SIZE, _BRAND_Y = 52, 130
+# 大標（置中，粗體來自 free 樣式）：有大數字框時上移，沒有時落在畫面中間偏上
+_HEADLINE_SIZES = (150, 132, 116, 100)
+_HEADLINE_MAX_LINES = 3
+_HEADLINE_Y_WITH_STAT, _HEADLINE_Y_BARE = 640, 820
+# kicker（底緣對齊）：底緣在大標頂緣之上 _KICKER_GAP
+_KICKER_SIZE, _KICKER_GAP = 64, 40
+# 大數字框（置中）
+_BOX_X, _BOX_Y, _BOX_W, _BOX_H, _BOX_RADIUS = 120, 960, 840, 440, 36
+_BOX_TEXT_MAX_W = 760
+_LABEL_SIZE, _LABEL_Y = 64, 1050
+_VALUE_SIZE = 220
+_VALUE_Y_LABELED, _VALUE_Y_BARE = 1230, 1180  # 沒標籤時數字上移到框內中間
 
 
 class CoverSpec(NamedTuple):
@@ -109,19 +109,20 @@ def _darken(hex_rgb: str, factor: float) -> str:
 
 
 def build_cover_ass(spec: CoverSpec, font: str, *, channel: str = "美股早發車") -> str:
-    """封面的完整 .ass：底部條 + 條內文字、kicker、大標、（有大數字時）深藍框 + 標籤 + 數字。
+    """封面的完整 .ass：底部條、品牌行、大標、kicker、（有大數字時）深藍框 + 標籤 + 數字。
 
     全部是靜態事件（``move_px=None``）。文字一律先過 ``textfit`` 擬合：大標依寬度縮字級／斷行
-    （保留作者自己的換行），其餘單行文字放不下就縮字級、再放不下才截斷，所以每個文字事件的
-    右緣都不超過 1210（左右邊距各 70）。底色不在 ASS 裡，由 ``render_cover`` 交給 ffmpeg 的色源。
+    （保留作者自己的換行，最多三行），其餘單行文字放不下就縮字級、再放不下才截斷，所以每個文字
+    事件都在 x 70..1010 內、底緣在 1500 之上。底色不在 ASS 裡，由 ``render_cover`` 交給 ffmpeg 的
+    色源。
     """
     end = _SHOWN_SEC
     events: list[str] = []
 
-    def text(x: int, y: int, body: str, size: int, color_hex: str, align: int) -> None:
+    def text(y: int, body: str, size: int, color_hex: str, align: int) -> None:
         events.append(
             text_event(
-                0.0, end, x, y, body, size=size, color=ass_color(color_hex), align=align,
+                0.0, end, _CENTER_X, y, body, size=size, color=ass_color(color_hex), align=align,
                 move_px=None,
             )
         )
@@ -132,21 +133,21 @@ def build_cover_ass(spec: CoverSpec, font: str, *, channel: str = "美股早發�
             ass_color(_darken(cover_accent(spec.date), _STRIP_DARKEN)), move_px=None,
         )
     )
-    strip, strip_size = fit_one_line(
-        f"{channel} · {spec.date.month}/{spec.date.day} 盤前", _STRIP_SIZE, _STRIP_TEXT_MAX_W
+    brand, brand_size = fit_one_line(
+        f"{channel} · {spec.date.month}/{spec.date.day} 盤前", _BRAND_SIZE, _TEXT_MAX_W
     )
-    text(_MARGIN_X, _STRIP_TEXT_Y, strip, strip_size, WHITE_HEX, 4)
+    text(_BRAND_Y, brand, brand_size, WHITE_HEX, 8)
 
-    headline_w = _HEADLINE_W_WITH_STAT if spec.stat else _HEADLINE_W_FULL
-    if spec.kicker:
-        kicker, kicker_size = fit_one_line(spec.kicker, _KICKER_SIZE, headline_w)
-        text(_MARGIN_X, _KICKER_Y, kicker, kicker_size, GOLD_HEX, 7)
-
+    headline_y = _HEADLINE_Y_WITH_STAT if spec.stat else _HEADLINE_Y_BARE
     lines, size = fit_authored_lines(
-        spec.headline, max_width=headline_w, sizes=_HEADLINE_SIZES, max_lines=_HEADLINE_MAX_LINES
+        spec.headline, max_width=_TEXT_MAX_W, sizes=_HEADLINE_SIZES, max_lines=_HEADLINE_MAX_LINES
     )
     if lines:
-        text(_MARGIN_X, _HEADLINE_Y, "\\N".join(lines), size, WHITE_HEX, 4)
+        text(headline_y, "\\N".join(lines), size, WHITE_HEX, 5)
+    if spec.kicker:
+        kicker, kicker_size = fit_one_line(spec.kicker, _KICKER_SIZE, _TEXT_MAX_W)
+        kicker_bottom = headline_y - len(lines) * size // 2 - _KICKER_GAP  # 大標頂緣再往上
+        text(kicker_bottom, kicker, kicker_size, GOLD_HEX, 2)
 
     if spec.stat:
         events.append(
@@ -157,10 +158,9 @@ def build_cover_ass(spec: CoverSpec, font: str, *, channel: str = "美股早發�
         )
         if spec.stat_label:
             label, label_size = fit_one_line(spec.stat_label, _LABEL_SIZE, _BOX_TEXT_MAX_W)
-            text(_BOX_CENTER_X, _LABEL_Y, label, label_size, MUTED_HEX, 5)
+            text(_LABEL_Y, label, label_size, MUTED_HEX, 5)
         value, value_size = fit_one_line(spec.stat, _VALUE_SIZE, _BOX_TEXT_MAX_W)
-        value_y = _VALUE_Y_LABELED if spec.stat_label else _VALUE_Y_BARE
-        text(_BOX_CENTER_X, value_y, value, value_size, GOLD_HEX, 5)
+        text(_VALUE_Y_LABELED if spec.stat_label else _VALUE_Y_BARE, value, value_size, GOLD_HEX, 5)
 
     return COVER_ASS_TEMPLATE.format(font=font, events="\n".join(events))
 
@@ -168,7 +168,7 @@ def build_cover_ass(spec: CoverSpec, font: str, *, channel: str = "美股早發�
 def render_cover(
     spec: CoverSpec, out_path: str | Path, *, font: str, channel: str = "美股早發車"
 ) -> Path:
-    """渲染封面 PNG（1280×720）並回傳絕對路徑；ffmpeg 失敗就拋 ``RuntimeError``。
+    """渲染封面 PNG（1080×1920）並回傳絕對路徑；ffmpeg 失敗就拋 ``RuntimeError``。
 
     ASS 寫進暫存目錄、ffmpeg 以該目錄為工作目錄（``subtitles=`` 吃相對檔名，路徑不必跳脫）；
     底色用 ``color=`` 色源，所以輸出路徑要先轉成絕對路徑。
