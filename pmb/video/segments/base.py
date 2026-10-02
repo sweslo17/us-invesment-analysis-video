@@ -111,7 +111,7 @@ class RenderContext:
     badge: str | None = None
     cta: str | None = None
     chart_paths: dict[str, str] = field(default_factory=dict)
-    banner: bool = False  # 這段顯示標題橫幅:用下移的版面(``pmb.video.ass.top_layout``)
+    banner: bool = False  # 這段顯示標題橫幅：用下移的版面（``pmb.video.ass.top_layout``）
 
 
 class Visual(NamedTuple):
@@ -120,7 +120,7 @@ class Visual(NamedTuple):
     ass: str  # 完整 .ass 內容
     stem: str  # .ass 檔名前綴(seg / card / dialogue …)
     sfx: str | None = None  # 段首疊的音效檔(絕對路徑)
-    chart_box: tuple[int, int] | None = None  # 圖表框 (上緣, 高),只有圖表段(非 is_card)有
+    chart_box: tuple[int, int] | None = None  # 圖表框（上緣、高），只有圖表段（非 is_card）有
 
 
 class SegmentRenderer(ABC):

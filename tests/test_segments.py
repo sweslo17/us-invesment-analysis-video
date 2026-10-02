@@ -882,11 +882,11 @@ def test_caption_break_candidates_include_fullwidth_question_and_exclamation():
     assert "?" in BREAK_AFTER and "!" in BREAK_AFTER  # 半形仍然保留
 
 
-# ── 橫幅版面(banner):標題縮小下移、內容帶上緣 424 ────────────────────────────
+# ── 橫幅版面（banner）：標題縮小下移、內容帶上緣 424 ────────────────────────────
 
 
 def _banner_ctx(takes, *, work_dir, duration=6.0, **kw):
-    """``_ctx`` 的橫幅版:``banner=True`` 代表這段顯示橫幅、用下移的版面。"""
+    """``_ctx`` 的橫幅版：``banner=True`` 代表這段顯示橫幅、用下移的版面。"""
     return dataclasses.replace(_ctx(takes, work_dir=work_dir, duration=duration, **kw),
                                banner=True)
 
@@ -896,12 +896,12 @@ def test_top_layouts_pick_plain_or_bannered_geometry():
     assert PLAIN_TOP == TopLayout("title", CHART_BAND_TOP) and PLAIN_TOP.content_top == 270
     assert BANNERED_TOP == TopLayout("title_b", BANNERED_CONTENT_TOP)
     assert CHART_BOX_BOTTOM == 1120 == CHART_BAND_TOP + CHART_BOX_H
-    assert PLAIN_TOP.chart_box_h == CHART_BOX_H == 850  # 不變:框底仍是 1120
+    assert PLAIN_TOP.chart_box_h == CHART_BOX_H == 850  # 不變：框底仍是 1120
     assert BANNERED_TOP.chart_box_h == 696 and BANNERED_TOP.content_top + 696 == CHART_BOX_BOTTOM
 
 
 def test_title_b_style_is_the_title_style_but_smaller_and_lower():
-    """``title_b`` 與 ``title`` 只差字級(60)與 MarginV(344,橫幅底緣 326 之下)。"""
+    """``title_b`` 與 ``title`` 只差字級（60）與 MarginV（344，橫幅底緣 326 之下）。"""
     ass = ASS_TEMPLATE.format(font="F", events="")
     styles = {ln.split(":", 1)[1].split(",")[0].strip(): ln.split(":", 1)[1].strip().split(",")
               for ln in ass.splitlines() if ln.startswith("Style:")}
@@ -918,7 +918,7 @@ def test_center_block_top_accepts_a_custom_band_top():
     assert center_block_top(150) == CONTENT_TOP + 450  # 預設不變
     assert center_block_top(150, top=BANNERED_CONTENT_TOP) == 424 + (1320 - 424 - 150) // 2
     assert center_block_top(896, top=BANNERED_CONTENT_TOP) == 424  # 剛好填滿
-    assert center_block_top(2000, top=BANNERED_CONTENT_TOP) == 424  # 太高:貼著自己的上緣
+    assert center_block_top(2000, top=BANNERED_CONTENT_TOP) == 424  # 太高：貼著自己的上緣
 
 
 def test_static_shape_event_uses_pos_without_slide_or_fade():
@@ -930,7 +930,7 @@ def test_static_shape_event_uses_pos_without_slide_or_fade():
 
 
 def _title_styles(ass: str) -> list[str]:
-    """段標題事件用的樣式名(``title`` / ``title_b``),依事件順序。"""
+    """段標題事件用的樣式名（``title`` / ``title_b``），依事件順序。"""
     return re.findall(r"^Dialogue: \d+,[^,]+,[^,]+,(title\w*),", ass, re.MULTILINE)
 
 
@@ -1021,17 +1021,18 @@ def test_bannered_dialogue_with_four_two_line_bubbles_starts_below_the_banner(tm
     boxes, label_tops = _events(visual.ass)
     assert len(boxes) == len(label_tops) == 4
     assert label_tops[0] >= BANNERED_CONTENT_TOP == 424
-    # 四個兩行泡泡整塊 906px > 內容帶 896px:貼著上緣、往下溢出 10px(1330),仍在字幕頂緣(約 1365)之上
+    # 四個兩行泡泡整塊 906px > 內容帶 896px：貼著上緣、往下溢出 10px（1330），
+    # 仍在字幕頂緣（約 1365）之上
     assert max(y + h for _, y, _, h in boxes) <= 1365
     assert label_tops == bubble_tops([b[3] for b in boxes], top=BANNERED_CONTENT_TOP)
     assert _title_styles(visual.ass) == ["title_b"]
 
 
 def test_bubble_tops_accepts_a_band_top_and_keeps_the_default():
-    heights = [164, 164, 164, 164]  # 四個兩行泡泡:整塊 3 × 230 + 52 + 164 = 906
+    heights = [164, 164, 164, 164]  # 四個兩行泡泡：整塊 3 × 230 + 52 + 164 = 906
     assert bubble_tops(heights) == bubble_tops(heights, top=CONTENT_TOP)
     assert bubble_tops(heights, top=BANNERED_CONTENT_TOP) == [424, 654, 884, 1114]  # 貼著上緣
-    two = bubble_tops([164, 164], top=BANNERED_CONTENT_TOP)  # 較少泡泡:在 424..1320 內置中
+    two = bubble_tops([164, 164], top=BANNERED_CONTENT_TOP)  # 較少泡泡：在 424..1320 內置中
     assert two[0] > BANNERED_CONTENT_TOP and two[-1] + 52 + 164 <= CONTENT_BOTTOM
     assert two[1] - two[0] == 230
 

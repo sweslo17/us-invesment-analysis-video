@@ -1,4 +1,4 @@
-"""textfit.fit_authored_lines:保留作者自己的斷行,放不下才退回依寬度斷行。"""
+"""textfit.fit_authored_lines：保留作者自己的斷行，放不下才退回依寬度斷行。"""
 
 from pmb.video.textfit import fit_authored_lines, fit_lines, line_px
 
@@ -20,7 +20,7 @@ def test_authored_parts_are_stripped_and_blank_lines_dropped():
 
 
 def test_a_part_too_wide_at_the_big_size_shrinks_but_keeps_the_parts():
-    wide = "字" * 12  # 88px:12 × 88 × 0.713 ≈ 753 > 740;76px:≈ 650 放得下
+    wide = "字" * 12  # 88px：12 × 88 × 0.713 ≈ 753 > 740；76px：≈ 650 放得下
     assert line_px(wide, 88) > 740 >= line_px(wide, 76)
     lines, size = fit_authored_lines(f"{wide}\n短句", max_width=740, sizes=_SIZES, max_lines=2)
     assert lines == [wide, "短句"] and size == 76
@@ -34,7 +34,7 @@ def test_more_parts_than_max_lines_falls_back_to_width_wrapping():
 
 
 def test_a_part_too_wide_at_every_size_falls_back_to_fit_lines():
-    too_wide = "字" * 16  # 66px:16 × 66 × 0.713 ≈ 753 > 740,三個字級都放不下
+    too_wide = "字" * 16  # 66px：16 × 66 × 0.713 ≈ 753 > 740，三個字級都放不下
     assert line_px(too_wide, 66) > 740
     text = f"{too_wide}\n短"
     lines, size = fit_authored_lines(text, max_width=740, sizes=_SIZES, max_lines=2)
@@ -43,7 +43,7 @@ def test_a_part_too_wide_at_every_size_falls_back_to_fit_lines():
 
 
 def test_fallback_joins_ascii_alnum_boundaries_with_a_space_only():
-    # 三段 → 退回 fit_lines;VIX|ETF 的 ASCII 邊界補空白,中文與英數之間不補
+    # 三段 → 退回 fit_lines；VIX|ETF 的 ASCII 邊界補空白，中文與英數之間不補
     lines, _ = fit_authored_lines("VIX\nETF\n大漲", max_width=2000, sizes=_SIZES, max_lines=2)
     assert lines == ["VIX ETF大漲"]
     lines, _ = fit_authored_lines("航母開三艘\nVIX\n卻打哈欠", max_width=2000, sizes=_SIZES,

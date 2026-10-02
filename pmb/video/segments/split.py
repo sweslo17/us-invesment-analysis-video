@@ -28,8 +28,8 @@ from pmb.video.textfit import fit_lines, fit_one_line, line_px
 
 _X = 60
 _W = 830  # 右緣 890,避開右側按讚欄
-_PLAIN_PANELS = ((290, 800), 470)  # (兩格頂緣, 格高):原版面
-_BANNERED_BOTTOM = 1310  # 有橫幅時兩格的下緣(字幕頂緣約 1365 之上)
+_PLAIN_PANELS = ((290, 800), 470)  # （兩格頂緣、格高）：原版面
+_BANNERED_BOTTOM = 1310  # 有橫幅時兩格的下緣（字幕頂緣約 1365 之上）
 _PANEL_GAP = 24
 _RADIUS = 28
 _INSET = 40
@@ -61,8 +61,8 @@ def panel_text_layout(text: str, *, has_stat: bool) -> tuple[list[str], int]:
 
 
 def panel_geometry(banner: bool) -> tuple[tuple[int, int], int]:
-    """(兩格頂緣, 格高)。有橫幅時上緣從 ``BANNERED_CONTENT_TOP`` 起、下緣收在 1310,
-    兩格等高、中間隔 ``_PANEL_GAP``(424 起 → 頂緣 (424, 879)、格高 431)。"""
+    """（兩格頂緣、格高）。有橫幅時上緣從 ``BANNERED_CONTENT_TOP`` 起、下緣收在 1310，
+    兩格等高、中間隔 ``_PANEL_GAP``（424 起 → 頂緣 (424, 879)、格高 431）。"""
     if not banner:
         return _PLAIN_PANELS
     h = (_BANNERED_BOTTOM - BANNERED_CONTENT_TOP - _PANEL_GAP) // 2

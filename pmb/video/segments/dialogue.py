@@ -70,8 +70,8 @@ def bubble_tops(heights: list[int], top: int = CONTENT_TOP) -> list[int]:
     """各泡泡的角色名頂緣 y(泡泡框頂緣 = 這個值 + ``_LABEL_GAP``)。
 
     相鄰泡泡維持固定的 ``_SLOT_PITCH``,整塊(第一個角色名頂緣 → 最後一個泡泡的真實底緣)
-    在內容帶裡上下置中:泡泡少就落在畫面中間,不再全擠在上半。``heights`` 是各泡泡框的實際高度,
-    ``top`` 是內容帶上緣(有橫幅時要比橫幅底緣低)。
+    在內容帶裡上下置中:泡泡少就落在畫面中間,不再全擠在上半。``heights`` 是各泡泡框的實際高度，
+    ``top`` 是內容帶上緣（有橫幅時要比橫幅底緣低）。
     """
     if not heights:
         return []

@@ -38,7 +38,7 @@ def build_segment_ass(
 
     callout(``stat``/``stat_label``)疊在圖表下方的留白處,是手機上一眼能抓到的重點數字;
     沒給就不畫,舊 script 相容。``starts`` 沒給就依各句停頓自行累算。``title_style`` 是標題的
-    ASS 樣式(有橫幅時用縮小下移的 ``title_b``)。
+    ASS 樣式（有橫幅時用縮小下移的 ``title_b``）。
     """
     events: list[str] = []
     if title:

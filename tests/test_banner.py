@@ -1,4 +1,4 @@
-"""標題橫幅(金底深字)的版面與 ASS:靜態、置中、避開右側按讚欄。"""
+"""標題橫幅（金底深字）的版面與 ASS：靜態、置中、避開右側按讚欄。"""
 
 import re
 
@@ -51,7 +51,7 @@ def test_banner_ass_is_static_with_exactly_two_full_length_events():
     assert all(ev.startswith("Dialogue: ") for ev in events)
     for ev in events:
         assert ",0:00:00.00,1:00:00.00," in ev  # 0 → 3600 秒
-    assert "Fontname" in ass and "PingFang TC" in ass  # 完整 ASS 文件(字型帶入樣式)
+    assert "Fontname" in ass and "PingFang TC" in ass  # 完整 ASS 文件（字型帶入樣式）
 
 
 def test_box_event_is_the_gold_rounded_rect_at_the_banner_origin():
