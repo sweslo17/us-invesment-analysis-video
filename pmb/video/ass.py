@@ -44,6 +44,8 @@ CARD_FONT = 136
 CARD_LINE_H = int(CARD_FONT * 1.25)
 CARD_MAX_UNITS = (WIDTH - 2 * 60) / CARD_FONT  # 每行寬度 ≈7 字(中文 1 單位 = 一個字寬)
 KICKER_GAP = 96  # kicker 基線到大標頂緣的距離
+KICKER_HALF_H = 26  # kicker 字級 52px 的一半（\an5 置中，頂緣 = \pos 的 y - 26）
+BANNER_KICKER_CLEARANCE = 20  # 有橫幅時，kicker 頂緣與橫幅底緣至少相隔的距離
 CTA_SEC = 3.0  # 片尾 CTA 出現秒數
 # 置中文字(口號轉場、全屏大數字):錨點 x=540、寬度上限 740 → 540 ± 370,右緣 910 不碰按讚欄
 CENTER_X = WIDTH // 2

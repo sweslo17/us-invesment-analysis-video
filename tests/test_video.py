@@ -134,6 +134,50 @@ def test_build_card_ass_without_tag_has_no_kicker_event():
     assert ass.count("Dialogue:") == 1
 
 
+_LONG_CARD_HEADLINE = "聯準會鷹派轉向加上非農大幅超預期讓殖利率飆高科技股估值承壓"  # 斷成 5 行
+
+
+def _kicker_y(ass: str) -> int:
+    """從 .ass 的 kicker 事件讀出 \\pos 的 y。"""
+    line = next(ln for ln in ass.splitlines() if ",kicker," in ln)
+    return int(re.search(r"\\pos\(540,(-?\d+)\)", line).group(1))
+
+
+def test_build_card_ass_banner_keeps_kicker_clear_of_banner_for_long_headline():
+    """橫幅段的長標題斷成很多行時，kicker 往下夾，頂緣仍在橫幅底緣之下留 20px。"""
+    from pmb.charts.cards import wrap_card_text
+    from pmb.video.ass import BANNER_H, BANNER_TOP, CARD_MAX_UNITS
+    from pmb.video.segments.card import build_card_ass
+
+    assert len(wrap_card_text(_LONG_CARD_HEADLINE, max_units=CARD_MAX_UNITS)) >= 5
+    ass = build_card_ass(
+        _LONG_CARD_HEADLINE, tag="盤前快報", duration=3.0, font="F", banner=True
+    )
+    assert _kicker_y(ass) - 26 >= BANNER_TOP + BANNER_H + 20
+
+
+def test_build_card_ass_banner_does_not_move_kicker_for_short_headline():
+    """兩行標題的 kicker 本來就在橫幅之下，夾制不介入，位置與無橫幅相同。"""
+    from pmb.video.segments.card import build_card_ass
+
+    kwargs = dict(tag="盤前快報", duration=3.0, font="F")
+    plain = build_card_ass("鷹鴿吵不完\n今天非農裁判", **kwargs)
+    bannered = build_card_ass("鷹鴿吵不完\n今天非農裁判", banner=True, **kwargs)
+    assert _kicker_y(bannered) == _kicker_y(plain)
+
+
+def test_build_card_ass_without_banner_keeps_original_kicker_formula():
+    """無橫幅時 kicker 位置維持 ``top - KICKER_GAP``，長標題也不夾制。"""
+    from pmb.charts.cards import wrap_card_text
+    from pmb.video.ass import CARD_CENTER_Y, CARD_LINE_H, CARD_MAX_UNITS, KICKER_GAP
+    from pmb.video.segments.card import build_card_ass
+
+    n = len(wrap_card_text(_LONG_CARD_HEADLINE, max_units=CARD_MAX_UNITS))
+    expected = CARD_CENTER_Y - n * CARD_LINE_H // 2 - KICKER_GAP
+    ass = build_card_ass(_LONG_CARD_HEADLINE, tag="盤前快報", duration=3.0, font="F")
+    assert _kicker_y(ass) == expected
+
+
 def test_segment_ass_draws_stat_callout_when_given():
     from pmb.video.segments.chart import build_segment_ass
 
