@@ -6,6 +6,7 @@ import types
 from pathlib import Path
 
 import pytest
+from loguru import logger
 
 from pmb import cli
 from pmb.cli import format_snapshot, resolve_fetch_target, today_blockers
@@ -154,8 +155,6 @@ def test_render_cover_without_script_or_hook_is_none(tmp_path, monkeypatch):
 
 def test_render_cover_failure_warns_and_returns_none(tmp_path, monkeypatch):
     """封面渲染失敗（ffmpeg 掛了）只記 WARNING、回 None，上傳照常進行、只是沒有自訂縮圖。"""
-    from loguru import logger
-
     arts = tmp_path / "artifacts"
     arts.mkdir()
     _write_script(arts, [{"vo": "開場。", "headline": "債市暴走", "tag": "債市日"}])
