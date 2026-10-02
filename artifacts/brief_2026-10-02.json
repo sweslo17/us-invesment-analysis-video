@@ -1,0 +1,163 @@
+{
+  "date": "2026-10-02",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7666.4501953125,
+      "overnight_pct": 0.194865286105804,
+      "drivers": [
+        "標普500上一交易日（10/1，週四）收7666.45點，漲0.19%，AI供應鏈強勢抵銷了利率與地緣風險升溫的壓力。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 26871.599609375,
+      "overnight_pct": 0.03922260627874426,
+      "drivers": [
+        "那斯達克收26871.6點，小漲0.04%，美光財報的AI供應鏈利多持續發酵。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 50926.55859375,
+      "overnight_pct": 0.04028714416065888,
+      "drivers": [
+        "道瓊收50926.56點，小漲0.04%，同一天油價因中東軍事部署消息大漲，拖住風險偏好。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 2806.6298828125,
+      "overnight_pct": 0.34917260233246833,
+      "drivers": [
+        "羅素兩千收2806.63點，漲0.35%，四大指數中表現最好。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普500近期已實現波動中性偏低，用波動目標的思路反推，合理槓桿倍數其實不算太誇張，但重點從來不是今天能開多高倍數，而是長期抱著三倍槓桿，波動耗損照樣會一年一年啃掉複利。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克的波動仍是四大指數裡最高，合理槓桿倍數因此被壓到最低，今天美光財報再亮眼，也不代表硬開三倍長期持有的磨損會消失。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊波動相對溫和，合理槓桿倍數略高於標普，但油價、地緣風險這種突發衝擊一來，三倍槓桿的耗損一樣會加速。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千對利率與風險消息向來反應最激烈，波動偏高讓合理槓桿倍數被壓低，三倍槓桿長期持有的代價依然可觀。"
+    }
+  ],
+  "regime": {
+    "vol": "normal",
+    "rates": "falling",
+    "stock_bond_corr": "positive",
+    "breadth": "narrow"
+  },
+  "items": [
+    {
+      "headline": "美軍證實派出第三艘航母，中東兵力創2003年以來最大規模",
+      "horizon": "MT",
+      "vs_thesis": "new",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "美國證實派出USS Theodore Roosevelt航母打擊群、加上兩棲戰備群與陸戰隊，合計增兵近萬人，區域美軍總規模將超過6萬人，是2003年伊拉克戰爭以來最大規模的中東軍事集結；對一般投資人來說，這代表地緣風險溢價的規模又墊高了一截，油價與避險情緒值得持續留意。",
+      "sources": [
+        {
+          "url": "https://www.euronews.com/2026/10/02/us-sends-third-carrier-strike-group-to-middle-east-in-biggest-buildup-since-2003",
+          "ts": null
+        },
+        {
+          "url": "https://www.cnbc.com/2026/10/02/cnbc-daily-open-us-third-carrier-iran.html",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "川普回絕伊朗荷姆茲重開方案，揚言很快做決定",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "川普9/30表態美方即將『很快』決定對伊朗是出手還是談判，並正式回絕伊朗先前提出的七天內重開荷姆茲海峽方案，理由是對方只承諾重開『部分』海峽；對一般投資人來說，這代表外交解套的樂觀一再落空，地緣風險溢價短期內不會真的解除。",
+      "sources": [
+        {
+          "url": "https://www.cbsnews.com/live-updates/iran-war-us-negotiations-strait-of-hormuz-oil/",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "油價應聲大漲，恆生重摔2.6%領跌全球",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "布蘭特原油單日漲4.4%收102.31美元、WTI漲2.7%收92.87美元，隔夜恆生應聲重摔2.6%，是今天全球主要指數表現最差的一個（陸股休市缺南向資金、加上中國暫停10月成品油出口）；對一般投資人來說，這顯示地緣風險這次確實有具體的價格傳導，不只是情緒反應。",
+      "sources": [
+        {
+          "url": "https://www.scmp.com/business/china-business/article/3358428/hang-seng-index-heads-worst-week-over-year-renewed-sell-engulfs-tech-names",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "ISM製造業物價分項創開戰以來新高，通膨成本壓力未解",
+      "horizon": "LT",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "9月ISM製造業PMI物價分項跳升到77.9，是美伊戰爭開打以來最高，顯示油價上漲的成本壓力正順著供應鏈往通膨傳導；對一般投資人來說，就算Fed想轉鴿，戰爭推升的油價成本也會讓通膨降溫更慢。",
+      "sources": [
+        {
+          "url": "https://www.prnewswire.com/news-releases/manufacturing-pmi-at-54-5-september-2026-ism-manufacturing-pmi-report-302894520.html",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "美股期貨平靜迎非農，市場等Fed路徑下一步",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "今天美東上午8:30將公布9月非農就業報告，市場預期新增約8.4萬人、失業率持平4.1%；對一般投資人來說，這是繼9/30威廉斯鴿派發言後，下一個驗證十月是否升息的硬數據。",
+      "sources": [
+        {
+          "url": "https://www.thestreet.com/stock-market-today/stock-market-today-dow-jones-sp-500-nasdaq-updates-oct-02-2026",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "美光財報持續發酵，Oracle因騰訊租晶片消息走高",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 2,
+      "confidence": "confirmed",
+      "audience_value": "美光財報的AI供應鏈利多延燒到今天，Oracle盤前漲逾2%（傳出騰訊向其東南亞資料中心租用10萬顆晶片），英特爾盤前也上漲近2%；對一般投資人來說，AI資本支出的訂單故事還在持續擴散，但晶片股『窄且不穩』的老問題並未真正解除。",
+      "sources": [
+        {
+          "url": "https://www.tipranks.com/news/why-are-ai-chip-stocks-intel-nvidia-broadcom-and-amd-rising-in-premarket-today-october-2",
+          "ts": null
+        }
+      ]
+    }
+  ],
+  "catalysts": [
+    "今天（10/2，週五）美東上午8:30：9月非農就業報告公布，市場預期新增約8.4萬人（Dow Jones共識）、失業率持平4.1%。",
+    "今天稍晚：多位Fed官員（包括紐約Fed總裁威廉斯、克里夫蘭Fed總裁哈瑪克）可能針對就業數據表態，牽動十月/十二月升息機率。",
+    "持續觀察：美軍三航母打擊群與約6萬兵力部署進度（預計11月底全數到位）、川普是否於期中選舉後對伊朗採取軍事行動、布蘭特原油能否守穩100美元上方、中國暫停10月成品油出口是否延續到國慶假期（10/7）後。"
+  ],
+  "thesis_delta": {
+    "changed": true,
+    "summary": "美國證實派出第三艘航空母艦打擊群（USS Theodore Roosevelt）前往中東，加上兩棲戰備群與陸戰隊，合計增兵近萬人，區域美軍規模將超過6萬人，是2003年伊拉克戰爭以來最大規模的中東軍事集結；川普同時回絕伊朗七天內重開荷姆茲海峽的方案，表態很快會做決定。油價應聲大漲，布蘭特原油收102.31美元、WTI收92.87美元，隔夜恆生重摔2.6%領跌全球，但美股本土期貨與VIX反應依舊平淡（VIX今天還回落到15.96），市場price action落後地緣風險升級速度的既有模式再次出現。同一天ISM製造業物價分項跳升到77.9、創開戰以來新高，顯示油價成本壓力正往整條供應鏈傳導。三條既有支柱方向皆未反轉，新增的重點是地緣風險的軍事部署規模來到開戰以來最大，信心維持developing。",
+    "horizon": "MT"
+  },
+  "lead_horizon": "MT",
+  "title_hook": "美軍三航母齊聚中東，華爾街卻淡定迎非農"
+}
