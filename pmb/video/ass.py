@@ -111,19 +111,42 @@ _STYLE_FORMAT = (
 _EVENT_FORMAT = (
     "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
 )
+# 自由定位樣式：新段型的色塊/圖示/文字（以及 16:9 封面）都用它，位置與字級由事件的 override 決定。
+# ``{font}`` 留給 ``ass_template`` 的產物用 ``.format`` 填字型。
+FREE_STYLE = "Style: free,{font},60,&H00FFFFFF,&H00FFFFFF,&H00201810,&H00000000,1,1,0,0,7,0,0,0"
+
+
+def ass_template(width: int, height: int, styles: list[str]) -> str:
+    """ASS 模板（``{font}``、``{events}`` 兩個佔位留給 ``.format``）：``PlayRes`` 取 ``width``×
+    ``height``，樣式區放 ``styles``（每個元素一行 ``Style: …``）。影片 9:16 的 ``ASS_TEMPLATE``
+    與 16:9 封面的 ``cover.COVER_ASS_TEMPLATE`` 共用這個骨架，``PlayRes`` 之外的檔頭一致。"""
+    return "\n".join(
+        [
+            "[Script Info]",
+            "ScriptType: v4.00+",
+            f"PlayResX: {width}",
+            f"PlayResY: {height}",
+            "WrapStyle: 2",
+            "ScaledBorderAndShadow: yes",
+            "",
+            "[V4+ Styles]",
+            _STYLE_FORMAT,
+            *styles,
+            "",
+            "[Events]",
+            _EVENT_FORMAT,
+            "{events}",
+            "",
+        ]
+    )
+
+
 # 顏色為 ASS 的 &HAABBGGRR。sub 的 Primary=金(唸過)、Secondary=白(未唸);
 # 版面座標全部引用上面的常數,改版面只改常數。
-ASS_TEMPLATE = "\n".join(
+ASS_TEMPLATE = ass_template(
+    WIDTH,
+    HEIGHT,
     [
-        "[Script Info]",
-        "ScriptType: v4.00+",
-        "PlayResX: 1080",
-        "PlayResY: 1920",
-        "WrapStyle: 2",
-        "ScaledBorderAndShadow: yes",
-        "",
-        "[V4+ Styles]",
-        _STYLE_FORMAT,
         # 字幕:底部置中,避開底部 UI 與右側按讚欄
         f"Style: sub,{{font}},64,&H0066D1FF,&H00FFFFFF,&H00201810,&H78000000,1,1,5,1,2,"
         f"60,{RIGHT_UI},{SUB_MARGIN_V}",
@@ -149,13 +172,8 @@ ASS_TEMPLATE = "\n".join(
         f"Style: cta,{{font}},48,&H00FFFFFF,&H00FFFFFF,&H00201810,&H78000000,1,1,4,0,2,"
         f"60,{RIGHT_UI},{CTA_MARGIN_V}",
         # 自由定位:新段型的色塊/圖示/文字都用它,位置與字級由事件的 override 決定
-        "Style: free,{font},60,&H00FFFFFF,&H00FFFFFF,&H00201810,&H00000000,1,1,0,0,7,0,0,0",
-        "",
-        "[Events]",
-        _EVENT_FORMAT,
-        "{events}",
-        "",
-    ]
+        FREE_STYLE,
+    ],
 )
 
 # 文字 pop-in:淡入 + 由 82% 放大到 100%(靜止字卡是滑走的主因之一)
