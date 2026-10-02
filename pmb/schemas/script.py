@@ -33,9 +33,14 @@ class _SegmentBase(BaseModel):
         return self.vo
 
     @property
+    def display_stats(self) -> list[tuple[str | None, str]]:
+        """畫面上的大數字 callout：（標籤, 數字）依顯示順序；封面挑大數字用。"""
+        return []
+
+    @property
     def display_numbers(self) -> list[str]:
         """畫面上顯示的數字字串(軟規則 N1:要也出現在念出來的字裡)。"""
-        return []
+        return [value for _, value in self.display_stats]
 
 
 class ChartSegment(_SegmentBase):
@@ -49,8 +54,8 @@ class ChartSegment(_SegmentBase):
     stat_label: str | None = None
 
     @property
-    def display_numbers(self) -> list[str]:
-        return [self.stat] if self.stat else []
+    def display_stats(self) -> list[tuple[str | None, str]]:
+        return [(self.stat_label, self.stat)] if self.stat else []
 
 
 class CardSegment(_SegmentBase):
@@ -107,8 +112,8 @@ class SplitSegment(_SegmentBase):
     bottom: Panel
 
     @property
-    def display_numbers(self) -> list[str]:
-        return [p.stat for p in (self.top, self.bottom) if p.stat]
+    def display_stats(self) -> list[tuple[str | None, str]]:
+        return [(p.label, p.stat) for p in (self.top, self.bottom) if p.stat]
 
 
 class BignumSegment(_SegmentBase):
@@ -121,8 +126,8 @@ class BignumSegment(_SegmentBase):
     context: str | None = None
 
     @property
-    def display_numbers(self) -> list[str]:
-        return [self.value]
+    def display_stats(self) -> list[tuple[str | None, str]]:
+        return [(self.label, self.value)]
 
 
 class RecapRow(BaseModel):
