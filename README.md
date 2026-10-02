@@ -111,6 +111,8 @@ poetry run pmb publish                  # 只寫 publish manifest,不上傳(需 
 
 中段畫面（鉤子之後的圖表、好壞、對話等段）頂部固定疊一條金底「今日主標」橫幅（取 hook 字卡的大標），讓 YouTube 自動挑的直式縮圖不論落在哪一格都像封面；`VIDEO_BANNER=false` 關掉、回到原版面。
 
+上傳到 YouTube 的自訂縮圖是 1080×1920 直式封面，用 libass 畫（`pmb.publish.cover`）：大標、帶標籤的大數字、隨日期輪替的底色。
+
 `script.gags` 記錄當天用到的梗(至少 2 個),供之後幾天避免重複。hook 後系統自動插入約 2 秒的開場口號轉場(`SLOGAN_INTRO`、`STING_ENABLE`),結尾自動接收尾口號(`SLOGAN_OUTRO`),講稿不用寫。開場(約 2 秒)加收尾(約 3–4 秒)口號合計多約 6 秒、不在 LLM 數的字數裡(成片 ≈ 字數 × 0.18 秒 + 6 秒),所以講稿字數目標是 330–410 字(硬上限 520),成片才落在 65–80 秒。
 
 研究 agent 寫完產物後用 `poetry run pmb validate-research --date YYYY-MM-DD` 自檢:schema、字數預算、反重複、欄位字數上限、畫面數字與旁白一致;多數規則是軟性的,runner 會帶著錯誤重試,但最後一次嘗試後若只剩軟性錯誤仍會交件。設計細節見 [`docs/superpowers/specs/2026-09-30-video-variety-humor-design.md`](docs/superpowers/specs/2026-09-30-video-variety-humor-design.md)。
