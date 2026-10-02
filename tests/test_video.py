@@ -212,6 +212,7 @@ def test_assemble_video_wires_card_ass_stat_badge_and_cta(tmp_path):
         script, snap, tmp_path / "out.mp4",
         synth_fn=lambda text, path, planned, voice: silent_synth(text, path, duration=1.0),
         work_dir=work, font="PingFang TC", channel_name="美股早發車", master_audio=False,
+        banner=False,  # 預設會幫鉤子之後的圖表段換成橫幅、不放角標；這支測全片角標，橫幅另有測試
     )
     assert out.exists() and out.stat().st_size > 0
     card0 = (work / "card0.ass").read_text(encoding="utf-8")
