@@ -8,6 +8,8 @@
 **版面避開 YouTube Shorts 播放器的 UI**(見 ``layout_safe_zone``):底部約 400px 被標題/
 頻道列蓋住、右側約 170px 是按讚欄,字幕、大數字 callout、CTA 一律放在安全區內。
 最終串接後過音訊母帶鏈(BGM ducking + loudnorm),見 ``finalize_master``。
+鉤子之後的中段畫面頂端疊「今日主標」橫幅（``video.banner``），讓 YouTube 自動挑的直式縮圖
+不論落在哪一格都讀得出主題；哪些段疊見 ``_bannered_units``。
 配音以可注入的 ``synth_fn`` 提供。
 斷句/字幕在 ``video.captions``、版面與 ASS 元件在 ``video.ass``,段型各自的畫面與句子計畫
 在 ``video.segments``(registry)。
@@ -25,7 +27,7 @@ from pathlib import Path
 from loguru import logger
 
 from pmb.charts.select import render_chart
-from pmb.schemas.script import Script, Segment, VoiceKey
+from pmb.schemas.script import CardSegment, Script, Segment, VoiceKey
 from pmb.schemas.snapshot import Snapshot
 from pmb.textnorm import zh_punct, zh_punct_model
 from pmb.tts.edge import SynthResult, probe_duration
@@ -39,6 +41,7 @@ from pmb.video.ass import (
     HEIGHT,
     WIDTH,
 )
+from pmb.video.banner import BANNER_ASS, build_banner_ass
 from pmb.video.captions import has_speakable
 from pmb.video.segments.base import (
     GAP,
@@ -63,6 +66,7 @@ _SLIDE_PX = 70  # 圖表段首自下方滑入的位移
 _SLIDE_SEC = 0.40
 _PROGRESS_H = 10  # 底部進度條高(px)
 _SHORTS_CAP = 180.0  # YouTube Shorts 長度上限(超過會被當一般影片)
+_PLAIN_CHART_BOX = (CHART_BAND_TOP, CHART_BOX_H)  # 圖表框（上緣、高）：無橫幅的原版面
 
 
 def _planned_seconds(text: str) -> float:
@@ -171,8 +175,13 @@ def _render_segment_clip(
     work_dir: Path,
     lead_in: float = 0.0,
     sfx: str | None = None,
+    chart_box: tuple[int, int] = _PLAIN_CHART_BOX,
+    banner_ass: str | None = None,
 ) -> None:
-    """單段 clip:畫布 + (圖表縮排/全屏卡)Ken Burns + 字幕 + 進度條 + 淡入(末段加淡出)。"""
+    """單段 clip:畫布 + (圖表縮排/全屏卡)Ken Burns + 字幕 + 進度條 + 淡入(末段加淡出)。
+
+    ``chart_box`` 是圖表框的（上緣、高），只影響圖表段；有橫幅的段框頂下移、框底不動。
+    ``banner_ass`` 給了就在淡入之後、淡出之前疊上橫幅：橫幅不跟著每段的淡入閃爍。"""
     frames = max(1, math.ceil(seg_duration * FPS))
     img_w, img_h = _png_size(work_dir / image)
     if is_card:
@@ -183,13 +192,14 @@ def _render_segment_clip(
     else:
         # 圖表:縮小一階塞進框,再用畫布同色 padding 墊回;zoompan 只推進 padding,
         # 圖上貼邊的字(數值標註/時間軸文字)永遠不會被裁掉
+        box_top, box_h = chart_box
         inner_w = int(CHART_BOX_W / (1 + _ZOOM_AMOUNT))
-        inner_h = int(CHART_BOX_H / (1 + _ZOOM_AMOUNT))
+        inner_h = int(box_h / (1 + _ZOOM_AMOUNT))
         fit_w, fit_h = _fit_box(img_w, img_h, inner_w, inner_h)
         out_w = int(fit_w * (1 + _ZOOM_AMOUNT)) // 2 * 2
         out_h = int(fit_h * (1 + _ZOOM_AMOUNT)) // 2 * 2
         ox = (WIDTH - out_w) // 2
-        oy = CHART_BAND_TOP + (CHART_BOX_H - out_h) // 2
+        oy = box_top + (box_h - out_h) // 2
         prep = (
             f"[0:v]scale={fit_w * 2}:{fit_h * 2}:flags=lanczos,"
             f"pad={out_w * 2}:{out_h * 2}:(ow-iw)/2:(oh-ih)/2:color=0x{BG_HEX}"
@@ -223,6 +233,8 @@ def _render_segment_clip(
         f"y={HEIGHT - _PROGRESS_H}[v2]"
     )
     fade = f"[v2]fade=t=in:st=0:d={_FADE_IN}:color=0x{BG_HEX}"
+    if banner_ass:
+        fade += f",subtitles={banner_ass}"
     if is_last:
         out_st = max(seg_duration - _FADE_OUT, 0)
         fade += f",fade=t=out:st={out_st:.3f}:d={_FADE_OUT}:color=0x{BG_HEX}"
@@ -364,6 +376,35 @@ def _plan_units(
     return plans
 
 
+def _banner_headline(hook: tuple[int, CardSegment] | None, enabled: bool) -> tuple[str, str]:
+    """今日主標＝開場字卡的大標，回傳（標題，不顯示的原因）。
+
+    有主標時原因是空字串；沒有時標題是空字串，原因給日誌說明（設定關閉、講稿沒有開場字卡、
+    標題是空的）。標題只含空白也算沒有：不能畫出一個空的金框。"""
+    if not enabled:
+        return "", "設定關閉（VIDEO_BANNER=false）"
+    if hook is None:
+        return "", "講稿沒有開場字卡"
+    headline = hook[1].headline.strip()
+    return (headline, "") if headline else ("", "開場字卡的標題是空的")
+
+
+def _bannered_units(
+    units: list[tuple[int, Segment | StingSegment]], *, hook_index: int, n_script_segments: int
+) -> set[int]:
+    """哪些 unit（以 ``units`` 內的位置為鍵）要疊今日主標橫幅。
+
+    橫幅疊在鉤子之後的畫面頂端：鉤子字卡本身已經把主標寫得很大，口號轉場是系統插入的過場，
+    收尾字卡（腳本最後一段且是字卡）要留給片尾 CTA，這三種都不疊；鉤子不在第一段時，排在
+    鉤子之前的段還沒有主標可顯示，也不疊。中段字卡（如名詞小教室）要疊。"""
+    last = n_script_segments - 1
+    return {
+        u
+        for u, (i, seg) in enumerate(units)
+        if seg.kind != "sting" and i > hook_index and not (seg.kind == "card" and i == last)
+    }
+
+
 def _synthesize_takes(
     plan: list[Utterance], u: int, work_dir: Path, synth_fn: SynthFn
 ) -> list[Take]:
@@ -409,8 +450,11 @@ def assemble_video(
     slogan_intro: str | None = None,
     slogan_outro: str | None = None,
     sting_sfx: str | Path | None = None,
+    banner: bool = True,
 ) -> Path:
     """合成直式短影片並回傳 mp4 路徑。段級渲染 + 卡拉OK字幕 + 動態;詳見模組 docstring。
+
+    ``banner`` 為真且講稿有開場字卡，就以字卡大標當今日主標橫幅，疊在鉤子之後的中段畫面頂端。
 
     ``slogan_intro`` 給了就在 hook 後插口號轉場(``sting_sfx`` 為其音效);``slogan_outro``
     接在最後一段(模型已寫同義句就不重複)。口號轉場配音失敗只略過該段;渲染失敗(如音效檔
@@ -425,12 +469,20 @@ def assemble_video(
     slogan_intro = zh_punct(slogan_intro) if slogan_intro else slogan_intro
     slogan_outro = zh_punct(slogan_outro) if slogan_outro else slogan_outro
 
+    hook = script.hook()
+    banner_text, banner_off_reason = _banner_headline(hook, banner)
+
     chart_paths = {spec.id: render_chart(spec, snapshot, work_dir).name for spec in script.charts}
 
     # Pass A:各段的句子計畫 → 逐句配音 + 實測長度 → 段長與全片時間軸(進度條/收尾要用)
     units: list[tuple[int, Segment | StingSegment]] = list(enumerate(script.segments))
     if slogan_intro and units:
         _insert_sting(units, slogan_intro, channel_name, sting_sfx)
+    banner_units = (
+        _bannered_units(units, hook_index=hook[0], n_script_segments=len(script.segments))
+        if banner_text and hook
+        else set()
+    )
     plans = _plan_units(units, slogan_outro)
     seg_takes: list[list[Take]] = []
     seg_durations: list[float] = []
@@ -468,6 +520,15 @@ def assemble_video(
             _SHORTS_CAP,
         )
 
+    # 今日主標橫幅：整支片同一份 .ass，只寫一次；有橫幅的段改用橫幅當品牌標記、不放角標。
+    if banner_text:
+        (work_dir / BANNER_ASS).write_text(build_banner_ass(banner_text, font), encoding="utf-8")
+        logger.info(
+            "今日主標：{!r}（{} 段有橫幅）", banner_text, sum(u in banner_units for u in usable)
+        )
+    else:
+        logger.info("今日主標橫幅關閉：{}", banner_off_reason)
+
     # Pass B:逐段渲染 clip。畫面(底圖 + .ass)由各段型 renderer 產出;每段都疊品牌·日期
     # 角標,片尾 CTA 只放在最後一段且該段是字卡(圖表段底部有字幕,再疊 CTA 會打架)。
     d = snapshot.session_date
@@ -480,11 +541,13 @@ def assemble_video(
         takes = seg_takes[u]
         renderer = renderer_for(seg.kind)
         is_last = u == (usable[-1] if usable else len(units) - 1)
+        bannered = u in banner_units
         ctx = RenderContext(
             index=i, duration=seg_durations[u], takes=takes,
             starts=take_starts(takes, renderer.lead_in), font=font, work_dir=work_dir,
-            badge=badge, cta=cta_text if (is_last and seg.kind == "card") else None,
-            chart_paths=chart_paths,
+            badge=None if bannered else badge,
+            cta=cta_text if (is_last and seg.kind == "card") else None,
+            chart_paths=chart_paths, banner=bannered,
         )
         visual = renderer.render(seg, ctx)
         ass_name = f"{visual.stem}{i}.ass"
@@ -495,6 +558,8 @@ def assemble_video(
             seg_duration=seg_durations[u], ass_name=ass_name, global_offset=starts[u],
             global_total=total, is_last=is_last, out=clip_name, work_dir=work_dir,
             lead_in=renderer.lead_in, sfx=visual.sfx if with_sfx else None,
+            chart_box=visual.chart_box or _PLAIN_CHART_BOX,
+            banner_ass=BANNER_ASS if bannered else None,
         )
         logger.info(
             "segment {}/{}({})完成({:.1f}s)", u + 1, len(units), seg.kind, seg_durations[u]

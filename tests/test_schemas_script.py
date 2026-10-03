@@ -192,3 +192,41 @@ def test_spoken_text_and_display_numbers():
     assert b.display_numbers == ["5.26%"]
     r = RecapSegment(vo="x。", rows=[{"ask": "a", "result": "沒守住5.2%", "mark": "no"}])
     assert r.display_numbers == ["沒守住5.2%"]
+
+
+def test_display_stats_pairs_label_with_value_per_segment_kind():
+    """封面要「標籤 + 數字」成對：圖表段取 stat_label、全屏大數字取 label、好壞格子取各格 label。"""
+    d = DialogueSegment(lines=[
+        {"speaker": "Fed", "voice": "a", "text": "不急。"},
+        {"speaker": "債市", "voice": "b", "text": "我急。"}])
+    assert d.display_stats == []
+    c = ChartSegment(vo="x", chart_id="c", stat="+1.06%", stat_label="標普昨收")
+    assert c.display_stats == [("標普昨收", "+1.06%")]
+    assert ChartSegment(vo="x", chart_id="c", stat="+1.06%").display_stats == [(None, "+1.06%")]
+    assert ChartSegment(vo="x", chart_id="c", stat_label="沒有數字").display_stats == []
+    b = BignumSegment(vo="x", value="5.26%", label="殖利率")
+    assert b.display_stats == [("殖利率", "5.26%")]
+    s = SplitSegment(vo="x。y。", top={"label": "利多", "text": "b", "stat": "5%"},
+                     bottom={"label": "利空", "text": "d"})
+    assert s.display_stats == [("利多", "5%")]  # 沒有 stat 的格子不列
+    s2 = SplitSegment(vo="x。y。", top={"label": "利多", "text": "b", "stat": "5%"},
+                      bottom={"label": "利空", "text": "d", "stat": "-3%"})
+    assert s2.display_stats == [("利多", "5%"), ("利空", "-3%")]
+    r = RecapSegment(vo="x。", rows=[{"ask": "a", "result": "沒守住5.2%", "mark": "no"}])
+    assert r.display_stats == []  # 對帳結果是列的結論，不當封面大數字
+
+
+def test_hook_is_the_first_card_even_when_it_is_not_at_index_zero():
+    data = _valid_script()
+    data["segments"] += [
+        {"vo": "開場。", "headline": "債市暴走", "tag": "債市日"},
+        {"vo": "收尾。", "headline": "金句\n對句"},
+    ]
+    script = Script.model_validate(data)
+    index, seg = script.hook()
+    assert index == 2
+    assert isinstance(seg, CardSegment) and seg.headline == "債市暴走"
+
+
+def test_hook_is_none_when_the_script_has_no_card():
+    assert Script.model_validate(_valid_script()).hook() is None

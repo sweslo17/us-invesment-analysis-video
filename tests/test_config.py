@@ -33,3 +33,10 @@ def test_slogan_defaults_use_fullwidth_punctuation(monkeypatch):
     settings = Settings(_env_file=None)
     assert settings.slogan_intro == "美股早發車，發車！"
     assert settings.slogan_outro == "以上非投資建議，明天盤前見。"
+
+
+def test_video_banner_defaults_on_and_reads_env(monkeypatch):
+    monkeypatch.delenv("VIDEO_BANNER", raising=False)
+    assert Settings(_env_file=None).video_banner is True
+    monkeypatch.setenv("VIDEO_BANNER", "false")
+    assert Settings(_env_file=None).video_banner is False

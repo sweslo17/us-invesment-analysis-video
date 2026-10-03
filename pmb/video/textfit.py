@@ -168,3 +168,34 @@ def fit_one_line(text: str, size: int, max_width: int) -> tuple[str, int]:
     還放不下才截斷補「…」(規則同 ``fit_lines``,``max_lines=1``)。"""
     lines, fitted = fit_lines(text, max_width=max_width, sizes=(size,), max_lines=1)
     return "".join(lines), fitted
+
+
+def _join_authored(parts: list[str]) -> str:
+    """把作者分好的行併回一串：只有左行以 ASCII 英數結尾、右行以 ASCII 英數開頭才補一個空白
+    （``VIX`` + ``ETF`` → ``VIX ETF``）；中文之間、中英之間不補，避免憑空多出空白。"""
+    out = parts[0]
+    for part in parts[1:]:
+        if out[-1].isascii() and out[-1].isalnum() and part[0].isascii() and part[0].isalnum():
+            out += " "
+        out += part
+    return out
+
+
+def fit_authored_lines(
+    text: str, *, max_width: int, sizes: tuple[int, ...], max_lines: int
+) -> tuple[list[str], int]:
+    """盡量保留作者自己的斷行（``\\n``），放不下才退回 ``fit_lines`` 依寬度斷行。
+
+    作者的每一行（去頭尾空白、略過空行）只要行數 <= ``max_lines``，就依序試 ``sizes``，第一個
+    讓每一行都放得進 ``max_width`` 的字級就用，行不動。行數太多、或每個字級都有某行放不下，
+    就把各行併成一串（``_join_authored``）交給 ``fit_lines``，保證每行 <= ``max_width``。
+    空白文字回 ``([], sizes[0])``。
+    """
+    parts = [part for raw in text.split("\n") if (part := raw.strip())]
+    if not parts:
+        return [], sizes[0]
+    if len(parts) <= max_lines:
+        for size in sizes:
+            if all(line_px(part, size) <= max_width for part in parts):
+                return parts, size
+    return fit_lines(_join_authored(parts), max_width=max_width, sizes=sizes, max_lines=max_lines)

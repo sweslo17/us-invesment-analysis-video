@@ -1,5 +1,6 @@
 """段型 renderer 共用機制測試:句子計畫、停頓、時間軸、registry(不跑 ffmpeg)。"""
 
+import dataclasses
 import random
 import re
 
@@ -7,16 +8,34 @@ import numpy as np
 import pytest
 from matplotlib.image import imread
 
-from pmb.schemas.script import BignumSegment, DialogueSegment, RecapSegment, SplitSegment
+from pmb.schemas.script import (
+    BignumSegment,
+    ChartSegment,
+    DialogueSegment,
+    RecapSegment,
+    SplitSegment,
+)
 from pmb.video.ass import (
+    ASS_TEMPLATE,
+    BANNERED_CONTENT_TOP,
+    BANNERED_TITLE_TOP,
+    BANNERED_TOP,
     BG_HEX,
+    CHART_BAND_TOP,
+    CHART_BOX_BOTTOM,
+    CHART_BOX_H,
     CONTENT_BOTTOM,
     CONTENT_TOP,
+    PLAIN_TOP,
     POP_IN,
+    TITLE_TOP,
+    TopLayout,
     ass_color,
     center_block_top,
     rounded_rect,
+    shape_event,
     text_event,
+    top_layout,
 )
 from pmb.video.captions import (
     BREAK_AFTER,
@@ -861,3 +880,186 @@ def test_is_beat_accepts_fullwidth_closers_after_the_ellipsis():
 def test_caption_break_candidates_include_fullwidth_question_and_exclamation():
     assert "？" in BREAK_AFTER and "！" in BREAK_AFTER
     assert "?" in BREAK_AFTER and "!" in BREAK_AFTER  # 半形仍然保留
+
+
+# ── 橫幅版面（banner）：標題縮小下移、內容帶上緣 424 ────────────────────────────
+
+
+def _banner_ctx(takes, *, work_dir, duration=6.0, **kw):
+    """``_ctx`` 的橫幅版：``banner=True`` 代表這段顯示橫幅、用下移的版面。"""
+    return dataclasses.replace(_ctx(takes, work_dir=work_dir, duration=duration, **kw),
+                               banner=True)
+
+
+def test_top_layouts_pick_plain_or_bannered_geometry():
+    assert top_layout(False) is PLAIN_TOP and top_layout(True) is BANNERED_TOP
+    assert PLAIN_TOP == TopLayout("title", CHART_BAND_TOP) and PLAIN_TOP.content_top == 270
+    assert BANNERED_TOP == TopLayout("title_b", BANNERED_CONTENT_TOP)
+    assert CHART_BOX_BOTTOM == 1120 == CHART_BAND_TOP + CHART_BOX_H
+    assert PLAIN_TOP.chart_box_h == CHART_BOX_H == 850  # 不變：框底仍是 1120
+    assert BANNERED_TOP.chart_box_h == 696 and BANNERED_TOP.content_top + 696 == CHART_BOX_BOTTOM
+
+
+def test_title_b_style_is_the_title_style_but_smaller_and_lower():
+    """``title_b`` 與 ``title`` 只差字級（60）與 MarginV（344，橫幅底緣 326 之下）。"""
+    ass = ASS_TEMPLATE.format(font="F", events="")
+    styles = {ln.split(":", 1)[1].split(",")[0].strip(): ln.split(":", 1)[1].strip().split(",")
+              for ln in ass.splitlines() if ln.startswith("Style:")}
+    title, title_b = styles["title"], styles["title_b"]
+    assert title[2] == "92" and title_b[2] == "60"
+    assert title[-1] == str(TITLE_TOP) and title_b[-1] == str(BANNERED_TITLE_TOP) == "344"
+    assert [f for k, f in enumerate(title) if k not in (0, 2, len(title) - 1)] == \
+           [f for k, f in enumerate(title_b) if k not in (0, 2, len(title_b) - 1)]
+    names = [ln.split(",")[0] for ln in ass.splitlines() if ln.startswith("Style:")]
+    assert names.index("Style: title_b") == names.index("Style: title") + 1  # 緊接在 title 之後
+
+
+def test_center_block_top_accepts_a_custom_band_top():
+    assert center_block_top(150) == CONTENT_TOP + 450  # 預設不變
+    assert center_block_top(150, top=BANNERED_CONTENT_TOP) == 424 + (1320 - 424 - 150) // 2
+    assert center_block_top(896, top=BANNERED_CONTENT_TOP) == 424  # 剛好填滿
+    assert center_block_top(2000, top=BANNERED_CONTENT_TOP) == 424  # 太高：貼著自己的上緣
+
+
+def test_static_shape_event_uses_pos_without_slide_or_fade():
+    ev = shape_event(0.0, 3600.0, 60, 110, rounded_rect(960, 216, 28), "&H66D1FF&", move_px=None)
+    assert "\\pos(60,110)" in ev and "\\move" not in ev and "\\fad" not in ev
+    assert "\\an7" in ev and "\\p1" in ev and ev.startswith("Dialogue: 0,0:00:00.00,1:00:00.00,")
+    default = shape_event(0.0, 1.0, 60, 110, "m 0 0", "&H66D1FF&")
+    assert "\\move(60,134,60,110,0,160)\\fad(120,0)" in default  # 預設行為不變
+
+
+def _title_styles(ass: str) -> list[str]:
+    """段標題事件用的樣式名（``title`` / ``title_b``），依事件順序。"""
+    return re.findall(r"^Dialogue: \d+,[^,]+,[^,]+,(title\w*),", ass, re.MULTILINE)
+
+
+def _chart_visual(tmp_path, *, banner):
+    seg = ChartSegment(vo="十年期升到5.26%。", chart_id="c1", title="殖利率", stat="5.26%",
+                       stat_label="十年期")
+    takes = [Take("十年期升到5.26%。", "a.mp3", 2.0, [])]
+    make = _banner_ctx if banner else _ctx
+    ctx = dataclasses.replace(make(takes, work_dir=tmp_path), chart_paths={"c1": "c1.png"})
+    return renderer_for("chart").render(seg, ctx)
+
+
+def test_chart_bannered_uses_title_b_and_a_shorter_chart_box(tmp_path):
+    visual = _chart_visual(tmp_path, banner=True)
+    assert visual.chart_box == (424, 696) and visual.image == "c1.png" and not visual.is_card
+    assert _title_styles(visual.ass) == ["title_b"] and "殖利率" in visual.ass
+    assert "5.26%" in visual.ass and ",statlabel," in visual.ass  # callout 位置不動
+
+
+def test_chart_plain_keeps_title_style_and_the_full_chart_box(tmp_path):
+    visual = _chart_visual(tmp_path, banner=False)
+    assert visual.chart_box == (270, 850)
+    assert _title_styles(visual.ass) == ["title"] and "殖利率" in visual.ass
+
+
+def test_visual_chart_box_defaults_to_none_for_full_screen_visuals(tmp_path):
+    takes = [Take("好。", "a.mp3", 2.0, []), Take("壞。", "b.mp3", 2.0, [])]
+    assert renderer_for("split").render(_split(), _ctx(takes, work_dir=tmp_path)).chart_box is None
+
+
+def _titled_split(**kw):
+    return _split(**kw).model_copy(update={"title": "好壞消息"})
+
+
+def _panel_boxes(ass: str):
+    boxes, _ = _events(ass)
+    return boxes
+
+
+def test_split_plain_panels_keep_their_current_geometry(tmp_path):
+    takes = [Take("好。", "a.mp3", 2.0, []), Take("壞。", "b.mp3", 2.0, [])]
+    visual = renderer_for("split").render(_titled_split(), _ctx(takes, work_dir=tmp_path))
+    boxes = _panel_boxes(visual.ass)
+    assert [(y, h) for _, y, _, h in boxes] == [(290, 470), (800, 470)]
+    assert _title_styles(visual.ass) == ["title"]
+
+
+def test_split_bannered_panels_start_at_424_and_879_and_end_by_1310(tmp_path):
+    takes = [Take("好。", "a.mp3", 2.0, []), Take("壞。", "b.mp3", 2.0, [])]
+    visual = renderer_for("split").render(_titled_split(), _banner_ctx(takes, work_dir=tmp_path))
+    boxes = _panel_boxes(visual.ass)
+    assert [(y, h) for _, y, _, h in boxes] == [(424, 431), (879, 431)]
+    assert boxes[1][1] - (boxes[0][1] + boxes[0][3]) == 24  # 兩格之間 24px
+    assert max(y + h for _, y, _, h in boxes) <= 1310
+    assert _title_styles(visual.ass) == ["title_b"]
+
+
+def test_split_bannered_text_stays_inside_its_panel_and_the_safe_column(tmp_path):
+    takes = [Take("好。", "a.mp3", 2.0, []), Take("壞。", "b.mp3", 2.0, [])]
+    seg = SplitSegment(vo="好。壞。",
+                       top={"label": "好消息", "text": "Fed說不急" * 6, "tone": "good"},
+                       bottom={"label": "壞消息", "stat": "5.26%", "tone": "bad",
+                               "text": "債市完全沒在聽而且還很生氣啊真的假的欸欸"})
+    ass = renderer_for("split").render(seg, _banner_ctx(takes, work_dir=tmp_path)).ass
+    boxes, events = _panel_boxes(ass), _text_extents(ass)
+    assert len(boxes) == 2 and len(events) == 5
+    for (x, y, size, bottom_anchored, lines), (bx, by, bw, bh) in zip(
+            events, [boxes[0]] * 2 + [boxes[1]] * 3, strict=True):
+        assert x + max(line_px(ln, size) for ln in lines) <= bx + bw <= 890
+        bottom_edge = y if bottom_anchored else y + len(lines) * size
+        assert by <= y and bottom_edge <= by + bh
+    (_, body_y, body_size, _, body_lines), (_, stat_y, stat_size, _, _) = events[3], events[4]
+    assert stat_y - stat_size - (body_y + len(body_lines) * body_size) > 0  # 內文不壓到大數字
+
+
+def test_bannered_dialogue_with_four_two_line_bubbles_starts_below_the_banner(tmp_path):
+    texts = ["十月升息不急,但債市完全不買單,而且覺得自己被大家當成冤大頭。",
+             "你說不急就不急,債市的帳本上,我手上的部位可不是這麼說的喔。",
+             "那我問你,殖利率都創新高了,你還敢說不急嗎?給個痛快話。",
+             "敢啊,鴿派的話我可以一天講三遍,債市愛不愛聽我都完全不管啦。"]
+    seg = _dialogue(lines=[
+        {"speaker": "Fed" if k % 2 == 0 else "債市", "voice": "ab"[k % 2], "text": t}
+        for k, t in enumerate(texts)]).model_copy(update={"title": "債市與 Fed"})
+    renderer = renderer_for("dialogue")
+    takes = [Take(u.text, f"{i}.mp3", 1.0, [], GAP, False)
+             for i, u in enumerate(renderer.utterances(seg))]
+    visual = renderer.render(seg, _banner_ctx(takes, work_dir=tmp_path))
+    boxes, label_tops = _events(visual.ass)
+    assert len(boxes) == len(label_tops) == 4
+    assert label_tops[0] >= BANNERED_CONTENT_TOP == 424
+    # 四個兩行泡泡整塊 906px > 內容帶 896px：貼著上緣、往下溢出 10px（1330），
+    # 仍在字幕頂緣（約 1365）之上
+    assert max(y + h for _, y, _, h in boxes) <= 1365
+    assert label_tops == bubble_tops([b[3] for b in boxes], top=BANNERED_CONTENT_TOP)
+    assert _title_styles(visual.ass) == ["title_b"]
+
+
+def test_bubble_tops_accepts_a_band_top_and_keeps_the_default():
+    heights = [164, 164, 164, 164]  # 四個兩行泡泡：整塊 3 × 230 + 52 + 164 = 906
+    assert bubble_tops(heights) == bubble_tops(heights, top=CONTENT_TOP)
+    assert bubble_tops(heights, top=BANNERED_CONTENT_TOP) == [424, 654, 884, 1114]  # 貼著上緣
+    two = bubble_tops([164, 164], top=BANNERED_CONTENT_TOP)  # 較少泡泡：在 424..1320 內置中
+    assert two[0] > BANNERED_CONTENT_TOP and two[-1] + 52 + 164 <= CONTENT_BOTTOM
+    assert two[1] - two[0] == 230
+
+
+def test_bannered_recap_with_three_rows_starts_below_the_banner(tmp_path):
+    marks = ("yes", "no", "mixed")
+    rows = [{"ask": f"問{k}", "result": "答" * 28, "mark": mark} for k, mark in enumerate(marks)]
+    seg = RecapSegment(vo="一。二。三。", rows=rows)
+    takes = [Take(t, f"{k}.mp3", 1.0, []) for k, t in enumerate(("一。", "二。", "三。"))]
+    visual = renderer_for("recap").render(seg, _banner_ctx(takes, duration=4.0, work_dir=tmp_path))
+    events = _text_extents(visual.ass)
+    tops = [events[2 * k][1] for k in range(3)]
+    assert tops[0] >= BANNERED_CONTENT_TOP == 424
+    assert all(b - a == 250 for a, b in zip(tops, tops[1:], strict=False))
+    last_bottom = events[-1][1] + len(events[-1][4]) * events[-1][2]
+    assert last_bottom <= CONTENT_BOTTOM
+    assert _title_styles(visual.ass) == ["title_b"]
+
+
+def test_row_tops_accepts_a_band_top_and_keeps_the_default():
+    extents = [200, 200, 200]
+    assert row_tops(extents) == row_tops(extents, top=CONTENT_TOP)
+    tops = row_tops(extents, top=BANNERED_CONTENT_TOP)
+    assert tops[0] >= BANNERED_CONTENT_TOP and tops[-1] + 200 <= CONTENT_BOTTOM
+    assert row_tops([], top=BANNERED_CONTENT_TOP) == []
+
+
+def test_non_bannered_context_is_the_default():
+    ctx = _ctx([], work_dir=None)
+    assert ctx.banner is False

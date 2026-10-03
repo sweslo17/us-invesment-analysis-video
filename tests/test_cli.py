@@ -3,9 +3,14 @@
 import datetime as dt
 import json
 import types
+from pathlib import Path
+
+import pytest
+from loguru import logger
 
 from pmb import cli
 from pmb.cli import format_snapshot, resolve_fetch_target, today_blockers
+from pmb.schemas.script import Script
 from pmb.schemas.snapshot import Quote, RegimeMetrics, Snapshot
 
 
@@ -55,52 +60,6 @@ def test_format_snapshot_includes_key_numbers():
     assert "VIX" in text
 
 
-def test_cover_spec_prefers_hook_headline_and_first_stat():
-    """封面 = 開場鉤子字卡的大標 + 第一個圖表段的大數字(有就用),不再是日期字卡。"""
-    from pmb.cli import cover_spec
-    from pmb.schemas.script import Script
-
-    script = Script.model_validate({
-        "segments": [
-            {"vo": "開場。", "headline": "鷹鴿吵不完", "tag": "今日盤前",
-             "t_start": 0, "duration": 1},
-            {"vo": "圖。", "chart_id": "c", "stat": "+1.06%", "stat_label": "標普昨收",
-             "t_start": 1, "duration": 1},
-        ],
-        "charts": [{"id": "c", "module": "leverage_decay", "params": {}}],
-    })
-    spec = cover_spec(script)
-    assert spec == {
-        "headline": "鷹鴿吵不完", "tag": "今日盤前", "stat": "+1.06%", "accent_index": 0,
-    }
-
-
-def test_cover_spec_without_headline_card_is_none():
-    from pmb.cli import cover_spec
-    from pmb.schemas.script import Script
-
-    script = Script.model_validate({
-        "segments": [{"vo": "圖。", "chart_id": "c", "t_start": 0, "duration": 1}],
-        "charts": [{"id": "c", "module": "leverage_decay", "params": {}}],
-    })
-    assert cover_spec(script) is None
-
-
-def test_cover_spec_takes_bignum_value_when_it_comes_first():
-    from pmb.cli import cover_spec
-    from pmb.schemas.script import Script
-
-    script = Script.model_validate({
-        "segments": [
-            {"vo": "開場。", "headline": "債市暴走", "tag": "債市日"},
-            {"kind": "bignum", "vo": "5.26%。", "value": "5.26%", "label": "10年期"},
-            {"vo": "圖。", "chart_id": "c", "stat": "+1.06%"},
-        ],
-        "charts": [{"id": "c", "module": "leverage_decay", "params": {}}],
-    })
-    assert cover_spec(script)["stat"] == "5.26%"
-
-
 def test_validate_research_command_reports_errors_and_rc(tmp_path, monkeypatch, capsys):
     monkeypatch.setattr(cli, "get_settings", lambda: types.SimpleNamespace(artifacts_dir=tmp_path))
     rc = cli.main(["validate-research", "--date", "2026-07-10"])
@@ -148,27 +107,91 @@ def test_voice_map_maps_narrator_and_both_roles_to_their_settings():
     assert set(voices) == set(get_args(VoiceKey))
 
 
+def _cover_settings(arts):
+    return types.SimpleNamespace(artifacts_dir=arts, channel_name="頻道甲", video_font="字型乙")
+
+
+def _write_script(arts, segments):
+    charts = [{"id": "c", "module": "leverage_decay", "params": {}}]
+    script = {"segments": segments, "charts": charts}
+    (arts / "script_2026-09-30.json").write_text(json.dumps(script), encoding="utf-8")
+
+
 def test_render_cover_normalizes_halfwidth_punctuation(tmp_path, monkeypatch):
-    """封面是公開圖片：大標與小標的半形標點在出口轉全形，大數字維持原樣。"""
+    """封面是公開圖片：大標與小標的半形標點在出口轉全形，大數字維持原樣；字型與頻道名取自設定。"""
     arts = tmp_path / "artifacts"
     arts.mkdir()
-    script = {
-        "segments": [
-            {"vo": "開場。", "headline": "債市暴走,Fed不急", "tag": "今日盤前:速報"},
-            {"vo": "圖。", "chart_id": "c", "stat": "7,670", "stat_label": "標普(昨收)"},
-        ],
-        "charts": [{"id": "c", "module": "leverage_decay", "params": {}}],
-    }
-    (arts / "script_2026-09-30.json").write_text(json.dumps(script), encoding="utf-8")
+    _write_script(arts, [
+        {"vo": "開場。", "headline": "債市暴走,Fed不急", "tag": "今日盤前:速報"},
+        {"vo": "圖。", "chart_id": "c", "stat": "7,670", "stat_label": "標普(昨收)"},
+    ])
     captured: dict = {}
 
-    def fake_render(out, headline, **kwargs):
-        captured.update(out=out, headline=headline, **kwargs)
+    def fake_render(spec, out, **kwargs):
+        captured.update(spec=spec, out=out, **kwargs)
+        return Path(out)
 
-    monkeypatch.setattr("pmb.charts.cards.render_headline_card", fake_render)
-    settings = types.SimpleNamespace(artifacts_dir=arts, channel_name="美股早發車")
-    cover = cli._render_cover(dt.date(2026, 9, 30), settings)
+    monkeypatch.setattr(cli, "render_cover", fake_render)
+    cover = cli._render_cover(dt.date(2026, 9, 30), _cover_settings(arts))
     assert cover == arts / "cover_2026-09-30.png"
-    assert captured["headline"] == "債市暴走，Fed不急"
-    assert captured["tag"] == "今日盤前：速報"
-    assert captured["stat"] == "7,670"
+    spec = captured["spec"]
+    assert spec.headline == "債市暴走，Fed不急"
+    assert spec.kicker == "今日盤前：速報"
+    assert (spec.stat_label, spec.stat) == ("標普（昨收）", "7,670")
+    assert spec.date == dt.date(2026, 9, 30)
+    assert captured["out"] == arts / "cover_2026-09-30.png"
+    assert (captured["font"], captured["channel"]) == ("字型乙", "頻道甲")
+
+
+def test_render_cover_without_script_or_hook_is_none(tmp_path, monkeypatch):
+    arts = tmp_path / "artifacts"
+    arts.mkdir()
+    monkeypatch.setattr(cli, "render_cover", lambda *a, **k: pytest.fail("不該渲染"))
+    settings = _cover_settings(arts)
+    assert cli._render_cover(dt.date(2026, 9, 30), settings) is None  # 沒有講稿
+    _write_script(arts, [{"vo": "圖。", "chart_id": "c"}])  # 有講稿但沒有字卡
+    assert cli._render_cover(dt.date(2026, 9, 30), settings) is None
+
+
+def test_render_cover_failure_warns_and_returns_none(tmp_path, monkeypatch):
+    """封面渲染失敗（ffmpeg 掛了）只記 WARNING、回 None，上傳照常進行、只是沒有自訂縮圖。"""
+    arts = tmp_path / "artifacts"
+    arts.mkdir()
+    _write_script(arts, [{"vo": "開場。", "headline": "債市暴走", "tag": "債市日"}])
+
+    def boom(spec, out, **kwargs):
+        raise RuntimeError("ffmpeg 失敗(rc=1)")
+
+    monkeypatch.setattr(cli, "render_cover", boom)
+    messages: list[str] = []
+    sink = logger.add(lambda m: messages.append(m.record["level"].name + " " + m.record["message"]),
+                      level="WARNING")
+    try:
+        assert cli._render_cover(dt.date(2026, 9, 30), _cover_settings(arts)) is None
+    finally:
+        logger.remove(sink)
+    assert any(m.startswith("WARNING") and "ffmpeg" in m for m in messages)
+
+
+@pytest.mark.parametrize("enabled", [True, False])
+def test_cmd_assemble_passes_the_banner_setting(tmp_path, monkeypatch, enabled):
+    """VIDEO_BANNER 設定原樣帶進 assemble_video（今日主標橫幅的開關）。"""
+    day = dt.date(2026, 9, 30)
+    script = Script.model_validate({
+        "segments": [{"kind": "card", "vo": "開場。", "headline": "債市暴走", "tag": "債市日"}],
+        "charts": [],
+    })
+    snapshot = Snapshot(session_date=day, generated_at=dt.datetime(2026, 9, 30, 12, tzinfo=dt.UTC))
+    (tmp_path / f"script_{day}.json").write_text(script.model_dump_json(), encoding="utf-8")
+    (tmp_path / f"snapshot_{day}.json").write_text(snapshot.model_dump_json(), encoding="utf-8")
+    settings = types.SimpleNamespace(
+        artifacts_dir=tmp_path, ensure_dirs=lambda: None, video_font="F", channel_name="頻道",
+        bgm_gain_db=-14.0, slogan_intro="口號", slogan_outro="收尾", sting_enable=True,
+        video_banner=enabled,
+    )
+    captured: dict = {}
+    monkeypatch.setattr(cli, "get_settings", lambda: settings)
+    monkeypatch.setattr(cli, "assemble_video", lambda *args, **kwargs: captured.update(kwargs))
+    monkeypatch.setattr(cli, "probe_duration", lambda path: 1.0)
+    assert cli.main(["assemble", "--date", str(day), "--dry-run"]) == 0
+    assert captured["banner"] is enabled
