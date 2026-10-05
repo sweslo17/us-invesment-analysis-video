@@ -1,0 +1,109 @@
+{
+  "segments": [
+    {
+      "kind": "card",
+      "vo": "非農爆冷，那指衝上新高，今天期貨卻猶豫了。",
+      "headline": "那指破頂\n期貨卻轉彎",
+      "tag": "降息紅利期"
+    },
+    {
+      "kind": "chart",
+      "vo": "隔夜日經大漲2.58%衝上七萬點、三個月新高，台股大漲2.53%站上四萬九千點續創天價，台積電寫下歷史新高。源頭是上週五非農爆冷，市場賭Fed十月按兵不動，資金回頭加碼AI鏈。",
+      "chart_id": "asia",
+      "title": "亞股集體噴出",
+      "stat": "+2.58%",
+      "stat_label": "日經創三個月高"
+    },
+    {
+      "kind": "recap",
+      "vo": "昨天說要看的兩件事，先對帳。非農預期8.4萬人，結果只增2.9萬，差了快三倍。美軍三航母部署呢，沒有懸念，確認10月底前全數抵達中東。",
+      "title": "昨天說要看的，來對帳",
+      "rows": [
+        {
+          "ask": "非農預期8.4萬人",
+          "result": "只增2.9萬，大失望",
+          "mark": "no"
+        },
+        {
+          "ask": "三航母部署進度",
+          "result": "確認10月底全數到位",
+          "mark": "yes"
+        }
+      ]
+    },
+    {
+      "kind": "chart",
+      "vo": "10年期公債殖利率今天來到5.28%附近，貼著2002年以來高點整理。非農數據已經那麼弱，長天期利率卻不肯回頭，顯示市場對發債供給的擔心比降不降息更根深蒂固。",
+      "chart_id": "rates",
+      "title": "殖利率續卡高檔",
+      "stat": "5.28%",
+      "stat_label": "10年期殖利率"
+    },
+    {
+      "kind": "card",
+      "vo": "決策公布後幾週，Fed才把當天閉門會議的逐字討論補發出來，這份紀要常常比決策本身更洩漏官員心裡話。",
+      "headline": "FOMC會議紀要",
+      "tag": "名詞小教室"
+    },
+    {
+      "kind": "chart",
+      "vo": "本週裁判排好隊：今天ISM服務業PMI，週二鮑曼、洛根發言，2天後週三FOMC會議紀要公布，週五柯林斯壓軸。非農已經降溫，這幾場發言才會告訴我們，Fed信不信這份數據。",
+      "chart_id": "cal",
+      "title": "本週政策排程",
+      "stat": "2天後",
+      "stat_label": "FOMC紀要公布"
+    },
+    {
+      "kind": "card",
+      "vo": "先衝進場，理由晚點再補。",
+      "headline": "先衝進場\n理由晚點補",
+      "tag": "彼得·林區 不知道有沒有說過"
+    }
+  ],
+  "charts": [
+    {
+      "id": "asia",
+      "module": "global_equity_overnight",
+      "params": {}
+    },
+    {
+      "id": "rates",
+      "module": "rates_trend",
+      "params": {}
+    },
+    {
+      "id": "cal",
+      "module": "catalyst_timeline",
+      "params": {
+        "title": "本週政策排程",
+        "events": [
+          {
+            "date": "10/5",
+            "label": "ISM服務業PMI公布",
+            "highlight": false
+          },
+          {
+            "date": "10/6",
+            "label": "鮑曼、洛根發言",
+            "highlight": false
+          },
+          {
+            "date": "10/7",
+            "label": "FOMC會議紀要公布",
+            "highlight": true
+          },
+          {
+            "date": "10/9",
+            "label": "柯林斯發言",
+            "highlight": false
+          }
+        ]
+      }
+    }
+  ],
+  "coverage_gaps": [],
+  "gags": [
+    "那指破頂、期貨卻轉彎的反差開場",
+    "對帳體：非農大失望 vs 三航母準時到位的一好一壞"
+  ]
+}

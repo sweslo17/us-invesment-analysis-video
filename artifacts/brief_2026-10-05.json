@@ -1,0 +1,171 @@
+{
+  "date": "2026-10-05",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7722.72021484375,
+      "overnight_pct": 0.7339800669638513,
+      "drivers": [
+        "標普500上一交易日（10/2，週五）收7722.72點，漲0.73%，9月非農爆冷帶動的降息樂觀撐出全線收紅。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 27190.859375,
+      "overnight_pct": 1.1881072304004519,
+      "drivers": [
+        "那斯達克收27190.86點，大漲1.19%，四大指數中表現最好、收在歷史新高。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 51176.9609375,
+      "overnight_pct": 0.49169026437285834,
+      "drivers": [
+        "道瓊收51176.96點，漲0.49%，漲幅相對溫和。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 2832.89990234375,
+      "overnight_pct": 0.9361743141228344,
+      "drivers": [
+        "羅素兩千收2832.90點，漲0.94%，利率敏感的中小型股同步受惠於降息預期回升。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普500近期已實現波動偏低，用波動目標的思路反推，合理槓桿倍數不算誇張，但長期抱著三倍槓桿，波動耗損還是會一年一年啃掉複利，跟今天是漲是跌無關。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克的波動仍是四大指數裡最高，合理槓桿倍數因此被壓到最低，今天亞股AI狂潮再亮眼，也不代表硬開三倍長期持有的磨損會消失。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊波動相對溫和，合理槓桿倍數略高於標普，但地緣風險這種突發衝擊一來，三倍槓桿的耗損一樣會加速。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千對利率消息向來反應最激烈，波動偏高讓合理槓桿倍數被壓低，三倍槓桿長期持有的代價依然可觀。"
+    }
+  ],
+  "regime": {
+    "vol": "normal",
+    "rates": "rising",
+    "stock_bond_corr": "positive",
+    "breadth": "narrow"
+  },
+  "items": [
+    {
+      "headline": "9月非農只增2.9萬人，遠低於預期8.4萬",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "上週五公布的9月非農就業報告新增僅2.9萬人，遠低於市場預期的8.4萬人，失業率升到4.2%，是近幾個月最具體的就業降溫證據，直接把市場對十月是否再升息的預期打回保守；對一般投資人來說，壞消息又一次被股市當成好消息，但也代表勞動市場真的在降溫。",
+      "sources": [
+        {
+          "url": "https://www.cnbc.com/2026/10/02/fed-rate-hike-odds-decline-after-september-jobs-report.html",
+          "ts": null
+        },
+        {
+          "url": "https://finance.yahoo.com/economy/articles/september-2026-jobs-report-payrolls-123334753.html",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "日經衝破7萬點、台股站上49000創新高",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "隔夜日經225大漲2.58%站上七萬點、三個月新高，台股大漲2.53%首度站上49000點續創歷史新高，台積電股價同步寫下天價，全是靠『十月可能不升息』的樂觀外溢撐出來的；對一般投資人來說，這代表降息預期帶動的全球資金正在追捧AI供應鏈，但追高後的回檔風險也同步在累積。",
+      "sources": [
+        {
+          "url": "https://www.analyticsinsight.net/news/japan-nikkei-hits-70000-as-ai-stocks-drive-253-surge",
+          "ts": null
+        },
+        {
+          "url": "https://finance.biggo.com/news/8765a1a9-602e-43b6-9607-a8922ccc580c",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "荷姆茲海峽本週第5艘油輪遇襲，川普稱伊朗『準備投降』",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "developing",
+      "audience_value": "希臘營運、中國船東的油輪Lipsi號10/4在荷姆茲海峽基什島附近遭飛彈擊中，是9/28以來第五艘遇襲的油輪；川普同時表態伊朗『已經準備投降』，但暗示真正的軍事決定要等11/3期中選舉前後；對一般投資人來說，地緣風險並未解除，只是這次油價反而沒有同步走高。",
+      "sources": [
+        {
+          "url": "https://maritime-executive.com/article/iran-keeps-up-pace-of-strikes-with-attack-on-brand-new-lr2-tanker",
+          "ts": null
+        },
+        {
+          "url": "https://www.winknews.com/news/trump-vows-iran-war-will-end-right-after-the-election-or-sooner-as-9-000/article_ce73be08-4269-4291-a07f-7125bfff7943.html",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "美股期貨平盤整理，10年期殖利率續卡2002年以來高檔",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "今天那斯達克期貨逆勢小跌0.13%，標普、道瓊、羅素期貨僅小幅走高，上週五靠就業數據撐出的樂觀今天明顯降溫；10年期公債殖利率續在5.28%附近盤旋、貼近2002年以來高點，顯示長天期利率壓力沒有因為就業數據轉弱而消失；對一般投資人來說，降息預期跟利率實際走勢這次又對不太上。",
+      "sources": [
+        {
+          "url": "https://finance.yahoo.com/markets/live/stock-market-today-monday-october-5-dow-sp-500-nasdaq-081220790.html",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "法國財政僵局推升法德公債利差，創2012年以來最寬",
+      "horizon": "MT",
+      "vs_thesis": "new",
+      "materiality": 2,
+      "confidence": "confirmed",
+      "audience_value": "法國預算案難產疊加2027年總統大選前的政治不確定性，法德十年期公債利差擴大到147個基點、創2012年以來最寬，歐元貶到17個月低點；對一般投資人來說，這是另一個已開發國家財政壓力的新例子，跟美國長天期殖利率居高不下的故事互相呼應。",
+      "sources": [
+        {
+          "url": "https://www.briefs.co/news/euro-hits-lowest-since-may-2025-as-political-and-fiscal-worr/",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "本週FOMC會議紀要加三位Fed官員發言，成下一組裁判",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "本週三（10/7）美東下午2點公布9月FOMC會議紀要，週二Fed理事鮑曼（傾向今年不再升息）、達拉斯Fed總裁洛根，以及週五波士頓Fed總裁柯林斯將陸續發言；對一般投資人來說，這是驗證上週就業數據降溫能否真正撼動升息路徑的下一步，比單一份數據更重要。",
+      "sources": [
+        {
+          "url": "https://investinglive.com/central-banks/fed-minutes-preview-one-more-hike-guidance-meets-softer-data-as-october-odds-fade",
+          "ts": null
+        }
+      ]
+    }
+  ],
+  "catalysts": [
+    "今天（10/5，週一）美東上午10:00：9月ISM非製造業（服務業）PMI公布，市場預期55.0（前值55.4）。",
+    "本週二（10/6）：Fed理事鮑曼（傾向今年不再升息）、達拉斯Fed總裁洛根發言；本週三（10/7）美東下午2:00：9月FOMC會議紀要公布；本週五（10/9）：波士頓Fed總裁柯林斯發言。",
+    "持續觀察：荷姆茲海峽本週第五艘油輪遇襲後的物流與油價反應、美軍三航母打擊群預計10月底前全數抵達中東、川普所稱軍事行動最快11/3期中選舉後重啟、法國財政僵局牽動歐股與歐元。"
+  ],
+  "thesis_delta": {
+    "changed": true,
+    "summary": "上週五（10/2）公布的9月非農就業報告大幅遜於預期——新增僅2.9萬人、遠低於市場預期的8.4萬人，失業率升到4.2%，是Fed政策這條主線這幾個月以來最具體的降溫硬數據；美股當天不跌反漲，那斯達克收在歷史新高，週末這股樂觀延燒到隔夜亞股，日經站上七萬點三個月新高、台股首度站上49000點續創歷史新高。但美股本土期貨今天早盤反而偏弱整理，10年期公債殖利率續在2002年以來高檔附近盤旋，法國財政僵局把法德公債利差推上2012年以來最寬，顯示『higher-for-longer』的壓力並未因一份疲軟就業數據而真正解除。地緣風險線同步沒有緩和：荷姆茲海峽本週已有第五艘油輪遇襲，沙烏地支持的葉門部隊同步對胡塞發動全面收復行動，但油價這次罕見地跟著回落。三條既有支柱方向皆未反轉，新增的重點是就業數據降溫與地緣風險延燒同時並存，但彼此的價格傳導這次明顯脫鉤。",
+    "horizon": "LT"
+  },
+  "lead_horizon": "ST",
+  "title_hook": "日經衝破7萬點，那斯達克期貨卻掉頭向下"
+}
