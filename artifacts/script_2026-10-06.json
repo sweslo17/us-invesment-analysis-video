@@ -1,0 +1,109 @@
+{
+  "segments": [
+    {
+      "kind": "card",
+      "vo": "殖利率衝上新高，那指卻照樣衝新天價。",
+      "headline": "殖利率衝新高\n那指照樣噴",
+      "tag": "多空拉鋸"
+    },
+    {
+      "kind": "chart",
+      "vo": "10年期公債殖利率今天來到5.31%，比昨天5.28%再墊高，續貼在2002年以來高點。殖利率像債市自己量的體溫，現在量出來的溫度比新聞標題還燙，跟股市創新高的樂觀完全反著走。",
+      "chart_id": "rates",
+      "title": "殖利率續創新高",
+      "stat": "5.31%",
+      "stat_label": "10年期殖利率"
+    },
+    {
+      "kind": "split",
+      "vo": "先看好消息：那斯達克昨晚衝上新高，大漲1.05%……殖利率根本沒在聽，今天續墊高到5.31%，寫下2002年以來新高。",
+      "title": "樂觀VS現實",
+      "top": {
+        "label": "降息預期",
+        "text": "那指創天價",
+        "stat": "+1.05%",
+        "tone": "good"
+      },
+      "bottom": {
+        "label": "殖利率現實",
+        "text": "5.31%續墊高",
+        "stat": "5.31%",
+        "tone": "bad"
+      }
+    },
+    {
+      "kind": "chart",
+      "vo": "隔夜亞股這次沒有一起漲。南韓KOSPI收黑0.89%，三星、SK海力士獲利了結；反觀日經逆勢漲1.08%、台股續漲0.31%、恆生漲1%，AI狂潮在日本、台灣還沒退燒，反而是南韓自己先踩了煞車。",
+      "chart_id": "asia",
+      "title": "亞股各走各的",
+      "stat": "-0.89%",
+      "stat_label": "南韓獲利了結"
+    },
+    {
+      "kind": "card",
+      "vo": "鷹派想升息壓通膨，鴿派想先顧經濟成長。",
+      "headline": "鷹派／鴿派",
+      "tag": "名詞小教室"
+    },
+    {
+      "kind": "chart",
+      "vo": "今晚Fed理事洛根先開腔，鮑曼這兩天在年會致詞，重頭戲是10/7下午兩點的九月FOMC會議紀要。當時九月會議鷹派佔多數，如今非農爆冷、服務業物價卻衝上74，紀要撐不撐得住鷹派，是這週最大懸念。",
+      "chart_id": "cal",
+      "title": "本週Fed排程",
+      "stat": "10/7",
+      "stat_label": "FOMC紀要公布"
+    },
+    {
+      "kind": "card",
+      "vo": "短線像公投，長線才秤斤兩。",
+      "headline": "短線像公投\n長線秤斤兩",
+      "tag": "葛拉漢 不知道有沒有說過"
+    }
+  ],
+  "charts": [
+    {
+      "id": "rates",
+      "module": "rates_trend",
+      "params": {}
+    },
+    {
+      "id": "asia",
+      "module": "global_equity_overnight",
+      "params": {}
+    },
+    {
+      "id": "cal",
+      "module": "catalyst_timeline",
+      "params": {
+        "title": "本週Fed排程",
+        "events": [
+          {
+            "date": "10/6",
+            "label": "洛根今晚發言",
+            "highlight": false
+          },
+          {
+            "date": "10/6-7",
+            "label": "鮑曼社區銀行年會致詞",
+            "highlight": false
+          },
+          {
+            "date": "10/7",
+            "label": "FOMC會議紀要公布",
+            "highlight": true
+          },
+          {
+            "date": "10/9",
+            "label": "柯林斯發言",
+            "highlight": false
+          }
+        ]
+      }
+    }
+  ],
+  "coverage_gaps": [],
+  "gags": [
+    "殖利率衝新高、那指卻噴新天價的反差開場",
+    "降息預期 vs 殖利率現實的冷面好壞消息對照"
+  ]
+}

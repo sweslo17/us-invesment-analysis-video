@@ -1,0 +1,152 @@
+{
+  "date": "2026-10-06",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7773.9501953125,
+      "overnight_pct": 0.6633698400628243,
+      "drivers": [
+        "標普500上一交易日（10/5）收7773.95點，漲0.66%，延續上週五非農爆冷帶動的降息樂觀。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 27477.310546875,
+      "overnight_pct": 1.0534698618245357,
+      "drivers": [
+        "那斯達克收27477.31點，大漲1.05%，寫下歷史新高，超越9/22的前波紀錄，AI股群（SpaceX、Meta、輝達、特斯拉）領漲。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 51267.8984375,
+      "overnight_pct": 0.17769409808632808,
+      "drivers": [
+        "道瓊收51267.90點，漲0.18%，漲幅四大指數中最溫和。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 2847.139892578125,
+      "overnight_pct": 0.5028458020440776,
+      "drivers": [
+        "羅素兩千收2847.14點，漲0.50%，利率敏感的中小型股同步受惠降息預期。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普500波動還不算高，用波動目標的思路反推，合理槓桿倍數沒有誇張到哪去，但殖利率這樣一路衝新高，長抱三倍槓桿的耗損不會因為指數創新高就消失。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克雖然又刷新天價，但它的波動本來就是四大指數最高的，合理槓桿倍數因此被壓得最低，追高容易，長抱三倍槓桿的磨損風險也最大。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊波動相對溫和，合理槓桿倍數能比標普高一些，但像荷姆茲海峽這種地緣風險一旦真的傳導到市場，三倍槓桿的耗損一樣會瞬間放大。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千對利率消息向來反應最激烈，殖利率只要持續往上衝，合理槓桿倍數就被壓得更低，長期抱著三倍槓桿的代價依然不便宜。"
+    }
+  ],
+  "regime": {
+    "vol": "normal",
+    "rates": "rising",
+    "stock_bond_corr": "positive",
+    "breadth": "narrow"
+  },
+  "items": [
+    {
+      "headline": "那指創新天價，10年期殖利率卻衝上5.31%再創新高",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "上一交易日那斯達克大漲1.05%收在27477點、寫下歷史新高，標普漲0.66%，靠的是非農爆冷帶動的降息樂觀；但今天10年期公債殖利率不跟著降溫，反而衝上5.31%、續創2002年以來新高，顯示長天期利率壓力沒有真的解除，股市的樂觀跟債市的現實這次完全對不上。",
+      "sources": [
+        {
+          "url": "https://www.thestreet.com/stock-market-today/stock-market-today-dow-jones-sp-500-nasdaq-updates-oct-05-2026",
+          "ts": null
+        },
+        {
+          "url": "https://finance.yahoo.com/markets/world-indices/articles/major-us-stock-indexes-fared-201520824.html",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "ISM服務業PMI降到54.9，物價分項卻衝上74創四年新高",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "昨天公布的9月ISM服務業採購經理人指數降到54.9（前值55.4），成長動能連續降溫，但物價分項卻跳升到74.0，是2022年7月以來最高；對一般投資人來說，這是成長放緩、通膨卻不降溫的組合，會讓Fed在明天公布的會議紀要裡更難表態寬鬆。",
+      "sources": [
+        {
+          "url": "https://www.prnewswire.com/news-releases/services-pmi-at-54-9-september-2026-ism-services-pmi-report-302898421.html",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "本週Fed排程卡位：洛根、鮑曼今明開腔，明天FOMC紀要見真章",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "今天傍晚達拉斯Fed總裁洛根發言，鮑曼也在社區銀行研究年會致詞，但真正的裁判是明天下午兩點公布的9月FOMC會議紀要——九月那場會議原本有16位官員主張年底前至少再升一次，如今非農爆冷、PCE降溫，紀要能不能撐住鷹派立場，將決定接下來利率路徑怎麼走。",
+      "sources": [
+        {
+          "url": "https://investinglive.com/central-banks/fed-minutes-preview-one-more-hike-guidance-meets-softer-data-as-october-odds-fade/",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "荷姆茲海峽10月以來近9起攻擊通報，IRGC警告開火驅離",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "developing",
+      "audience_value": "荷姆茲海峽的攻擊頻率這個月明顯加快，英國海事貿易行動處10月以來已發布近9次警告，伊朗革命衛隊昨天更直接警告一艘油輪若不折返就開火；但油價這次沒有跟著恐慌大漲，顯示市場開始相信供應面比想像中有韌性，風險與價格的落差還在擴大。",
+      "sources": [
+        {
+          "url": "https://www.globalsecurity.org/military/ops/iran-war-oprep.htm",
+          "ts": null
+        },
+        {
+          "url": "https://www.seatrade-maritime.com/security/ukmto-issues-four-hormuz-attack-warnings-in-four-hours",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "南韓KOSPI收黑0.89%，晶片股獲利了結，日台股續創高",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "developing",
+      "audience_value": "隔夜亞股這次沒有一起走，南韓KOSPI因三星、SK海力士獲利了結加上殖利率壓力收黑0.89%、重回七千點下方；但日經逆勢漲1.08%、台股續漲0.31%創歷史新高，AI狂潮的『窄且不穩』這次換成南韓自己踩煞車，其他市場還在狂歡。",
+      "sources": [
+        {
+          "url": "https://sundayguardianlive.com/business/korea-stock-market-krx-today-october-06-why-is-the-korean-stock-market-down-today-kospi-falls-below-7000-as-samsung-electronics-sk-hynix-slide-kosdaq-rises-299805/",
+          "ts": null
+        }
+      ]
+    }
+  ],
+  "catalysts": [
+    "今天（10/6）美東傍晚7:00：達拉斯Fed總裁洛根發表談話。",
+    "今天至明天（10/6–7）：Fed理事鮑曼於社區銀行研究年會開場致詞。",
+    "明天（10/7）美東下午2:00：9月FOMC會議紀要公布。",
+    "持續觀察：本週五（10/9）波士頓Fed總裁柯林斯發言；荷姆茲海峽10月以來已累計近9起攻擊通報，IRGC於10/5警告船隻若不折返將開火；南韓KOSPI因晶片股獲利了結與殖利率壓力重回7000點下方。"
+  ],
+  "thesis_delta": {
+    "changed": false
+  },
+  "lead_horizon": "ST",
+  "title_hook": "殖利率噴新高，那指照樣噴天價"
+}
