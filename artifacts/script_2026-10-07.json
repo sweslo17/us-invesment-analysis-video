@@ -1,0 +1,119 @@
+{
+  "segments": [
+    {
+      "kind": "card",
+      "vo": "美股剛噴天價，期貨已落跑，下午紀要見真章。",
+      "headline": "美股噴天價\n期貨已落跑",
+      "tag": "紀要日"
+    },
+    {
+      "kind": "dialogue",
+      "title": "紀要前夜",
+      "vo": "期貨隱含十月升息機率彈回74%，比上週明顯墊高，十二月更到88%。今天下午兩點的九月FOMC會議紀要，就是檢驗這個押注準不准的第一關。",
+      "lines": [
+        {
+          "speaker": "美股",
+          "voice": "a",
+          "text": "我昨晚才衝新高。"
+        },
+        {
+          "speaker": "殖利率",
+          "voice": "b",
+          "text": "下午紀要見真章。"
+        },
+        {
+          "speaker": "美股",
+          "voice": "a",
+          "text": "可以別嚇我嗎。"
+        },
+        {
+          "speaker": "殖利率",
+          "voice": "b",
+          "text": "機率都衝到74%了。"
+        }
+      ]
+    },
+    {
+      "kind": "chart",
+      "vo": "標普十大權值股今天盤前幾乎全翻黑，輝達領跌0.49%，蘋果、亞馬遜、博通跟著收紅轉黑。這不是今天才有的毛病，大盤屋頂鋪滿金箔，地基卻只有27%的成分股站上五十日均線，窄基反彈的老問題還沒解。",
+      "chart_id": "conc",
+      "title": "權值股全面翻黑",
+      "stat": "-0.49%",
+      "stat_label": "輝達領跌"
+    },
+    {
+      "kind": "chart",
+      "vo": "隔夜全球股市幾乎沒人躲過，南韓KOSPI重挫1.98%，日經跌1.04%。法國學生抗議財政撙節延燒，拖累歐股，德國DAX跌1.46%、STOXX50跌1.73%。倒是台股逆勢上漲，AI狂潮在亞股內部還沒真的退燒。",
+      "chart_id": "intl",
+      "title": "歐亞股全面收黑",
+      "stat": "-1.98%",
+      "stat_label": "南韓領跌"
+    },
+    {
+      "kind": "card",
+      "vo": "公債利率連成一條線，倒掛代表衰退警訊。",
+      "headline": "殖利率曲線",
+      "tag": "名詞小教室"
+    },
+    {
+      "kind": "chart",
+      "vo": "今天真正的裁判是美東下午2:00的九月FOMC會議紀要，看會議裡十六位官員喊再升一次的鷹派基調，撐不撐得住後來爆冷的非農與PCE。下午1點還有一場390億美元的十年期公債標售，通膨與財政壓力，今天一次攤在陽光下。",
+      "chart_id": "cal",
+      "title": "今天該看什麼",
+      "stat": "2:00",
+      "stat_label": "FOMC紀要時間"
+    },
+    {
+      "kind": "card",
+      "vo": "狗跑到主人前面，最後還是要回家。",
+      "headline": "狗跑到主人前面\n最後還是要回家",
+      "tag": "科斯托蘭尼 不知道有沒有說過"
+    }
+  ],
+  "charts": [
+    {
+      "id": "conc",
+      "module": "concentration",
+      "params": {}
+    },
+    {
+      "id": "intl",
+      "module": "global_equity_overnight",
+      "params": {}
+    },
+    {
+      "id": "cal",
+      "module": "catalyst_timeline",
+      "params": {
+        "title": "今天怎麼走",
+        "events": [
+          {
+            "date": "今天14:00",
+            "label": "FOMC九月紀要公布",
+            "highlight": true
+          },
+          {
+            "date": "今天13:00",
+            "label": "10年期公債標售390億",
+            "highlight": false
+          },
+          {
+            "date": "本週五",
+            "label": "柯林斯談話",
+            "highlight": false
+          },
+          {
+            "date": "下週起",
+            "label": "銀行股開跑財報季",
+            "highlight": false
+          }
+        ]
+      }
+    }
+  ],
+  "coverage_gaps": [],
+  "gags": [
+    "期貨比美股還怕事、開盤前就先落跑的擬人梗開場",
+    "美股跟殖利率互嗆的對話體，呼應FOMC紀要前的忐忑"
+  ]
+}

@@ -1,0 +1,158 @@
+{
+  "date": "2026-10-07",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7818.93017578125,
+      "overnight_pct": 0.5786013002559854,
+      "drivers": [
+        "標普500上一交易日（10/6）收7818.93點，漲0.58%，改寫歷史新高紀錄。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 27599.7890625,
+      "overnight_pct": 0.4457461902202169,
+      "drivers": [
+        "那斯達克收27599.79點，漲0.45%，續創歷史新高，輝達逼近6兆美元市值、法說會展望亮眼是主要推力。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 51521.28125,
+      "overnight_pct": 0.49422982021888656,
+      "drivers": [
+        "道瓊收51521.28點，漲0.49%，跟上標普、那指同步創高的步調。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 2830.300048828125,
+      "overnight_pct": -0.5913188883787596,
+      "drivers": [
+        "羅素兩千逆勢收跌0.59%，四大指數裡唯一收黑，小型股延續第三季以來的相對弱勢。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普500波動還算溫和，波動目標思路反推出來的合理槓桿倍數不算低，但創新高不代表波動消失，長抱三倍槓桿的耗損一樣在累積。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克波動是四大指數裡最高的，合理槓桿倍數因此被壓得最低，輝達這種單一權值股牽動大盤的格局下，追高三倍槓桿的磨損風險特別大。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊波動相對溫和，合理槓桿倍數能比標普高一些，但法國財政僵局這種外部風險一旦傳導，三倍槓桿的耗損照樣會瞬間放大。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千對利率消息向來最敏感，今天又是四大指數裡唯一收黑的一個，合理槓桿倍數被壓得更低，長抱三倍槓桿的代價依然不便宜。"
+    }
+  ],
+  "regime": {
+    "vol": "normal",
+    "rates": "rising",
+    "stock_bond_corr": "positive",
+    "breadth": "narrow"
+  },
+  "items": [
+    {
+      "headline": "FOMC紀要下午見真章，市場隱含十月升息機率彈回74%",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "今天美東下午兩點公布的九月FOMC會議紀要，是市場重新評估升息路徑的裁判。期貨隱含十月升息機率已彈回74%，十二月更到88%，比非農爆冷後的低點明顯墊高；對一般投資人來說，就算就業數據轉弱，利率路徑也可能沒有市場原本想的那麼鬆動。",
+      "sources": [
+        {
+          "url": "https://www.fxstreet.com/news/dow-jones-futures-fall-as-us-treasury-yields-rebound-ahead-of-fomc-minutes-202610070843",
+          "ts": null
+        },
+        {
+          "url": "https://admiralmarkets.com/analytics/traders-blog/fomc-minutes-october-2026",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "輝達逼近6兆美元市值，標普十大權值股今天盤前卻幾乎全翻黑",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "輝達昨天靠破紀錄回購計畫與樂觀第三季營收展望衝上歷史新高、市值直逼6兆美元，帶動那斯達克同步創高；但今天盤前標普十大權值股裡，輝達、蘋果、亞馬遜、博通、Meta幾乎全數轉黑，領跌的輝達跌0.49%。漲的時候靠幾檔巨頭扛，跌的時候也是同一批人先倒，呼應大盤創新高、卻只有約27%成分股站上五十日均線的窄基老問題。",
+      "sources": [
+        {
+          "url": "https://www.bloomberg.com/news/articles/2026-10-06/nvidia-heads-for-6-trillion-value-with-chipmaker-back-at-record",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "荷姆茲海峽10月以來已9起攻擊通報，油輪船員傷亡創新高",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "developing",
+      "audience_value": "巴拿馬籍油輪「On Peace」週二在荷姆茲海峽遭不明拋射物擊中，19名船員中12人受傷，是這波攻擊以來傷亡最慘重的一次，也是10月以來第5艘遇襲船隻；英國海事貿易行動處統計10月至今已發布9次攻擊警告，已經追平9月全月的一半。但油價這次沒有跟著恐慌式飆升，中東原油出口流量據報已回到戰前水準附近，風險升溫與實際供應之間的落差持續擴大。",
+      "sources": [
+        {
+          "url": "https://www.seatrade-maritime.com/security/at-least-12-seafarers-injured-in-hormuz-tanker-attack",
+          "ts": null
+        },
+        {
+          "url": "https://www.bloomberg.com/news/articles/2026-10-06/iran-ramps-up-ship-attacks-in-hormuz-as-oil-and-gas-flows-climb",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "法國學生示威延燒成數十年最大規模，法德公債利差創2012年來最寬",
+      "horizon": "MT",
+      "vs_thesis": "new",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "法國總理勒科爾尼提出的2027財政撙節預算，引爆法國數十年來最大規模的學生示威，主辦單位宣稱45萬人上街、逾300名師生受傷；極右派勒龐趁勢加碼減支政見，卡位明年春天的總統大選。法國公債殖利率衝上2002年以來高點，法德利差擴大到2012年歐債危機以來最寬，拖累歐股全面走弱，也是今天隔夜全球股市普遍收黑的主因之一。",
+      "sources": [
+        {
+          "url": "https://www.euronews.com/2026/10/06/frances-sovereign-debt-crisis-explained-how-dangerous-could-it-be",
+          "ts": null
+        },
+        {
+          "url": "https://www.washingtonpost.com/world/2026/10/06/protests-sweep-france-closing-schools-student-walkouts-escalate",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "南韓KOSPI重挫近2%獲利了結，台股逆勢創高顯示AI狂潮還沒退燒",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "developing",
+      "audience_value": "南韓KOSPI隔夜重挫1.98%，三星電子、SK海力士在前波大漲後遭外資獲利了結；反觀台股受惠台積電先進封裝題材，連幾個交易日創歷史新高。AI/半導體『窄且不穩』這次換成亞股內部自己分裂，南韓先踩煞車，台灣還在狂歡。",
+      "sources": [
+        {
+          "url": "https://www.taipeitimes.com/News/biz/archives/2026/10/07/2003865511",
+          "ts": null
+        }
+      ]
+    }
+  ],
+  "catalysts": [
+    "今天（10/7）美東下午2:00：9月FOMC會議紀要公布。",
+    "今天（10/7）美東下午1:00：390億美元10年期公債標售（重啟發行）。",
+    "本週五（10/9）：波士頓Fed總裁柯林斯發言。",
+    "持續觀察：荷姆茲海峽10月以來已9起攻擊通報（追平9月全月一半），油輪船員傷亡創新高；法國國民議會10/13起審議2027財政預算案，法德公債利差創2012年來最寬。"
+  ],
+  "thesis_delta": {
+    "changed": false,
+    "summary": null,
+    "horizon": null
+  },
+  "lead_horizon": "ST",
+  "title_hook": "FOMC紀要下午見真章，升息機率衝回74%"
+}
