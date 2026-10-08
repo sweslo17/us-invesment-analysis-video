@@ -1,0 +1,158 @@
+{
+  "date": "2026-10-08",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7801.77001953125,
+      "overnight_pct": -0.21946711978173852,
+      "drivers": [
+        "標普500上一交易日（10/7）收7801.77點，跌0.22%，從前一天的歷史新高小幅回吐。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 27538.689453125,
+      "overnight_pct": -0.22173115011303782,
+      "drivers": [
+        "那斯達克收27538.69點，跌0.22%，結束連兩天的創高走勢。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 51179.87109375,
+      "overnight_pct": -0.6626561029733711,
+      "drivers": [
+        "道瓊收51179.87點，跌0.66%，跌幅四大指數裡第二深。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 2793.199951171875,
+      "overnight_pct": -1.3107261741513427,
+      "drivers": [
+        "羅素兩千收跌1.31%，是四大指數裡最慘的一個，對利率最敏感的小型股持續落後。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普500波動還算溫和，波動目標思路反推出來的合理槓桿倍數不算低，但昨天才從歷史新高小幅回吐，提醒創高不代表波動消失，長抱三倍槓桿的耗損一樣在累積。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克波動是四大指數裡最高的，合理槓桿倍數因此被壓得最低，權值股牽動大盤的格局下，追高三倍槓桿的磨損風險特別大。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊波動相對溫和，合理槓桿倍數能比標普高一些，但油價與地緣風險這種外部衝擊一旦傳導，三倍槓桿的耗損照樣會瞬間放大。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千對利率消息向來最敏感，今天又是四大指數裡跌最深的一個，合理槓桿倍數被壓得更低，長抱三倍槓桿的代價依然不便宜。"
+    }
+  ],
+  "regime": {
+    "vol": "normal",
+    "rates": "rising",
+    "stock_bond_corr": "positive",
+    "breadth": "narrow"
+  },
+  "items": [
+    {
+      "headline": "FOMC九月紀要證實鷹派一致，19位官員全數挺升息",
+      "horizon": "LT",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "會議紀要白紙黑字寫下19位官員全數支持9月升息，多數認為年底前還要再升一次，這不是市場臆測而是會議室裡的共識；一般投資人若還在等Fed很快轉向降息，可能要調整期待。",
+      "sources": [
+        {
+          "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261007a.htm",
+          "ts": null
+        },
+        {
+          "url": "https://bloomberg.com/news/articles/2026-10-07/fed-minutes-show-hawkish-unity-behind-september-rate-hike",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "白宮令五角大廈備妥打伊朗選項，川普稱對談判沒興趣",
+      "horizon": "MT",
+      "vs_thesis": "new",
+      "materiality": 5,
+      "confidence": "developing",
+      "audience_value": "這是衝突以來第一次把『動武時間』跟『期中選舉行事曆』明確綁在一起——白宮要五角大廈備好選項，川普卻又說這仗可能拖到選後才見真章，訊號本身就互相矛盾；一般投資人該留意的是，只要時間表不確定，油價與波動率就有隨時被重新定價的風險。",
+      "sources": [
+        {
+          "url": "https://www.businesstoday.in/world/story/pentagon-prepares-iran-strike-plans-as-trump-weighs-options-before-midterm-elections-report-560282-2026-10-08",
+          "ts": null
+        },
+        {
+          "url": "https://www.theweek.in/news/middle-east/2026/10/08/us-iran-war-to-restart-pentagon-orders-preparations-marks-targets.html",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "隔夜亞股全面重摔，南韓科技股領跌拖累KOSPI挫2.6%",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "美股期貨同步翻黑，顯示中東動武消息與油價跳升的恐慌正從亞股外溢回美股；AI/半導體『窄且不穩』這條老問題，今天換成區域性的全面獲利了結。",
+      "sources": [
+        {
+          "url": "https://finance.biggo.com/news/26afbc2a-2762-4753-9a30-dc54c568fe88",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "荷姆茲海峽攻擊未停，油價單日跳升近5%",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "油價是通膨故事裡最直接的傳導管道，一旦墊高，先前靠非農轉弱撐起的降息樂觀就可能被迫重新定價，一般投資人該把『油價是否持續上行』當成觀察Fed態度的領先指標。",
+      "sources": [
+        {
+          "url": "https://www.aljazeera.com/news/2026/10/8/tanker-hit-by-multiple-projectiles-off-north-coast-of-qatar-ukmto-says",
+          "ts": null
+        },
+        {
+          "url": "https://tradingeconomics.com/commodity/crude-oil",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "今天初領失業金是十月升息機率的下一塊拼圖",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 2,
+      "confidence": "developing",
+      "audience_value": "市場預期初領失業金小幅增加到20萬人，如果真的轉弱，可能稍微抵銷地緣風險帶來的鷹派氛圍，是今天盤中第一個硬數據檢驗點。",
+      "sources": [
+        {
+          "url": "https://www.xtb.com/int/market-analysis/news-and-research/economic-calendar-u-s-jobless-claims-and-ecb-meeting-minutes-in-focus-08-10-2026",
+          "ts": null
+        }
+      ]
+    }
+  ],
+  "catalysts": [
+    "今天（10/8）美東上午8:30：初領失業金（預期20萬、前值19.7萬）與持續申請人數（預期170萬）。",
+    "今天（10/8）：市場緊盯白宮是否就五角大廈準備的伊朗打擊選項進一步表態，油價與VIX同步升溫。",
+    "明天（10/9）：波士頓Fed總裁柯林斯預定發言。",
+    "持續觀察：荷姆茲海峽/波灣油輪攻擊事件頻率、美方對伊朗動武時間表是否鎖定11/3期中選舉前後、法國國民議會10/13起審議2027財政預算案。"
+  ],
+  "thesis_delta": {
+    "changed": false,
+    "summary": null,
+    "horizon": null
+  },
+  "lead_horizon": "MT",
+  "title_hook": "五角大廈備好打伊朗選項，川普卻說選後見真章"
+}
