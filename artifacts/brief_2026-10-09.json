@@ -1,0 +1,154 @@
+{
+  "date": "2026-10-09",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7765.35986328125,
+      "overnight_pct": -0.46669072170482384,
+      "drivers": [
+        "標普500上一交易日（10/8）收7765.36點，跌0.47%，是這波AI選股情緒轉弱帶來的第二天回吐。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 27193.33984375,
+      "overnight_pct": -1.254057995167595,
+      "drivers": [
+        "那斯達克收27193.34點，重挫1.25%，是今年8月中旬以來最大單日跌幅，導火線是OpenAI年化營收傳出比先前認知少了約200億美元。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 51231.640625,
+      "overnight_pct": 0.1011542721777085,
+      "drivers": [
+        "道瓊逆勢收漲0.10%至51231.64點，非AI權值股的防禦性輪動撐住了指數。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 2794.1298828125,
+      "overnight_pct": 0.03314769750078482,
+      "drivers": [
+        "羅素兩千小漲0.03%收2794.13點，小型股這次沒有跟著AI權值股一起重摔。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普500的已實現波動還算溫和，反推出來的合理槓桿倍數不算低，但昨天AI股的重摔提醒你，指數本身平靜不代表底下的集中倉位風險真的變小，長抱三倍槓桿的耗損一樣在累積。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克的波動是四大指數裡最高的，合理槓桿倍數因此被壓得最低；昨天一則營收計算口徑的爭議就讓它重挫逾1%，追高三倍槓桿在這種集中度下的磨損風險特別明顯。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊波動相對溫和，合理槓桿倍數能比標普高一些，但昨天的防禦性輪動只是暫時換了一批股票扛風險，三倍槓桿的耗損邏輯從來沒有改變。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千昨天意外沒有跟著AI股一起重摔，但它對利率消息向來最敏感，合理槓桿倍數偏低，長抱三倍槓桿的代價依然不便宜。"
+    }
+  ],
+  "regime": {
+    "vol": "normal",
+    "rates": "rising",
+    "stock_bond_corr": "positive",
+    "breadth": "narrow"
+  },
+  "items": [
+    {
+      "headline": "OpenAI年化營收傳短少200億美元，那斯達克創8月中旬以來最大單日跌幅",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "這次賣壓的起點不是晶片訂單或Fed政策，而是AI故事裡最核心的公司自己的營收數字被打了問號——雖然差距多半是計算口徑不同，但市場選擇先賣再說。一般投資人該留意這種『窄且不穩』的題材，風吹草動都可能被放大成重挫。",
+      "sources": [
+        {
+          "url": "https://finance.yahoo.com/markets/stocks/articles/oracle-stock-crashes-openais-revenue-184120958.html",
+          "ts": null
+        },
+        {
+          "url": "https://www.cnbc.com/2026/10/08/stock-market-today-live-updates.html",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "川普重申伊朗這仗選後才見真章，油價應聲回落",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "developing",
+      "audience_value": "地緣風險的時間表再度跟期中選舉掛鉤，但外媒同時報導白宮內部也在考慮選前動手，訊號依然矛盾。對一般投資人來說，油價與波動率隨時可能因為一句話而重新定價。",
+      "sources": [
+        {
+          "url": "https://politicalwire.com/2026/10/07/trump-is-considering-striking-iran-before-the-midterms/",
+          "ts": null
+        },
+        {
+          "url": "https://www.thestar.com.my/aseanplus/aseanplus-news/2026/09/11/trump-says-us-is-not-attacking-iran-in-039full039-because-of-the-midterm-elections",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "初領失業金降到19.7萬，創7月以來最低",
+      "horizon": "LT",
+      "vs_thesis": "confirms",
+      "materiality": 2,
+      "confidence": "confirmed",
+      "audience_value": "勞動市場連四週撐在20萬人以下，硬數據沒有給Fed任何提早降息的理由，鷹派路徑短期內很難真的鬆動。",
+      "sources": [
+        {
+          "url": "https://www.bloomberg.com/news/articles/2026-10-08/us-jobless-claims-eased-last-week-to-lowest-level-since-july",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "隔夜南韓科技股補跌，三星財測不如市場最樂觀版本",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "三星的財測其實年增仍然驚人，只是不如市場最樂觀的版本，疊加AI選股情緒轉弱，讓KOSPI補跌超過2.6%——同一批公司，多頭少頭的解讀永遠只有一線之隔。",
+      "sources": [
+        {
+          "url": "https://www.autobound.ai/companies/samsung/news/samsung-electronics-reports-q3-earnings-as-fed-releases-5e302188",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "美股期貨早盤已回補部分跌幅，那斯達克期貨領漲",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 2,
+      "confidence": "developing",
+      "audience_value": "資金願意在重挫隔夜就回頭找買點，顯示市場目前還是把這次當作計算口徑的虛驚，而不是AI泡泡真的開始漏氣；今天這個判斷撐不撐得住，要看開盤後的真實買盤。",
+      "sources": [
+        {
+          "url": "https://www.cnbc.com/2026/10/08/stock-market-today-live-updates.html",
+          "ts": null
+        }
+      ]
+    }
+  ],
+  "catalysts": [
+    "今天持續觀察：AI權值股（輝達、超微、甲骨文）能否真的收復昨天跌幅，不只是期貨喊漲。",
+    "今天持續觀察：川普『選後才動武』說法與外媒『考慮選前動武』報導的矛盾訊號，哪個版本會兌現。",
+    "近日：南韓三星電子正式（非預估）第三季財報將公布更細節的獲利數字。",
+    "持續觀察：荷姆茲海峽/波灣油輪攻擊事件頻率、10年期公債殖利率能否守穩5.2%下方。"
+  ],
+  "thesis_delta": {
+    "changed": false,
+    "summary": null,
+    "horizon": null
+  },
+  "lead_horizon": "MT",
+  "title_hook": "OpenAI營收傳缺口，科技股今天要搶反彈"
+}

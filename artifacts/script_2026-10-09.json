@@ -1,0 +1,108 @@
+{
+  "segments": [
+    {
+      "kind": "card",
+      "vo": "美股一句備註沒讀清楚，輝達、甲骨文集體被嚇到重摔。",
+      "headline": "先別慌\n看清楚備註",
+      "tag": "營收羅生門"
+    },
+    {
+      "kind": "split",
+      "vo": "OpenAI年化營收傳出比預期少了兩百億美元，那斯達克應聲重挫1.25%，創八月中旬以來最大單日跌幅……今天早盤期貨已經回彈0.36%，資金還沒打算真的跟AI說再見。",
+      "top": {
+        "label": "昨天",
+        "text": "AI股重摔",
+        "stat": "-1.25%",
+        "tone": "bad"
+      },
+      "bottom": {
+        "label": "今天",
+        "text": "期貨已回彈",
+        "stat": "+0.36%",
+        "tone": "good"
+      }
+    },
+    {
+      "kind": "card",
+      "vo": "這一季的錢乘以四，當作全年收入估計。",
+      "headline": "年化營收",
+      "tag": "名詞小教室"
+    },
+    {
+      "kind": "chart",
+      "vo": "隔夜KOSPI重摔2.62%，三星財測雖然年增驚人，仍不如市場最樂觀版本，記憶體股跟著補跌。歐股卻完全沒理這套劇本，德股、英股都上漲，恆生更逆勢大漲1.79%，賣壓還是集中在美股AI供應鏈本身。",
+      "chart_id": "intl",
+      "title": "亞股補跌，歐股無感",
+      "stat": "-2.62%",
+      "stat_label": "KOSPI領跌"
+    },
+    {
+      "kind": "chart",
+      "vo": "10年期殖利率回落到5.23%，主因川普重申這仗選後才見真章，油價跟著降溫。不過這仍是2002年以來高檔，初領失業金也降到19.7萬創七月新低，Fed想提早降息的理由並沒有變多。",
+      "chart_id": "rates",
+      "title": "殖利率喘口氣",
+      "stat": "5.23%",
+      "stat_label": "10年期殖利率"
+    },
+    {
+      "kind": "chart",
+      "vo": "今天要看AI權值股能不能真的收復跌幅、伊朗動武時間表還在矛盾、三星正式財報即將公布。VIX只有15.2，這盤面算意外冷靜。",
+      "chart_id": "cal",
+      "title": "今天怎麼看",
+      "stat": "15.2",
+      "stat_label": "VIX波動率"
+    },
+    {
+      "kind": "card",
+      "vo": "吵的是定義，跌的是真金。",
+      "headline": "吵的是定義\n跌的是真金",
+      "tag": "巴菲特 不知道有沒有說過"
+    }
+  ],
+  "charts": [
+    {
+      "id": "intl",
+      "module": "global_equity_overnight",
+      "params": {}
+    },
+    {
+      "id": "rates",
+      "module": "rates_trend",
+      "params": {}
+    },
+    {
+      "id": "cal",
+      "module": "catalyst_timeline",
+      "params": {
+        "title": "今天怎麼看",
+        "events": [
+          {
+            "date": "持續",
+            "label": "AI權值股能否真的止穩",
+            "highlight": true
+          },
+          {
+            "date": "持續",
+            "label": "伊朗動武時間表仍矛盾",
+            "highlight": true
+          },
+          {
+            "date": "近日",
+            "label": "三星正式財報待公布",
+            "highlight": false
+          },
+          {
+            "date": "持續",
+            "label": "荷姆茲海峽油輪攻擊頻率",
+            "highlight": false
+          }
+        ]
+      }
+    }
+  ],
+  "coverage_gaps": [],
+  "gags": [
+    "『先別慌，看清楚備註』玩『先別急』的長青meme，呼應OpenAI營收數字只是計算口徑不同造成的虛驚",
+    "split對比『昨天AI重摔』vs『今天期貨已回彈』，一好一壞的冷面反差，搭配……停頓"
+  ]
+}
