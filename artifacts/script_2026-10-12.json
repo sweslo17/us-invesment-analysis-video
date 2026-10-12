@@ -1,0 +1,108 @@
+{
+  "segments": [
+    {
+      "kind": "card",
+      "vo": "連假沒消停，先看昨天說要看的事兌現了沒。",
+      "headline": "放假也出事\n先對帳",
+      "tag": "補課日"
+    },
+    {
+      "kind": "recap",
+      "vo": "那指收出四連漲週，AI股跌的這段基本補回來了。川普說選前不打伊朗，卻在週末鬆口考慮跟沙國一起打胡塞。10年期殖利率來到5.24%，沒能守住5.2%這條線。",
+      "title": "對帳時間",
+      "rows": [
+        {
+          "ask": "AI股收復失地？",
+          "result": "那指四連漲週",
+          "mark": "yes"
+        },
+        {
+          "ask": "選前會打伊朗？",
+          "result": "不打，卻鬆口打胡塞",
+          "mark": "mixed"
+        },
+        {
+          "ask": "殖利率守5.2%？",
+          "result": "5.24%，沒守住",
+          "mark": "no"
+        }
+      ]
+    },
+    {
+      "kind": "chart",
+      "vo": "隔夜KOSPI重摔3.65%，記憶體股同步走弱，AI窄且不穩的疑慮還沒退潮。歐股卻完全沒被嚇到，德股、英股都上漲，因為油價下跌反而讓他們鬆了一口氣。",
+      "chart_id": "intl",
+      "title": "亞股重跌，歐股淡定",
+      "stat": "-3.65%",
+      "stat_label": "KOSPI領跌"
+    },
+    {
+      "kind": "chart",
+      "vo": "期貨隱含的升息路徑一路往上，10月機率70%，12月更衝到90%，政策利率現在3.75%。真正的大魔王是週三的9月CPI，夠熱的話，這條路徑會被坐實。",
+      "chart_id": "fed",
+      "title": "升息路徑沒變",
+      "stat": "90%",
+      "stat_label": "12月升息機率"
+    },
+    {
+      "kind": "chart",
+      "vo": "本週真正的關卡是週三的CPI，加上摩根大通、花旗、高盛先打頭陣的財報，等於提前幫我們驗貨。VIX只有15.46，離恐慌還很遠，但這週CPI要是意外走熱，風向可能瞬間轉。",
+      "chart_id": "cal",
+      "title": "本週該看什麼",
+      "stat": "15.46",
+      "stat_label": "VIX波動率"
+    },
+    {
+      "kind": "card",
+      "vo": "都不怕的時候，才是最該怕的時候。",
+      "headline": "都不怕的時候\n才最該怕",
+      "tag": "霍華馬克斯 不知道有沒有說過"
+    }
+  ],
+  "charts": [
+    {
+      "id": "intl",
+      "module": "global_equity_overnight",
+      "params": {}
+    },
+    {
+      "id": "fed",
+      "module": "fed_path",
+      "params": {}
+    },
+    {
+      "id": "cal",
+      "module": "catalyst_timeline",
+      "params": {
+        "title": "本週該看什麼",
+        "events": [
+          {
+            "date": "10/13",
+            "label": "JPM/花旗/高盛財報",
+            "highlight": false
+          },
+          {
+            "date": "10/14",
+            "label": "9月CPI公布",
+            "highlight": true
+          },
+          {
+            "date": "10/15",
+            "label": "PPI/零售銷售/台積電財報",
+            "highlight": false
+          },
+          {
+            "date": "持續",
+            "label": "胡塞-沙國衝突是否延燒",
+            "highlight": true
+          }
+        ]
+      }
+    }
+  ],
+  "coverage_gaps": [],
+  "gags": [
+    "開場玩『補課/對帳』的長週末迷因，呼應連假期間新聞沒停、回來要先核對進度",
+    "川普『選前不打』卻『鬆口打胡塞』的語言反差，一本正經戳破前後矛盾"
+  ]
+}

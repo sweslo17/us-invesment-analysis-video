@@ -1,0 +1,169 @@
+{
+  "date": "2026-10-12",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7811.5400390625,
+      "overnight_pct": 0.5946928289544893,
+      "drivers": [
+        "標普500上週五（10/9）收7811.54點，漲0.59%，收在接近本週稍早創下的歷史新高（盤中一度觸及7844.52點）附近，寫下連四週上漲。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 27366.169921875,
+      "overnight_pct": 0.6355597432128597,
+      "drivers": [
+        "那斯達克收27366.17點，漲0.64%，是這波OpenAI營收疑雲帶來的賣壓後連三天反彈，也是連續第四週收高。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 51654.94921875,
+      "overnight_pct": 0.826265211790996,
+      "drivers": [
+        "道瓊收51654.95點，漲0.83%領漲四大指數，上週以來的防禦性輪動延續。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 2806.97998046875,
+      "overnight_pct": 0.45995672169766205,
+      "drivers": [
+        "羅素兩千收2806.98點，漲0.46%，週線同步收高但漲幅在四大指數中最小。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普500的已實現波動還算溫和，反推出來的合理槓桿倍數不算低，但上週五才剛收在歷史高點附近，這種『指數很平靜、但正站在高點』的組合，往往是風險被低估的時候。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克的波動是四大指數裡最高的，合理槓桿倍數因此被壓得最低；上週才因為一則營收爭議重挫逾1%，追高三倍槓桿在AI股這種集中度下的磨損風險特別明顯。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊波動相對溫和，合理槓桿倍數能比標普高一些，但這只是暫時換了一批股票扛風險，三倍槓桿的耗損邏輯從來沒有改變。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千對利率消息向來最敏感，本週CPI若意外走熱，它通常是第一個被教訓的，合理槓桿倍數偏低，長抱三倍槓桿代價依然不便宜。"
+    }
+  ],
+  "regime": {
+    "vol": "normal",
+    "rates": "rising",
+    "stock_bond_corr": "positive",
+    "breadth": "narrow"
+  },
+  "items": [
+    {
+      "headline": "胡塞飛彈擊中利雅德機場釀3死，沙國反擊行動後最致命一擊",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "葉門青年運動本週稍早接連攻擊沙烏地兩座機場，週四利雅德金哈立德國際機場一役造成包含一名沙特航空機師在內3人死亡，是沙國上週末對胡塞展開地面收復行動後遭到的最猛烈報復。對一般投資人來說，中東這條地緣風險線還在延燒，只是戰場從美伊直接對抗，多了沙胡塞這條新戰線。",
+      "sources": [
+        {
+          "url": "https://www.aljazeera.com/news/2026/10/9/saudi-arabia-reopens-riyadh-airport-after-houthi-attack-kills-three",
+          "ts": null
+        },
+        {
+          "url": "https://www.euronews.com/2026/10/09/houthi-missile-strikes-kill-three-at-riyadh-airport-including-airline-captain",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "川普鬆口考慮讓美軍加入沙國打胡塞，選前不打伊朗的說法同時並存",
+      "horizon": "MT",
+      "vs_thesis": "new",
+      "materiality": 4,
+      "confidence": "developing",
+      "audience_value": "川普週四才重申期中選舉前不對伊朗動武，週六卻鬆口正考慮讓美軍加入沙烏地對胡塞的軍事行動——地緣風險第一次把『美國直接出手』的可能性，從伊朗本身延伸到伊朗撐腰的胡塞武裝。一般投資人該留意，這種矛盾訊號代表油價與波動率隨時可能因一句話重新定價。",
+      "sources": [
+        {
+          "url": "https://www.usnews.com/news/world/articles/2026-10-08/trump-says-us-will-not-resume-military-strikes-on-iran-before-the-nov-3-midterm-elections",
+          "ts": null
+        },
+        {
+          "url": "https://www.washingtontimes.com/news/2026/oct/8/trump-may-authorize-strikes-iran-midterms-report/",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "油價不升反降，俄烏『能源停火』說法抵銷了中東風險溢價",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 3,
+      "confidence": "developing",
+      "audience_value": "照理說中東攻擊升溫該推高油價，但布蘭特回落到103美元附近、WTI跌到90美元出頭，主因是川普宣稱促成的俄烏『能源停火』與額外俄國柴油供給。伊朗同時說美方的荷姆茲重開提案『不夠』，海峽封鎖沒真的解除——油價這次是被另一頭的消息蓋過，不代表中東風險真的降溫。",
+      "sources": [
+        {
+          "url": "https://hdfcsky.com/news/brent-crude-oil-price-today-october-12-2026-brent-falls-1-5percent-to-103-wti-drops-1-8percent-to-90-2-middle-east-risks-persist",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "本週三9月CPI是升息路徑最後檢驗，期貨隱含10月70%、12月90%機率",
+      "horizon": "LT",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "9月FOMC會議紀要已證實19位官員一致支持升息、多數認為年底前還要再升一次，期貨目前隱含10月升息機率70%、12月90%。本週三公布的9月CPI，將是這條已經偏鷹的路徑會不會被數據坐實的最後一塊拼圖，跟每個人的房貸、信用卡利率都有關。",
+      "sources": [
+        {
+          "url": "https://stocktwits.com/news-articles/markets/equity/what-to-expect-markets-this-week-oct-10-2026/cZxdPFCRBF5",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "隔夜KOSPI重挫逾3.6%，AI記憶體股補跌，窄且不穩的疑慮未解",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "南韓KOSPI隔夜重挫3.65%，記憶體雙雄同步走弱，延續上週OpenAI營收疑雲以來AI供應鏈『窄且不穩』的賣壓；反觀歐股因油價回落逆勢走高。同一個AI故事，不同市場的解讀還是天差地遠。",
+      "sources": [
+        {
+          "url": "https://www.cnbc.com/2026/10/08/stock-market-today-live-updates.html",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "本週銀行三雄財報開跑，JPM、花旗、高盛週二打頭陣",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 2,
+      "confidence": "confirmed",
+      "audience_value": "摩根大通、花旗、高盛週二盤前公布財報，美國銀行、摩根士丹利週三跟上，是華爾街自己對景氣冷暖的第一手回報，通常也會牽動市場對消費與信貸品質的判斷。",
+      "sources": [
+        {
+          "url": "https://www.fxempire.com/forecasts/article/the-week-ahead-jpmorgan-goldman-sachs-earnings-and-cpi-test-stock-market-strength-1637135",
+          "ts": null
+        }
+      ]
+    }
+  ],
+  "catalysts": [
+    "本週三（10/14）美東上午8:30公布9月CPI，市場預期年增加速到3.6%（前值3.4%），是升息路徑最後的硬檢驗。",
+    "本週二（10/13）盤前摩根大通、花旗、高盛財報，週三（10/14）美國銀行、摩根士丹利跟上，銀行業打頭陣的財報季開跑。",
+    "本週四（10/15）PPI、零售銷售，以及台積電財報。",
+    "持續觀察：川普是否真的讓美軍加入沙烏地對胡塞的軍事行動，以及胡塞對沙國機場的攻擊是否延續。",
+    "持續觀察：俄烏『能源停火』說法能否持續壓低油價、抵銷中東地緣風險溢價。"
+  ],
+  "thesis_delta": {
+    "changed": false,
+    "summary": null,
+    "horizon": null
+  },
+  "lead_horizon": "MT",
+  "title_hook": "美股轉紅背後，川普鬆口要跟沙國一起動手"
+}
