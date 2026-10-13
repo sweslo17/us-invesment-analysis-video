@@ -17,6 +17,25 @@ from pmb.data.retry import call_with_retry
 
 DEFAULT_VOICE = "zh-TW-HsiaoChenNeural"
 
+# 2026-10 起 Microsoft 對舊 host(speech.platform.bing.com)的 v1 Sec-MS-GEC token 一律回 403
+# (美國自 10/12)。Edge 155 改走 api.msedgeservices.com,該 host 仍收 v1 token,但金鑰參數名改為
+# Ocp-Apim-Subscription-Key。edge-tts 7.2.8 未修(見 rany2/edge-tts#490、#491、#492)。
+MSEDGE_WSS_BASE = "wss://api.msedgeservices.com/tts/cognitiveservices/websocket/v1"
+
+
+def ensure_working_endpoint() -> None:
+    """edge-tts 仍用 v1 token 時,把合成 WebSocket 改指新 host(冪等)。
+
+    上游改用 v2 token 後舊 host 又能用,此時不動上游設定——墊片隨升級自動失效。
+    """
+    import edge_tts.communicate as comm
+    from edge_tts.constants import TRUSTED_CLIENT_TOKEN
+
+    if not comm.SEC_MS_GEC_VERSION.startswith("1-") or comm.WSS_URL.startswith(MSEDGE_WSS_BASE):
+        return
+    comm.WSS_URL = f"{MSEDGE_WSS_BASE}?Ocp-Apim-Subscription-Key={TRUSTED_CLIENT_TOKEN}"
+    logger.info("edge-tts 仍用 v1 token,合成改走 {}", MSEDGE_WSS_BASE)
+
 
 class WordBoundary(BaseModel):
     text: str
@@ -35,6 +54,7 @@ async def _edge_async(
 ) -> SynthResult:
     import edge_tts
 
+    ensure_working_endpoint()
     communicate = edge_tts.Communicate(text, voice, rate=rate, pitch=pitch)
     words: list[WordBoundary] = []
     with open(out_path, "wb") as fh:
