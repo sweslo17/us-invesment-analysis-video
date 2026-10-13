@@ -1,0 +1,113 @@
+{
+  "segments": [
+    {
+      "kind": "card",
+      "vo": "韓股被血洗，美股期貨照樣喊不痛。",
+      "headline": "韓股重摔\n美股裝沒事",
+      "tag": "銀行開獎日"
+    },
+    {
+      "kind": "chart",
+      "vo": "隔夜KOSPI重摔5.46%，三星、SK海力士同步重傷，日經跌1.83%、台股跌1.93%跟著遭殃。歐股倒是淡定，德股漲0.28%、英股漲0.78%，這波賣壓目前只困在亞洲記憶體供應鏈。",
+      "chart_id": "intl",
+      "title": "亞股重摔，歐股淡定",
+      "stat": "-5.46%",
+      "stat_label": "KOSPI領跌"
+    },
+    {
+      "kind": "chart",
+      "vo": "美股期貨完全是另一個世界，標普期貨漲0.1%、那斯達克期貨漲0.05%、道瓊期貨漲0.48%、羅素兩千期貨漲0.19%。VIX只跳了1.5%來到15.44，離恐慌還很遠，市場根本沒把亞股這波重摔當一回事。",
+      "chart_id": "fut",
+      "title": "期貨：全面翻紅",
+      "stat": "+0.48%",
+      "stat_label": "道瓊期貨領漲"
+    },
+    {
+      "kind": "dialogue",
+      "vo": "同一個記憶體故事，這次韓股跟美股期貨根本活在兩個世界。",
+      "title": "越洋電話",
+      "lines": [
+        {
+          "speaker": "韓股",
+          "voice": "b",
+          "text": "記憶體全面崩盤，三星海力士躺平！"
+        },
+        {
+          "speaker": "美股期貨",
+          "voice": "a",
+          "text": "辛苦了……"
+        },
+        {
+          "speaker": "韓股",
+          "voice": "b",
+          "text": "你倒是扶我一把啊！"
+        },
+        {
+          "speaker": "美股期貨",
+          "voice": "a",
+          "text": "SOXL還幫我漲了2.47%。"
+        }
+      ]
+    },
+    {
+      "kind": "chart",
+      "vo": "昨天摩根大通財報不如預期，高盛靠交易獲利逆勢跳升，銀行財報季才剛起跑。今天輪到花旗公布，真正的大魔王留到明天：9月CPI市場預期衝到3.6%，直接關係到期貨現在隱含的10月70%、12月88%升息機率會不會被坐實。",
+      "chart_id": "cal",
+      "title": "本週該看什麼",
+      "stat": "3.6%",
+      "stat_label": "CPI預期年增"
+    },
+    {
+      "kind": "card",
+      "vo": "看不懂的公司，就別硬拗懂。",
+      "headline": "看不懂的公司\n別硬拗懂",
+      "tag": "彼得林區 不知道有沒有說過"
+    }
+  ],
+  "charts": [
+    {
+      "id": "intl",
+      "module": "global_equity_overnight",
+      "params": {}
+    },
+    {
+      "id": "fut",
+      "module": "index_overnight_grid",
+      "params": {}
+    },
+    {
+      "id": "cal",
+      "module": "catalyst_timeline",
+      "params": {
+        "title": "本週該看什麼",
+        "events": [
+          {
+            "date": "10/13",
+            "label": "花旗財報",
+            "highlight": true
+          },
+          {
+            "date": "10/14",
+            "label": "9月CPI（預期3.6%）",
+            "highlight": true
+          },
+          {
+            "date": "10/15",
+            "label": "PPI/零售銷售/台積電財報",
+            "highlight": false
+          },
+          {
+            "date": "持續",
+            "label": "沙國-胡塞衝突、記憶體股能否止穩",
+            "highlight": true
+          }
+        ]
+      }
+    }
+  ],
+  "coverage_gaps": [],
+  "gags": [
+    "開場『韓股重摔/美股裝沒事』的反差起手式，呼應KOSPI暴跌但美股期貨照樣翻紅的分裂劇本",
+    "越洋電話對話體，把記憶體崩盤的韓股和幸災樂禍、還倒漲的美股期貨擬人化互嗆"
+  ]
+}
