@@ -1,0 +1,144 @@
+{
+  "date": "2026-10-14",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7805.4501953125,
+      "overnight_pct": -0.02292493490016679,
+      "drivers": [
+        "標普500收7805.45點，小跌0.02%，銀行財報季首週因殖利率壓力與花旗財報評價不一而承壓，金融類股是當天倒數第二弱的族群。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 27204.380859375,
+      "overnight_pct": -0.15239407608894073,
+      "drivers": [
+        "那斯達克收27204.38點，跌0.15%，記憶體股賣壓延續，科技權值股表現分散。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 51670.1015625,
+      "overnight_pct": -0.34801643859130305,
+      "drivers": [
+        "道瓊收51670.10點，跌0.35%，四大指數中跌最深，金融類股（-0.42%）、醫療類股（-1.35%）雙雙走弱拖累。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 2783.3701171875,
+      "overnight_pct": -0.3975653006104899,
+      "drivers": [
+        "羅素兩千收2783.37點，跌0.40%，對利率最敏感的中小型股延續偏弱。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普500的已實現波動相對溫和，換算下來的波動目標槓桿還有一定空間，但CPI公布前這種「風平浪靜」的日子，正是最容易低估槓桿耗損成本的時候。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克的波動本來就是四大指數裡最高的一個，合理槓桿倍數因此被壓得最低，這陣子記憶體股的反覆拉扯，三倍槓桿扛起來特別吃力。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊的波動相對溫和，合理槓桿倍數能比標普更寬裕，但今天道瓊反而是四大指數裡跌最深的一個，波動平靜不代表哪天不會輪到你。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千對利率最敏感、波動也偏高，合理槓桿倍數因此偏低，CPI這種數據公布日前後的震盪，對長抱三倍槓桿的人代價格外真實。"
+    }
+  ],
+  "regime": {
+    "vol": "low",
+    "rates": "rising",
+    "stock_bond_corr": "positive",
+    "breadth": "narrow"
+  },
+  "items": [
+    {
+      "headline": "今天CPI見真章，驗收10月72%、12月92%升息機率",
+      "horizon": "LT",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "developing",
+      "audience_value": "9月FOMC會議紀要已經證實官員鷹派立場，期貨目前隱含10月升息機率72%、12月92%，今天這份CPI是檢驗這條路徑今年最具體的一塊硬數據，結果會直接牽動每個人的房貸與信用卡利率。",
+      "sources": [
+        {
+          "url": "https://admiralmarkets.com/analytics/traders-blog/us-cpi-preview-september-2026-forecasts-and-the-core-cpi-outlook"
+        },
+        {
+          "url": "https://fedratecalc.com/cpi-release-date/"
+        }
+      ]
+    },
+    {
+      "headline": "ASML財報優於預期，Q4展望上修，歐股台股同步買單",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "ASML今天稍早公布的Q3營收116.6億歐元優於財測上緣，Q4展望142億到152億歐元同步上修，歐股應聲走高、台股也跟漲，但同一時間南韓KOSPI、日經、上海仍然偏弱，AI供應鏈「誰漲誰跌」的分裂劇本今天換了新的組合。",
+      "sources": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/0000937966/000162828026065813/pressreleasefinancialresul.htm"
+        }
+      ]
+    },
+    {
+      "headline": "道瓊昨天收跌0.35%，四大指數裡最弱，金融、醫療類股領跌",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "銀行財報季才剛起跑，花旗財報雖優於預期，但市場把焦點放在升息環境對淨利差與信貸品質的壓力上，金融類股昨天收跌0.42%，是道瓊落居四大指數最弱的主要原因。",
+      "sources": [
+        {
+          "url": "https://www.chartmill.com/news/C/Chartmill-50957-Citigroup-NYSEC-Earnings-Beat-Overshadowed-by-Macro-Headwinds-as-Stock-Dips"
+        }
+      ]
+    },
+    {
+      "headline": "伊朗主動提議斡旋沙烏地-胡塞衝突，沙國尚未鬆口",
+      "horizon": "MT",
+      "vs_thesis": "new",
+      "materiality": 4,
+      "confidence": "developing",
+      "audience_value": "上週末利雅德機場接連遇襲、死亡人數上修到12到14人後，伊朗外長主動致電沙國外長提議協助斡旋，是這波衝突這幾個月來第一次由伊朗主動提外交善意，但沙烏地官方只證實通話、沒有公開接受斡旋，地緣風險溢價還沒有真正解除。",
+      "sources": [
+        {
+          "url": "https://www.aljazeera.com/news/2026/10/12/irans-fm-urges-diplomacy-in-call-with-saudi-counterpart"
+        },
+        {
+          "url": "https://www.newsbytesapp.com/news/world/iran-offers-mediation-after-tehran-backed-houthis-kill-14-in-saudi/tldr"
+        }
+      ]
+    },
+    {
+      "headline": "能源類股昨天逆勢漲1.8%，領先全市場",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 2,
+      "confidence": "confirmed",
+      "audience_value": "中東衝突風險溢價尚未解除，能源類股昨天逆勢上漲1.8%，是昨天表現最好的類股，反映市場仍把地緣風險放進油價裡定價。",
+      "sources": []
+    }
+  ],
+  "catalysts": [
+    "今天美東上午8:30公布9月CPI，市場預期年增約3.6%、核心2.4%，是10月28日FOMC決策前最後一塊硬數據。",
+    "ASML今天稍早公布Q3財報優於預期，Q4營收展望142-152億歐元、全年指引上修到440-450億歐元。",
+    "本週四（10/15）台積電公布財報，加上PPI、零售銷售，是AI供應鏈訂單能見度與消費動能的下一塊拼圖。",
+    "持續觀察：伊朗外長主動提議斡旋沙烏地-胡塞衝突，沙國是否正式回應。",
+    "持續觀察：銀行財報季接下來幾天還有多家大型銀行公布，檢驗升息環境下的淨利差與信貸體質。"
+  ],
+  "thesis_delta": {
+    "changed": false,
+    "summary": null,
+    "horizon": null
+  },
+  "lead_horizon": "LT",
+  "title_hook": "CPI今天見真章，72%升息賭注要兌現了"
+}

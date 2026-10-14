@@ -1,0 +1,108 @@
+{
+  "segments": [
+    {
+      "kind": "card",
+      "vo": "72%的升息賭注，今天CPI見真章。",
+      "headline": "72%\n要見真章",
+      "tag": "一錘定音"
+    },
+    {
+      "kind": "chart",
+      "vo": "今天美東上午8:30公布9月CPI，市場預期年增3.6%，核心2.4%，是10月28日FOMC前最後一塊硬數據。ASML稍早公布財報優於預期，Q4展望上修，本週五台積電財報接力驗證AI訂單能見度。",
+      "chart_id": "cal",
+      "title": "本週怎麼看",
+      "stat": "3.6%",
+      "stat_label": "CPI預期年增"
+    },
+    {
+      "kind": "chart",
+      "vo": "美股四大期貨今天盤前分裂，標普期貨跌0.04%、那斯達克期貨跌0.40%領跌，道瓊期貨逆勢漲0.18%、羅素兩千期貨跌0.07%。VIX小漲0.52%來到15.35，還在近期區間，市場還沒把亞股的賣壓當一回事。",
+      "chart_id": "fut",
+      "title": "期貨：道瓊逆勢撐盤",
+      "stat": "-0.40%",
+      "stat_label": "那斯達克落後"
+    },
+    {
+      "kind": "split",
+      "vo": "ASML財報優於預期，Q4展望還上修，德股應聲漲0.67%……可是韓股KOSPI還是跌0.44%，記憶體股賣壓沒有真正退燒。",
+      "title": "歐漲亞跌",
+      "top": {
+        "label": "歐股",
+        "text": "ASML亮眼",
+        "stat": "+0.67%",
+        "tone": "good"
+      },
+      "bottom": {
+        "label": "亞股",
+        "text": "記憶體續弱",
+        "stat": "-0.44%",
+        "tone": "bad"
+      }
+    },
+    {
+      "kind": "chart",
+      "vo": "10年期公債殖利率今天小退到5.22%，暫時從逼近2002年以來高點的5.24%喘口氣，但方向沒有真正轉彎。它現在就像卡在交流道口的車，CPI這盞紅綠燈一變，才知道要往哪個方向衝。",
+      "chart_id": "rate",
+      "title": "殖利率等CPI表態",
+      "stat": "5.22%",
+      "stat_label": "10年期殖利率"
+    },
+    {
+      "kind": "card",
+      "vo": "數字蹦一下，你的心態別跟著蹦。",
+      "headline": "數字蹦一下\n你別跟著蹦",
+      "tag": "柏格 不知道有沒有說過"
+    }
+  ],
+  "charts": [
+    {
+      "id": "cal",
+      "module": "catalyst_timeline",
+      "params": {
+        "title": "本週怎麼看",
+        "events": [
+          {
+            "date": "10/14",
+            "label": "9月CPI（預期年增3.6%）",
+            "highlight": true
+          },
+          {
+            "date": "10/14",
+            "label": "ASML財報已公布優於預期",
+            "highlight": true
+          },
+          {
+            "date": "10/15",
+            "label": "台積電財報、PPI、零售銷售",
+            "highlight": true
+          },
+          {
+            "date": "10/28",
+            "label": "FOMC利率決策",
+            "highlight": false
+          },
+          {
+            "date": "持續",
+            "label": "沙烏地-胡塞衝突、伊朗斡旋提議",
+            "highlight": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "fut",
+      "module": "index_overnight_grid",
+      "params": {}
+    },
+    {
+      "id": "rate",
+      "module": "rates_trend",
+      "params": {}
+    }
+  ],
+  "coverage_gaps": [],
+  "gags": [
+    "開場把CPI公布包裝成一場『72%升息賭注、今天開獎見真章』的賭局",
+    "ASML財報亮眼、德股大漲但韓股記憶體照樣躺平的split對比，中間用……停頓製造反差"
+  ]
+}
