@@ -1,0 +1,124 @@
+{
+  "segments": [
+    {
+      "kind": "card",
+      "vo": "韓股觸發熔斷機制，全球股市屏息以待。",
+      "headline": "韓股熔斷\n全球屏息",
+      "tag": "亞股變盤"
+    },
+    {
+      "kind": "chart",
+      "vo": "南韓KOSPI暴跌7.57%，觸發熔斷機制，SK海力士、三星電子領跌；日經跌5.06%、台股跌3.72%，台積電財報淨利年增近七成，股價照樣撐不住。",
+      "chart_id": "ovn",
+      "title": "亞股全面重摔",
+      "stat": "-7.57%",
+      "stat_label": "KOSPI觸發熔斷"
+    },
+    {
+      "kind": "card",
+      "vo": "股價跌太快，交易所強制暫停讓大家冷靜。",
+      "headline": "熔斷機制",
+      "tag": "名詞小教室"
+    },
+    {
+      "kind": "chart",
+      "vo": "昨天9月CPI年增3.7%，比預期3.6%還燙，核心也上修到2.6%。期貨應聲把10月升息機率推到82%，12月攀上92%。今天還有PPI和零售銷售要驗收通膨會不會收斂。",
+      "chart_id": "fed",
+      "title": "升息賭注升溫",
+      "stat": "82%",
+      "stat_label": "10月升息機率"
+    },
+    {
+      "kind": "dialogue",
+      "title": "IMF示警",
+      "lines": [
+        {
+          "speaker": "IMF",
+          "voice": "a",
+          "text": "槓桿疊這麼高，摔下來會很痛。"
+        },
+        {
+          "speaker": "AI估值",
+          "voice": "b",
+          "text": "我沒事，這叫正常回檔。"
+        },
+        {
+          "speaker": "IMF",
+          "voice": "a",
+          "text": "避險基金、散戶，全都借錢加碼。"
+        },
+        {
+          "speaker": "AI估值",
+          "voice": "b",
+          "text": "我……撐得住。"
+        }
+      ],
+      "vo": "IMF這份金融穩定報告直接點名，AI泡沫加上槓桿，是全球金融風險第一名。"
+    },
+    {
+      "kind": "chart",
+      "vo": "今天還有PPI，市場預期月增0.5%，加上零售銷售與初領失業金。晚一點主席華許要跟IMF總裁對談，接棒今天的示警。美股期貨現在小漲，像從斷崖邊緣伸手抓住欄杆，還沒真正脫險。",
+      "chart_id": "cal",
+      "title": "今天怎麼看",
+      "stat": "+0.5%",
+      "stat_label": "PPI月增預期"
+    },
+    {
+      "kind": "card",
+      "vo": "慌的人在倒貨，懂的人在撿貨。",
+      "headline": "慌的人在倒貨\n懂的人在撿貨",
+      "tag": "科斯托蘭尼 不知道有沒有說過"
+    }
+  ],
+  "charts": [
+    {
+      "id": "ovn",
+      "module": "global_equity_overnight",
+      "params": {}
+    },
+    {
+      "id": "fed",
+      "module": "fed_path",
+      "params": {}
+    },
+    {
+      "id": "cal",
+      "module": "catalyst_timeline",
+      "params": {
+        "title": "今天怎麼看",
+        "events": [
+          {
+            "date": "今天",
+            "label": "PPI、零售銷售、初領失業金",
+            "highlight": true
+          },
+          {
+            "date": "今天",
+            "label": "Fed哈瑪克談話",
+            "highlight": false
+          },
+          {
+            "date": "今天",
+            "label": "主席華許對談IMF總裁",
+            "highlight": true
+          },
+          {
+            "date": "持續",
+            "label": "亞股熔斷後續、記憶體雙雄能否止穩",
+            "highlight": true
+          },
+          {
+            "date": "10/28",
+            "label": "FOMC利率決策",
+            "highlight": false
+          }
+        ]
+      }
+    }
+  ],
+  "coverage_gaps": [],
+  "gags": [
+    "開場用『熔斷機制+全球屏息』的雙關起手，呼應韓股真的觸發熔斷",
+    "IMF vs AI估值的對話體，AI估值用『我沒事，這叫正常回檔』的長青自我安慰梗，搭配……停頓硬撐坦承"
+  ]
+}

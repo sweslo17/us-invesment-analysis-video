@@ -1,0 +1,155 @@
+{
+  "date": "2026-10-15",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7718.93994140625,
+      "overnight_pct": -1.1083289060047763,
+      "drivers": [
+        "標普500收7718.94點，跌1.11%，9月CPI轉熱（年增3.7%，比預期3.6%還高）推升升息機率，科技與利率敏感類股領跌。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 26692.869140625,
+      "overnight_pct": -1.8802518542050985,
+      "drivers": [
+        "那斯達克收26692.87點，重挫1.88%，是近期最大單日跌幅，AI與晶片相關個股首當其衝。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 51621.48046875,
+      "overnight_pct": -0.0940960657130498,
+      "drivers": [
+        "道瓊收51621.48點，小跌0.09%，四大指數裡跌最少，傳產與防禦類股撐盤。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 2729.530029296875,
+      "overnight_pct": -1.934309489799058,
+      "drivers": [
+        "羅素兩千收2729.53點，跌1.93%，對利率最敏感的中小型股因升息機率升高重摔。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普500的已實現波動還算溫和，換算下來的波動目標槓桿空間不小；但IMF這幾天才剛點名「槓桿是AI估值風險的引爆點」，風平浪靜時最容易忘記這件事。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克波動本來就是四大指數裡最高的，合理槓桿倍數因此被壓到最低；這次重摔又是AI、晶片股打頭陣，三倍槓桿在這種日子最吃痛。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊波動相對溫和，合理槓桿倍數能比標普更寬裕，今天也是四大指數裡跌最少的一個，但這不代表道瓊永遠比較安全。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千對利率最敏感、波動也偏高，合理槓桿倍數因此偏低；今天升息機率一跳升，它就是跌最重的一個，槓桿疊上去代價會更真實。"
+    }
+  ],
+  "regime": {
+    "vol": "elevated",
+    "rates": "rising",
+    "stock_bond_corr": "positive",
+    "breadth": "narrow"
+  },
+  "items": [
+    {
+      "headline": "9月CPI轉熱，10月升息機率跳升到82%",
+      "horizon": "LT",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "9月CPI年增3.7%、核心2.6%都高於預期，主因汽油價格上漲；期貨隱含的10月升息機率應聲跳升，10年期公債殖利率逼近5.3%，這會直接牽動每個人的房貸與信用卡利率。",
+      "sources": [
+        {
+          "url": "https://www.detroitnews.com/story/business/2026/10/14/wall-street-slides-as-hot-cpi-data-fuels-rate-hike-bets/92248454007/",
+          "ts": null
+        },
+        {
+          "url": "https://www.cnbc.com/2026/10/13/stock-market-today-live-updates-.html",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "南韓KOSPI觸發熔斷機制，記憶體雙雄重摔領跌亞股",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "隔夜到今天，南韓KOSPI重挫逾7%觸發熔斷，SK海力士、三星電子雙雙重摔，日經跌逾5%、台股跌逾3%，AI/半導體「窄且不穩」這次換成系統性規模的重摔，不是單一個股或單一國家的分裂。",
+      "sources": [
+        {
+          "url": "https://www.investing.com/news/stock-market-news/asia-stocks-slump-as-chip-rout-deepens-after-hotter-us-inflation-4950421",
+          "ts": null
+        },
+        {
+          "url": "https://www.washingtonpost.com/business/2026/10/14/stock-markets-earnings-bonds-artificial-intelligence/89fc4cd4-c784-11f1-aefb-abe4112d087e_story.html",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "IMF示警：AI估值修正是全球三大系統性風險之一",
+      "horizon": "MT",
+      "vs_thesis": "new",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "IMF週二發布的全球金融穩定報告，首度把AI估值修正列為全球金融體系三大系統性風險之一，點名大型科技公司發債、避險基金與散戶的槓桿部位是觸發點；兩天內這個風險就具體兌現在亞股重摔上，值得一般投資人留意槓桿曝險不是只有槓桿型商品才有。",
+      "sources": [
+        {
+          "url": "https://thenightly.com.au/business/ai-bubble-or-boom-on-the-radar-for-economists-as-international-monetary-fund-keeps-an-eye-on-tech-c-21354539",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "台積電淨利年增近七成，股價仍擋不住賣壓",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "台積電今天公布第三季淨利年增約69%、優於市場預期，但股價仍小跌，顯示這波賣壓是市場重新定價AI估值與槓桿風險，不是訂單能見度出了問題。",
+      "sources": [
+        {
+          "url": "https://www.clickorlando.com/business/2026/10/15/south-koreas-benchmark-kospi-index-sinks-more-than-7-as-tech-sell-off-deepens/",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "今天PPI、零售銷售將驗收通膨是否持續發燒",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "今天美東上午公布的9月PPI與零售銷售，是CPI意外轉熱後第一塊硬數據拼圖；晚上主席華許將與IMF總裁對談，是觀察Fed如何回應這波鷹派重新定價的重要窗口。",
+      "sources": [
+        {
+          "url": "https://fedratecalc.com/us-economic-calendar/october-2026/",
+          "ts": null
+        }
+      ]
+    }
+  ],
+  "catalysts": [
+    "今天美東上午8:30公布9月PPI（預期月增0.5%）、9月零售銷售（預期月增0.3%）與當週初領失業金（預期19.5萬），是驗證CPI轉熱後通膨是否持續發燒的下一塊拼圖。",
+    "今天稍晚，Fed理事哈瑪克參與一場對談；主席華許將與IMF總裁喬治艾娃進行爐邊對談，是CPI意外轉熱後第一次重量級政策表態。",
+    "持續觀察：南韓KOSPI觸發熔斷機制後，記憶體雙雄（SK海力士、三星電子）與日股、台股的賣壓能否止穩。",
+    "持續觀察：台積電財報淨利年增近七成，但股價未能止穩大盤賣壓，AI供應鏈訂單能見度與股價評價的落差。",
+    "持續觀察：IMF全球金融穩定報告點名AI估值修正為三大系統性風險之一，留意後續是否有更多機構跟進表態。"
+  ],
+  "thesis_delta": {
+    "changed": true,
+    "summary": "IMF全球金融穩定報告（10/13）首度把AI估值修正列為全球金融體系三大系統性風險之一，直指槓桿（大型科技公司發債、避險基金與散戶的槓桿部位）是觸發點；隔夜南韓KOSPI觸發熔斷機制、記憶體雙雄重摔逾9%，是這個風險首次在單一交易日具體兌現的規模，AI/半導體「窄且不穩」的信心等級已從developing上修為confirmed，Fed政策這條主線也因9月CPI轉熱再度確認鷹派方向。",
+    "horizon": "MT"
+  },
+  "lead_horizon": "MT",
+  "title_hook": "亞股熔斷式重摔，美股今天扛得住嗎"
+}
