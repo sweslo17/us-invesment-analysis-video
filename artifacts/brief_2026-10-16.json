@@ -1,0 +1,154 @@
+{
+  "date": "2026-10-16",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7744.06005859375,
+      "overnight_pct": 0.3254340439717163,
+      "drivers": [
+        "標普500收7744.06點，漲0.33%，從CPI意外轉熱後的重挫中回穩，但漲幅主要靠非科技類股撐起。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 26713.029296875,
+      "overnight_pct": 0.0755231523436821,
+      "drivers": [
+        "那斯達克收26713.03點，幾乎打平（+0.08%），科技類股收黑0.65%，顯示AI相關股票信心尚未完全恢復。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 52177.69140625,
+      "overnight_pct": 1.0774805492790922,
+      "drivers": [
+        "道瓊收52177.69點，大漲1.08%，是四大指數裡表現最強的一個，金融與傳產類股領漲。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 2767.27001953125,
+      "overnight_pct": 1.3826117661248973,
+      "drivers": [
+        "羅素兩千收2767.27點，勁揚1.38%，對利率最敏感的中小型股這次反而領漲，反映殖利率回落帶來的喘息。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普500波動還算溫和，合理槓桿空間不算小；但CoreWeave公司債殖利率衝破15%提醒我們，槓桿風險不會只停在股票裡。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克波動本來就是四大指數裡最高的，合理槓桿倍數被壓得最低；科技股今天逆勢收黑，三倍槓桿在這種分歧格局下特別吃虧。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊波動相對溫和，合理槓桿空間能比標普更寬鬆，今天也是反彈最猛的一個，但波動隨時可能回頭。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千對利率最敏感、波動也偏高，合理槓桿倍數因此偏低；今天殖利率一回落，它就是漲最兇的一個，槓桿疊上去兩面都會被放大。"
+    }
+  ],
+  "regime": {
+    "vol": "elevated",
+    "rates": "falling",
+    "stock_bond_corr": "positive",
+    "breadth": "mixed"
+  },
+  "items": [
+    {
+      "headline": "PPI飆6.3%，殖利率卻不漲反跌",
+      "horizon": "LT",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "昨天公布的9月PPI年增6.3%，是2022年以來最大漲幅，核心PPI也漲了5%，主因還是汽油價格；零售銷售雖然成長0.8%優於預期，但扣掉加油站，消費力道只剩0.2%，顯示一般人荷包正被油價擠壓。照理升息風險該上升，但10年期公債殖利率這兩天反而回落，因為市場的恐慌轉移到別的地方——這代表接下來的房貸、信用卡利率走勢，不能只看通膨數字。",
+      "sources": [
+        {
+          "url": "https://www.cnbc.com/2026/10/15/september-producer-price-index-retail-sales-data.html",
+          "ts": null
+        },
+        {
+          "url": "https://www.cnn.com/2026/10/15/economy/us-retail-sales-wholesale-inflation-ppi-september",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "CoreWeave公司債殖利率衝破15%",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "AI資料中心公司CoreWeave的公司債，殖利率這兩天一度衝上近15%，債券價格跌到面額八成以下，是市場認定「可能還不出錢」的訊號。IMF上週才把AI估值修正列為全球三大系統性風險之一，這次風險沒有停在股價，直接燒到債券市場——而私募信貸基金的曝險，很多一般人的退休金或理財產品裡都有。",
+      "sources": [
+        {
+          "url": "https://www.marketbeat.com/instant-alerts/price-coreweave-nasdaq-crwv-shares-down-155-heres-why-2026-10-14/",
+          "ts": null
+        },
+        {
+          "url": "https://www.barchart.com/story/news/335979/coreweave-falls-below-key-support-levels-amid-hyperscaler-panic-should-you-buy-the-crwv-stock-dip",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "華許在IMF年會不給10月信號",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 3,
+      "confidence": "developing",
+      "audience_value": "主席華許今天在曼谷IMF/世界銀行年會上，被問到10月是否升息，完全不給答案，只強調Fed已經在9月「拿掉一部分寬鬆」，並點名AI投資熱潮本身正在製造新的需求衝擊、推升通膨。市場的反應是把10月升息預期往下修一點，但12月仍是多數情境，一般人能做的就是繼續看10/27-28的正式決策。",
+      "sources": [
+        {
+          "url": "https://www.cryptotimes.io/2026/10/16/fed-chair-warsh-gives-no-october-rate-signal-warns-ai-boom-may-fuel-inflation/",
+          "ts": null
+        },
+        {
+          "url": "https://www.usnews.com/news/business/articles/2026-10-16/fed-chair-warsh-says-price-stability-is-key-but-shies-away-from-signals-about-rates",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "美股反彈但科技股缺席",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "道瓊大漲1.08%、羅素兩千漲1.38%，標普小漲0.33%，從CPI重挫中回穩，但那斯達克幾乎打平，科技類股還逆勢收黑0.65%，是這幾個月反覆出現的「廣度撐盤、龍頭落後」劇本，顯示資金對AI相關股票的戒心還沒真正解除。",
+      "sources": [
+        {
+          "url": "https://uk.finance.yahoo.com/news/wall-street-futures-gain-warsh-091219180.html",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "KOSPI、日經今天初步反彈",
+      "horizon": "MT",
+      "vs_thesis": "new",
+      "materiality": 3,
+      "confidence": "developing",
+      "audience_value": "南韓KOSPI今天反彈2.05%、日經漲1.30%，從昨天觸發熔斷機制的恐慌中喘口氣，記憶體雙雄止穩，但這比較像技術性反彈，不是風險真正解除，後續仍要看AI估值與信用市場的壓力會不會延燒回來。",
+      "sources": []
+    }
+  ],
+  "catalysts": [
+    "今天美東沒有重大總經數據排程（9月PPI、零售銷售已於昨天公布，密西根大學消費者信心終值要等10/23）；市場持續消化主席華許在曼谷IMF年會上拒絕對10月決策表態的談話。",
+    "持續觀察：CoreWeave等AI基建公司的公司債殖利率能否降溫，或繼續往其他槓桿較高的AI相關企業蔓延。",
+    "持續觀察：南韓KOSPI、日經今天的反彈能否延續，記憶體雙雄止穩是否穩固。",
+    "持續觀察：10年期公債殖利率能否延續這兩天的回落，或重新反映PPI、零售銷售的鷹派數據。",
+    "持續觀察：10/27-28 FOMC決策前，是否有更多官員針對華許的談話表態。"
+  ],
+  "thesis_delta": {
+    "changed": true,
+    "summary": "CoreWeave公司債殖利率這兩天一度衝破15%、債券價格跌破面額八成，是IMF上週（10/13）示警的「AI估值修正系統性風險」第一次具體燒到債券市場而非只是股價，私募信貸曝險的擔憂首次有了具體的市場價格證據；同一天，9月PPI年增6.3%創2022年以來最大漲幅、零售銷售扣除加油站後明顯放緩，顯示油價正在擠壓一般消費者，但主席華許在曼谷IMF年會上拒絕對10月決策表態、並點名AI投資熱潮本身正在製造新的需求衝擊，10年期公債殖利率因此不升反降。AI/半導體「窄且不穩」維持confirmed，新增的是風險傳導管道從股票擴大到信用市場這個具體證據；Fed政策主線因華許的沉默暫時降溫為觀望，但PPI數據本身的鷹派程度未被推翻。",
+    "horizon": "MT"
+  },
+  "lead_horizon": "MT",
+  "title_hook": "公司債殖利率衝15%，華許偏不吭聲"
+}
