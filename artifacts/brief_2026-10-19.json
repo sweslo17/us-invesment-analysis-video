@@ -1,0 +1,150 @@
+{
+  "date": "2026-10-19",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7659.44,
+      "overnight_pct": -1.09,
+      "drivers": [
+        "標普500收7659.44點，跌1.09%，連兩天收黑，科技股重挫拖累指數。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 26140.03,
+      "overnight_pct": -2.15,
+      "drivers": [
+        "那斯達克收26140.03點，重挫2.15%，科技類股大跌逾3%，寫下這幾個月最慘的一週。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 52002.41,
+      "overnight_pct": -0.34,
+      "drivers": [
+        "道瓊收52002.41點，小跌0.34%，是四大指數裡跌最少的一個，金融、必需消費等防禦類股撐住盤面。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 2721.37,
+      "overnight_pct": -1.66,
+      "drivers": [
+        "羅素兩千收2721.37點，重挫1.66%，對利率最敏感的中小型股這次跌最深。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普500波動還算溫和，合理槓桿空間本來不算小，但上週五那斯達克領跌、股債同步承壓的組合提醒我們，波動隨時可能同步放大。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克向來是四大指數裡波動最高的，合理槓桿倍數被壓得最低；這週科技股又領跌，三倍槓桿在這種分裂行情下特別吃虧。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊波動相對溫和，合理槓桿空間能比標普更寬鬆，這次也是四大指數裡跌最淺的一個，防禦屬性比較明顯。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千對利率最敏感、波動也偏高，合理槓桿倍數因此偏低；10年期殖利率只要一動，它通常是反應最大的一個。"
+    }
+  ],
+  "regime": {
+    "vol": "elevated",
+    "rates": "stable",
+    "stock_bond_corr": "positive",
+    "breadth": "narrow"
+  },
+  "items": [
+    {
+      "headline": "那斯達克收挫2.15%，寫下近期最慘一週",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "上週五那斯達克大跌2.15%，科技股重挫逾3%，標普、羅素兩千同步收黑，只有道瓊靠防禦類股撐住。這不是單日恐慌，是整個禮拜AI相關股票被持續調節的結果，一般人持有的科技基金或相關指數型商品這週應該都感受得到。",
+      "sources": [
+        {
+          "url": "https://www.thestreet.com/stock-market-today/stock-market-today-oct-19-2026-nasdaq-futures-climb-as-tech-rebound-from-sell-off"
+        },
+        {
+          "url": "https://www.gurufocus.com/news/9129170/us-stock-futures-rise-as-tech-stocks-rebound-amid-earnings-reports"
+        }
+      ]
+    },
+    {
+      "headline": "CoreWeave公司債信用壓力週末沒解除",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "AI資料中心公司CoreWeave的公司債，上週五債券價格仍跌破面額八成、隱含違約風險明顯升高，雖然週四一度彈回一些，但整體還是沒有回到正常水位，連帶拖累同業Nebius。這代表IMF稍早示警的「AI估值修正」風險，沒有因為一週過去就平息，反而持續在信用市場發酵——很多人不持有AI股票，也可能透過理財產品間接曝險。",
+      "sources": [
+        {
+          "url": "https://www.kucoin.com/news/flash/coreweave-stock-and-bonds-plunge-amid-ai-debt-concerns"
+        },
+        {
+          "url": "https://www.tikr.com/blog/coreweave-crwv-stock-bonds-fall-ai-debt-fears"
+        },
+        {
+          "url": "https://www.thestar.com.my/tech/tech-news/2026/10/16/coreweave-stock-bond-set-for-weekly-plunge-as-rate-hike-fears-hit-ai-bet"
+        }
+      ]
+    },
+    {
+      "headline": "今早期貨原本要反彈，開盤前又翻黑",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 3,
+      "confidence": "developing",
+      "audience_value": "今天盤前美股期貨一度因為逢低承接出現反彈跡象，但隨著時間推進又掉頭向下，標普期貨跌0.41%、那斯達克期貨跌0.33%。一般人如果想等「跌深就是機會」，要有心理準備這種反彈不一定撐得住，追高容易被甩在半路。",
+      "sources": [
+        {
+          "url": "https://www.bloomberg.com/news/articles/2026-10-18/stock-market-today-dow-s-p-live-updates"
+        },
+        {
+          "url": "https://finance.yahoo.com/markets/stocks/articles/us-stock-futures-rise-ahead-090912788.html"
+        }
+      ]
+    },
+    {
+      "headline": "南韓反彈，歐股卻還在消化賣壓",
+      "horizon": "MT",
+      "vs_thesis": "new",
+      "materiality": 3,
+      "confidence": "developing",
+      "audience_value": "隔夜南韓KOSPI大漲1.76%，記憶體雙雄止穩領漲，但歐股沒有跟上，德國DAX跌1.29%、英國富時跌1.03%，還在消化上週五美股重挫的衝擊。全球市場對同一波AI信心動搖的反應並不同步，這種分裂本身就是風險還沒解除的訊號。",
+      "sources": []
+    },
+    {
+      "headline": "Fed進入會前靜默期，本週換財報說話",
+      "horizon": "LT",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "10/27到28號的FOMC決策之前，Fed官員照慣例不再公開評論政策，這幾天市場聽不到新的鷹鴿表態。真正能左右情緒的換成這週的財報——網飛、通用汽車週二，特斯拉、Meta、IBM週三，寶僑週四，企業願不願意繼續砸錢做AI，會比Fed的沉默更直接影響股價。",
+      "sources": [
+        {
+          "url": "https://tech-insider.org/stocks-rebound-nasdaq-futures-earnings-week-2026/"
+        }
+      ]
+    }
+  ],
+  "catalysts": [
+    "今天美東沒有重大總經數據排程；Fed即將進入FOMC前的管制期，距10/27-28決策只剩約一週半。",
+    "本週財報：網飛、通用汽車（10/20），特斯拉、Meta、IBM（10/21），寶僑（10/22）。",
+    "持續觀察：CoreWeave等AI基建公司的公司債殖利率能否真正回到面額附近，或繼續惡化、外溢到其他槓桿較高的AI相關企業。",
+    "持續觀察：南韓KOSPI、記憶體雙雄的反彈能否延續，歐股能否跟上止穩。",
+    "持續觀察：10年期公債殖利率能否守穩5%上方，或進一步回落。"
+  ],
+  "thesis_delta": {
+    "changed": true,
+    "summary": "那斯達克上週五收挫2.15%，科技股重摔逾3%，寫下這幾個月最慘的一週，CoreWeave公司債的信用壓力週末沒有真正緩解，債券仍跌破面額八成；今天盤前美股期貨原本想反彈，卻在開盤前又轉跌，顯示AI估值與信貸風險的疑慮尚未真正解除。Fed已進入FOMC前的官員靜默期，10/27-28決策揭曉前市場轉而緊盯本週財報（網飛、通用、特斯拉、Meta、IBM、寶僑），AI資本支出能否撐得住會是比Fed更直接的答案。AI/半導體「窄且不穩」與信用市場的風險傳導維持confirmed，三條既有支柱方向皆未反轉。",
+    "horizon": "MT"
+  },
+  "lead_horizon": "ST",
+  "title_hook": "美股期貨早盤想反彈，自己先慫了"
+}
