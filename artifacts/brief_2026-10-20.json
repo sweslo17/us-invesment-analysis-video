@@ -1,0 +1,151 @@
+{
+  "date": "2026-10-20",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7690.73,
+      "overnight_pct": 0.41,
+      "drivers": [
+        "標普500收7690.73點，漲0.41%，與那斯達克一起終止上週五的重挫，但漲勢集中在非必需消費與科技類股。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 26430.89,
+      "overnight_pct": 1.11,
+      "drivers": [
+        "那斯達克收26430.89點，大漲1.11%，科技類股整體漲1.36%，但十大權值股裡只有微軟收紅，輝達、蘋果、亞馬遜、Alphabet、博通全數收黑，真正撐盤的是廣度而非龍頭。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 51966.03,
+      "overnight_pct": -0.07,
+      "drivers": [
+        "道瓊收51966.03點，小跌0.07%，近乎打平。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 2728.3,
+      "overnight_pct": 0.25,
+      "drivers": [
+        "羅素兩千收2728.30點，小漲0.25%。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普500的波動不算高，合理槓桿空間原本還算寬，但這幾天AI資金疑慮反覆發酵，提醒波動隨時可能重新放大。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克向來是四大指數裡波動最高的，合理槓桿倍數因此被壓得最低；這幾天在反彈與AI資金疑慮之間來回拉扯，三倍槓桿特別容易被巴來巴去。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊波動相對溫和，合理槓桿空間能比標普更寬鬆，這波AI疑慮對它的衝擊也相對有限。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千對利率最敏感，殖利率只要再往上頂，它通常是反應最大的一個，合理槓桿倍數因此偏低。"
+    }
+  ],
+  "regime": {
+    "vol": "elevated",
+    "rates": "rising",
+    "stock_bond_corr": "neutral",
+    "breadth": "narrow"
+  },
+  "items": [
+    {
+      "headline": "美股反彈才一天，今天盤前期貨全面翻黑",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "上一交易日那斯達克大漲1.11%、標普漲0.41%，市場一度以為賣壓結束了。但今天盤前標普期貨跌0.33%、那斯達克期貨跌0.65%，道瓊、羅素兩千期貨同步翻黑，顯示AI資金疑慮沒有被一天的反彈真正消化掉。對一般人來說，這種「彈一天就縮回去」的格局，提醒追高反彈要更小心。",
+      "sources": [
+        {
+          "url": "https://features.financialjuice.com/2026/10/20/us-stock-rebound-falters-ai-spending-concerns-return-europe-market-wrap/"
+        },
+        {
+          "url": "https://www.centraloregondaily.com/news/consumer/shares-stumble-oil-rises-as-investors-await-ai-sector-earnings/article_89a0ea42-affa-5b5a-a0f8-a7e6afcf133f.html"
+        }
+      ]
+    },
+    {
+      "headline": "南韓KOSPI重摔3.73%，記憶體雙雄反彈只撐兩天",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "南韓KOSPI今天重摔3.73%，三星電子跌近3%、SK海力士跌逾4%，外資與法人同步賣超，結束前兩天的止穩反彈。這不是單一國家的恐慌，而是全球對「AI投資到底能不能賺回來」的疑慮，從CoreWeave的公司債一路燒到股市——即使你沒買AI概念股，持有相關基金或ETF的人這幾天應該都感受得到淨值震盪。",
+      "sources": [
+        {
+          "url": "https://en.sedaily.com/finance/2026/10/20/kospi-plunges-373-percent-as-foreign-institutional"
+        },
+        {
+          "url": "https://www.cnbc.com/2026/10/15/sk-hynix-samsung-softbank-stocks-asia-tech-rout-ai-funding-worries.html"
+        },
+        {
+          "url": "https://www.investing.com/news/stock-market-news/european-chip-stocks-fall-tracking-asian-selloff-over-ai-investment-worries-4959012"
+        }
+      ]
+    },
+    {
+      "headline": "那斯達克雖上漲，但十大權值股九檔收黑",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "上一交易日那斯達克漲1.11%，聽起來像普天同慶，但拆開來看，輝達、蘋果、亞馬遜、Alphabet、博通等十大權值股裡九檔其實是收黑的，只有微軟逆勢上漲，真正把指數撐起來的是後面比較小型的股票。指數上漲不代表「AI股全部在漲」，這種落差本身就是風險還沒解除的訊號。",
+      "sources": []
+    },
+    {
+      "headline": "10年期公債殖利率續墊高到5.136%，繼續卡在5%之上",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "10年期公債殖利率今天來到5.136%，比上一交易日的5.098%又更高，繼續卡在5%整數大關之上。殖利率等於借錢的成本，對那些靠大量舉債蓋資料中心的AI公司來說，利率續墊高意味著融資壓力不會自動變小，CoreWeave這類公司債風波會不會降溫，很大程度要看這條線能不能回落。",
+      "sources": [
+        {
+          "url": "https://www.investing.com/news/stock-market-news/european-chip-stocks-fall-tracking-asian-selloff-over-ai-investment-worries-4959012"
+        }
+      ]
+    },
+    {
+      "headline": "本週財報連環考：GM先交卷，Netflix、特斯拉、Meta、IBM接力",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "通用汽車今天一早先公布第三季淨利33億美元，並加碼200億美元庫藏股；真正的重頭戲是今晚盤後登場的Netflix，接著特斯拉、Meta、IBM週三接力，寶僑週四壓軸。高盛預估明年五大AI雲端巨頭合計資本支出將衝上約1.2兆美元，這幾份財報會是市場檢驗這筆錢花得值不值得的第一手證據，比Fed在管制期的沉默更直接影響股價。",
+      "sources": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/0001467858/000146785826000056/gmq32026pressreleaseandfin.htm"
+        },
+        {
+          "url": "https://www.insiderfinance.io/news/netflix-q3-2026-earnings-oct-20"
+        }
+      ]
+    }
+  ],
+  "catalysts": [
+    "今天盤後：Netflix第三季財報登場；通用汽車今天稍早已公布，淨利33億美元、加碼200億美元庫藏股。",
+    "本週財報：特斯拉、Meta、IBM（10/21），寶僑（10/22）。",
+    "Fed仍在FOMC前的官員管制期，10/27-28決策揭曉。",
+    "持續觀察：CoreWeave等AI基建公司的公司債殖利率能否真正降溫，壓力是否外溢到更多槓桿較高的AI相關企業。",
+    "持續觀察：南韓KOSPI、記憶體雙雄這次重摔能否止穩，或進一步惡化。",
+    "持續觀察：10年期公債殖利率能否守穩5%上方，或進一步走高。"
+  ],
+  "thesis_delta": {
+    "changed": true,
+    "summary": "CoreWeave的信用壓力週末沒有緩解，股價一週累計重挫近25%，壓力今天正式蔓延到亞股：南韓KOSPI暴跌3.73%，結束連兩天反彈，三星電子、SK海力士同步走弱，日經、台股、香港恆生同步下跌，歐股半導體設備股也跟著重摔逾4%。美股本土這邊，上一交易日那斯達克雖反彈收漲1.11%，但十大權值股裡只有微軟收紅，真正撐盤的是廣度而非龍頭；今天盤前這股樂觀又全面熄火，四大期貨全數翻黑。真正的裁判換成本週財報——通用汽車已公布淨利33億美元，Netflix今晚登場，特斯拉、Meta、IBM週三接力，寶僑週四壓軸，這幾份財報將是檢驗AI資本支出能否撐得住的第一手證據。AI/半導體「窄且不穩」與信用風險傳導維持confirmed，三條既有支柱方向皆未反轉。",
+    "horizon": "MT"
+  },
+  "lead_horizon": "ST",
+  "title_hook": "韓股重摔3.73%，AI這筆錢到底賺不賺得回來"
+}
