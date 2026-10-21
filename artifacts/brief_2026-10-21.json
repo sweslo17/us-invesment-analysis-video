@@ -1,0 +1,141 @@
+{
+  "date": "2026-10-21",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7712.57,
+      "overnight_pct": 0.28,
+      "drivers": [
+        "標普500收7712.57點，漲0.28%，91%的成分股收紅，醫療、房地產、金融等類股普遍上漲，但晶片權值股拖累指數漲幅有限。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 26424.82,
+      "overnight_pct": -0.02,
+      "drivers": [
+        "那斯達克收26424.82點，幾乎打平，輝達跌2.05%、美光跌2.08%、博通跌1.68%，三倍做多半導體ETF（SOXL）單日崩跌6.92%，指數表面平靜，底下其實是晶片股的重傷日。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 52495.88,
+      "overnight_pct": 1.02,
+      "drivers": [
+        "道瓊收52495.88點，大漲1.02%，受惠於非科技類股廣泛上漲。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 2773.42,
+      "overnight_pct": 1.65,
+      "drivers": [
+        "羅素兩千收2773.42點，大漲1.65%，是四大指數裡表現最好的，小型股普遍受惠於這波廣度行情。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普500近20日已實現波動率約9.1%，不算高，對應的波動目標槓桿空間原本還算寬；但晶片權值股單日重摔的教訓是，指數整體波動低不代表個股或產業內部不會瞬間放大。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克已實現波動率約14.8%，是四大指數裡最高，對應的合理槓桿倍數因此被壓得最低；今天晶片三倍ETF單日跌掉近7%，正是這種高波動對高槓桿殺傷力的活教材。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊已實現波動率約9.5%，相對溫和，合理槓桿空間能比標普、那斯達克更寬鬆一些。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千已實現波動率約15.6%，是四大指數裡最高，對應的合理槓桿倍數因此最低，殖利率只要再往上頂，它通常也是反應最大的一個。"
+    }
+  ],
+  "regime": {
+    "vol": "elevated",
+    "rates": "rising",
+    "stock_bond_corr": "neutral",
+    "breadth": "broad"
+  },
+  "items": [
+    {
+      "headline": "標普91%個股收紅，晶片三倍ETF卻重摔6.92%",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "上一交易日標普500裡高達91%的成分股收紅，醫療漲2.37%、金融漲1.2%，漲勢看起來遍地開花。但輝達跌2.05%、美光跌2.08%、博通跌1.68%，三倍做多半導體的SOXL單日崩跌6.92%，那斯達克指數因此幾乎打平。對一般人來說，這代表「大盤平靜」這四個字底下，晶片相關的部位這幾天承受的痛苦遠比表面數字嚴重，尤其是持有槓桿型半導體部位的人。",
+      "sources": []
+    },
+    {
+      "headline": "Fed管制期閉嘴，期貨市場卻把升息機率推上68%、90%",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "Fed目前處於10月27、28日FOMC決策前的官員管制期，不能公開表態，但期貨市場自己把話說滿：10月升息機率來到68%，12月更衝上90%，隱含政策利率看向4.145%。紐約Fed總裁威廉斯稍早才說「不急」，市場卻用真金白銀下注更鷹的路徑，呼應這幾個月「higher-for-longer」沒有真正結束的既有判斷，對靠舉債擴張的AI公司而言，融資成本的壓力只會更明顯。",
+      "sources": [
+        {
+          "url": "https://www.nst.com.my/amp/business/economy/2026/10/1545927/fed-policymakers-lean-against-october-rate-hike"
+        },
+        {
+          "url": "https://coingape.com/prediction-markets/will-the-fed-raise-interest-rates-after-the-october-2026-meeting-odds-split-50-50/"
+        }
+      ]
+    },
+    {
+      "headline": "Netflix財報開局，營收年增12%、利潤率衝上34.6%",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "本週AI資本支出財報周第一棒Netflix昨晚交卷，營收年增12%來到129億美元，符合公司自己的預測，營業利益率衝上34.6%（去年同期28.2%），全年財測重申營收511億美元、利益率31.5%。這份財報沒有驚喜也沒有爆雷，等於替本週真正的大考（今晚特斯拉、Meta、IBM）先開了一個穩健但不算亮眼的頭。",
+      "sources": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/0001065280/000106528026000290/ex991_q326.htm"
+        },
+        {
+          "url": "https://www.insiderfinance.io/news/netflix-q3-2026-earnings-oct-20"
+        }
+      ]
+    },
+    {
+      "headline": "南韓KOSPI一夜反彈3.29%，美股期貨卻只是小動",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "南韓KOSPI今天大漲3.29%，從上個交易日熔斷式重摔3.73%的坑裡爬出來一半，日經漲0.91%、台股漲1.41%，但香港恆生跌0.9%、上海跌0.53%，亞股這波反彈也不是雨露均霑。更值得留意的是，標普期貨今天只跌0.05%、那斯達克期貨跌0.16%，幾乎沒有把亞股的樂觀當一回事——這種「海外先彈、美股不理」的落差，這陣子已經不是第一次出現。",
+      "sources": []
+    },
+    {
+      "headline": "今晚特斯拉、Meta、IBM接力交卷，AI資本支出大考還沒完",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "今晚美股盤後，特斯拉、Meta、IBM三家同台公布財報，接棒昨晚Netflix那份穩健但不算驚豔的成績單。市場估計Meta每股盈餘年增幅度驚人（主因去年同期基期極低），特斯拉則預期獲利年減，這幾份財報會是本週繼續檢驗「AI資本支出這筆錢花得值不值得」的下一手證據，比Fed在管制期的沉默更直接影響股價。",
+      "sources": [
+        {
+          "url": "https://www.itiger.com/news/2676578281"
+        },
+        {
+          "url": "https://blofin.com/academy/education/tradfi/earnings-this-week-oct-19-23-2026"
+        }
+      ]
+    }
+  ],
+  "catalysts": [
+    "今晚美股盤後：特斯拉、Meta、IBM同台公布第三季財報，接棒昨晚Netflix的穩健成績單。",
+    "本週稍後：寶僑財報（10/22）。",
+    "Fed處於FOMC前官員管制期，10/27–28公布利率決策；期貨隱含10月升息機率68%、12月90%。",
+    "持續觀察：SOXL等槓桿半導體部位能否止穩，或賣壓進一步擴大。",
+    "持續觀察：亞股隔夜反彈力道能否延續到美股開盤，或又是一次「海外先彈、美股不理」。"
+  ],
+  "thesis_delta": {
+    "changed": false
+  },
+  "lead_horizon": "ST",
+  "title_hook": "晶片3倍ETF一天蒸發7%，今晚Meta、特斯拉接棒交卷"
+}
