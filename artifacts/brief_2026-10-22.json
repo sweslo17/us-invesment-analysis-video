@@ -1,0 +1,139 @@
+{
+  "date": "2026-10-22",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7757.17,
+      "overnight_pct": 0.59,
+      "drivers": [
+        "標普500收7757.17點，漲0.59%，延續這幾天的廣度行情，收盤後市場把焦點轉向特斯拉、Meta、IBM三檔財報。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 26702.857,
+      "overnight_pct": 1.06,
+      "drivers": [
+        "那斯達克收26702.857點，大漲1.06%，是四大指數表現最好的，收盤後財報接力登場。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 52856.09,
+      "overnight_pct": 0.68,
+      "drivers": [
+        "道瓊收52856.09點，漲0.68%，非科技類股同步走穩。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 2781.021,
+      "overnight_pct": 0.27,
+      "drivers": [
+        "羅素兩千收2781.021點，漲0.27%，漲幅相對收斂。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普500近20日已實現波動率約9.1%，不算高，但特斯拉、Meta這類AI權值股財報夜的個股波動遠比指數本身劇烈，指數平靜不代表成分股沒有大幅震盪。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克已實現波動率約14.8%，四大指數裡最高，今天正好是AI資本支出疑慮發酵的日子，對應的合理槓桿倍數本來就被壓得最低，高槓桿部位這種財報後波動最傷。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊已實現波動率約9.5%，相對溫和，受AI權值股財報的直接衝擊也比那斯達克小一些。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千已實現波動率約15.6%，是四大指數裡最高，殖利率只要再往上頂，它通常也是反應最大的一個。"
+    }
+  ],
+  "regime": {
+    "vol": "elevated",
+    "rates": "rising",
+    "stock_bond_corr": "neutral",
+    "breadth": "mixed"
+  },
+  "items": [
+    {
+      "headline": "特斯拉財報賺更多，股價盤後卻摔破4%",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "特斯拉第三季非GAAP每股盈餘0.48美元優於預期的0.45美元，營收280.5億美元大致符合，交車量48.6萬輛也超過預期，照理是一份不錯的成績單。但營業利益年減約56%、自由現金流年減62%、資本支出翻倍衝上47.3億美元，全花在機器人Optimus、Cybercab與下一代工廠上，市場解讀成「現在少賺、以後才賺」，股價收盤後重摔逾4%。對一般人來說，這提醒財報的「賺多少」和「花多少換未來」同樣重要，花得兇往往才是股價當下反應的關鍵。",
+      "sources": [
+        {
+          "url": "https://www.cnbc.com/2026/10/21/tesla-tsla-q3-2026-earnings-report.html",
+          "ts": null
+        },
+        {
+          "url": "https://www.teslarati.com/tesla-tsla-q3-2026-earnings-results/",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "Meta營收創新高，卻把今年AI支出上限衝到1450億美元",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "Meta第三季營收646億美元、年增26%，優於市場預期的633.4億美元，但一筆青少年訴訟和解的鉅額法律費用拖累了帳面獲利，公司同時把2026年資本支出上限上修到1450億美元，單季就砸了349億美元蓋資料中心，並透過股票分割發行新股為AI買單。股價在財報後的反應分歧、今天盤前偏弱，呼應這陣子市場對「AI資本支出到底能不能賺回來」的耐心正在變薄。這跟每個人都有關，因為退休金、ETF裡多半都壓著這幾家公司。",
+      "sources": [
+        {
+          "url": "https://www.cnbc.com/2026/10/21/meta-earnings-q3-2026-live-updates.html",
+          "ts": null
+        },
+        {
+          "url": "https://www.mitrade.com/insights/shares-analysis/us-stocks/meta-ai-capex-class-c-stock-20261022J1346",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "全球股市跟著翻黑，VIX一天跳升10%",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "特斯拉、Meta財報後的AI支出疑慮，隔夜外溢到全球股市：南韓KOSPI重挫2.97%、日經跌2.74%、香港恆生跌3.03%、台股跌1.43%、歐洲STOXX50跌1.5%，美股期貨也跟著翻黑（標普期貨跌0.39%、那斯達克期貨跌0.45%），VIX單日跳升10%來到18.35。這代表只要幾家AI巨頭的財報不夠讓市場安心，風險情緒會很快同步傳到全世界的股市，不只是美股自己的事。",
+      "sources": []
+    },
+    {
+      "headline": "Fed還沒開口，期貨市場已經把升息機率喊到64%、88%",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "Fed目前處於10月27、28日FOMC決策前的官員管制期，不能公開表態，但期貨市場隱含的10月升息機率報64%、12月來到88%，隱含政策利率看向4.13%；10年期公債殖利率今天來到5.146%，比前一交易日再墊高一截。呼應這幾個月「higher-for-longer」沒有真正結束的既有判斷，對靠舉債擴張資本支出的AI公司來說，融資成本的壓力只會更明顯。",
+      "sources": []
+    },
+    {
+      "headline": "寶僑今天開盤前交卷，是消費體質的溫度計",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 2,
+      "confidence": "confirmed",
+      "audience_value": "寶僑排定今天美股開盤前公布財報，這家賣洗衣精、尿布、牙膏的民生消費巨頭，營收走勢向來被當成一般家庭荷包鬆緊的溫度計，跟科技股的AI狂熱是完全不同的觀察角度。",
+      "sources": []
+    }
+  ],
+  "catalysts": [
+    "今天美股開盤前：寶僑（P&G）公布第一財季（FY2027）財報，是消費體質的溫度計。",
+    "今天美東上午8:30：初領失業金（市場預期20萬人，前值19.9萬人）。",
+    "Fed仍處於10/27–28 FOMC決策前的官員管制期；期貨隱含10月升息機率64%、12月88%。",
+    "持續觀察：特斯拉、Meta財報後的AI資本支出疑慮是否延燒，全球股市與VIX能否止穩。"
+  ],
+  "thesis_delta": {
+    "changed": false,
+    "summary": null,
+    "horizon": null
+  },
+  "lead_horizon": "ST",
+  "title_hook": "特斯拉大賺卻摔破4%，AI這筆帳今天換全球股市買單"
+}
