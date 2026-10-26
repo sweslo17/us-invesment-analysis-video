@@ -1,0 +1,145 @@
+{
+  "date": "2026-10-26",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7623.68,
+      "overnight_pct": -0.52,
+      "drivers": [
+        "標普500上週五收7623.68點，跌0.52%，主要被Google、亞馬遜等權值股拖累，能源類股逆勢大漲2.6%撐住部分跌幅。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 25955.34,
+      "overnight_pct": -0.24,
+      "drivers": [
+        "那斯達克收25955.34點，跌0.24%，四大指數裡跌幅最小，科技類股整體仍小漲0.49%，但通訊服務重摔1.78%。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 52215.16,
+      "overnight_pct": -1.22,
+      "drivers": [
+        "道瓊收52215.16點，跌1.22%，四大指數中跌最重，非科技傳產類股普遍承壓。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 2775.9,
+      "overnight_pct": -0.29,
+      "drivers": [
+        "羅素兩千收2775.90點，跌0.29%，中小型股同樣對殖利率逼近5%感到壓力。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普500近20日已實現波動率約9.9%，對應波動目標槓桿約1.5倍，是四大指數裡波動最低的一個，但這週三Fed決定加上科技巨頭財報同天登場，波動隨時可能跳升。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克已實現波動率約17.3%，四大指數裡最高，對應的合理槓桿倍數因此被壓到最低、約0.87倍，3倍槓桿的年化波動耗損逼近13.5%，這週微軟、Google同天交卷，高槓桿部位最先感受到衝擊。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊已實現波動率約10%，跟標普接近，對Fed決策與非科技財報的敏感度也類似，相對溫和。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千已實現波動率約14.5%，對應槓桿倍數略高於1倍，殖利率只要再往5%頂，中小型股通常是反應最大的一群。"
+    }
+  ],
+  "regime": {
+    "vol": "elevated",
+    "rates": "rising",
+    "stock_bond_corr": "negative",
+    "breadth": "narrow"
+  },
+  "items": [
+    {
+      "headline": "本週三，Fed利率決定和兩大科技巨頭財報撞在同一天",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "這週三（10/28）美東下午2點Fed公布利率決定（本次會議不附點陣圖），同一天盤後微軟、Google（Alphabet）接力公布財報，隔天（10/29）換亞馬遜交卷。對一般人來說，這代表「升息會不會讓借錢更貴」跟「AI砸的錢到底值不值得」這兩個問題，這週會被迫同時交出答案，股市的波動可能因此放大。",
+      "sources": [
+        {
+          "url": "https://finance.yahoo.com/markets/live/stock-market-today-monday-october-26-dow-sp-500-nasdaq-101153035.html",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "期貨市場把10月升息機率喊到62%，12月衝上82%",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "9月Fed才升息一碼到3.75–4%，市場現在賭這週三可能再升一次，機率62%，12月更到82%，呼應這幾個月「higher-for-longer」沒有真正結束的既有判斷。對一般人來說，房貸、信用卡、企業借款的利息，短期內恐怕很難真正鬆手。",
+      "sources": []
+    },
+    {
+      "headline": "CoreWeave公司債殖利率飆上15.78%，原始票息只有9.75%",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "幫AI公司蓋資料中心、本身背了逾500億美元債務的CoreWeave，公司債殖利率這幾天飆到15.78%，比原始票息9.75%高出一大截，市場幫它的債券保險、一年要收超過10%，等於認定它還不出錢的機率明顯升高。對一般人來說，這代表AI熱潮背後的借貸壓力是真實存在的風險，不是只看股價熱鬧就夠了，即使沒持有相關股票，透過退休金或理財產品也可能間接曝險。",
+      "sources": [
+        {
+          "url": "https://www.cnbc.com/2026/10/19/coreweave-oracle-ai-credit-stress.html",
+          "ts": null
+        },
+        {
+          "url": "https://aiweekly.co/issues/big-tech-reports-ai-spending-wednesday-as-coreweave-debt",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "上週五標普只有27%成分股上漲，能源漲2.6%、通訊服務跌1.78%",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "上週五雖然指數本身只小跌0.52%，但底下類股分裂明顯：能源因中東緊張局勢大漲2.6%，通訊服務卻重摔1.78%，當天標普只有27%的成分股收紅。對一般人來說，指數平靜不代表底下沒有劇烈分歧，持有大盤ETF的人實際承受的波動，往往比指數表面數字看起來更大。",
+      "sources": []
+    },
+    {
+      "headline": "以色列明天大選，川普說伊朗在「做假攻擊」拉高油價",
+      "horizon": "MT",
+      "vs_thesis": "new",
+      "materiality": 3,
+      "confidence": "developing",
+      "audience_value": "以色列明天（10/27）舉行國會大選，被視為選民對納坦雅胡處理對伊戰爭成果的公投，民調顯示他的聯盟可能落敗。同一時間，川普公開指控伊朗「捏造假攻擊」藉機在期中選舉前推高油價，但革命衛隊同時宣稱在波灣擊中多艘油輪、另有船隻觸雷，雙方說法各執一詞。對一般人來說，這代表中東風險並未真正降溫，只是換了一種更難判斷真假的形式延續，油價仍有突發波動的可能。",
+      "sources": [
+        {
+          "url": "https://www.timesofisrael.com/liveblog-october-22-2026/",
+          "ts": null
+        },
+        {
+          "url": "https://www.cfr.org/global-conflict-tracker/conflict/confrontation-between-united-states-and-iran",
+          "ts": null
+        }
+      ]
+    }
+  ],
+  "catalysts": [
+    "明天（10/27）：以色列全國大選，被視為對總理納坦雅胡處理對伊朗戰爭成果的公投。",
+    "週三（10/28）美東下午2點：Fed公布利率決定，本次會議不附新點陣圖；2:30主席記者會。",
+    "週三（10/28）盤後：微軟、Google（Alphabet）公布財報。",
+    "週四（10/29）：亞馬遜公布財報。",
+    "持續觀察：CoreWeave等AI資料中心公司的信用壓力（公司債殖利率、違約保險成本）能否止穩。"
+  ],
+  "thesis_delta": {
+    "changed": false,
+    "summary": null,
+    "horizon": null
+  },
+  "lead_horizon": "MT",
+  "title_hook": "Fed週三開獎，微軟Google也同天交卷"
+}
