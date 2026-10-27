@@ -1,0 +1,151 @@
+{
+  "date": "2026-10-27",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7676.77,
+      "overnight_pct": 0.71,
+      "drivers": [
+        "標普上一交易日收7676.77點，漲0.71%創收盤新高，Anthropic傳出以近兩兆美元估值掛牌的消息點燃科技股買氣，但十大權值股裡有8檔收黑，真正撐盤的是後面的中小型股。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 26169.38,
+      "overnight_pct": 0.83,
+      "drivers": [
+        "那斯達克收26169.38點，漲0.83%，四大指數裡漲最多，科技類股整體漲1.69%，但輝達（跌0.23%）、博通（跌1.3%）、美光（跌逾1%）等實際權值股仍收黑。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 52361.58,
+      "overnight_pct": 0.29,
+      "drivers": [
+        "道瓊收52361.58點，漲0.29%，漲幅四大指數中最小，非科技傳產類股漲勢相對溫和。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 2786.42,
+      "overnight_pct": 0.41,
+      "drivers": [
+        "羅素兩千收2786.42點，漲0.41%，近七成成分股站上50日均線，廣度數據顯示這波上漲並非只靠少數權值股。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普500近20日已實現波動率約9.9%，對應波動目標槓桿約1.5倍，是四大指數裡最溫和的一個；3倍槓桿的年化波動耗損約4.4%。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克已實現波動率約17.5%，四大指數裡最高，對應的合理槓桿倍數因此被壓到最低、約0.86倍，3倍槓桿的年化波動耗損逼近13.7%——這週同時撞上Fed決定與微軟、Google財報，高槓桿部位最先感受到衝擊。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊已實現波動率約9.6%，跟標普接近，對Fed決策與非科技財報的敏感度也類似，相對溫和。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千已實現波動率約14.4%，對應槓桿倍數約1.04倍，殖利率只要再往5%頂，中小型股通常是反應最大的一群。"
+    }
+  ],
+  "regime": {
+    "vol": "elevated",
+    "rates": "stable",
+    "stock_bond_corr": "negative",
+    "breadth": "broad"
+  },
+  "items": [
+    {
+      "headline": "標普創收盤新高，但十大權值股有8檔收黑，真正撐盤的是中小型股",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "上一交易日標普漲0.71%創新高，看起來是全面慶祝行情，但拆開十大權值股才發現輝達、博通、美光、Google、Meta等8檔其實收黑，真正把指數往上推的是後面那些中小型股。對一般人來說，指數創新高不代表你持有的AI權值股也在漲，廣度才是這次行情的真功臣。",
+      "sources": []
+    },
+    {
+      "headline": "Anthropic傳出近兩兆美元估值掛牌，點燃AI狂熱，但晶片龍頭沒跟上",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "developing",
+      "audience_value": "外媒報導Anthropic的IPO承銷商向投資人表示，掛牌估值可能上看近兩兆美元、募資規模上看千億美元，比今年稍早SpaceX掛牌的1.8兆美元更大，消息帶動上一交易日科技股買氣；但輝達、博通、美光等真正的晶片供應鏈股價當天仍收黑。對一般人來說，AI敘事的「故事面」跟「硬體面」又一次出現落差，這波題材的分裂沒有收斂，只是換了新主角。",
+      "sources": [
+        {
+          "url": "https://aiweekly.co/node/10581",
+          "ts": null
+        },
+        {
+          "url": "https://finance.yahoo.com/markets/live/stock-market-today-monday-october-26-dow-sp-500-nasdaq-101153035.html",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "FOMC兩天會議今天正式開議，週三下午2點揭曉決定",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "今天是FOMC兩天會議的第一天，週三（10/28）美東下午2點公布利率決定（本次不附點陣圖），期貨市場隱含10月升息機率60%、12月更衝上84%。對一般人來說，這代表房貸、信用卡、企業借款的利率，這週很可能繼續維持在偏高水位，升息故事還沒真正結束。",
+      "sources": []
+    },
+    {
+      "headline": "以色列今天舉行國會大選，牽動對伊戰爭後續政治時程",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "developing",
+      "audience_value": "以色列今天投票，被視為選民對納坦雅胡處理對伊朗戰爭成果的公投，選前民調顯示他的聯盟可能落敗；結果預計今晚到明天陸續揭曉。對一般人來說，這場選舉的結果可能牽動美伊衝突接下來怎麼走，進而影響油價與地緣風險溢價，是本週除了Fed之外另一個不確定性來源。",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/2026_Israeli_legislative_election",
+          "ts": null
+        },
+        {
+          "url": "https://cryptobriefing.com/israels-election-set-for-october-27-2026-amid-coalition-tensions/",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "CoreWeave信用壓力未解，持續牽動本週雲端巨頭財報的解讀",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "幫AI公司蓋資料中心的CoreWeave，公司債殖利率這兩週一度衝上15–16%、違約保險成本飆上年化雙位數，市場認定的違約風險明顯升高，壓力並外溢到同業Nebius、Iren與評等更高的Oracle。對一般人來說，這週三微軟、Google交卷、週四亞馬遜交卷，它們的資本支出指引會直接決定這條信用壓力線接下來是緩解還是加劇，即使沒有持股，透過退休金或理財產品也可能間接曝險。",
+      "sources": [
+        {
+          "url": "https://www.roic.ai/news/coreweave-shares-plunge-to-lowest-since-may-2025-as-credit-fears-mount-10-15-2026",
+          "ts": null
+        },
+        {
+          "url": "https://coinpaper.com/37875/stock-market-today-s-and-p-500-dji-rise-as-nvidia-rebounds-ai-debt-fears-persist-ahead-of-fed-decision",
+          "ts": null
+        }
+      ]
+    }
+  ],
+  "catalysts": [
+    "今天：FOMC兩天會議正式開議。",
+    "今天：以色列舉行國會大選，牽動對伊戰爭後續政治時程，結果預計今晚起陸續揭曉。",
+    "週三（10/28）美東下午2點：Fed公布利率決定（本次不附新點陣圖）；2:30主席記者會。",
+    "週三（10/28）盤後：微軟、Google（Alphabet）公布財報。",
+    "週四（10/29）：亞馬遜公布財報。",
+    "持續觀察：CoreWeave等AI資料中心公司的信用壓力（公司債殖利率、違約保險成本）能否止穩。",
+    "持續觀察：Anthropic IPO估值與掛牌時間表是否有官方證實。"
+  ],
+  "thesis_delta": {
+    "changed": false,
+    "summary": null,
+    "horizon": null
+  },
+  "lead_horizon": "MT",
+  "title_hook": "兩兆估值傳聞燒起來，輝達卻缺席慶功"
+}
