@@ -1,0 +1,106 @@
+{
+  "segments": [
+    {
+      "kind": "card",
+      "vo": "美股今天要交兩份考卷，一份是Fed，一份是科技巨頭財報。",
+      "headline": "Fed先交卷\n科技才要補考",
+      "tag": "科技補考日"
+    },
+    {
+      "kind": "chart",
+      "vo": "南韓KOSPI今天狂飆6.33%，從5654點衝上6012點，記憶體雙雄是推手；日經只漲1.11%，美股期貨幾乎沒感覺。",
+      "chart_id": "global_eq_1028",
+      "title": "韓股噴出",
+      "stat": "+6.33%",
+      "stat_label": "KOSPI單日漲幅"
+    },
+    {
+      "kind": "recap",
+      "vo": "昨天說要看的以色列大選開票了，利庫德聯盟54席、艾森科特49席，雙方都碰不到過半的61席，國會懸峙，謝克爾匯率應聲走弱。",
+      "rows": [
+        {
+          "ask": "以色列大選結果",
+          "result": "54比49仍未過半",
+          "mark": "mixed"
+        }
+      ]
+    },
+    {
+      "kind": "chart",
+      "vo": "目前政策利率3.75%，期貨押注12月跳到4.125%，等於還在賭至少再升一碼。這次沒附點陣圖，兩點半主席記者會才是真正風向球。十年期殖利率卡在4.99%，離5%只差一步。",
+      "chart_id": "fedpath_1028",
+      "title": "升息路口",
+      "stat": "4.125%",
+      "stat_label": "12月隱含利率"
+    },
+    {
+      "kind": "bignum",
+      "vo": "幫AI公司蓋資料中心的CoreWeave，債券殖利率這兩週衝破15%……這不是成長股的待遇，是信用市場在押它可能還不出錢。今晚微軟、Google的資本支出答案，就是這條壓力線的註解。",
+      "value": "15%+",
+      "label": "AI機房公司債殖利率",
+      "context": "債市已經不演了"
+    },
+    {
+      "kind": "chart",
+      "vo": "今天排好兩場硬仗：美東下午2點FOMC公布利率決定，2點半主席開記者會；盤後換微軟、Google交財報；明天輪到亞馬遜。這幾場加起來，才是今天真正的答案卷。",
+      "chart_id": "catalyst_1028",
+      "title": "今明兩場硬仗",
+      "stat": "2pm",
+      "stat_label": "Fed公布時間"
+    },
+    {
+      "kind": "card",
+      "vo": "退潮的時候，先濕的是信用市場。",
+      "headline": "退潮的時候\n先濕的是信用市場",
+      "tag": "巴菲特 不知道有沒有說過"
+    }
+  ],
+  "charts": [
+    {
+      "id": "global_eq_1028",
+      "module": "global_equity_overnight",
+      "params": {}
+    },
+    {
+      "id": "fedpath_1028",
+      "module": "fed_path",
+      "params": {}
+    },
+    {
+      "id": "catalyst_1028",
+      "module": "catalyst_timeline",
+      "params": {
+        "events": [
+          {
+            "date": "2:00pm",
+            "label": "FOMC利率決定",
+            "highlight": true
+          },
+          {
+            "date": "2:30pm",
+            "label": "主席記者會",
+            "highlight": true
+          },
+          {
+            "date": "盤後",
+            "label": "微軟、Google財報",
+            "highlight": true
+          },
+          {
+            "date": "明天",
+            "label": "亞馬遜財報"
+          },
+          {
+            "date": "持續",
+            "label": "CoreWeave信用壓力觀察"
+          }
+        ]
+      }
+    }
+  ],
+  "coverage_gaps": [],
+  "gags": [
+    "Fed先交卷、科技才要補考的考試梗開場",
+    "CoreWeave債市已經不演了的冷面反差：股市還在歡呼AI、債市已經在押違約"
+  ]
+}

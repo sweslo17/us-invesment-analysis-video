@@ -1,0 +1,139 @@
+{
+  "date": "2026-10-28",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7722.6,
+      "overnight_pct": 0.6,
+      "drivers": [
+        "標普上一交易日（10/27）收7722.6點，漲0.6%，連兩天改寫新高，但道瓊幾乎打平（+0.04%），四大指數漲幅並不同步，市場在FOMC與科技巨頭財報前保持觀望。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 26477.81,
+      "overnight_pct": 1.18,
+      "drivers": [
+        "那斯達克收26477.81點，漲1.18%，四大指數裡漲最多，科技股領漲。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 52377.57,
+      "overnight_pct": 0.04,
+      "drivers": [
+        "道瓊收52377.57點，僅微漲0.04%，非科技傳產股幾乎按兵不動，等晚間財報與Fed決策定調。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 2818.87,
+      "overnight_pct": 1.16,
+      "drivers": [
+        "羅素兩千收2818.87點，漲1.16%，利率敏感的中小型股同步走高，反映市場暫時押注Fed今天按兵不動或僅溫和升息。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普500近20日已實現波動率約10.1%，對應波動目標槓桿約1.48倍，是四大指數裡偏溫和的一個；3倍槓桿的年化波動耗損約4.6%。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克已實現波動率約18.1%，四大指數裡最高，對應的合理槓桿倍數因此被壓到最低、約0.83倍，3倍槓桿的年化波動耗損逼近14.7%——今晚微軟、Google財報加上Fed決策同天撞上，高槓桿部位最先感受到衝擊。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊已實現波動率約9.5%，四大指數裡最溫和，對Fed決策與非科技財報的敏感度也相對較低，對應槓桿倍數約1.57倍。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千已實現波動率約15.0%，對應槓桿倍數約1.0倍，殖利率只要再往5%頂，中小型股通常是反應最大的一群。"
+    }
+  ],
+  "regime": {
+    "vol": "elevated",
+    "rates": "stable",
+    "stock_bond_corr": "negative",
+    "breadth": "mixed"
+  },
+  "items": [
+    {
+      "headline": "FOMC今天下午兩點公布決定，這次沒有新點陣圖",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "美東下午2點Fed公布利率決定，2點半主席記者會；市場隱含12月政策利率看向4.125%，意味著不管今天結果如何，市場仍押注年底前還有進一步緊縮空間。沒有新點陣圖，代表記者會的措辭是今天唯一能聽到的前瞻指引，對一般人來說，這直接牽動房貸、信用卡與企業借款利率接下來的走向。",
+      "sources": []
+    },
+    {
+      "headline": "以色列大選開出僵局，納坦雅胡與艾森科特都過不了半",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "計票顯示納坦雅胡聯盟約54席、艾森科特陣營約49席，都碰不到過半所需的61席，阿拉伯政黨合計約17席成為關鍵少數，謝克爾匯率應聲走弱。對一般人來說，這代表以色列對伊戰爭的政策方向短期內更可能維持現狀、難有大轉向，是地緣風險線的最新進展而非終點。",
+      "sources": [
+        {
+          "url": "https://www.cnbc.com/2026/10/28/israel-election-netanyahu-trump-gaza-.html"
+        },
+        {
+          "url": "https://www.timesofisrael.com/liveblog-october-28-2026/"
+        },
+        {
+          "url": "https://www.ynetnews.com/article/hjnatbkaml"
+        }
+      ]
+    },
+    {
+      "headline": "亞股隔夜分裂：南韓KOSPI狂飆6.3%，美股期貨幾乎無感",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "南韓KOSPI今天跳升6.33%、日經僅漲1.11%，但四大美股期貨幾乎打平，這波亞股熱度沒有同步外溢到美股本土，提醒大家「亞股大漲」不代表你的美股部位今天也會跟著動。",
+      "sources": []
+    },
+    {
+      "headline": "CoreWeave信用壓力持續惡化，殖利率飆破15%，正好撞上今晚財報",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "幫AI公司蓋資料中心的CoreWeave，公司債殖利率這兩週一度衝上15%到16%，五年期違約保險成本隱含的違約機率來到約63%，壓力同步外溢到同業Nebius，連評等更高的Oracle股價這波也重摔近9%。今晚微軟、Google的資本支出指引，會直接牽動這條信用壓力線是緩解還是加劇，即使沒有持有這些公司股票，退休金或企業債基金也可能間接曝險。",
+      "sources": [
+        {
+          "url": "https://investinglive.com/stocks/coreweave-bonds-trade-like-distressed-debt-as-ai-spending-outpaces-balance-sheets/"
+        },
+        {
+          "url": "https://admiralmarkets.com/education/articles/shares/coreweave-stock-drop-ai-debt"
+        }
+      ]
+    },
+    {
+      "headline": "標普創新高，但十大權值股依然普遍收黑",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "上一交易日輝達、蘋果、微軟、Google等多檔權值股其實收黑或打平，真正撐起標普漲幅的還是後面的中小型股，延續這陣子「龍頭落後、廣度撐盤」的老問題，只是數字天天換。對只持有AI權值股的人來說，指數創新高不代表你的部位也在漲。",
+      "sources": []
+    }
+  ],
+  "catalysts": [
+    "今天美東下午2點：FOMC公布利率決定（本次不附新點陣圖）；2:30主席記者會。",
+    "今天盤後：微軟、Google（Alphabet）公布財報，資本支出指引是觀察重點。",
+    "明天（10/29）：亞馬遜公布財報。",
+    "持續觀察：以色列大選後續組閣進展，是否牽動美伊戰事政治時間表。",
+    "持續觀察：CoreWeave等AI資料中心公司的信用壓力（公司債殖利率、違約保險成本）能否止穩。"
+  ],
+  "thesis_delta": {
+    "changed": false,
+    "summary": null,
+    "horizon": null
+  },
+  "lead_horizon": "MT",
+  "title_hook": "Fed今天開獎，微軟Google晚上接棒"
+}
