@@ -1,0 +1,113 @@
+{
+  "segments": [
+    {
+      "kind": "card",
+      "vo": "微軟財報前重摔，財報後狂飆；Google正好相反。",
+      "headline": "財報前後\n表情全換",
+      "tag": "財報翻臉日"
+    },
+    {
+      "kind": "chart",
+      "vo": "昨天標普漲0.27%、那斯達克漲0.28%，是Fed決議當天的溫和反應。今天盤前風向換了：那斯達克期貨漲0.31%靠微軟撐著，道瓊期貨卻跌0.49%，標普期貨只小漲0.17%。微軟財報後大漲抵銷了Alphabet重摔的拖累，四大期貨這次不同步。",
+      "chart_id": "overnight_1029",
+      "title": "昨收vs盤前",
+      "stat": "+0.31%",
+      "stat_label": "那斯達克期貨"
+    },
+    {
+      "kind": "split",
+      "vo": "微軟財報大勝，Azure雲年成長48%，股價財報後跳漲4.3%。Google隔壁雲端成長103%更猛……股價財報後卻重摔9%。",
+      "title": "財報兩極",
+      "top": {
+        "label": "微軟",
+        "text": "財報後大漲",
+        "stat": "+4.3%",
+        "tone": "good"
+      },
+      "bottom": {
+        "label": "Google",
+        "text": "財報後重摔",
+        "stat": "-9%",
+        "tone": "bad"
+      }
+    },
+    {
+      "kind": "chart",
+      "vo": "拆開標普十大權值股，財報公布前那天，Google兩個代碼合計貢獻指數正0.6個百分點，是最大功臣；微軟反而倒扣0.16個百分點。結果財報一公布，兩邊位置整個對調。",
+      "chart_id": "concentration_1029",
+      "title": "財報前卡位",
+      "stat": "+0.6",
+      "stat_label": "Google貢獻財報前"
+    },
+    {
+      "kind": "chart",
+      "vo": "10年期公債殖利率今天來到5.045%，Fed記者會後不降反升，續創這幾個月的新高；華許不給前瞻指引、也說政治沒有影響決策，但殖利率用數字自己投了反對票。",
+      "chart_id": "rates_1029",
+      "title": "殖利率破5",
+      "stat": "5.045%",
+      "stat_label": "10年期殖利率"
+    },
+    {
+      "kind": "chart",
+      "vo": "今晚換亞馬遜交卷，AWS上一季成長37%，分析師預期這一季放緩到35%左右，三大雲端巨頭的資本支出答案就要交齊。CoreWeave的信用壓力、以色列大選後的組閣僵局，也還在繼續發酵。",
+      "chart_id": "catalyst_1029",
+      "title": "今晚接棒",
+      "stat": "35%",
+      "stat_label": "AWS預估成長"
+    },
+    {
+      "kind": "card",
+      "vo": "財報前擠破頭，財報後鳥獸散。",
+      "headline": "財報前擠破頭\n財報後鳥獸散",
+      "tag": "柏格 不知道有沒有說過"
+    }
+  ],
+  "charts": [
+    {
+      "id": "overnight_1029",
+      "module": "overnight_vs_close",
+      "params": {}
+    },
+    {
+      "id": "concentration_1029",
+      "module": "concentration",
+      "params": {}
+    },
+    {
+      "id": "rates_1029",
+      "module": "rates_trend",
+      "params": {}
+    },
+    {
+      "id": "catalyst_1029",
+      "module": "catalyst_timeline",
+      "params": {
+        "events": [
+          {
+            "date": "今晚5點",
+            "label": "亞馬遜公布財報",
+            "highlight": true
+          },
+          {
+            "date": "今晚",
+            "label": "AWS成長目標約35%",
+            "highlight": true
+          },
+          {
+            "date": "持續",
+            "label": "CoreWeave信用壓力觀察"
+          },
+          {
+            "date": "持續",
+            "label": "以色列組閣僵局"
+          }
+        ]
+      }
+    }
+  ],
+  "coverage_gaps": [],
+  "gags": [
+    "微軟財報前重摔、財報後狂飆，Google恰恰相反的開場反差",
+    "微軟財報後大漲、Google財報後重摔的冷面反差，雲端成長103%更猛反而跌更多"
+  ]
+}
