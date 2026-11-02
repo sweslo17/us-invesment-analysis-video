@@ -1,0 +1,125 @@
+{
+  "segments": [
+    {
+      "kind": "card",
+      "vo": "美股剛摔了一跤，明天美國期中選舉就要開票。",
+      "headline": "崩完盤\n還要開票",
+      "tag": "開票前夜"
+    },
+    {
+      "kind": "chart",
+      "vo": "四大期貨幾乎打平，標普期貨漲0.06%，道瓊期貨最強漲0.22%，那斯達克期貨卻還跌0.07%，科技股的傷還沒好，市場選在選舉前按兵不動。",
+      "chart_id": "c1",
+      "title": "期貨按兵不動",
+      "stat": "-0.07%",
+      "stat_label": "那指仍翻黑"
+    },
+    {
+      "kind": "dialogue",
+      "title": "晶片界貧富差距",
+      "lines": [
+        {
+          "speaker": "美股科技股",
+          "voice": "a",
+          "text": "英特爾嚇到我了"
+        },
+        {
+          "speaker": "韓股記憶體",
+          "voice": "b",
+          "text": "缺貨缺到我發財"
+        },
+        {
+          "speaker": "美股科技股",
+          "voice": "a",
+          "text": "記憶體漲價，我先倒"
+        },
+        {
+          "speaker": "韓股記憶體",
+          "voice": "b",
+          "text": "我昨夜噴3.4趴"
+        }
+      ],
+      "vo": "記憶體漲價逼PC廠商砍單，卻讓南韓記憶體股噴出，昨夜KOSPI大漲3.4%，同一個原因，兩個命運。"
+    },
+    {
+      "kind": "chart",
+      "vo": "VIX今天回落到18.96，跌幅約2.5%，比上週五的高點降溫，但跟這個月初的14、15比，恐慌情緒其實還墊在高檔，沒有真的退場。",
+      "chart_id": "c2",
+      "title": "降溫不代表解除",
+      "stat": "18.96",
+      "stat_label": "VIX仍偏高"
+    },
+    {
+      "kind": "chart",
+      "vo": "以那斯達克今天約20%的已實現波動率去算，合理槓桿其實不到1倍；如果硬開3倍，光是波動耗損一年就要吃掉18.7%的報酬，這就是追高科技股的隱藏成本。",
+      "chart_id": "c3",
+      "title": "那指槓桿最燒",
+      "stat": "18.7%",
+      "stat_label": "那指3倍耗損"
+    },
+    {
+      "kind": "chart",
+      "vo": "今天稍早有ISM製造業PMI，真正的大事是明天期中選舉，全部435席眾議員、三分之一參議員同步改選。下週還有非農與CoreWeave財報接力登場。",
+      "chart_id": "c4",
+      "title": "本週關鍵日",
+      "stat": "435",
+      "stat_label": "眾院全面改選"
+    },
+    {
+      "kind": "card",
+      "vo": "想躲崩盤的人，通常先把自己摔死。",
+      "headline": "想躲崩盤的人\n通常先把自己摔死",
+      "tag": "彼得林區 不知道有沒有說過"
+    }
+  ],
+  "charts": [
+    {
+      "id": "c1",
+      "module": "index_overnight_grid",
+      "params": {}
+    },
+    {
+      "id": "c2",
+      "module": "vix_regime",
+      "params": {}
+    },
+    {
+      "id": "c3",
+      "module": "leverage_decay",
+      "params": {}
+    },
+    {
+      "id": "c4",
+      "module": "catalyst_timeline",
+      "params": {
+        "events": [
+          {
+            "date": "11/2",
+            "label": "ISM製造業PMI公布",
+            "highlight": false
+          },
+          {
+            "date": "11/3",
+            "label": "期中選舉開票",
+            "highlight": true
+          },
+          {
+            "date": "11/6",
+            "label": "10月非農就業報告",
+            "highlight": false
+          },
+          {
+            "date": "11/11",
+            "label": "CoreWeave Q3財報",
+            "highlight": false
+          }
+        ]
+      }
+    }
+  ],
+  "coverage_gaps": [],
+  "gags": [
+    "開場用剛摔完一跤又要迎接期中選舉開票的反差",
+    "英特爾嚇到我了 vs 缺貨缺到我發財的對話體，呼應記憶體漲價讓美系PC廠商和韓系記憶體廠命運相反"
+  ]
+}

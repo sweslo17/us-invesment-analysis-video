@@ -1,0 +1,175 @@
+{
+  "date": "2026-11-02",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7580.07,
+      "overnight_pct": -1.83,
+      "drivers": [
+        "標普上一交易日（10/30，週五）重摔1.83%收7580.07點，是自六月以來最差單日表現，也是連續第三週收黑，主因AI相關權值股同步走弱。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 25437.0,
+      "overnight_pct": -2.87,
+      "drivers": [
+        "那斯達克重摔2.87%收25437.00點，那斯達克100一度跌入修正區間，英特爾財測嚇崩、Alphabet現金燒更快是主要拖累。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 51770.31,
+      "overnight_pct": -1.09,
+      "drivers": [
+        "道瓊跌1.09%收51770.31點，跌幅四大指數中最淺，能源、必需消費等防禦型類股相對抗跌。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 2811.84,
+      "overnight_pct": -1.65,
+      "drivers": [
+        "羅素兩千跌1.65%收2811.84點，中小型股同步遭殃，但今天盤前期貨已轉為小幅上漲。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普500近20日已實現波動率約11.8%，對應波動目標槓桿約1.27倍，3倍槓桿的年化波動耗損約6.2%，是四大指數裡相對溫和的一個。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克已實現波動率約20.4%，四大指數裡最高，對應的合理槓桿倍數因此被壓到最低、約0.74倍，3倍槓桿的年化波動耗損逼近18.7%——英特爾與Alphabet接連重摔後，這個數字這兩天還在墊高。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊已實現波動率約9.8%，四大指數裡最溫和，對應槓桿倍數約1.52倍，是四個指數中波動耗損最低的一個。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千已實現波動率約16.2%，對應槓桿倍數約0.93倍，科技股重摔外溢到中小型股時，這個組合通常也跟著震盪加大。"
+    }
+  ],
+  "regime": {
+    "vol": "elevated",
+    "rates": "falling",
+    "stock_bond_corr": "negative",
+    "breadth": "mixed"
+  },
+  "items": [
+    {
+      "headline": "科技股全面重摔，標普創六月以來最差單日",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "上一交易日（10/30，週五）標普500重摔1.83%收7580.07點，那斯達克更摔2.87%收25437點、那斯達克100一度跌入修正區，道瓊跌1.09%、羅素兩千跌1.65%，是標普自六月以來最差的一天，也是連續第三週收黑。拖累主要來自AI相關權值股同步走弱——輝達、蘋果、微軟、Google A股與C股當天合計貢獻指數負值，只有Meta逆勢小漲。對一般投資人來說，不管有沒有主動買AI股，只要持有追蹤大盤的ETF或退休金，這種集中在少數巨頭的賣壓都會直接反映在帳面上。",
+      "sources": [
+        {
+          "url": "https://stockmarketwatch.com/digest/2026-10-30",
+          "ts": null
+        },
+        {
+          "url": "https://www.ajc.com/news/2026/10/the-sell-off-for-tech-stocks-deepens-and-drags-wall-street-toward-its-worst-day-since-june/",
+          "ts": null
+        },
+        {
+          "url": "https://thebusinessjournal.com/wall-street-stocks-tech-selloff-worst-week-june/",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "亞馬遜AWS創五年最快成長，資本支出指引卻嚇壞市場",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "亞馬遜上一交易日盤後公布財報，AWS營收年增39%、創近五年最快成長，執行長Jassy更喊出2027、2028年AWS成長率都能守住四成以上，訂單積壓一口氣衝上5780億美元；但公司2026年資本支出維持約2200億美元、2027年還會「明顯更多」，過去12個月自由現金流已轉為淨流出424億美元。對一般投資人來說，訂單能見度再亮眼，市場現在更在意這些錢花下去什麼時候真的能賺回來。",
+      "sources": [
+        {
+          "url": "https://www.constellationr.com/insights/news/aws-q3-revenue-growth-surges-39-capex-stings-amazons-cash-flow",
+          "ts": null
+        },
+        {
+          "url": "https://aiweekly.co/alerts/amazons-aws-growth-hits-39-in-q3-as-capex-guide-jolts-stock",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "英特爾財測嚇崩，股價創1974年來最糟單日",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "英特爾第三季財報其實優於預期（營收年增21%至165.1億美元、每股盈餘0.52美元），但財測是真正的地雷——第四季營收指引中值155億美元，比市場預期的171.1億美元低了快一成，財務長並坦言今年不會有正自由現金流。上一交易日股價一度重摔近3成，創1974年以來最慘的單日。市場解讀的原因之一，是記憶體晶片漲價逼PC廠商大砍庫存，衝擊英特爾的個人電腦晶片業務；對一般投資人來說，這提醒科技股財報「打敗預期」不代表股價會漲，市場真正在賭的是下一季。",
+      "sources": [
+        {
+          "url": "https://www.ynetnews.com/business/article/ryivnsmazl",
+          "ts": null
+        },
+        {
+          "url": "https://journalarta.com/en/2026/10/30/intel-stock-plunges-nearly-30-weak-outlook/",
+          "ts": null
+        },
+        {
+          "url": "https://tech-insider.org/intel-plunges-25-q4-guidance-15-16-billion-pc-slump-2026/",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "記憶體缺貨光環轉移，南韓KOSPI逆勢噴出3.4%",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "developing",
+      "audience_value": "同一波逼垮英特爾的記憶體漲價，昨夜卻讓南韓股市大漲，KOSPI收漲3.41%，三星電子、SK海力士這類記憶體廠受惠於供給吃緊、價格墊高；反觀美股本土的晶片生態系，因為Intel這類邏輯晶片廠商首當其衝，情緒明顯更差。對一般投資人來說，同一則「記憶體缺貨」的新聞，對不同公司是完全相反的意思，提醒不能把整個半導體類股當成同一支股票看待。",
+      "sources": [
+        {
+          "url": "https://meyka.com/blog/intel-stock-crashes-weak-pc-outlook/",
+          "ts": null
+        },
+        {
+          "url": "https://tech-insider.org/intel-plunges-25-q4-guidance-15-16-billion-pc-slump-2026/",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "以色列大選懸而未決，組閣僵局牽動地緣政策方向",
+      "horizon": "MT",
+      "vs_thesis": "new",
+      "materiality": 2,
+      "confidence": "developing",
+      "audience_value": "以色列10/27大選計票結果顯示，納坦雅胡的右翼宗教集團約拿下53席、前參謀總長艾森科特陣營約48席，雙方都碰不到過半所需的61席，阿拉伯政黨合計約17席成為關鍵少數；艾森科特公開表態不會與阿拉伯議員組閣，組閣協商預計要花上數天甚至更久，若僵局不解，不排除重新選舉。對一般投資人來說，這代表以色列對伊朗的戰爭政策短期內大概率維持現狀，地緣風險溢價不會因為選舉結束而解除。",
+      "sources": [
+        {
+          "url": "https://www.itv.com/news/2026-10-30/heres-what-could-happen-next-after-israels-election-results",
+          "ts": null
+        },
+        {
+          "url": "https://batimes.com.ar/news/amp/world/netanyahu-leads-eisenkot-in-race-to-form-israeli-government.phtml",
+          "ts": null
+        }
+      ]
+    }
+  ],
+  "catalysts": [
+    "今天美東上午10:00：10月ISM製造業PMI公布。",
+    "明天（11/3，週二）：美國期中選舉開票，改選全部435席眾議員與三分之一參議院席次。",
+    "本週五（11/6）美東上午8:30：10月非農就業報告。",
+    "持續觀察：CoreWeave等AI資料中心公司的信用壓力（5年期公司債殖利率、CDS利差），11/11第三季財報是下一個檢驗點。",
+    "持續觀察：以色列大選後的組閣僵局（納坦雅胡聯盟約53席、艾森科特陣營約48席皆未過半），對美伊地緣政策方向的影響。"
+  ],
+  "thesis_delta": {
+    "changed": false,
+    "summary": null,
+    "horizon": null
+  },
+  "lead_horizon": "MT",
+  "title_hook": "期中選舉倒數一天，VIX還卡在19"
+}
