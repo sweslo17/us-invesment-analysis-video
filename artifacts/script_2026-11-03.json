@@ -1,0 +1,103 @@
+{
+  "segments": [
+    {
+      "kind": "card",
+      "vo": "蘋果財報贏了預期，股價卻開心不起來。",
+      "headline": "蘋果賺更多\n卻笑不出來",
+      "tag": "毛利率警報"
+    },
+    {
+      "kind": "chart",
+      "vo": "昨天那斯達克收跌1.09%、標普跌0.52%，道瓊卻逆勢漲0.41%；今天盤前四大期貨幾乎打平，那指期貨還翻紅漲0.30%，市場像是在開票夜前先深呼吸。",
+      "chart_id": "c1",
+      "title": "開票前先定神",
+      "stat": "+0.30%",
+      "stat_label": "那指期貨轉紅"
+    },
+    {
+      "kind": "chart",
+      "vo": "伊朗與美國和談傳出進展，油價一夜重摔逾4%，能源股應聲領跌3.96%；科技股也跌2.95%，南韓KOSPI同步重摔逾4%，AI能不能賺回本的疑慮還沒散，金融股逆勢漲1.86%撐住大盤。",
+      "chart_id": "c2",
+      "title": "能源科技最傷",
+      "stat": "-3.96%",
+      "stat_label": "能源領跌類股"
+    },
+    {
+      "kind": "split",
+      "vo": "蘋果財報營收、每股盈餘都贏過預期，iPhone營收年增17%……下一季毛利率guide卻讓市場倒抽一口氣，記憶體漲價正式吃進蘋果的毛利，財報後股價不漲反跌。",
+      "title": "財報冰火兩極",
+      "top": {
+        "label": "營收",
+        "text": "全面贏過預期",
+        "stat": "+17%",
+        "tone": "good"
+      },
+      "bottom": {
+        "label": "展望",
+        "text": "毛利率被看衰",
+        "tone": "bad"
+      }
+    },
+    {
+      "kind": "chart",
+      "vo": "今天稍晚有9月JOLTS職缺數據，但重頭戲是今晚的期中選舉開票，全部435席眾議員、三分之一參議員同步改選；本週五還有10月非農數據，11號CoreWeave財報是下一個檢驗點。",
+      "chart_id": "c3",
+      "title": "今晚開票",
+      "stat": "435",
+      "stat_label": "眾議員全面改選"
+    },
+    {
+      "kind": "card",
+      "vo": "今天忙著投票，明天才秤重量。",
+      "headline": "今天忙著投票\n明天才秤重量",
+      "tag": "葛拉漢 不知道有沒有說過"
+    }
+  ],
+  "charts": [
+    {
+      "id": "c1",
+      "module": "overnight_vs_close",
+      "params": {}
+    },
+    {
+      "id": "c2",
+      "module": "breadth",
+      "params": {}
+    },
+    {
+      "id": "c3",
+      "module": "catalyst_timeline",
+      "params": {
+        "events": [
+          {
+            "date": "11/3",
+            "label": "9月JOLTS職缺公布",
+            "highlight": false
+          },
+          {
+            "date": "11/3",
+            "label": "期中選舉今晚開票",
+            "highlight": true
+          },
+          {
+            "date": "11/6",
+            "label": "10月非農就業報告",
+            "highlight": false
+          },
+          {
+            "date": "11/11",
+            "label": "CoreWeave Q3財報",
+            "highlight": false
+          }
+        ]
+      }
+    }
+  ],
+  "coverage_gaps": [
+    "想直接顯示原油/WTI價格走勢作為今天地緣風險緩和的直接指標，目前圖表庫沒有商品價格模組，只能用能源類股報酬（breadth）間接呈現。"
+  ],
+  "gags": [
+    "開場用蘋果財報贏了預期、股價卻開心不起來的反差",
+    "split段用……停頓反差，呼應iPhone營收年增17%卻被毛利率guide打臉的轉折"
+  ]
+}

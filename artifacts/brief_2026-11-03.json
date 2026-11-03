@@ -1,0 +1,164 @@
+{
+  "date": "2026-11-03",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7541.4,
+      "overnight_pct": -0.52,
+      "drivers": [
+        "標普上一交易日（11/2）收跌0.52%至7541.40點，從財報分裂與科技股承壓中小幅走弱。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 25164.31,
+      "overnight_pct": -1.09,
+      "drivers": [
+        "那斯達克跌1.09%收25164.31點，記憶體漲價與AI估值疑慮持續壓抑科技權值股。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 51983.98,
+      "overnight_pct": 0.41,
+      "drivers": [
+        "道瓊逆勢漲0.41%收51983.98點，非科技類股撐盤，是四大指數裡唯一收紅的一個。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 2805.88,
+      "overnight_pct": -0.22,
+      "drivers": [
+        "羅素兩千跌0.22%收2805.88點，中小型股同步承壓但跌幅較科技股溫和。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普500近20日已實現波動率約11.5%，對應波動目標槓桿約1.30倍，3倍槓桿的年化波動耗損約6.0%，四大指數裡相對溫和。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克已實現波動率約19.9%，四大指數裡最高，對應的合理槓桿倍數因此被壓到最低、約0.75倍，3倍槓桿的年化波動耗損逼近17.8%。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊已實現波動率約9.9%，四大指數裡最溫和，對應槓桿倍數約1.51倍，是四個指數中波動耗損最低的一個。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千已實現波動率約16.1%，對應槓桿倍數約0.93倍，3倍槓桿的年化波動耗損約11.6%。"
+    }
+  ],
+  "regime": {
+    "vol": "elevated",
+    "rates": "falling",
+    "stock_bond_corr": "negative",
+    "breadth": "broad"
+  },
+  "items": [
+    {
+      "headline": "蘋果財報全面超標，毛利率guide卻讓股價挨打",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "蘋果上一交易日（11/2）盤後公布第四季財報，營收1144.8億美元、每股盈餘2.10美元，雙雙優於市場預期的1133.8億美元與1.99美元；iPhone營收年增17%至575.8億美元，服務業務創新高、大中華區營收更衝21%創單季紀錄。但市場更在意下一季：管理層對下一季毛利率的展望因記憶體成本上升而偏向保守，股價財報後不漲反跌。對一般投資人來說，這再度證明財報「打敗預期」不代表股價會漲，市場真正在賭的是下一季的成本結構。",
+      "sources": [
+        {
+          "url": "https://9to5mac.com/2026/11/02/apple-reports-q4-2026-earnings/",
+          "ts": null
+        },
+        {
+          "url": "https://www.cnbc.com/2026/11/02/apple-aapl-q4-2026-earnings-live-updates.html",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "伊朗美國傳出和談進展，油價一夜重摔逾4%",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "developing",
+      "audience_value": "上一交易日油價出現這幾個月最大單日跌幅之一，WTI、布蘭特原油雙雙重摔逾4%，市場解讀是美國與伊朗之間釋出新一輪和談進展，降低了外界對中東能源供應中斷的擔憂。這波油價回落直接拖累能源類股成為昨天表現最差的類股（跌3.96%），但考量過去大半年這類和談傳聞多次反覆、荷姆茲海峽實際通行量仍遠低於戰前水準，這次的緩和能否延續仍待確認。對一般投資人來說，油價若真的進入降溫趨勢，有助於壓低通膨與利率壓力，但現在還不到確定的程度。",
+      "sources": [
+        {
+          "url": "https://energynow.com/2026/11/oil-prices-plunge-more-than-4-as-u-s-iran-peace-talks-raise-hopes-of-easing-middle-east-supply-disruptions/",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "南韓KOSPI隔夜重摔逾4%，AI獲利疑慮再起",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "南韓KOSPI隔夜重摔逾4%，三星電子、SK海力士同步重挫，儘管兩家公司上週才剛交出歷史天量獲利，市場仍在擔心AI支出到底能不能真正賺回來，這股疑慮同一天也壓回美股科技類股（跌2.95%）。對一般投資人來說，這提醒就算基本面亮眼，只要AI估值這條神經被碰到，股價還是可能不漲反跌。",
+      "sources": [
+        {
+          "url": "https://www.altcoinbuzz.io/kospi-falls-ai-spending-fears-samsung-sk-hynix",
+          "ts": null
+        },
+        {
+          "url": "https://finance.biggo.com/news/e9cb82de-07b7-46cf-a344-c221da2ba7ad",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "以色列組閣僵局：納坦雅胡拋出統一政府，艾森科特拒絕",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 2,
+      "confidence": "developing",
+      "audience_value": "以色列10/27大選後，納坦雅胡陣營與艾森科特陣營都未過半，納坦雅胡近日拋出可能的聯合政府或輪替方案拉攏艾森科特，但艾森科特公開表態「絕不在納坦雅胡底下任職」，組閣僵局短期內難解，若協商破裂不排除重新選舉。對一般投資人來說，這代表以色列對伊朗的戰爭政策方向短期內大概率維持現狀，與今天提到的伊朗和談進展是兩條還沒交會的線。",
+      "sources": [
+        {
+          "url": "https://www.arabnews.com/middle-east/with-no-majority-what-options-remain-for-israels-netanyahu-eisenkot-3008989",
+          "ts": null
+        },
+        {
+          "url": "https://www.ynetnews.com/article/byjzm7ztmx",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "美國期中選舉今晚開票，國會控制權見真章",
+      "horizon": "LT",
+      "vs_thesis": "new",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "今天是美國期中選舉投票日，全部435席眾議員、三分之一參議院席次與36州州長同步改選，多數預測模型看好民主黨拿下眾議院（機率約85%至95%區間），參議院則是五五波到六成上下的拉鋸戰。對一般投資人來說，國會席次分布會決定接下來兩年財政、貿易與監管政策的推進難度，是今天VIX仍卡在21附近、沒有真正退場的部分原因。",
+      "sources": [
+        {
+          "url": "https://decisiondeskhq.substack.com/p/2026-midterm-election-forecast-tight-race-congress-senate-house",
+          "ts": null
+        },
+        {
+          "url": "https://www.pollcheck.co.uk/us-midterms-2026/poll-closing-times",
+          "ts": null
+        }
+      ]
+    }
+  ],
+  "catalysts": [
+    "今天（11/3，週二）：美國期中選舉投票，全部435席眾議員與三分之一參議院改選，36州州長選舉同步進行，結果最快今晚美東時間陸續出爐。",
+    "今天：9月JOLTS職缺數據公布。",
+    "本週稍後：Fed官員洛根、威廉斯、穆薩勒姆、鮑曼等人陸續公開發言。",
+    "本週五（11/6）美東上午8:30：10月非農就業報告。",
+    "持續觀察：CoreWeave等AI資料中心公司的信用壓力（5年期公司債殖利率、CDS隱含違約機率），11/11第三季財報是下一個檢驗點。",
+    "持續觀察：以色列納坦雅胡提議籌組聯合政府／輪替方案，艾森科特公開表態不會在納坦雅胡之下任職，組閣僵局能否化解。"
+  ],
+  "thesis_delta": {
+    "changed": false,
+    "summary": null,
+    "horizon": null
+  },
+  "lead_horizon": "MT",
+  "title_hook": "今晚開票，435席眾院全面改選"
+}
