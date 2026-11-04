@@ -1,0 +1,142 @@
+{
+  "date": "2026-11-04",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7568.92,
+      "overnight_pct": 0.35,
+      "drivers": [
+        "標普上一交易日（11/3，選舉日）收漲0.35%至7568.92點，開票結果出爐前盤面相對平靜。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 25372.01,
+      "overnight_pct": 0.8,
+      "drivers": [
+        "那斯達克漲0.80%收25372.01點，科技類股（+1.31%）領漲，選前AI股賣壓初步止穩。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 51786.72,
+      "overnight_pct": -0.39,
+      "drivers": [
+        "道瓊逆勢跌0.39%收51786.72點，必需消費、原物料類股領跌拖累。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 2812.45,
+      "overnight_pct": 0.25,
+      "drivers": [
+        "羅素兩千小漲0.25%收2812.45點，中小型股表現溫和。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普500近20日已實現波動率約11.4%，對應波動目標槓桿約1.32倍，3倍槓桿的年化波動耗損約5.8%，四大指數裡相對溫和。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克已實現波動率約20.1%，四大指數裡最高，對應的合理槓桿倍數因此被壓到最低、約0.74倍，3倍槓桿的年化波動耗損逼近18.3%。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊已實現波動率約9.9%，四大指數裡最溫和，對應槓桿倍數約1.51倍，是四個指數中波動耗損最低的一個。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千已實現波動率約16.0%，對應槓桿倍數約0.94倍，3倍槓桿的年化波動耗損約11.5%。"
+    }
+  ],
+  "regime": {
+    "vol": "elevated",
+    "rates": "rising",
+    "stock_bond_corr": "negative",
+    "breadth": "mixed"
+  },
+  "items": [
+    {
+      "headline": "期中選舉民主黨拿下參眾兩院，川普接受結果化解不確定性",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "美國期中選舉結果昨晚揭曉，民主黨拿下眾議院與參議院控制權；開票過程中市場一度因「藍潮衝擊AI股監管」的疑慮重摔，那斯達克100期貨一度跌逾2.4%，但隨著川普表態願意接受結果，政治不確定性迅速解除，期貨轉而大漲，今天盤前四大期貨全面上漲逾1.9%，VIX重挫逾12%。對一般投資人來說，這提醒選舉夜的劇烈波動常常是「不確定性」本身造成的，一旦結果塵埃落定，市場的情緒轉彎可能比想像中更快。",
+      "sources": [
+        {
+          "url": "https://www.cnbc.com/2026/11/03/stock-market-today-live-updates.html",
+          "ts": null
+        },
+        {
+          "url": "https://rallies.ai/news/us-stock-futures-rise-as-investors-assess-democrats-midterm-sweep-359817bdeec73214",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "AMD、Arista財報同步報喜，帶動AI供應鏈期貨領漲",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "AMD第三季營收134億美元、非GAAP每股盈餘2.09美元，雙雙優於市場預期（原預期每股約1.64美元），並預告第四季資料中心需求加速；Arista Networks營收年增58.5%至36.6億美元，創IPO以來最快成長，每股盈餘同樣大幅超標。這兩份財報跟選舉結果同一晚公布，是今天盤前科技股領漲的另一個關鍵推手。對一般投資人來說，這再次證明「訂單是真的」這條線還撐得住，AI資本支出的疑慮暫時被實際業績壓過。",
+      "sources": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/0000002488/000000248826000188/q32026991.htm",
+          "ts": null
+        },
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/0001596532/000159653226000252/ex991q326-earningsrelease.htm",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "VIX重挫逾12%，恐慌情緒隨選舉結果明朗快速降溫",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "VIX恐慌指數今天從20.81重挫到18.27、跌幅逾12%，是這個月以來最大單日降幅之一，反映選舉結果明朗加上財報利多，讓市場的避險需求迅速退潮。對一般投資人來說，VIX驟降理論上代表短線波動風險下降，但10年期公債殖利率同一天卻逆勢彈升到4.95%，顯示市場不是「全面無風險」，只是這一夜最大的不確定性（選舉）被移除了。",
+      "sources": [
+        {
+          "url": "https://www.bloomberg.com/news/articles/2026-11-04/us-equity-futures-inch-higher-as-investors-await-midterm-results",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "民主黨掌控國會後，AI反壟斷與監管審查風險浮上檯面",
+      "horizon": "MT",
+      "vs_thesis": "new",
+      "materiality": 3,
+      "confidence": "developing",
+      "audience_value": "選前市場普遍擔心民主黨完全執政會加重科技業監管壓力，美銀甚至警告若民主黨橫掃國會，股市恐跌逾一成；華爾街分析師也預期民主黨可能成立「AI特別委員會」傳喚科技高層。這些風險目前仍停留在預期階段，尚未轉化成具體聽證或立法行動。對一般投資人來說，今天的財報狂歡不代表這條風險線消失了，只是暫時被業績蓋過，接下來兩年國會怎麼對待AI巨頭，值得持續關注。",
+      "sources": [
+        {
+          "url": "https://www.advisorperspectives.com/articles/2026/10/30/ai-policy-fears-grip-stock-bond-traders-midterms",
+          "ts": null
+        }
+      ]
+    }
+  ],
+  "catalysts": [
+    "今天（11/4）美東上午8:15：10月ADP民間就業報告。",
+    "今天美東上午8:30：9月美國貿易帳。",
+    "今天美東上午10:00：10月ISM非製造業（服務業）PMI。",
+    "本週五（11/6）美東上午8:30：10月非農就業報告。",
+    "持續觀察：民主黨拿下參眾兩院後，是否成立AI特別委員會或啟動對科技巨頭的聽證／反壟斷調查。",
+    "持續觀察：CoreWeave等AI資料中心公司的信用壓力，11/11第三季財報是下一個檢驗點。"
+  ],
+  "thesis_delta": {
+    "changed": false,
+    "summary": null,
+    "horizon": null
+  },
+  "lead_horizon": "ST",
+  "title_hook": "拿下國會嚇不跑科技股，期貨噴上近2%"
+}

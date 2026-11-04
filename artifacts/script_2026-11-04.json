@@ -1,0 +1,131 @@
+{
+  "segments": [
+    {
+      "kind": "card",
+      "vo": "市場怕到腿軟，開票完卻直接起飛。",
+      "headline": "嚇死自己\n結果股市噴",
+      "tag": "藍潮誤判"
+    },
+    {
+      "kind": "recap",
+      "vo": "民主黨真的拿下參眾兩院。原本怕AI股被嚇崩，結果被AMD、Arista的財報打臉。",
+      "title": "開票對帳",
+      "rows": [
+        {
+          "ask": "開票：兩院控制權",
+          "result": "民主黨全部拿下",
+          "mark": "yes"
+        },
+        {
+          "ask": "怕藍潮嚇跑AI股",
+          "result": "財報止穩反漲",
+          "mark": "no"
+        }
+      ]
+    },
+    {
+      "kind": "chart",
+      "vo": "開票結果底定、川普也表態接受後，四大期貨今天盤前全面翻紅：那斯達克期貨大漲2.23%最猛，標普、道瓊、羅素兩千期貨同步漲逾1.9%，VIX重挫12%，市場像鬆了一口氣。",
+      "chart_id": "c1",
+      "title": "開票後全面噴出",
+      "stat": "+2.23%",
+      "stat_label": "那指期貨最猛"
+    },
+    {
+      "kind": "chart",
+      "vo": "VIX就像市場的恐慌溫度計，今天從20.81降到18.27，跌幅達12.2%，是這個月單日最大降溫；但10年期公債殖利率同一天逆勢彈到4.95%，提醒市場不是全面退燒，只是昨晚最大的不確定性被拆除了。",
+      "chart_id": "c2",
+      "title": "恐慌情緒降溫",
+      "stat": "-12.2%",
+      "stat_label": "VIX單日重挫"
+    },
+    {
+      "kind": "dialogue",
+      "title": "藍潮驚魂記",
+      "vo": "選前怕監管的空頭，被財報和選後氛圍打臉，但國會會不會真的出手，還要看接下來兩年。",
+      "lines": [
+        {
+          "speaker": "空頭",
+          "voice": "a",
+          "text": "藍潮一掃，科技股要崩了。"
+        },
+        {
+          "speaker": "科技股",
+          "voice": "b",
+          "text": "崩？我超漲給你看。"
+        },
+        {
+          "speaker": "空頭",
+          "voice": "a",
+          "text": "財報也能逆天改命？"
+        },
+        {
+          "speaker": "科技股",
+          "voice": "b",
+          "text": "AMD、Arista說可以。"
+        }
+      ]
+    },
+    {
+      "kind": "chart",
+      "vo": "今明兩天還有ADP與ISM非製造業PMI數據，本週五（11/6）有10月非農就業報告，是接下來最重要的裁判；11/11的CoreWeave第三季財報則是AI信用壓力的下一個檢驗點。",
+      "chart_id": "c3",
+      "title": "本週關鍵時間軸",
+      "stat": "11/6",
+      "stat_label": "非農就業報告"
+    },
+    {
+      "kind": "card",
+      "vo": "恐慌亂吠的狗，終究跟主人走。",
+      "headline": "恐慌亂吠的狗\n終究跟主人走",
+      "tag": "科斯托蘭尼 不知道有沒有說過"
+    }
+  ],
+  "charts": [
+    {
+      "id": "c1",
+      "module": "index_overnight_grid",
+      "params": {}
+    },
+    {
+      "id": "c2",
+      "module": "vix_regime",
+      "params": {}
+    },
+    {
+      "id": "c3",
+      "module": "catalyst_timeline",
+      "params": {
+        "events": [
+          {
+            "date": "11/4",
+            "label": "10月ADP、ISM服務業公布",
+            "highlight": false
+          },
+          {
+            "date": "11/4",
+            "label": "9月美國貿易帳",
+            "highlight": false
+          },
+          {
+            "date": "11/6",
+            "label": "10月非農就業報告",
+            "highlight": true
+          },
+          {
+            "date": "11/11",
+            "label": "CoreWeave Q3財報",
+            "highlight": false
+          }
+        ]
+      }
+    }
+  ],
+  "coverage_gaps": [
+    "想直接顯示期中選舉開票結果（席次版圖）作為今天的核心事件，目前圖表庫沒有選舉/政治事件模組，只能用recap文字段落帶過。"
+  ],
+  "gags": [
+    "開場用『嚇死自己，結果股市噴』的反差，呼應藍潮恐慌被財報打臉",
+    "空頭 vs 科技股的對話體，呼應選前監管恐慌被AMD、Arista財報秒殺"
+  ]
+}
