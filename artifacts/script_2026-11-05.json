@@ -1,0 +1,134 @@
+{
+  "segments": [
+    {
+      "kind": "card",
+      "vo": "股市才剛鬆口氣，晶片股就倒地。",
+      "headline": "贏了選舉\n輸給記憶體",
+      "tag": "晶片補刀日"
+    },
+    {
+      "kind": "chart",
+      "vo": "南韓重挫4.73%、台股跌3.29%、日經跌1.52%，只有恆生逆勢漲3.67%。高通、Arm財報爆冷，拖累亞洲晶片鏈隔夜補跌。",
+      "chart_id": "c1",
+      "title": "亞股連夜補跌",
+      "stat": "-4.73%",
+      "stat_label": "南韓重挫最深"
+    },
+    {
+      "kind": "split",
+      "vo": "那斯達克期貨續漲0.59%，延續選後的樂觀……南韓卻重摔4.73%，晶片鏈正在吃高通財報的苦果。",
+      "title": "樂觀 vs 現實",
+      "top": {
+        "label": "美股期貨",
+        "text": "續漲",
+        "stat": "+0.59%",
+        "tone": "good"
+      },
+      "bottom": {
+        "label": "晶片股",
+        "text": "隔夜重摔",
+        "stat": "-4.73%",
+        "tone": "bad"
+      }
+    },
+    {
+      "kind": "chart",
+      "vo": "昨天道瓊狂飆3.05%、標普漲1.59%，是選後最大的一口氣。今天期貨只是溫和跟漲，那斯達克期貨漲0.59%。",
+      "chart_id": "c2",
+      "title": "狂歡退場，溫和接棒",
+      "stat": "+3.05%",
+      "stat_label": "道瓊昨收暴漲"
+    },
+    {
+      "kind": "dialogue",
+      "title": "成本拔河",
+      "vo": "高通這季手機晶片營收下滑，官方說是記憶體缺貨墊高了成本。",
+      "lines": [
+        {
+          "speaker": "記憶體",
+          "voice": "a",
+          "text": "我缺貨，所以我漲價"
+        },
+        {
+          "speaker": "手機晶片",
+          "voice": "b",
+          "text": "你漲價，我利潤被擠死"
+        },
+        {
+          "speaker": "記憶體",
+          "voice": "a",
+          "text": "這叫產業鏈重新分配"
+        },
+        {
+          "speaker": "手機晶片",
+          "voice": "b",
+          "text": "我只知道毛利薄了"
+        }
+      ]
+    },
+    {
+      "kind": "chart",
+      "vo": "10年期殖利率小降到4.894%，前一天是4.952%，仍卡在逼近5%的高檔，緊縮壓力沒有真正解除。",
+      "chart_id": "c3",
+      "title": "殖利率沒跟著鬆",
+      "stat": "4.894%",
+      "stat_label": "10年期殖利率"
+    },
+    {
+      "kind": "chart",
+      "vo": "真正答案等明天（11/6）非農公布。CoreWeave下週二（11/11）交財報，是AI信用壓力的下一個檢驗點。",
+      "chart_id": "c4",
+      "title": "下一張考卷",
+      "stat": "11/6",
+      "stat_label": "非農就業報告"
+    },
+    {
+      "kind": "card",
+      "vo": "給我看誘因，我就告訴你結局。",
+      "headline": "給我看誘因\n我就告訴你結局",
+      "tag": "蒙格 不知道有沒有說過"
+    }
+  ],
+  "charts": [
+    {
+      "id": "c1",
+      "module": "global_equity_overnight",
+      "params": {}
+    },
+    {
+      "id": "c2",
+      "module": "overnight_vs_close",
+      "params": {}
+    },
+    {
+      "id": "c3",
+      "module": "rates_trend",
+      "params": {}
+    },
+    {
+      "id": "c4",
+      "module": "catalyst_timeline",
+      "params": {
+        "events": [
+          {
+            "date": "11/6",
+            "label": "10月非農就業報告",
+            "highlight": true
+          },
+          {
+            "date": "11/11",
+            "label": "CoreWeave Q3財報",
+            "highlight": false
+          }
+        ]
+      }
+    }
+  ],
+  "coverage_gaps": [
+    "想呈現高通/Arm財報後，亞洲晶片供應鏈裡誰受惠（記憶體廠）、誰受傷（手機晶片廠）的產業鏈地圖，目前圖表庫沒有對應模組，只能用dialogue段口頭講機制。"
+  ],
+  "gags": [
+    "開場用『贏了選舉、輸給記憶體』的反差，呼應美股大漲後晶片股隔夜被記憶體成本拖垮",
+    "記憶體 vs 手機晶片的對話體，用『我漲價 vs 我利潤被擠死』的拔河講成本轉嫁"
+  ]
+}

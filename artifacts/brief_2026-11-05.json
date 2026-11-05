@@ -1,0 +1,135 @@
+{
+  "date": "2026-11-05",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7688.62,
+      "overnight_pct": 1.59,
+      "drivers": [
+        "標普上一交易日（11/4，選舉結果底定後首個交易日）大漲1.59%收7688.62點，延續選後鬆口氣的行情。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 25736.51,
+      "overnight_pct": 1.46,
+      "drivers": [
+        "那斯達克漲1.46%收25736.51點，但半導體類股明顯落後大盤漲幅，『窄且不穩』的老問題還在。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 53356.12,
+      "overnight_pct": 3.05,
+      "drivers": [
+        "道瓊暴漲3.05%收53356.12點，是今年最大單日漲點之一，油價重挫與選後政治不確定性解除是主要推力。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 2856.95,
+      "overnight_pct": 1.54,
+      "drivers": [
+        "羅素兩千漲1.54%收2856.95點，中小型股同步受惠於選後情緒與VIX重挫。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普500近20日已實現波動率約12.9%，對應波動目標槓桿約1.16倍，3倍槓桿的年化波動耗損約7.5%，四大指數裡仍偏溫和。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克已實現波動率約21.2%，四大指數裡最高，對應的合理槓桿倍數因此被壓到最低、約0.71倍，3倍槓桿的年化波動耗損逼近20.2%。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊已實現波動率約14.1%，對應槓桿倍數約1.06倍，3倍槓桿的年化波動耗損約9.0%。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千已實現波動率約16.2%，對應槓桿倍數約0.93倍，3倍槓桿的年化波動耗損約11.8%。"
+    }
+  ],
+  "regime": {
+    "vol": "normal",
+    "rates": "falling",
+    "stock_bond_corr": "negative",
+    "breadth": "broad"
+  },
+  "items": [
+    {
+      "headline": "選舉鬆口氣行情延續，道瓊創今年最大單日漲點之一但晶片股缺席",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "道瓊上一交易日（11/4）大漲3.05%收53356點，標普漲1.59%、那斯達克漲1.46%，VIX重挫近19%，是期中選舉結果底定、政治不確定性解除後最明確的一次鬆口氣行情。但半導體類股明顯落後這波漲勢，顯示指數大漲不代表每個族群都雨露均霑，AI/半導體『窄且不穩』的老問題還在同一天的漲勢裡藏著。",
+      "sources": [
+        {
+          "url": "https://www.stocktitan.net/articles/stock-market-today-live-november-4-2026",
+          "ts": null
+        },
+        {
+          "url": "https://www.alainguillot.com/stock-market-recap-november-4-2026/",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "高通財報後重摔，手機晶片被記憶體漲價反噬",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "高通第四季財報優於預期，但財測保守，公司明確點名記憶體缺貨墊高了手機整機成本、壓縮手機晶片業務，股價盤後重挫逾6%；Arm同樣繳出優於預期的營收與成長，但權利金收入不如分析師樂觀預期、第三季指引只是『符合』而非『超車』，股價盤後同步下跌。對一般投資人來說，這提醒記憶體供應吃緊是一體兩面——幫了記憶體廠賺錢，卻正在侵蝕下游裝置廠商的利潤，同一個『AI/半導體』故事裡，贏家和輸家可能同時存在。",
+      "sources": [
+        {
+          "url": "https://siliconangle.com/2026/11/04/qualcomms-stock-falls-on-revenue-miss-and-weak-guidance-arm-and-globalfoundries-do-little-better/",
+          "ts": null
+        },
+        {
+          "url": "https://en.sedaily.com/international/2026/11/05/qualcomm-arm-hit-by-memory-crunch-as-ai-push-falls-short",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "高通、Arm利空隔夜灌爆亞股，南韓重摔4.73%",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "南韓KOSPI隔夜重挫4.73%、台股跌3.29%、日經跌1.52%，都是亞洲晶片供應鏈承接高通、Arm財報失望情緒的直接反應；反而是跟半導體關聯較低的香港恆生逆勢上漲3.67%，上海也小幅收紅。今天美股期貨仍溫和上漲（那斯達克期貨+0.59%），顯示這波利空目前還侷限在晶片供應鏈本身，沒有擴散成全面性的風險趨避，但也提醒美股期貨的樂觀跟亞股晶片鏈的現實正在脫節。",
+      "sources": [
+        {
+          "url": "https://za.investing.com/news/stock-market-news/asian-chip-stocks-slide-as-disappointing-qualcomm-arm-earnings-weigh-4552720",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "10年期殖利率仍卡在逼近5%高檔，higher-for-longer沒被選舉結果打散",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "10年期公債殖利率今天小降至4.894%（前一交易日4.952%），仍只比近期高點略低，離5%整數關卡不遠。即使選舉結果與財報帶動股市大漲、VIX重挫近兩成，長天期利率並沒有跟著鬆動太多，顯示市場對higher-for-longer格局的定價沒有被這波樂觀情緒打散，對仰賴借貸的企業、或是想買房置產的一般人來說，利率負擔短期內還撐在高檔。",
+      "sources": []
+    }
+  ],
+  "catalysts": [
+    "明天（11/6）美東上午8:30：10月非農就業報告，是下一個對利率路徑最直接的裁判。",
+    "持續觀察：CoreWeave 11/11第三季財報，是AI資料中心信用壓力能否緩解的下一個檢驗點。",
+    "持續觀察：南韓、台灣半導體類股能否止穩，或Qualcomm、Arm財報的利空是否持續外溢。",
+    "持續觀察：以色列組閣協商（納坦雅胡 vs 艾森科特）能否在未來幾天出現具體結果。"
+  ],
+  "thesis_delta": {
+    "changed": false,
+    "summary": null,
+    "horizon": null
+  },
+  "lead_horizon": "ST",
+  "title_hook": "高通財報嚇趴亞股，記憶體才是真凶"
+}
