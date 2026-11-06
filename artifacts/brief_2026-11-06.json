@@ -1,0 +1,131 @@
+{
+  "date": "2026-11-06",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7353.73,
+      "overnight_pct": -4.36,
+      "drivers": [
+        "標普500昨天（11/5）重挫4.36%收7353.73點，是2025年4月關稅衝擊以來最慘的一天。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 24315.0,
+      "overnight_pct": -5.54,
+      "drivers": [
+        "那斯達克綜合重摔5.54%收24315點，正式跌入修正區間，費城半導體相關類股單日重挫逾一成。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 51523.06,
+      "overnight_pct": -3.44,
+      "drivers": [
+        "道瓊重挫約1833點、跌3.44%收51523點，但相對其他指數抗跌，反映非科技權值股受傷較輕。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 2729.89,
+      "overnight_pct": -4.45,
+      "drivers": [
+        "羅素兩千同步重摔4.45%收2729.89點，中小型股同樣沒能倖免這波賣壓。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普500近20日已實現波動率跳升到約20.2%，合理波動目標槓桿因此降到約0.74倍，3倍槓桿的年化波動耗損約18.4%，比近期明顯墊高。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克已實現波動率約28.3%，四大指數裡最高，合理槓桿倍數因此被壓到最低、約0.53倍，3倍槓桿的年化波動耗損逼近36.1%。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊已實現波動率約19.3%，合理槓桿倍數約0.78倍，3倍槓桿的年化波動耗損約16.8%。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千已實現波動率約23.2%，合理槓桿倍數約0.65倍，3倍槓桿的年化波動耗損約24.1%。"
+    }
+  ],
+  "regime": {
+    "vol": "elevated",
+    "rates": "falling",
+    "stock_bond_corr": "negative",
+    "breadth": "narrow"
+  },
+  "items": [
+    {
+      "headline": "美股創史上最慘單日之一，那斯達克100單日蒸發2.3兆美元創紀錄",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "昨天（11/5）標普500重挫4.36%、那斯達克重摔5.54%正式跌入修正，是2025年4月關稅衝擊以來最慘的一天；那斯達克100指數單日蒸發2.3兆美元，是史上最大單日蒸發紀錄。觸發點是期中選舉民主黨拿下參眾兩院後，市場擔心AI與資料中心會面臨更嚴格監管與課稅，原本撐起大盤的AI權值股集體補跌，輝達重摔逾9%、超微重摔逾17%。對一般投資人來說，這是『AI/半導體窄且不穩』第一次具體演變成指數級規模的重挫，提醒集中在少數巨頭身上的漲勢，回檔時也會被加倍放大。",
+      "sources": [
+        {
+          "url": "https://www.cnbc.com/2026/11/05/stock-market-selloff-ai-fears.html",
+          "ts": null
+        },
+        {
+          "url": "https://www.foxbusiness.com/markets/stocks-nov-5-2026",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "亞股隔夜加碼重摔，南韓重挫5.27%、日經重摔5.98%",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "這波賣壓隔夜延燒到亞股：南韓KOSPI重挫5.27%、日經重摔5.98%、台股跌4.43%，半導體權重最重的幾個市場受傷最深；反而是半導體曝險較低的香港恆生、上海僅小跌約1%左右。對一般投資人來說，這再次證實AI/半導體供應鏈是這波全球股市連動最敏感的一條線，持有相關部位要留意這種跨市場的同步放大效應。",
+      "sources": []
+    },
+    {
+      "headline": "期貨搶反彈、晶片股領漲，但三倍半導體ETF仍重摔",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "developing",
+      "audience_value": "今天美股期貨全面翻紅，那斯達克期貨漲0.52%，輝達、超微等晶片股盤前同步反彈，分析師形容這更像情緒性反應、而非基本面重新評估。但追蹤三倍做多半導體的SOXL盤前仍重摔逾6%，顯示晶片供應鏈底層的疑慮沒有真正解除，指數翻紅不代表每個角落都真的回溫。",
+      "sources": [
+        {
+          "url": "https://finimize.com/content/chip-stocks-try-to-steady-nasdaq-after-thursdays-selloff",
+          "ts": null
+        }
+      ]
+    },
+    {
+      "headline": "10月非農今天揭曉，是這波賣壓後最直接的裁判",
+      "horizon": "MT",
+      "vs_thesis": "new",
+      "materiality": 4,
+      "confidence": "developing",
+      "audience_value": "今天美東上午8:30公布10月非農就業報告，市場預期新增約5.5至5.9萬人，較9月僅2.9萬人明顯回升。這份數據會直接影響12月FOMC是否再升息的機率——目前利率期貨隱含12月升息機率仍達72%，顯示市場並未因為這波股災就認定Fed會轉鴿。對一般投資人來說，這代表『股市大跌』和『利率立刻走低』不是同一件事，higher-for-longer的格局要看硬數據，不是看股價臉色。",
+      "sources": [
+        {
+          "url": "https://finance.yahoo.com/markets/live/stock-market-today-friday-november-6-dow-sp-500-nasdaq-jobs-report-091927729.html",
+          "ts": null
+        }
+      ]
+    }
+  ],
+  "catalysts": [
+    "今天（11/6）美東上午8:30：10月非農就業報告，市場預期新增約5.5–5.9萬人（前值9月為2.9萬人），是12月FOMC升息路徑的下一個關鍵裁判。",
+    "持續觀察：CoreWeave 11/11第三季財報，是AI資料中心信用壓力能否緩解的下一個檢驗點。",
+    "持續觀察：南韓、台灣半導體類股隔夜加碼重挫，今天能否止穩。",
+    "持續觀察：以色列組閣協商（納坦雅胡 vs 艾森科特）能否出現具體結果。"
+  ],
+  "thesis_delta": {
+    "changed": false,
+    "summary": null,
+    "horizon": null
+  },
+  "lead_horizon": "ST",
+  "title_hook": "蒸發2.3兆美元，非農今天來驗收"
+}
