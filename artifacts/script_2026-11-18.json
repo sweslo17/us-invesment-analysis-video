@@ -1,0 +1,108 @@
+{
+  "segments": [
+    {
+      "kind": "card",
+      "vo": "輝達繳出滿分考卷，但有一行小字沒人注意。",
+      "headline": "滿分考卷\n藏一行小字",
+      "tag": "小字放大鏡"
+    },
+    {
+      "kind": "bignum",
+      "vo": "輝達第三季營收1158億美元，年增103%，超過預期1088億；資料中心、每股盈餘同步超標。下季財測上看1274到1326億，明年成長展望上修到75%。",
+      "value": "1158億",
+      "label": "輝達Q3營收",
+      "context": "年增103%，超預期1088億"
+    },
+    {
+      "kind": "chart",
+      "vo": "標普上一交易日跌1.07%、道瓊跌1.68%，四大指數昨收全面收黑。今天盤前回穩，那斯達克期貨漲0.53%，VIX重挫近5%，財報大勝換來的是止穩，不是全面衝高。",
+      "chart_id": "c1",
+      "title": "昨摔今穩",
+      "stat": "+0.53%",
+      "stat_label": "那斯達克期貨"
+    },
+    {
+      "kind": "split",
+      "vo": "好消息，輝達營收、資料中心、每股盈餘全面超標，年增103%……壞消息是，財測完全沒把中國業務算進去，晶片流向的追查，這個月還沒結束。",
+      "top": {
+        "label": "財報",
+        "text": "三項全超標",
+        "stat": "+103%",
+        "tone": "good"
+      },
+      "bottom": {
+        "label": "財測",
+        "text": "沒算中國業務",
+        "tone": "bad"
+      }
+    },
+    {
+      "kind": "chart",
+      "vo": "財報利多隔夜先反應，南韓KOSPI大漲2.06%，記憶體股領漲；港股卻逆勢跌0.91%，恒生不太買帳。",
+      "chart_id": "c2",
+      "title": "亞股搶先慶祝",
+      "stat": "+2.06%",
+      "stat_label": "南韓KOSPI"
+    },
+    {
+      "kind": "chart",
+      "vo": "今天下午兩點，FOMC十月會議記錄公布；晚上Anthropic定價，區間70到78美元，傳可能訂在上緣；明天掛牌那斯達克，代號ANT，是輝達財報後的下一張考卷。",
+      "chart_id": "c3",
+      "title": "今明兩張考卷",
+      "stat": null,
+      "stat_label": null
+    },
+    {
+      "kind": "card",
+      "vo": "數字會說話，故事只能戀愛。",
+      "headline": "數字會說話\n故事只能戀愛",
+      "tag": "彼得·林區 不知道有沒有說過"
+    }
+  ],
+  "charts": [
+    {
+      "id": "c1",
+      "module": "overnight_vs_close",
+      "params": {}
+    },
+    {
+      "id": "c2",
+      "module": "global_equity_overnight",
+      "params": {}
+    },
+    {
+      "id": "c3",
+      "module": "catalyst_timeline",
+      "params": {
+        "events": [
+          {
+            "date": "今天",
+            "label": "FOMC十月會議紀錄公布",
+            "highlight": true
+          },
+          {
+            "date": "今晚",
+            "label": "Anthropic敲定IPO價格",
+            "highlight": true
+          },
+          {
+            "date": "明天11/19",
+            "label": "Anthropic掛牌，代號ANT",
+            "highlight": true
+          },
+          {
+            "date": "12/8-9",
+            "label": "下次FOMC會議",
+            "highlight": false
+          }
+        ]
+      }
+    }
+  ],
+  "coverage_gaps": [],
+  "gags": [
+    "開場用『滿分考卷藏一行小字』的反差，呼應輝達財報數字全面超標、卻在財測裡悄悄排除中國業務這個細節",
+    "好消息/壞消息對比：財報三項全超標 vs 財測不算中國業務，中間用『……』停頓製造冷面反差",
+    "貫穿全片的『考卷』比喻：輝達交出滿分考卷，今晚FOMC紀錄與Anthropic定價則是下一張要交的新考卷"
+  ]
+}
