@@ -1,0 +1,119 @@
+{
+  "segments": [
+    {
+      "kind": "card",
+      "vo": "史上最大IPO今天掛牌，買單的出資人，你絕對認識。",
+      "headline": "天價掛牌\n金主是自己人",
+      "tag": "AI印鈔機"
+    },
+    {
+      "kind": "chart",
+      "vo": "四大指數期貨今天全面翻紅，那斯達克期貨漲1.32%領漲，標普期貨漲0.73%，道瓊期貨漲0.36%。VIX同步重挫超過一成，來到21.99，市場情緒比昨天輕鬆不少。",
+      "chart_id": "c1",
+      "title": "期貨全線翻紅",
+      "stat": "+1.32%",
+      "stat_label": "那斯達克期貨"
+    },
+    {
+      "kind": "bignum",
+      "vo": "安索普股票加私募配售，總共募資1073億美元，超越SpaceX寫下史上最大IPO紀錄，今天就在那斯達克掛牌，代號ANT。",
+      "value": "1073億",
+      "label": "安索普IPO募資",
+      "context": "超越SpaceX，史上最大"
+    },
+    {
+      "kind": "dialogue",
+      "title": "搶購現場",
+      "lines": [
+        {
+          "speaker": "新股東",
+          "voice": "a",
+          "text": "安索普掛牌，我要搶購！"
+        },
+        {
+          "speaker": "輝達荷包",
+          "voice": "b",
+          "text": "其實我也投了260億。"
+        },
+        {
+          "speaker": "新股東",
+          "voice": "a",
+          "text": "等等，你不是客戶嗎？"
+        },
+        {
+          "speaker": "輝達荷包",
+          "voice": "b",
+          "text": "客戶跟金主，都是我。"
+        }
+      ],
+      "vo": "輝達、Google、微軟、超微這次合計砸260億私募配售，買的是自己最大客戶的新股，供應商跟金主的界線早就模糊了。"
+    },
+    {
+      "kind": "chart",
+      "vo": "FOMC十月紀錄鷹派依舊，期貨隱含12月利率衝上4.175%，比現在3.88%再升29.5個基點，10年期殖利率維持5.07%左右，高檔格局沒鬆動。",
+      "chart_id": "c2",
+      "title": "升息路徑未退",
+      "stat": "4.175%",
+      "stat_label": "12月隱含利率"
+    },
+    {
+      "kind": "chart",
+      "vo": "今天兩件事：安索普在那斯達克掛牌，代號ANT；美東上午8點半公布每週初領失業金。下次FOMC是12月8到9號，市場押注再升一次。",
+      "chart_id": "c3",
+      "title": "今天兩件事",
+      "stat": "12/8-9",
+      "stat_label": "下次FOMC"
+    },
+    {
+      "kind": "card",
+      "vo": "錢繞了一圈，還是自己的錢。",
+      "headline": "錢繞一圈\n還是自己的錢",
+      "tag": "索羅斯 不知道有沒有說過"
+    }
+  ],
+  "charts": [
+    {
+      "id": "c1",
+      "module": "index_overnight_grid",
+      "params": {}
+    },
+    {
+      "id": "c2",
+      "module": "fed_path",
+      "params": {}
+    },
+    {
+      "id": "c3",
+      "module": "catalyst_timeline",
+      "params": {
+        "events": [
+          {
+            "date": "今天",
+            "label": "安索普掛牌，代號ANT",
+            "highlight": true
+          },
+          {
+            "date": "今天8:30",
+            "label": "初領失業金數據公布",
+            "highlight": false
+          },
+          {
+            "date": "約11/25",
+            "label": "貝森特給輝達的說明期限屆滿",
+            "highlight": false
+          },
+          {
+            "date": "12/8-9",
+            "label": "下次FOMC會議",
+            "highlight": true
+          }
+        ]
+      }
+    }
+  ],
+  "coverage_gaps": [],
+  "gags": [
+    "開場用『買單的出資人，你絕對認識』的懸念鉤子，呼應輝達、Google、微軟、超微自己掏錢接住安索普IPO私募配售這個反轉",
+    "新股東vs輝達荷包的對話體，拆穿安索普IPO金主同時是自己最大客戶、供應商的循環融資劇本"
+  ]
+}
