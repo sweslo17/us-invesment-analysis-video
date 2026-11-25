@@ -1,0 +1,110 @@
+{
+  "segments": [
+    {
+      "kind": "card",
+      "vo": "作業終於排了死線，12月3日，黃仁勳要交卷了。",
+      "headline": "開庭日\n12月3日",
+      "tag": "聽證風暴"
+    },
+    {
+      "kind": "chart",
+      "vo": "南韓KOSPI重挫6.77%，台灣跌4.8%，日經跌2.67%，恆生、上海也小跌。這波賣壓源頭在美股晶片股的疑慮，直接外溢到整條亞洲供應鏈，歐股反而淡定。",
+      "chart_id": "c1",
+      "title": "南韓領跌亞股",
+      "stat": "-6.77%",
+      "stat_label": "南韓KOSPI"
+    },
+    {
+      "kind": "recap",
+      "vo": "昨天說黃仁勳作證日期沒定，官方效率罕見沒鴿，今天查到了：12月3日，參議院銀行委員會見真章。",
+      "title": "昨天的伏筆",
+      "rows": [
+        {
+          "ask": "作證日期未定",
+          "result": "確定12/3",
+          "mark": "yes"
+        }
+      ]
+    },
+    {
+      "kind": "chart",
+      "vo": "四大期貨今天全面翻黑，那斯達克100期貨跌1.54%領跌，標普期貨跌1.09%，道瓊期貨跌0.73%，羅素兩千期貨跌0.65%。等於把本週稍早的反彈，又先吐回一截。",
+      "chart_id": "c2",
+      "title": "期貨全面翻黑",
+      "stat": "-1.54%",
+      "stat_label": "那指期貨"
+    },
+    {
+      "kind": "bignum",
+      "vo": "VIX今天跳升15.48%，來到30.44，上週五一度衝破35，這週的恐慌情緒忽高忽低，像心情溫度計故障。",
+      "value": "30.44",
+      "label": "VIX恐慌指數",
+      "context": "上週五衝破35"
+    },
+    {
+      "kind": "chart",
+      "vo": "本週還有兩件事要看，今天稍晚10月PCE跟GDP二次估一次公布，明天感恩節休市，後天提早一點收盤。12月3號換黃仁勳自己去參議院解釋，12月8到9號才是真正的FOMC。",
+      "chart_id": "c3",
+      "title": "感恩節週行事曆",
+      "stat": "12/3",
+      "stat_label": "黃仁勳聽證"
+    },
+    {
+      "kind": "card",
+      "vo": "潮水退了，才看到裸泳。",
+      "headline": "潮水退了\n才看到裸泳",
+      "tag": "巴菲特 不知道有沒有說過"
+    }
+  ],
+  "charts": [
+    {
+      "id": "c1",
+      "module": "global_equity_overnight",
+      "params": {}
+    },
+    {
+      "id": "c2",
+      "module": "index_overnight_grid",
+      "params": {}
+    },
+    {
+      "id": "c3",
+      "module": "catalyst_timeline",
+      "params": {
+        "events": [
+          {
+            "date": "今天",
+            "label": "PCE+GDP二次估",
+            "highlight": false
+          },
+          {
+            "date": "11/26",
+            "label": "感恩節休市",
+            "highlight": false
+          },
+          {
+            "date": "11/27",
+            "label": "提早1點收盤",
+            "highlight": false
+          },
+          {
+            "date": "12/3",
+            "label": "黃仁勳參議院聽證",
+            "highlight": true
+          },
+          {
+            "date": "12/8-9",
+            "label": "FOMC決策日",
+            "highlight": true
+          }
+        ]
+      }
+    }
+  ],
+  "coverage_gaps": [],
+  "gags": [
+    "開場用『作業終於排了死線』比喻黃仁勳12月3日國會聽證終於排定的具體日期",
+    "對帳段吐槽『官方效率罕見沒鴿』，呼應昨天查無確切作證日期、今天真的排定",
+    "VIX大數字用『心情溫度計故障』比喻恐慌指數忽高忽低"
+  ]
+}
