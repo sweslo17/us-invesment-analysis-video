@@ -1,0 +1,119 @@
+{
+  "segments": [
+    {
+      "kind": "card",
+      "vo": "那斯達克期貨一口氣噴漲近3%，晶片股全面反攻。",
+      "headline": "噴近3%\n全面反攻",
+      "tag": "黑五狂潮"
+    },
+    {
+      "kind": "chart",
+      "vo": "標普期貨漲2.09%，那指期貨噴漲2.84%領漲，道瓊漲2.03%，羅素兩千漲2.49%，四大期貨翻紅。VIX重挫6.75%回落到24.99，緊繃情緒鬆開了。",
+      "chart_id": "c1",
+      "title": "四大期貨狂飆",
+      "stat": "+2.84%",
+      "stat_label": "那指期貨"
+    },
+    {
+      "kind": "recap",
+      "vo": "之前說要看的PCE和GDP，結果出來了：核心PCE年增3.3%，創三年新高；GDP終值上修到4.3%，12月升息幾乎沒有懸念。",
+      "title": "數據見真章",
+      "rows": [
+        {
+          "ask": "PCE、GDP二次估",
+          "result": "核心PCE3.3%創新高",
+          "mark": "yes"
+        }
+      ]
+    },
+    {
+      "kind": "chart",
+      "vo": "隔夜南韓KOSPI大漲3.70%，日經漲2.21%，上海飆升4.03%，歐股同步走高。這波買氣是全球跟著美股晶片股一起買回來。",
+      "chart_id": "c2",
+      "title": "全球同步噴出",
+      "stat": "+3.70%",
+      "stat_label": "南韓KOSPI"
+    },
+    {
+      "kind": "dialogue",
+      "title": "反攻的真相",
+      "lines": [
+        {
+          "speaker": "AI多頭",
+          "voice": "a",
+          "text": "晶片全面噴，穩了吧？"
+        },
+        {
+          "speaker": "華爾街",
+          "voice": "b",
+          "text": "穩的只是技術性反彈……"
+        },
+        {
+          "speaker": "AI多頭",
+          "voice": "a",
+          "text": "先衝一波，管他穩不穩。"
+        }
+      ],
+      "vo": "多頭看到數字就興奮，但分析師說這像橡皮筋繃太緊彈回去，不代表真的鬆了——晶片股治理風暴、12月升息，都還沒解除。"
+    },
+    {
+      "kind": "chart",
+      "vo": "今天美股提早1點收盤，感恩節週告一段落。接下來兩週：12月3日黃仁勳參議院聽證，12月4日非農報告，12月8到9日FOMC開會，升息機率逼近95%。",
+      "chart_id": "c3",
+      "title": "接下來兩週",
+      "stat": "12/3",
+      "stat_label": "黃仁勳聽證"
+    },
+    {
+      "kind": "card",
+      "vo": "行情噴出的時候，誰都像股神。",
+      "headline": "噴出的時候\n誰都像股神",
+      "tag": "彼得林區 不知道有沒有說過"
+    }
+  ],
+  "charts": [
+    {
+      "id": "c1",
+      "module": "index_overnight_grid",
+      "params": {}
+    },
+    {
+      "id": "c2",
+      "module": "global_equity_overnight",
+      "params": {}
+    },
+    {
+      "id": "c3",
+      "module": "catalyst_timeline",
+      "params": {
+        "events": [
+          {
+            "date": "今天",
+            "label": "美股1點收盤",
+            "highlight": false
+          },
+          {
+            "date": "12/3",
+            "label": "黃仁勳參議院聽證",
+            "highlight": true
+          },
+          {
+            "date": "12/4",
+            "label": "11月非農就業報告",
+            "highlight": false
+          },
+          {
+            "date": "12/8-9",
+            "label": "FOMC決策日",
+            "highlight": true
+          }
+        ]
+      }
+    }
+  ],
+  "coverage_gaps": [],
+  "gags": [
+    "開場用『黑五狂潮』雙關黑色星期五購物季與晶片股全面噴出反攻的意涵",
+    "AI多頭vs華爾街的對話體，用『橡皮筋彈回去』比喻超跌反彈但疑慮未解，吐槽技術性反彈vs真正風險沒解除的反差"
+  ]
+}

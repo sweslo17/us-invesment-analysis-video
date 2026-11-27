@@ -1,0 +1,112 @@
+{
+  "date": "2026-11-27",
+  "indices": [
+    {
+      "name": "S&P 500",
+      "level": 7182.78,
+      "overnight_pct": -0.27,
+      "drivers": [
+        "標普500上一交易日（11/25）小跌0.27%收7182.78點，消化10月核心PCE轉熱與GDP上修的鷹派數據。"
+      ]
+    },
+    {
+      "name": "Nasdaq Composite",
+      "level": 23585.8,
+      "overnight_pct": -0.63,
+      "drivers": [
+        "那斯達克跌0.63%至23585.80點，科技股持續承壓。"
+      ]
+    },
+    {
+      "name": "道瓊工業指數",
+      "level": 50182.95,
+      "overnight_pct": 0.31,
+      "drivers": [
+        "道瓊逆勢上漲0.31%收50182.95點，資金轉向非科技類股。"
+      ]
+    },
+    {
+      "name": "Russell 2000",
+      "level": 2704.06,
+      "overnight_pct": 0.73,
+      "drivers": [
+        "羅素兩千上漲0.73%至2704.06點，中小型股表現相對抗跌。"
+      ]
+    }
+  ],
+  "leverage_context": [
+    {
+      "market": "S&P 500",
+      "edu_note": "標普500近20日已實現波動率約31.7%，波動目標槓桿約0.47倍，3倍槓桿的年化波動耗損約45.3%。"
+    },
+    {
+      "market": "Nasdaq Composite",
+      "edu_note": "那斯達克已實現波動率約42.5%，四大指數裡最高，合理槓桿被壓到最低、約0.35倍，3倍槓桿的年化波動耗損逼近81.2%。"
+    },
+    {
+      "market": "道瓊工業指數",
+      "edu_note": "道瓊工業指數已實現波動率約26.1%，合理槓桿約0.58倍，3倍槓桿的年化波動耗損約30.6%。"
+    },
+    {
+      "market": "Russell 2000",
+      "edu_note": "羅素兩千已實現波動率約30.6%，合理槓桿約0.49倍，3倍槓桿的年化波動耗損約42.2%。"
+    }
+  ],
+  "regime": {
+    "vol": "elevated",
+    "rates": "falling",
+    "stock_bond_corr": "negative",
+    "breadth": "broad"
+  },
+  "items": [
+    {
+      "headline": "感恩節連假後，晶片股領軍全球同步大反彈",
+      "horizon": "ST",
+      "vs_thesis": "confirms",
+      "materiality": 5,
+      "confidence": "confirmed",
+      "audience_value": "那斯達克100期貨盤前噴漲近2.8%，輝達、美光、SanDisk等個股齊漲，VIX重挫逾6%回落到25附近；隔夜南韓、日本、中國股市同步跳漲，歐股走高。對一般投資人來說，這是感恩節前那波治理風暴重挫後最大規模的一次全球性買回，但多數分析師形容這更像超跌後的技術性反彈，不代表風險真正解除。",
+      "sources": []
+    },
+    {
+      "headline": "10月核心PCE創三年新高，12月升息機率逼近95%",
+      "horizon": "LT",
+      "vs_thesis": "confirms",
+      "materiality": 4,
+      "confidence": "confirmed",
+      "audience_value": "本週三公布的10月核心PCE年增3.3%優於預期，第三季GDP終值上修到4.3%，兩份數據同步轉熱，期貨隱含12月再升一碼的機率已逼近94%到97%。對一般投資人來說，不管股市怎麼反彈，利率維持高檔這個長期背景沒有改變，12月8-9日FOMC幾乎沒有懸念。",
+      "sources": []
+    },
+    {
+      "headline": "Megaspeed暫緩列入出口管制黑名單",
+      "horizon": "MT",
+      "vs_thesis": "confirms",
+      "materiality": 3,
+      "confidence": "developing",
+      "audience_value": "英國金融時報報導，商務部把新一輪出口管制黑名單延後兩個月，暫時沒有把輝達治理風暴核心的轉口商Megaspeed列入清單，儘管其他部會持續施壓。對一般投資人來說，這舒緩了晶片股的短期供應鏈疑慮，但12月3日黃仁勳的國會聽證如期舉行，治理風暴本身並未落幕。",
+      "sources": []
+    },
+    {
+      "headline": "全球股市同步跟漲，不是只有美股在反彈",
+      "horizon": "ST",
+      "vs_thesis": "new",
+      "materiality": 3,
+      "confidence": "confirmed",
+      "audience_value": "隔夜南韓KOSPI大漲3.7%、上海飆升4.0%、日經漲2.2%，歐股同步走高。對一般投資人來說，這種跨市場同步上漲顯示這波買氣是全球資金一起跟著美股晶片股買回來，不是單一市場的個別反彈。",
+      "sources": []
+    }
+  ],
+  "catalysts": [
+    "今天：感恩節連假後首個交易日，美股提早於下午1點收盤（債市2點），晶片股領漲全球股市同步反彈。",
+    "12/3（週四）：黃仁勳出席參議院銀行委員會公開聽證，說明出口管制合規爭議。",
+    "12/4（週五）：11月非農就業報告，是12月FOMC前最後一塊硬數據拼圖。",
+    "12/8-9：下次FOMC會議，期貨隱含12月再升一碼的機率已逼近95%。"
+  ],
+  "thesis_delta": {
+    "changed": false,
+    "summary": null,
+    "horizon": null
+  },
+  "lead_horizon": "ST",
+  "title_hook": "晶片股一口氣反攻，那指期貨噴近3%"
+}
